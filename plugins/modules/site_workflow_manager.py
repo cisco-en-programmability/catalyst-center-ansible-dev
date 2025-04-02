@@ -478,7 +478,6 @@ class Site(DnacBase):
         self.deleted_site_list, self.site_absent_list = [], []
         self.keymap = {}
         self.handle_config = {}
-        self.registered = {}
 
     def validate_input(self):
         """
@@ -2689,7 +2688,7 @@ def main():
         ccc_site.check_return_status()
 
     ccc_site.validate_input().check_return_status()
-    # config_verify = ccc_site.params.get("config_verify")
+    config_verify = ccc_site.params.get("config_verify")
     ccc_site.validate_site_input_data(ccc_site.validated_config, state).check_return_status()
 
     if ccc_site.compare_dnac_versions(ccc_site.get_ccc_version(), "2.3.7.6") >= 0:
@@ -2699,8 +2698,8 @@ def main():
 
         ccc_site.get_diff_state_apply[state](ccc_site.validated_config).check_return_status()
 
-        # if config_verify:
-        #     ccc_site.update_site_messages().check_return_status()
+        if config_verify:
+            ccc_site.update_site_messages().check_return_status()
 
     else:
         for config in ccc_site.validated_config:
