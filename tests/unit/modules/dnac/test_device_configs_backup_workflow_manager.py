@@ -238,6 +238,15 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 self.test_data.get("response_get_task_details_response"),
                 Exception("Simulated exception")
             ]
+
+        if "device_configs_backup_success_scenario_5" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("response_get_device"),
+                self.test_data.get("response_get_network_device_configuration_1"),
+                self.test_data.get("response_get_network_device_configuration_2"),
+                self.test_data.get("response_get_network_device_configuration_3"),
+                Exception("Simulated exception")
+            ]
 # SUCCESS TESTCASES ########################################################################################
 
     def test_device_configs_backup_success_scenario_1(self):
@@ -250,7 +259,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -273,7 +282,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -296,7 +305,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -319,7 +328,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -332,7 +341,30 @@ class TestDeviceConfigsBackup(TestDnacModule):
             result.get("msg"),
         )
 
-# FAILURE TESTCASES ########################################################################################
+    def test_device_configs_backup_success_scenario_5(self):
+        print("Test Data: {test_data}".format(test_data=self.test_data.get("playbook_config_device_configs_backup_scenario_6")))
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=False,
+                dnac_log_level="DEBUG",
+                dnac_version="2.3.7.9",
+                config_verify=True,
+                dnac_log_append=False,
+                state="merged",
+                config=self.test_data.get("playbook_config_device_configs_backup_scenario_6"),
+            )
+        )
+        result = self.execute_module(changed=False, failed=True)
+        self.assertIn(
+            "Successfully validated playbook configuration parameters",
+            result.get("msg"),
+        )
+
+    # FAILURE TESTCASES ########################################################################################
 
     def test_device_configs_backup_failure_scenario_1_1(self):
         print("Test Data: {test_data}".format(test_data=self.test_data.get("playbook_config_device_configs_backup_scenario_1")))
@@ -344,7 +376,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -367,7 +399,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -390,7 +422,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -413,7 +445,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -436,7 +468,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -459,7 +491,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -482,7 +514,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -505,7 +537,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -528,7 +560,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -551,7 +583,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -574,7 +606,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -597,7 +629,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
@@ -620,7 +652,7 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 dnac_password="dummy",
                 dnac_log=False,
                 dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
+                dnac_version="2.3.7.6",
                 config_verify=True,
                 dnac_log_append=False,
                 state="merged",
