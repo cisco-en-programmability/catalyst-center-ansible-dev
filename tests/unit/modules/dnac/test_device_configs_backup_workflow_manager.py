@@ -341,29 +341,6 @@ class TestDeviceConfigsBackup(TestDnacModule):
             result.get("msg"),
         )
 
-    def test_device_configs_backup_success_scenario_5(self):
-        print("Test Data: {test_data}".format(test_data=self.test_data.get("playbook_config_device_configs_backup_scenario_6")))
-
-        set_module_args(
-            dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_log=False,
-                dnac_log_level="DEBUG",
-                dnac_version="2.3.7.9",
-                config_verify=True,
-                dnac_log_append=False,
-                state="merged",
-                config=self.test_data.get("playbook_config_device_configs_backup_scenario_6"),
-            )
-        )
-        result = self.execute_module(changed=False, failed=True)
-        self.assertIn(
-            "Successfully validated playbook configuration parameters",
-            result.get("msg"),
-        )
-
     # FAILURE TESTCASES ########################################################################################
 
     def test_device_configs_backup_failure_scenario_1_1(self):
@@ -662,5 +639,28 @@ class TestDeviceConfigsBackup(TestDnacModule):
         result = self.execute_module(changed=False, failed=True)
         self.assertIn(
             "The Backup Config file with File ID:",
+            result.get("msg"),
+        )
+
+    def test_device_configs_backup_success_scenario_5(self):
+        print("Test Data: {test_data}".format(test_data=self.test_data.get("playbook_config_device_configs_backup_scenario_5")))
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=False,
+                dnac_log_level="DEBUG",
+                dnac_version="2.3.7.9",
+                config_verify=True,
+                dnac_log_append=False,
+                state="merged",
+                config=self.test_data.get("playbook_config_device_configs_backup_scenario_5"),
+            )
+        )
+        result = self.execute_module(changed=False, failed=True)
+        self.assertIn(
+            "Successfully validated playbook configuration parameters",
             result.get("msg"),
         )
