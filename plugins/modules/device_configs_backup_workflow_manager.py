@@ -415,7 +415,6 @@ EXAMPLES = r"""
           - VLAN
           - STARTUPCONFIG
           - RUNNINGCONFIG
-
 """
 RETURN = r"""
 # Case_1: Successful creation and exportation of device configs
