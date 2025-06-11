@@ -412,13 +412,6 @@ except ImportError:
     HAS_PATHLIB = False
     pathlib = None
 
-try:
-    import pyminizip
-    HAS_PYMINIZIP = True
-except ImportError:
-    HAS_PYMINIZIP = False
-    pyminizip = None
-
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
     DnacBase,
@@ -431,8 +424,6 @@ import re
 import time
 import datetime
 import os
-import shutil
-import zipfile
 
 
 class DeviceConfigsBackup(DnacBase):
@@ -472,13 +463,6 @@ class DeviceConfigsBackup(DnacBase):
             msg = "Pathlib is not installed. Please install it using 'pip install pathlib' command"
             self.log(msg, "CRITICAL")
             self.module.fail_json(msg=msg)
-
-        # Check if Pyminizip is installed
-        if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.9") >= 0:
-            if HAS_PYMINIZIP is False:
-                msg = "pyminizip is required for Catalyst Center versions 2.3.7.9 and above. Please install it using 'pip install pyminizip'."
-                self.log(msg, "CRITICAL")
-                self.module.fail_json(msg=msg)
 
         # Check if the config is provided in the playbook
         if not self.config:
@@ -571,6 +555,8 @@ class DeviceConfigsBackup(DnacBase):
         mgmt_ip_to_instance_id_map = {}
         processed_device_count = 0
         skipped_device_count = 0
+        # Define device families to skip
+        skipped_device_families = {"Unified AP", "Wireless Sensor", "Third Party Device"}
 
         try:
             offset = 1
@@ -603,30 +589,31 @@ class DeviceConfigsBackup(DnacBase):
                     device_ip = device_info.get("managementIpAddress", "Unknown IP")
 
                     # Check if the device is reachable and managed
-                    if device_info.get("reachabilityStatus") == "Reachable" and device_info.get("collectionStatus") == "Managed":
+                    reachability = device_info.get("reachabilityStatus")
+                    collection_status = device_info.get("collectionStatus")
+                    device_family = device_info.get("family")
+
+                    if reachability == "Reachable" and collection_status in ["Managed", "In Progress"]:
                         # Skip Unified AP devices
-                        if device_info.get("family") != "Unified AP" :
+                        if device_family not in skipped_device_families:
                             device_id = device_info["id"]
                             mgmt_ip_to_instance_id_map[device_ip] = device_id
                         else:
                             skipped_device_count += 1
                             self.skipped_devices_list.append(device_ip)
-                            msg = (
-                                "Skipping device {0} as its family is: {1}.".format(
-                                    device_ip, device_info.get("family")
-                                )
+                            self.log(
+                                "Skipping device {0} as its family is: {1}.".format(device_ip, device_family),
+                                "INFO"
                             )
-                            self.log(msg, "INFO")
-
                     else:
                         skipped_device_count += 1
                         self.skipped_devices_list.append(device_ip)
-                        msg = (
-                            "Skipping device {0} as its status is {1} or its collectionStatus is {2}.".format(
-                                device_ip, device_info.get("reachabilityStatus"), device_info.get("collectionStatus")
-                            )
+                        self.log(
+                            "Skipping device {0} as its reachabilityStatus is '{1}' or collectionStatus is '{2}'.".format(
+                                device_ip, reachability, collection_status
+                            ),
+                            "INFO"
                         )
-                        self.log(msg, "INFO")
 
                 # Check if the response size is less than the limit
                 if len(response) < limit:
@@ -862,8 +849,17 @@ class DeviceConfigsBackup(DnacBase):
                 self.log("Response received post '{0}' API Call: {1}".format(function_name, response), "DEBUG")
 
                 # Check if response returned
-                if response and response.data:
-                    self.log("Download successful using function: {0}".format(function_name), "DEBUG")
+                if response:
+                    self.log("Response object for file ID {0}: {1}".format(file_id, response), "DEBUG")
+
+                    # Log type and optionally size of data
+                    try:
+                        self.log("Type of response.data: {0}".format(type(response.data)), "DEBUG")
+                        self.log("response.data: {0}".format(response.data), "DEBUG")
+                        self.log("Length of response.data: {0}".format(len(response.data)), "DEBUG")
+                    except Exception as e:
+                        self.log("Could not determine length of response.data: {0}".format(e), "DEBUG")
+
                     return (file_id, response.data)
 
                 self.msg = "No response received post the '{0}' API call.".format(function_name)
@@ -882,6 +878,7 @@ class DeviceConfigsBackup(DnacBase):
         # Log and attempt the second function call if the first fails
         self.log("Trying 'download_a_file_by_file_id' due to the exception in the previous call.", "INFO")
         result = try_download("download_a_file_by_file_id")
+        self.log("Type of result: {0}".format(type(result)), "DEBUG")
         if result is not None:
             self.log("File download completed using 'download_a_file_by_file_id'", "INFO")
             return result
@@ -1171,22 +1168,19 @@ class DeviceConfigsBackup(DnacBase):
                 Returns the last successful response if multiple IDs are provided.
                 Returns None if no valid response is received.
         """
-        self.log("Entering download_unmasked_raw_device_configuration function", "INFO")
+        self.log("Starting download_unmasked_raw_device_configuration", "INFO")
 
         if not id_list or not file_password:
-            self.log("Missing 'id_list' or 'file_password' in parameters", "ERROR")
-            self.fail_and_exit("Both 'id_list' and 'file_password' must be provided.")
+            msg = "Missing 'id_list' or 'file_password' parameters: id_list={}, file_password={}".format(
+                id_list, 'set' if file_password else 'not set')
+            self.fail_and_exit(msg)
 
         final_response = None
 
         try:
             for file_id in id_list:
-                payload = {
-                    "id": file_id,
-                    "password": file_password
-                }
-
-                self.log("Requesting export for file ID: {0} with payload: {1}".format(file_id, payload), "INFO")
+                payload = {"id": file_id, "password": file_password}
+                self.log("Requesting export for file ID: {} with payload: {}".format(file_id, payload), "INFO")
 
                 response = self.dnac._exec(
                     family="configuration_archive",
@@ -1195,168 +1189,106 @@ class DeviceConfigsBackup(DnacBase):
                     params=payload
                 )
 
-                data = response.data if response else None
-                if data:
-                    self.log("Received valid unmasked config data for file ID: {0}".format(file_id), "DEBUG")
-                    final_response = data
+                if response and hasattr(response, "data") and response.data:
+                    self.log("Received data for file ID {}: type={}, length={}".format(
+                        file_id, type(response.data), len(response.data)), "DEBUG")
+                    final_response = response.data
                 else:
-                    self.log("Empty response received for file ID: {0}".format(file_id), "WARNING")
+                    self.log("No valid data received for file ID: {}".format(file_id), "WARNING")
 
             if final_response:
-                self.log("Returning last valid unmasked configuration file.", "INFO")
+                self.log("Returning last valid unmasked configuration for file IDs: {}".format(id_list), "INFO")
             else:
                 self.log("No valid unmasked configuration file received for any file ID.", "WARNING")
 
             return final_response
 
         except Exception as e:
-            error_msg = "An error occurred in 'download_unmasked_raw_device_configuration': {0}".format(str(e))
+            error_msg = "Error in download_unmasked_raw_device_configuration: {}".format(e)
             self.log(error_msg, "ERROR")
             self.set_operation_result("failed", False, error_msg, "ERROR").check_return_status()
 
     def download_unmasked_configuration(self):
         """
-        Downloads unmasked configuration files for devices, saves them locally, and optionally unzips the files.
+        Downloads unmasked configuration files for devices, saves them locally,
+        and optionally unzips the files.
 
         Uses parameters from self.want including:
         - file_password: password to decrypt the downloaded zip files
         - file_path: local directory to save backups (default 'backup')
         - file_types: list of configuration file types to download (e.g., VLAN, STARTUPCONFIG)
-        - unzip_backup: boolean indicating whether to keep files zipped or unzip them
+        - unzip_backup: boolean indicating whether to unzip the files after download
 
-        For each device IP, creates a dated folder, downloads configuration ZIPs by file ID, and extracts if needed.
+        For each device IP, creates a dated folder, downloads configuration ZIPs by file ID,
+        and extracts if needed.
         """
         params = self.want
-        self.log("Configuration Params: {0}".format(params), "DEBUG")
+        self.log("Configuration Params: {}".format(params), "DEBUG")
 
         file_password = params.get("file_password")
-        file_path = params.get("file_path", "backup")
+        base_backup_path = params.get("file_path", "backup")
         file_types = params.get("file_types")
         unzip_required = params.get("unzip_backup", False)
-        os.makedirs(file_path, exist_ok=True)
+        os.makedirs(base_backup_path, exist_ok=True)
 
         mgmt_ip_to_instance_id_map = params.get("mgmt_ip_to_instance_id_map", {})
-        self.log("Management IP to Instance ID Map: {0}".format(mgmt_ip_to_instance_id_map), "DEBUG")
+        self.log("Management IP to Instance ID Map: {}".format(mgmt_ip_to_instance_id_map), "DEBUG")
 
-        ip_to_file_details = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
-        self.log("Retrieved Configuration File Details: {0}".format(ip_to_file_details), "DEBUG")
+        file_details_list = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
+        self.log("Retrieved Configuration File Details: {}".format(file_details_list), "DEBUG")
 
-        if not ip_to_file_details:
+        if not file_details_list:
             self.log("No file details returned for processing.", "ERROR")
             return
 
-        for file_details in ip_to_file_details:
-            ip_address = file_details.get("ip_address")
-            file_ids = file_details.get("file_ids")
+        for device_files in file_details_list:
+            ip_address = device_files.get("ip_address")
+            file_ids = device_files.get("file_ids")
 
             if not file_ids:
-                self.log("No file IDs found for IP {0}, skipping.".format(ip_address), "ERROR")
+                self.log("No file IDs found for IP {}, skipping.".format(ip_address), "WARNING")
                 continue
 
-            formatted_date = datetime.datetime.now().strftime("%d_%b_%Y")
-            ip_folder_name = "{0}_{1}".format(formatted_date, ip_address.replace('.', '_'))
-            target_dir = os.path.join(file_path, ip_folder_name)
+            date_str = datetime.datetime.now().strftime("%d_%b_%Y")
+            ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
+            target_dir = os.path.join(base_backup_path, ip_folder_name)
             os.makedirs(target_dir, exist_ok=True)
 
             for file_id in file_ids:
-                response_bytes = self.download_unmasked_raw_device_configuration(
+                config_data = self.download_unmasked_raw_device_configuration(
                     id_list=[file_id],
                     file_types=file_types,
                     file_password=file_password
                 )
 
-                if not response_bytes:
-                    self.log("No config for file ID {0}, skipping.".format(file_id), "WARNING")
+                if not config_data:
+                    self.log("No configuration data for file ID {} (IP {}), skipping.".format(file_id, ip_address), "WARNING")
                     continue
 
+                original_file_path = params.get("file_path")
                 try:
-                    with zipfile.ZipFile(BytesIO(response_bytes)) as input_zip:
-                        if file_password:
-                            input_zip.setpassword(file_password.encode())
+                    if unzip_required:
+                        self.want["file_path"] = target_dir
+                    success = self.unzip_data(file_id, config_data)
+                finally:
+                    self.want["file_path"] = original_file_path
 
-                        for name in input_zip.namelist():
-                            try:
-                                file_bytes = input_zip.read(name)
-                                output_file_path = os.path.join(target_dir, os.path.basename(name))
-                                with open(output_file_path, "wb") as f:
-                                    f.write(file_bytes)
-                                self.log("Extracted {0} to: {1}".format(name, output_file_path), "INFO")
-                            except RuntimeError as re:
-                                self.log("Password error for {0}: {1}".format(name, re), "ERROR")
-                except Exception as e:
-                    self.log("Failed to process ZIP for file ID {0}: {1}".format(file_id, e), "ERROR")
-
-            if not unzip_required:
-                self.zip_extracted_configuration(ip_folder_name, target_dir, file_path, file_password, ip_address)
+                if not success:
+                    self.log("Failed to process file ID {} for IP {}".format(file_id, ip_address), "ERROR")
 
         total_devices = len(mgmt_ip_to_instance_id_map)
-        successful_devices = len(ip_to_file_details)
-        skipped_devices = total_devices - successful_devices
-        backup_path = os.path.abspath(file_path)
-        log_message = (
-            "Backup Device Configuration task has been successfully performed on {0} device(s) "
-            "and skipped on {1} device(s). Backup files are stored at: {2}. "
-            "Password to unzip files: '{3}'.".format(
-                successful_devices, skipped_devices, backup_path, file_password
+        processed_devices = len(file_details_list)
+        skipped_devices = total_devices - processed_devices
+        abs_backup_path = os.path.abspath(base_backup_path)
+
+        log_msg = (
+            "Backup Device Configuration task completed: {} device(s) succeeded, "
+            "{} device(s) skipped. Backup files stored at: {}. "
+            "Password to unzip files: '{}'.".format(
+                processed_devices, skipped_devices, abs_backup_path, file_password
             )
         )
-
-        self.set_operation_result("success", True, log_message, "INFO")
-
-    def zip_extracted_configuration(self, ip_folder_name, target_dir, file_path, file_password, ip_address):
-        """
-        Compresses the extracted configuration files into a password-protected ZIP file
-        without including subfolders inside the ZIP archive.
-
-        Parameters:
-            ip_folder_name (str): Name of the folder corresponding to the IP address and date.
-            target_dir (str): Path to the directory containing extracted files.
-            file_path (str): Destination directory to save the ZIP file.
-            file_password (str): Password to protect the ZIP file.
-            ip_address (str): The IP address of the device (used for logging).
-
-        Behavior:
-            - Collects all files from `target_dir` (excluding subfolders).
-            - Compresses them into a password-protected ZIP file at `file_path`.
-            - Deletes the extracted folder after zipping.
-        """
-        zip_filename = "{}.zip".format(ip_folder_name)
-        zip_file_path = os.path.join(file_path, zip_filename)
-
-        files = []
-        relative_names = []
-
-        self.log("Zipping contents of folder: {}".format(target_dir), "DEBUG")
-
-        for filename in os.listdir(target_dir):
-            full_path = os.path.join(target_dir, filename)
-            if os.path.isfile(full_path):
-                files.append(full_path)
-                relative_names.append(os.path.basename(filename))
-                self.log("Adding file: {} as {} to zip".format(full_path, filename), "DEBUG")
-
-        if not files:
-            self.log("No files found to compress.", "WARNING")
-            return
-
-        if not file_password:
-            self.log("No password provided for zip file; compression may fail.", "WARNING")
-
-        try:
-            self.log("Files to compress: {}".format(files), "DEBUG")
-            self.log("Relative names in zip: {}".format(relative_names), "DEBUG")
-
-            pyminizip.compress_multiple(files, relative_names, zip_file_path, file_password, 5)
-            self.log("Created password-protected zip without subfolders: {}".format(zip_file_path), "INFO")
-        except Exception as e:
-            self.log("Failed to create zip for {}: {}".format(ip_address, e), "ERROR")
-
-        self.log("About to delete extracted folder after zipping: {}".format(target_dir), "DEBUG")
-        try:
-            shutil.rmtree(target_dir)
-            self.log("Deleted extracted folder: {}".format(target_dir), "DEBUG")
-        except Exception as e:
-            self.log("Failed to delete extracted folder {}: {}".format(target_dir, e), "ERROR")
+        self.set_operation_result("success", True, log_msg, "INFO")
 
     def get_want(self, config):
         """

@@ -47,7 +47,8 @@
             ],
             "family_list": [
                 "Switches and Hubs",
-                "Routers"
+                "Routers",
+                "Wireless Sensor"
             ],
             "file_password": "qsaA12!asdasd",
             "file_path": "backup77751",
@@ -59,42 +60,6 @@
                 " cc:b6:c8:e2:29:0b",
                 "90:88:55:8e:42:80",
                 "90:88:55:07:59:00"
-            ],
-            "series_list": [
-                "Cisco Catalyst 9300 Series Switches"
-            ],
-            "type_list": [
-                "Cisco Catalyst 9300 Switch"
-            ],
-            "unzip_backup": false
-        }
-    ],
-    "playbook_config_device_configs_backup_scenario_6":[
-        {
-            "collection_status_list": [
-                "Managed"
-            ],
-            "config_file_types": [
-                "VLAN",
-                "STARTUPCONFIG",
-                "RUNNINGCONFIG"
-            ],
-            "family_list": [
-                "Switches and Hubs",
-                "Routers"
-            ],
-            "file_path": "backup77751",
-            "ip_address_list": [
-                "204.1.2.3"
-            ],
-            "mac_address_list": [
-                "0c:75:bd:42:db:80",
-                " cc:b6:c8:e2:29:0b",
-                "90:88:55:8e:42:80",
-                "90:88:55:07:59:00"
-            ],
-            "series_list": [
-                "Cisco Catalyst 9300 Series Switches"
             ],
             "type_list": [
                 "Cisco Catalyst 9300 Switch"
