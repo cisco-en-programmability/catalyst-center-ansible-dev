@@ -567,19 +567,25 @@ class DeviceConfigsBackup(DnacBase):
     def get_device_list_params(self, config):
         """
         Generates a dictionary of device parameters for querying Cisco Catalyst Center.
+
         Parameters:
             config (dict): A dictionary containing device filter criteria.
+
         Returns:
             dict: A dictionary mapping internal parameter names to their corresponding values from the config.
+
         Description:
             This method takes a configuration dictionary containing various device filter criteria and maps them to the internal parameter
             names required by Cisco Catalyst Center.
             It returns a dictionary of these mapped parameters which can be used to query devices based on the provided filters.
         """
+        self.log("Starting get_device_list_params function.", "DEBUG")
+        self.log("Input config: {}".format(config), "DEBUG")
+
         # Initialize an empty dictionary to store the mapped parameters
         get_device_list_params = {}
 
-        # Mapping from input parameters names to API Specific parameter names
+        # Mapping from input parameter names to API Specific parameter names
         parameters_list = {
             "hostname_list": "hostname",
             "ip_address_list": "management_ip_address",
@@ -591,11 +597,40 @@ class DeviceConfigsBackup(DnacBase):
             "collection_status_list": "collection_status",
         }
 
+        self.log("Parameter mapping list: {}".format(parameters_list), "DEBUG")
+
         # Iterate over the parameters and add them to the result dictionary if present in the config
         for parameter, parameter_name in parameters_list.items():
-            if config.get(parameter):
-                get_device_list_params[parameter_name] = config.get(parameter)
-        self.log("get_device_list_params: {0}".format(get_device_list_params), "DEBUG")
+            param_value = config.get(parameter)
+            if param_value:
+                self.log("Parameter '{}' found in config with value: {}".format(parameter, param_value), "DEBUG")
+
+                # If the parameter is serial_number_list, modify each serial number
+                if parameter == "serial_number_list":
+                    # Handle case where serial numbers are provided as a single comma-separated string
+                    all_serial_numbers = []
+                    for serial_item in param_value:
+                        # Split if there are multiple serial numbers in one string
+                        split_serials = serial_item.split(",")
+                        for serial in split_serials:
+                            serial_number = serial.strip()
+                            all_serial_numbers.append(serial_number)
+
+                    # Add wildcard prefix and suffix
+                    serial_numbers_with_wildcards = []
+                    for serial_number in all_serial_numbers:
+                        serial_with_wildcard = ".*" + serial_number + ".*"
+                        serial_numbers_with_wildcards.append(serial_with_wildcard)
+
+                    get_device_list_params[parameter_name] = serial_numbers_with_wildcards
+                    self.log("Modified serial_number_list with wildcards: {}".format(serial_numbers_with_wildcards), "DEBUG")
+                else:
+                    get_device_list_params[parameter_name] = param_value
+            else:
+                self.log("Parameter '{}' not found in config or is empty.".format(parameter), "DEBUG")
+
+        self.log("Final get_device_list_params output: {}".format(get_device_list_params), "DEBUG")
+        self.log("Completed get_device_list_params function.", "DEBUG")
         return get_device_list_params
 
     def get_device_ids_by_params(self, get_device_list_params):
@@ -1471,10 +1506,11 @@ class DeviceConfigsBackup(DnacBase):
                 self.log("No file IDs found for IP {}, skipping.".format(ip_address), "WARNING")
                 continue
 
-            date_str = datetime.datetime.now().strftime("%d_%b_%Y")
-            ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
-            target_dir = os.path.join(base_backup_path, ip_folder_name)
-            os.makedirs(target_dir, exist_ok=True)
+            if unzip_required:
+                date_str = datetime.datetime.now().strftime("%d_%b_%Y")
+                ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
+                target_dir = os.path.join(base_backup_path, ip_folder_name)
+                os.makedirs(target_dir, exist_ok=True)
 
             for file_id in file_ids:
                 config_data = self.download_unmasked_raw_device_configuration(
