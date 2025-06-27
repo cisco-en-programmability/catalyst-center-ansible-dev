@@ -179,6 +179,7 @@ options:
             - This parameter is available starting from Cisco Catalyst Center version 2.3.7.9 and later.
             - For Example - ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
         type: list
+        default: all
         elements: str
 requirements:
   - dnacentersdk == 2.9.2
@@ -412,6 +413,7 @@ EXAMPLES = r"""
         file_path: backup
         unzip_backup: false
         config_file_types:
+          - ALL
           - VLAN
           - STARTUPCONFIG
           - RUNNINGCONFIG
@@ -1570,9 +1572,26 @@ class DeviceConfigsBackup(DnacBase):
         if file_types:
             if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.9") < 0:
                 self.fail_and_exit(
-                    "config_file_types parameter not supported for 2.3.7.6 Catalyst Center and only applicable from "
-                    "2.3.7.9 Catalyst version onwards"
+                    "The 'config_file_types' parameter is not supported for Catalyst Center version 2.3.7.6. "
+                    "It is supported from version 2.3.7.9 onwards."
                 )
+
+            # Convert to uppercase for consistency (multi-line)
+            upper_file_types = []
+            for ftype in file_types:
+                upper_file_types.append(ftype.upper())
+            file_types = upper_file_types
+
+            # Validate conflict if 'ALL' is selected with other types
+            if "ALL" in file_types and len(file_types) > 1:
+                self.fail_and_exit(
+                    "Invalid 'config_file_types' selection: Please select either 'All' or specific file types "
+                    "(VLAN, STARTUPCONFIG, RUNNINGCONFIG), not both."
+                )
+
+            # If 'ALL' is selected, expand to all supported file types
+            if "ALL" in file_types:
+                file_types = ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
 
         # Validate the IP address list if provided
         if ip_address_list:
