@@ -171,6 +171,16 @@ options:
             its zipped state.
         type: bool
         default: true
+      config_file_types:
+        description:
+            - Specifies the list of configuration file types to be downloaded for each device.
+            - If this parameter is not specified, all available configuration types
+              will be downloaded for the selected devices by default.
+            - This parameter is available starting from Cisco Catalyst Center version 2.3.7.9 and later.
+            - For Example - ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
+        type: list
+        default: all
+        elements: str
 requirements:
   - dnacentersdk == 2.9.2
   - python >= 3.5
@@ -384,6 +394,29 @@ EXAMPLES = r"""
         ip_address_list: ["204.1.2.5"]
         file_path: backup
         unzip_backup: false
+- name: Take backup of device(s) using specified configuration file types
+  cisco.dnac.device_configs_backup_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: merged
+    config:
+      - site_list: ["Global"]
+        family_list: ["Switches and Hubs"]
+        ip_address_list: ["204.1.2.5"]
+        file_path: backup
+        unzip_backup: false
+        config_file_types:
+          - ALL
+          - VLAN
+          - STARTUPCONFIG
+          - RUNNINGCONFIG
 """
 RETURN = r"""
 # Case_1: Successful creation and exportation of device configs
@@ -439,6 +472,7 @@ import string
 import re
 import time
 import datetime
+import os
 
 
 class DeviceConfigsBackup(DnacBase):
@@ -507,6 +541,7 @@ class DeviceConfigsBackup(DnacBase):
             "file_path": {"type": "str", "required": False, "default": "tmp"},
             "file_password": {"type": "str", "required": False},
             "unzip_backup": {"type": "bool", "required": False, "default": True},
+            "config_file_types": {"type": "list", "elements": "str", "required": False}
         }
 
         # Validate device_configs_backup params
@@ -534,19 +569,25 @@ class DeviceConfigsBackup(DnacBase):
     def get_device_list_params(self, config):
         """
         Generates a dictionary of device parameters for querying Cisco Catalyst Center.
+
         Parameters:
             config (dict): A dictionary containing device filter criteria.
+
         Returns:
             dict: A dictionary mapping internal parameter names to their corresponding values from the config.
+
         Description:
             This method takes a configuration dictionary containing various device filter criteria and maps them to the internal parameter
             names required by Cisco Catalyst Center.
             It returns a dictionary of these mapped parameters which can be used to query devices based on the provided filters.
         """
+        self.log("Starting get_device_list_params function.", "DEBUG")
+        self.log("Input config: {}".format(config), "DEBUG")
+
         # Initialize an empty dictionary to store the mapped parameters
         get_device_list_params = {}
 
-        # Mapping from input parameters names to API Specific parameter names
+        # Mapping from input parameter names to API Specific parameter names
         parameters_list = {
             "hostname_list": "hostname",
             "ip_address_list": "management_ip_address",
@@ -558,11 +599,40 @@ class DeviceConfigsBackup(DnacBase):
             "collection_status_list": "collection_status",
         }
 
+        self.log("Parameter mapping list: {}".format(parameters_list), "DEBUG")
+
         # Iterate over the parameters and add them to the result dictionary if present in the config
         for parameter, parameter_name in parameters_list.items():
-            if config.get(parameter):
-                get_device_list_params[parameter_name] = config.get(parameter)
-        self.log("get_device_list_params: {0}".format(get_device_list_params), "DEBUG")
+            param_value = config.get(parameter)
+            if param_value:
+                self.log("Parameter '{}' found in config with value: {}".format(parameter, param_value), "DEBUG")
+
+                # If the parameter is serial_number_list, modify each serial number
+                if parameter == "serial_number_list":
+                    # Handle case where serial numbers are provided as a single comma-separated string
+                    all_serial_numbers = []
+                    for serial_item in param_value:
+                        # Split if there are multiple serial numbers in one string
+                        split_serials = serial_item.split(",")
+                        for serial in split_serials:
+                            serial_number = serial.strip()
+                            all_serial_numbers.append(serial_number)
+
+                    # Add wildcard prefix and suffix
+                    serial_numbers_with_wildcards = []
+                    for serial_number in all_serial_numbers:
+                        serial_with_wildcard = ".*" + serial_number + ".*"
+                        serial_numbers_with_wildcards.append(serial_with_wildcard)
+
+                    get_device_list_params[parameter_name] = serial_numbers_with_wildcards
+                    self.log("Modified serial_number_list with wildcards: {}".format(serial_numbers_with_wildcards), "DEBUG")
+                else:
+                    get_device_list_params[parameter_name] = param_value
+            else:
+                self.log("Parameter '{}' not found in config or is empty.".format(parameter), "DEBUG")
+
+        self.log("Final get_device_list_params output: {}".format(get_device_list_params), "DEBUG")
+        self.log("Completed get_device_list_params function.", "DEBUG")
         return get_device_list_params
 
     def get_device_ids_by_params(self, get_device_list_params):
@@ -995,6 +1065,7 @@ class DeviceConfigsBackup(DnacBase):
             "INFO",
         )
         result = try_download("download_a_file_by_file_id")
+        self.log("Type of result: {0}".format(type(result)), "DEBUG")
         if result is not None:
             self.log(
                 "File download completed using 'download_a_file_by_file_id'", "INFO"
@@ -1203,6 +1274,282 @@ class DeviceConfigsBackup(DnacBase):
 
         return self
 
+    def get_network_device_configuration_file_details(self, mgmt_ip_to_instance_id_map):
+        """
+        Retrieves the latest network device configuration file details.
+
+        If no file_type is specified in the playbook, it retrieves for VLAN, STARTUPCONFIG, and RUNNINGCONFIG.
+
+        Parameters:
+            mgmt_ip_to_instance_id_map (dict): Dictionary mapping management IPs to device instance IDs.
+
+        Returns:
+            list: A list of dictionaries with device_id, ip_address, and file_ids (dict of latest file IDs by type).
+        """
+        self.log("Entering get_network_device_configuration_file_details function", "INFO")
+
+        valid_file_types = ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
+        input_file_types = self.want.get("file_types")
+
+        if not input_file_types or not isinstance(input_file_types, list):
+            file_types = valid_file_types
+        else:
+            file_types = []
+            for ftype in input_file_types:
+                upper_ftype = ftype.upper()
+                if upper_ftype not in valid_file_types:
+                    msg = "Invalid file_type: {0} given in the input. Valid file_types: {1}".format(
+                        ftype, valid_file_types
+                    )
+                    self.fail_and_exit(msg)
+                file_types.append(upper_ftype)
+
+        self.log("Validated file_types received: {0}".format(file_types), "DEBUG")
+
+        try:
+            self.log("Processing device list for configuration file details.", "DEBUG")
+
+            filter_file_ids = []
+
+            for ip_address in self.want.get("mgmt_ip_to_instance_id_map"):
+                device_id = mgmt_ip_to_instance_id_map.get(ip_address)
+                self.log("Processing device IP: {0}, Device ID: {1}".format(ip_address, device_id), "DEBUG")
+
+                file_ids = []
+                collected_types = []
+
+                for file_type in file_types:
+                    self.log("Fetching latest '{0}' config for Device ID: {1}".format(file_type, device_id), "DEBUG")
+
+                    response = self.execute_get_request(
+                        "configuration_archive",
+                        "get_network_device_configuration_file_details_v1",
+                        {
+                            "networkDeviceId": device_id,
+                            "fileType": file_type,
+                            "offset": 1,
+                            "limit": 1
+                        }
+                    )
+
+                    if response and response.get("response"):
+                        file_id = response["response"][0].get("id")
+                        if file_id:
+                            file_ids.append(file_id)
+                            collected_types.append(file_type)
+                            self.log("Retrieved File ID: {0} for Device ID: {1}, Type: {2}".format(
+                                file_id, device_id, file_type), "DEBUG")
+                        else:
+                            self.log("No File ID in response for Device ID: {0}, Type: {1}".format(
+                                device_id, file_type), "WARNING")
+                    else:
+                        self.log("No config files found for Device ID: {0}, Type: {1}".format(
+                            device_id, file_type), "DEBUG")
+
+                filter_file_ids.append({
+                    "device_id": device_id,
+                    "ip_address": ip_address,
+                    "file_ids": file_ids,
+                    "file_types": collected_types
+                })
+
+            if filter_file_ids:
+                self.log("Final configuration file details retrieved:\n{0}".format(
+                    self.pprint(filter_file_ids)), "INFO")
+                return filter_file_ids
+
+            self.log("No configuration files found for any device.", "WARNING")
+            return None
+
+        except Exception as e:
+            msg = "An error occurred in get_network_device_configuration_file_details: {0}".format(str(e))
+            self.log(msg, "ERROR")
+            self.fail_and_exit(msg)
+
+    def get_configuration_file_ids(self, mgmt_ip_to_instance_id_map, file_password):
+        """
+        Retrieves only the 'id' values from the configuration file details response.
+
+        Parameters:
+            mgmt_ip_to_instance_id_map (dict): Mapping of management IPs to device instance IDs.
+            file_password (str): Password required for unmasking configuration files.
+
+        Returns:
+            list: List of 'id' strings extracted from the configuration file details response.
+        """
+        self.log("Entering get_configuration_file_ids function", "INFO")
+
+        response = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
+
+        if not response or not isinstance(response, list):
+            self.log("No configuration file details found or invalid format returned.", "WARNING")
+            return []
+
+        id_list = []
+
+        for item in response:
+            if not isinstance(item, dict):
+                self.log("Skipping item that is not a dictionary: {0}".format(item), "WARNING")
+                continue
+
+            file_ids = item.get("file_ids", [])
+            file_types = item.get("file_types", [])
+
+            if file_ids and isinstance(file_ids, list):
+                id_list.extend(file_ids)
+
+                self.log("Processing file IDs: {0} with types: {1}".format(file_ids, file_types), "DEBUG")
+                unmasked_params = self.download_unmasked_raw_device_configuration(file_ids, file_types, file_password)
+
+                self.log("Unmasked Params for device {0}: {1}".format(item.get("ip_address"), unmasked_params), "INFO")
+                self.log("Added file IDs: {0}".format(file_ids), "DEBUG")
+            else:
+                self.log("No valid file_ids list found in item: {0}".format(item), "DEBUG")
+
+        if id_list:
+            self.log("Extracted file IDs successfully: {0}".format(id_list), "INFO")
+        else:
+            self.log("No valid file IDs extracted from configuration file details.", "WARNING")
+
+        return id_list
+
+    def download_unmasked_raw_device_configuration(self, id_list, file_types, file_password):
+        """
+        Downloads the unmasked (raw) configuration ZIP file for each provided file ID using the Catalyst Center API.
+
+        Parameters:
+            id_list (list): A list of configuration file IDs to download.
+            file_types (list): (Unused currently) A list of configuration file types.
+            file_password (str): Password used to secure or decrypt the downloaded ZIP files.
+
+        Returns:
+            bytes: A ZIP archive in binary format containing configuration files for the requested file ID(s).
+                Returns the last successful response if multiple IDs are provided.
+                Returns None if no valid response is received.
+        """
+        self.log("Starting download_unmasked_raw_device_configuration", "INFO")
+
+        if not id_list or not file_password:
+            msg = "Missing 'id_list' or 'file_password' parameters: id_list={}, file_password={}".format(
+                id_list, 'set' if file_password else 'not set')
+            self.fail_and_exit(msg)
+
+        final_response = None
+
+        try:
+            for file_id in id_list:
+                payload = {"id": file_id, "password": file_password}
+                self.log("Requesting export for file ID: {0} with payload: {1}".format(file_id, payload), "INFO")
+
+                response = self.dnac._exec(
+                    family="configuration_archive",
+                    function="download_unmaskedraw_device_configuration_as_z_ip_v1",
+                    op_modifies=True,
+                    params=payload
+                )
+
+                if response and hasattr(response, "data") and response.data:
+                    self.log("Received data for file ID {}: type={}, length={}".format(
+                        file_id, type(response.data), len(response.data)), "DEBUG")
+                    final_response = response.data
+                else:
+                    self.log("No valid data received for file ID: {}".format(file_id), "WARNING")
+
+            if final_response:
+                self.log("Returning last valid unmasked configuration for file IDs: {}".format(id_list), "INFO")
+            else:
+                self.log("No valid unmasked configuration file received for any file ID.", "WARNING")
+
+            return final_response
+
+        except Exception as e:
+            error_msg = "Error in download_unmasked_raw_device_configuration: {}".format(e)
+            self.log(error_msg, "ERROR")
+            self.set_operation_result("failed", False, error_msg, "ERROR").check_return_status()
+
+    def download_unmasked_configuration(self):
+        """
+        Downloads unmasked configuration files for devices, saves them locally,
+        and optionally unzips the files.
+
+        Uses parameters from self.want including:
+        - file_password: password to decrypt the downloaded zip files
+        - file_path: local directory to save backups (default 'backup')
+        - file_types: list of configuration file types to download (e.g., VLAN, STARTUPCONFIG)
+        - unzip_backup: boolean indicating whether to unzip the files after download
+
+        For each device IP, creates a dated folder, downloads configuration ZIPs by file ID,
+        and extracts if needed.
+        """
+        params = self.want
+        self.log("Configuration Params: {}".format(params), "DEBUG")
+
+        file_password = params.get("file_password")
+        base_backup_path = params.get("file_path", "backup")
+        file_types = params.get("file_types")
+        unzip_required = params.get("unzip_backup", False)
+        os.makedirs(base_backup_path, exist_ok=True)
+
+        mgmt_ip_to_instance_id_map = params.get("mgmt_ip_to_instance_id_map", {})
+        self.log("Management IP to Instance ID Map: {}".format(mgmt_ip_to_instance_id_map), "DEBUG")
+
+        file_details_list = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
+        self.log("Retrieved Configuration File Details: {}".format(file_details_list), "DEBUG")
+
+        if not file_details_list:
+            self.log("No file details returned for processing.", "ERROR")
+            return
+
+        for device_files in file_details_list:
+            ip_address = device_files.get("ip_address")
+            file_ids = device_files.get("file_ids")
+
+            if not file_ids:
+                self.log("No file IDs found for IP {}, skipping.".format(ip_address), "WARNING")
+                continue
+
+            if unzip_required:
+                date_str = datetime.datetime.now().strftime("%d_%b_%Y")
+                ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
+                target_dir = os.path.join(base_backup_path, ip_folder_name)
+                os.makedirs(target_dir, exist_ok=True)
+
+            for file_id in file_ids:
+                config_data = self.download_unmasked_raw_device_configuration(
+                    id_list=[file_id],
+                    file_types=file_types,
+                    file_password=file_password
+                )
+
+                if not config_data:
+                    self.log("No configuration data for file ID {} (IP {}), skipping.".format(file_id, ip_address), "WARNING")
+                    continue
+
+                original_file_path = params.get("file_path")
+                try:
+                    if unzip_required:
+                        self.want["file_path"] = target_dir
+                    success = self.unzip_data(file_id, config_data)
+                finally:
+                    self.want["file_path"] = original_file_path
+
+                if not success:
+                    self.log("Failed to process file ID {} for IP {}".format(file_id, ip_address), "ERROR")
+
+        total_devices = len(mgmt_ip_to_instance_id_map)
+        processed_devices = len(file_details_list)
+        skipped_devices = total_devices - processed_devices
+        abs_backup_path = os.path.abspath(base_backup_path)
+
+        log_msg = (
+            "Backup Device Configuration task completed: {} device(s) succeeded, "
+            "{} device(s) skipped. Backup files stored at: {}. "
+            "Password to unzip files: '{}'.".format(
+                processed_devices, skipped_devices, abs_backup_path, file_password
+            )
+        )
+        self.set_operation_result("success", True, log_msg, "INFO")
+
     def get_want(self, config):
         """
         Prepares the desired state (want) based on the provided configuration.
@@ -1221,6 +1568,30 @@ class DeviceConfigsBackup(DnacBase):
         file_path = config.get("file_path")
         file_password = config.get("file_password")
         ip_address_list = config.get("ip_address_list")
+        file_types = config.get("config_file_types")
+        if file_types:
+            if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.9") < 0:
+                self.fail_and_exit(
+                    "The 'config_file_types' parameter is not supported for Catalyst Center version 2.3.7.6. "
+                    "It is supported from version 2.3.7.9 onwards."
+                )
+
+            # Convert to uppercase for consistency (multi-line)
+            upper_file_types = []
+            for ftype in file_types:
+                upper_file_types.append(ftype.upper())
+            file_types = upper_file_types
+
+            # Validate conflict if 'ALL' is selected with other types
+            if "ALL" in file_types and len(file_types) > 1:
+                self.fail_and_exit(
+                    "Invalid 'config_file_types' selection: Please select either 'All' or specific file types "
+                    "(VLAN, STARTUPCONFIG, RUNNINGCONFIG), not both."
+                )
+
+            # If 'ALL' is selected, expand to all supported file types
+            if "ALL" in file_types:
+                file_types = ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
 
         # Validate the IP address list if provided
         if ip_address_list:
@@ -1265,6 +1636,7 @@ class DeviceConfigsBackup(DnacBase):
         self.want["file_password"] = file_password
         self.want["file_path"] = file_path
         self.want["unzip_backup"] = config.get("unzip_backup")
+        self.want["file_types"] = file_types
         self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
 
         return self
@@ -1280,20 +1652,21 @@ class DeviceConfigsBackup(DnacBase):
         """
         self.log("Executing the get_diff_merged function", "DEBUG")
 
-        # Define a map of action parameters to their corresponding action and status functions
-        action_map = {
-            "export_device_configurations_params": (
-                self.export_device_configurations,
-                self.get_export_device_config_task_status,
-            ),
-        }
+        if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.6") <= 0:
+            action_map = {
+                "export_device_configurations_params": (
+                    self.export_device_configurations,
+                    self.get_export_device_config_task_status,
+                ),
+            }
 
-        # Iterate over each action parameter and its associated functions
-        for action_param, (action_func, status_func) in action_map.items():
-            # Execute the action and check its status
-            if self.want.get(action_param):
-                result_task_id = action_func(self.want.get(action_param))
-                status_func(result_task_id).check_return_status()
+            for action_param, (action_func, status_func) in action_map.items():
+                if self.want.get(action_param):
+                    result_task_id = action_func(self.want.get(action_param))
+                    status_func(result_task_id).check_return_status()
+        else:
+            self.log("Detected DNAC version newer than 2.3.7.6 — running download_unmasked_configuration()", "INFO")
+            self.download_unmasked_configuration()
 
         return self
 
