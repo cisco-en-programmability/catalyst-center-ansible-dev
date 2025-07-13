@@ -179,8 +179,13 @@ options:
             - This parameter is available starting from Cisco Catalyst Center version 2.3.7.9 and later.
             - For Example - ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
         type: list
-        default: all
         elements: str
+        choices:
+            - ALL 
+            - VLAN
+            - STARTUPCONFIG
+            - RUNNINGCONFIG
+        default: ["ALL"]
 requirements:
   - dnacentersdk == 2.9.2
   - python >= 3.5
@@ -1277,7 +1282,6 @@ class DeviceConfigsBackup(DnacBase):
     def get_network_device_configuration_file_details(self, mgmt_ip_to_instance_id_map):
         """
         Retrieves the latest network device configuration file details.
-
         If no file_type is specified in the playbook, it retrieves for VLAN, STARTUPCONFIG, and RUNNINGCONFIG.
 
         Parameters:
@@ -1286,13 +1290,14 @@ class DeviceConfigsBackup(DnacBase):
         Returns:
             list: A list of dictionaries with device_id, ip_address, and file_ids (dict of latest file IDs by type).
         """
-        self.log("Entering get_network_device_configuration_file_details function", "INFO")
+        self.log("Retrieving latest configuration file details for network devices.", "INFO")
 
         valid_file_types = ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
         input_file_types = self.want.get("file_types")
 
         if not input_file_types or not isinstance(input_file_types, list):
             file_types = valid_file_types
+            self.log("No file_types specified in the playbook. Defaulting to {0}".format(file_types), "INFO")
         else:
             file_types = []
             for ftype in input_file_types:
@@ -1307,7 +1312,7 @@ class DeviceConfigsBackup(DnacBase):
         self.log("Validated file_types received: {0}".format(file_types), "DEBUG")
 
         try:
-            self.log("Processing device list for configuration file details.", "DEBUG")
+            self.log("Processing device list to retrieve configuration file details.", "DEBUG")
 
             filter_file_ids = []
 
@@ -1377,7 +1382,7 @@ class DeviceConfigsBackup(DnacBase):
         Returns:
             list: List of 'id' strings extracted from the configuration file details response.
         """
-        self.log("Entering get_configuration_file_ids function", "INFO")
+        self.log("Retrieving configuration file IDs from the configuration file details.", "INFO")
 
         response = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
 
@@ -1389,19 +1394,21 @@ class DeviceConfigsBackup(DnacBase):
 
         for item in response:
             if not isinstance(item, dict):
-                self.log("Skipping item that is not a dictionary: {0}".format(item), "WARNING")
+                self.log("Skipping invalid item. Expected a dictionary but got {}...".format(type(item).__name__), "WARNING")
                 continue
 
             file_ids = item.get("file_ids", [])
             file_types = item.get("file_types", [])
+            ip_address = item.get("ip_address")
 
             if file_ids and isinstance(file_ids, list):
+                self.log(f"Processing file IDs: {file_ids} with types: {file_types} for device {ip_address}.", "DEBUG")
                 id_list.extend(file_ids)
 
                 self.log("Processing file IDs: {0} with types: {1}".format(file_ids, file_types), "DEBUG")
                 unmasked_params = self.download_unmasked_raw_device_configuration(file_ids, file_types, file_password)
 
-                self.log("Unmasked Params for device {0}: {1}".format(item.get("ip_address"), unmasked_params), "INFO")
+                self.log(f"Unmasked parameters retrieved for device {ip_address}: {unmasked_params}", "INFO")
                 self.log("Added file IDs: {0}".format(file_ids), "DEBUG")
             else:
                 self.log("No valid file_ids list found in item: {0}".format(item), "DEBUG")
@@ -1413,25 +1420,37 @@ class DeviceConfigsBackup(DnacBase):
 
         return id_list
 
-    def download_unmasked_raw_device_configuration(self, id_list, file_types, file_password):
+    def download_unmasked_raw_device_configuration(self, id_list, file_password, file_types=None):
         """
         Downloads the unmasked (raw) configuration ZIP file for each provided file ID using the Catalyst Center API.
 
         Parameters:
             id_list (list): A list of configuration file IDs to download.
-            file_types (list): (Unused currently) A list of configuration file types.
             file_password (str): Password used to secure or decrypt the downloaded ZIP files.
+            file_types (list, optional): Reserved for future use, currently unused. A list of configuration file types.
 
         Returns:
             bytes: A ZIP archive in binary format containing configuration files for the requested file ID(s).
                 Returns the last successful response if multiple IDs are provided.
                 Returns None if no valid response is received.
         """
-        self.log("Starting download_unmasked_raw_device_configuration", "INFO")
+        self.log("Starting the operation to download unmasked raw device configurations.", "INFO")
+
+        self.log(
+            "Input parameters - id_list: {}, file_types: {}, file_password: {}".format(
+                id_list, file_types, 'set' if file_password else 'not set'
+            ), 
+            "DEBUG"
+        )
 
         if not id_list or not file_password:
-            msg = "Missing 'id_list' or 'file_password' parameters: id_list={}, file_password={}".format(
-                id_list, 'set' if file_password else 'not set')
+            msg = (
+                "Missing required parameters: "
+                "'id_list' is {} and 'file_password' is {}".format(
+                    'not provided' if not id_list else 'provided',
+                    'not set' if not file_password else 'set'
+                )
+            )
             self.fail_and_exit(msg)
 
         final_response = None
@@ -1449,9 +1468,12 @@ class DeviceConfigsBackup(DnacBase):
                 )
 
                 if response and hasattr(response, "data") and response.data:
-                    self.log("Received data for file ID {}: type={}, length={}".format(
-                        file_id, type(response.data), len(response.data)), "DEBUG")
-                    final_response = response.data
+                    self.log(
+                        "Received valid response for file ID {}. Data type: {}, Data size: {}".format(
+                            file_id, type(response.data), len(response.data)
+                        ),
+                        "DEBUG"
+                    )
                 else:
                     self.log("No valid data received for file ID: {}".format(file_id), "WARNING")
 
@@ -1481,6 +1503,7 @@ class DeviceConfigsBackup(DnacBase):
         For each device IP, creates a dated folder, downloads configuration ZIPs by file ID,
         and extracts if needed.
         """
+        self.log("Initiating the process to download and save unmasked configuration files.", "INFO")
         params = self.want
         self.log("Configuration Params: {}".format(params), "DEBUG")
 
@@ -1488,16 +1511,37 @@ class DeviceConfigsBackup(DnacBase):
         base_backup_path = params.get("file_path", "backup")
         file_types = params.get("file_types")
         unzip_required = params.get("unzip_backup", False)
-        os.makedirs(base_backup_path, exist_ok=True)
 
         mgmt_ip_to_instance_id_map = params.get("mgmt_ip_to_instance_id_map", {})
         self.log("Management IP to Instance ID Map: {}".format(mgmt_ip_to_instance_id_map), "DEBUG")
 
-        file_details_list = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
-        self.log("Retrieved Configuration File Details: {}".format(file_details_list), "DEBUG")
+        # Validate mandatory parameters
+        if not file_password or not file_types or not mgmt_ip_to_instance_id_map:
+            self.log(
+                "Required parameters missing. Ensure 'file_password', 'file_types', and "
+                "'mgmt_ip_to_instance_id_map' are included.", "ERROR"
+            )
+            return
+
+        # Create base backup directory
+        try:
+            os.makedirs(base_backup_path, exist_ok=True)
+            self.log(f"Base directory for storing backup files created or already exists: {base_backup_path}", "DEBUG")
+        except Exception as e:
+            self.log(f"Error creating base directory '{base_backup_path}': {e}", "ERROR")
+            return
+
+        # Fetch configuration file details
+        self.log("Retrieving configuration file details for the devices...", "INFO")
+        try:
+            file_details_list = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
+            self.log(f"Configuration file details retrieved: {file_details_list}", "DEBUG")
+        except Exception as e:
+            self.log(f"Error retrieving configuration file details: {e}", "ERROR")
+            return
 
         if not file_details_list:
-            self.log("No file details returned for processing.", "ERROR")
+            self.log("No configuration file details found. Aborting the operation.", "ERROR")
             return
 
         for device_files in file_details_list:
@@ -1505,36 +1549,54 @@ class DeviceConfigsBackup(DnacBase):
             file_ids = device_files.get("file_ids")
 
             if not file_ids:
-                self.log("No file IDs found for IP {}, skipping.".format(ip_address), "WARNING")
+                self.log("No file IDs found for IP {}, skipping this device.".format(ip_address), "WARNING")
                 continue
 
             if unzip_required:
                 date_str = datetime.datetime.now().strftime("%d_%b_%Y")
                 ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
                 target_dir = os.path.join(base_backup_path, ip_folder_name)
+                try:
+                    os.makedirs(target_dir, exist_ok=True)
+                    self.log(f"Target directory for unzipped files created: {target_dir}", "DEBUG")
+                except Exception as e:
+                    self.log(f"Error creating target directory '{target_dir}' for IP {ip_address}: {e}", "ERROR")
+                    continue
                 os.makedirs(target_dir, exist_ok=True)
 
-            for file_id in file_ids:
-                config_data = self.download_unmasked_raw_device_configuration(
-                    id_list=[file_id],
-                    file_types=file_types,
-                    file_password=file_password
-                )
+               # Download and process each file
+                for file_id in file_ids:
+                    self.log(f"Downloading configuration data for file ID {file_id} (Device IP: {ip_address})...", "INFO")
+                    try:
+                        # Download the configuration data
+                        config_data = self.download_unmasked_raw_device_configuration(
+                            id_list=[file_id],
+                            file_types=file_types,
+                            file_password=file_password
+                        )
 
-                if not config_data:
-                    self.log("No configuration data for file ID {} (IP {}), skipping.".format(file_id, ip_address), "WARNING")
-                    continue
+                        if not config_data:
+                            self.log(f"No configuration data found for file ID {file_id} (Device IP: {ip_address}). Skipping.", "WARNING")
+                            continue
 
-                original_file_path = params.get("file_path")
-                try:
-                    if unzip_required:
-                        self.want["file_path"] = target_dir
-                    success = self.unzip_data(file_id, config_data)
-                finally:
-                    self.want["file_path"] = original_file_path
+                        # Unzip the configuration data if required
+                        original_file_path = params.get("file_path")
+                        try:
+                            if unzip_required:
+                                self.want["file_path"] = target_dir
 
-                if not success:
-                    self.log("Failed to process file ID {} for IP {}".format(file_id, ip_address), "ERROR")
+                            success = self.unzip_data(file_id, config_data)
+                        finally:
+                            self.want["file_path"] = original_file_path
+
+                        if success:
+                            self.log(f"Successfully processed configuration for file ID {file_id} (Device IP: {ip_address}).", "INFO")
+                        else:
+                            self.log(f"Failed to process configuration for file ID {file_id} (Device IP: {ip_address}).", "ERROR")
+
+                    except Exception as e:
+                        self.log(f"Error while processing file ID {file_id} for Device IP {ip_address}: {e}", "ERROR")
+                        continue
 
         total_devices = len(mgmt_ip_to_instance_id_map)
         processed_devices = len(file_details_list)
@@ -1542,12 +1604,11 @@ class DeviceConfigsBackup(DnacBase):
         abs_backup_path = os.path.abspath(base_backup_path)
 
         log_msg = (
-            "Backup Device Configuration task completed: {} device(s) succeeded, "
-            "{} device(s) skipped. Backup files stored at: {}. "
-            "Password to unzip files: '{}'.".format(
-                processed_devices, skipped_devices, abs_backup_path, file_password
-            )
+            f"Configuration backup operation completed: {processed_devices} device(s) processed successfully, "
+            f"{skipped_devices} device(s) skipped. Backup files saved at: {abs_backup_path}. "
+            f"Password to unzip files: '{file_password}'."
         )
+        self.log("Completed the process of downloading and saving unmasked configuration files.", "INFO")
         self.set_operation_result("success", True, log_msg, "INFO")
 
     def get_want(self, config):
@@ -1562,6 +1623,8 @@ class DeviceConfigsBackup(DnacBase):
             It validates the IP address list and file password, generates a new password if none is provided,
             retrieves device IDs, and updates the desired state with necessary parameters.
         """
+        self.log("Starting the process to prepare the desired state (want) based on the provided configuration.", "INFO")
+
         self.want = {}
 
         # Retrieve configuration parameters
@@ -1570,13 +1633,15 @@ class DeviceConfigsBackup(DnacBase):
         ip_address_list = config.get("ip_address_list")
         file_types = config.get("config_file_types")
         if file_types:
-            if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.9") < 0:
+            current_version = self.get_ccc_version()
+            self.log(f"Current Catalyst Center Version: {current_version}", "DEBUG")
+            if self.compare_dnac_versions(current_version, "2.3.7.9") < 0:
                 self.fail_and_exit(
                     "The 'config_file_types' parameter is not supported for Catalyst Center version 2.3.7.6. "
                     "It is supported from version 2.3.7.9 onwards."
                 )
 
-            # Convert to uppercase for consistency (multi-line)
+            self.log("Converting file types to uppercase for consistency.", "DEBUG")
             upper_file_types = []
             for ftype in file_types:
                 upper_file_types.append(ftype.upper())
@@ -1591,53 +1656,49 @@ class DeviceConfigsBackup(DnacBase):
 
             # If 'ALL' is selected, expand to all supported file types
             if "ALL" in file_types:
+                self.log("Expanding 'ALL' to include all supported file types: VLAN, STARTUPCONFIG, RUNNINGCONFIG.", "DEBUG")
                 file_types = ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
 
         # Validate the IP address list if provided
         if ip_address_list:
+            self.log(f"Validating the IP address list: {ip_address_list}", "INFO")
             self.validate_ip4_address_list(ip_address_list)
+            self.log("IP address list validation completed successfully.", "INFO")
 
-        # Validate the file password or generate a new one if not provided
         if file_password:
+            self.log("Validating the provided file password.", "INFO")
             self.validate_file_password(file_password)
+            self.log("File password validation completed successfully.", "INFO")
         else:
             file_password = self.password_generator()
+            self.log("No file password provided. Generated a new password.", "INFO")
 
-        # Retrieve the device ID list based on the provided configuration
+        self.log("Retrieving the device ID list based on the provided IP addresses.", "INFO")
         mgmt_ip_to_instance_id_map = self.get_device_id_list(config)
-        self.log(
-            "Retrived the Device ID list based on the provided parameters: {0}".format(
-                mgmt_ip_to_instance_id_map
-            ),
-            "DEBUG",
-        )
+
         if not mgmt_ip_to_instance_id_map:
-            self.msg = (
-                "No reachable devices found among the provided parameters: {0}".format(
-                    config
-                )
-            )
+            self.msg = f"No reachable devices found among the provided parameters: {config}"
             self.set_operation_result("failed", False, self.msg, "WARNING")
+            self.log(f"Process aborted: {self.msg}", "WARNING")
             return self
 
         self.log(
-            "Based on provided parameters, retrieved Device Id(s) of {0} device(s): {1} ".format(
-                len(mgmt_ip_to_instance_id_map), mgmt_ip_to_instance_id_map
-            )
+            f"Retrieved {len(mgmt_ip_to_instance_id_map)} device(s) with their corresponding instance IDs: "
+            f"{mgmt_ip_to_instance_id_map}", "INFO"
         )
 
-        # Prepare the desired state (want)
-        self.want["export_device_configurations_params"] = (
-            self.export_device_configurations_params(
-                file_password, mgmt_ip_to_instance_id_map
-            )
+        self.log("Preparing the desired state (want).", "INFO")
+        self.want["export_device_configurations_params"] = self.export_device_configurations_params(
+            file_password, mgmt_ip_to_instance_id_map
         )
         self.want["mgmt_ip_to_instance_id_map"] = mgmt_ip_to_instance_id_map
         self.want["file_password"] = file_password
         self.want["file_path"] = file_path
         self.want["unzip_backup"] = config.get("unzip_backup")
         self.want["file_types"] = file_types
-        self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+
+        self.log(f"Desired State (want) has been prepared: {str(self.want)}", "INFO")
+        self.log("Completed the process to prepare the desired state (want).", "INFO")
 
         return self
 
