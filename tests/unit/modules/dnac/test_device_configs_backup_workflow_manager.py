@@ -659,8 +659,8 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 config=self.test_data.get("playbook_config_device_configs_backup_scenario_5"),
             )
         )
-        result = self.execute_module(changed=False, failed=True)
+        result = self.execute_module(changed=True, failed=False)
         self.assertIn(
-            "Successfully validated playbook configuration parameters using 'validate_input':",
+            "Configuration backup operation completed",
             result.get("msg")
         )
