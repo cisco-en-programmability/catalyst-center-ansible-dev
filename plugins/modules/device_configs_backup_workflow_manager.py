@@ -181,7 +181,7 @@ options:
         type: list
         elements: str
         choices:
-            - ALL 
+            - ALL
             - VLAN
             - STARTUPCONFIG
             - RUNNINGCONFIG
@@ -1439,7 +1439,7 @@ class DeviceConfigsBackup(DnacBase):
         self.log(
             "Input parameters - id_list: {}, file_types: {}, file_password: {}".format(
                 id_list, file_types, 'set' if file_password else 'not set'
-            ), 
+            ),
             "DEBUG"
         )
 
@@ -1564,7 +1564,7 @@ class DeviceConfigsBackup(DnacBase):
                     continue
                 os.makedirs(target_dir, exist_ok=True)
 
-               # Download and process each file
+                # Download and process each file
                 for file_id in file_ids:
                     self.log(f"Downloading configuration data for file ID {file_id} (Device IP: {ip_address})...", "INFO")
                     try:
