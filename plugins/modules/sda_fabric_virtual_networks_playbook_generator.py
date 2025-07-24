@@ -348,12 +348,14 @@ from collections import OrderedDict
 import os
 
 
-class OrderedDumper(yaml.Dumper):
-    def represent_dict(self, data):
-        return self.represent_mapping("tag:yaml.org,2002:map", data.items())
+if HAS_YAML:
+    class OrderedDumper(yaml.Dumper):
+        def represent_dict(self, data):
+            return self.represent_mapping("tag:yaml.org,2002:map", data.items())
 
-
-OrderedDumper.add_representer(OrderedDict, OrderedDumper.represent_dict)
+    OrderedDumper.add_representer(OrderedDict, OrderedDumper.represent_dict)
+else:
+    OrderedDumper = None
 
 
 class VirtualNetworksPlaybookGenerator(DnacBase):
@@ -1815,7 +1817,7 @@ def main():
         "dnac_port": {"type": "str", "default": "443"},
         "dnac_username": {"type": "str", "default": "admin", "aliases": ["user"]},
         "dnac_password": {"type": "str", "no_log": True},
-        "dnac_verify": {"type": "bool", "default": "True"},
+        "dnac_verify": {"type": "bool", "default": True},
         "dnac_version": {"type": "str", "default": "2.2.3.3"},
         "dnac_debug": {"type": "bool", "default": False},
         "dnac_log_level": {"type": "str", "default": "WARNING"},
