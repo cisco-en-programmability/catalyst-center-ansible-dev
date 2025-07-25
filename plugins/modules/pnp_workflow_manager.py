@@ -92,6 +92,12 @@ options:
               flag.
             type: bool
             required: false
+          authorize:
+            description:
+              - Set the authorize flag for the device.
+              - Supported from Cisco Catalyst Center release version 2.3.7.6 onwards.
+            type: bool
+            required: false
       site_name:
         description: Name of the site for which the
           device will be claimed.
@@ -213,14 +219,17 @@ notes:
     sites.Sites.get_site,
     software_image_management_swim.SoftwareImageManagementSwim.get_software_image_details,
     configuration_templates.ConfigurationTemplates.gets_the_templates_available
+
   - Paths used are
     post /dna/intent/api/v1/onboarding/pnp-device
     post /dna/intent/api/v1/onboarding/pnp-device/site-claim
     post /dna/intent/api/v1/onboarding/pnp-device/{id}
     get /dna/intent/api/v1/onboarding/pnp-device/count
-    get /dna/intent/api/v1/onboarding/pnp-device put
-    /onboarding/pnp-device/${id} get /dna/intent/api/v1/site
+    get /dna/intent/api/v1/onboarding/pnp-device
+    put /onboarding/pnp-device/${id} get /dna/intent/api/v1/site
     get /dna/intent/api/v1/image/importation get /dna/intent/api/v1/template-programmer/template
+    post /api/v1/onboarding/pnp-device/authorize
+
 """
 EXAMPLES = r"""
 ---
@@ -269,6 +278,7 @@ EXAMPLES = r"""
             hostname: New_WLC
             state: Unclaimed
             pid: C9800-CL-K9
+            authorize: true
         site_name: Global/USA/San Francisco/BGL_18
         template_name: Ansible_PNP_WLC
         template_params:
@@ -666,6 +676,10 @@ class PnP(DnacBase):
             param["serialNumber"] = param.pop("serial_number")
             if "is_sudi_required" in param:
                 param["isSudiRequired"] = param.pop("is_sudi_required")
+
+            if "authorize" in param:
+                param["authorize"] = param.pop("authorize")
+
             device_dict["deviceInfo"] = param
             device_info_list.append(device_dict)
 
@@ -830,6 +844,55 @@ class PnP(DnacBase):
         )
         return reset_params
 
+    def authorize_device(self, device_id):
+        """
+        Sets the authorization flag for a device on Cisco Catalyst Center.
+
+        Parameters:
+            device_id (str): The ID of the device to authorize.
+
+        Returns:
+            dict: The API response if the authorization is successful.
+            None: If the authorization fails or an unexpected response is received.
+        """
+        self.log("Authorizing the device with device ID '{0}'.".format(device_id), "DEBUG")
+
+        if not device_id:
+            self.msg = "No device ID provided for authorization."
+            self.log(self.msg, "ERROR")
+            return None
+
+        authorize_payload = {
+            "deviceIdList": [device_id]
+        }
+        try:
+            authorize_response = self.dnac_apply['exec'](
+                family="device_onboarding_pnp",
+                function="authorize_device",
+                params=authorize_payload,
+                op_modifies=True
+            )
+            self.log(
+                "Response from 'authorize_device' API for device authorization: {0}".format(
+                    self.pprint(authorize_response)
+                ),
+                "DEBUG",
+            )
+
+            if authorize_response and isinstance(authorize_response, dict):
+                return authorize_response
+
+            self.log("Received unexpected response from 'authorize_device' API for device ID {0}".
+                     format(device_id), "ERROR")
+
+        except Exception as e:
+            self.msg = "Unable to execute 'authorize_device' for device ID: '{0}'. ".format(
+                device_id)
+            self.log(self.msg + str(e), "ERROR")
+            return e
+
+        return None
+
     def bulk_devices_import(self, add_devices):
         """
         Add Multiple devices to the Cisco Catalyst Center.
@@ -911,13 +974,12 @@ class PnP(DnacBase):
                     "failed", False, self.msg, "ERROR", bulk_params
                 ).check_return_status()
 
-            self.result["msg"] = "{0} device(s) imported successfully".format(
-                len(bulk_params.get("successList"))
-            )
-            self.log(self.result["msg"], "INFO")
-            self.result["response"] = bulk_params
-            self.result["diff"] = self.validated_config
-            self.result["changed"] = True
+            self.result['msg'] = "{0} device(s) imported successfully".format(
+                len(bulk_params.get("successList")))
+            self.log(self.result['msg'], "INFO")
+            self.result['response'] = bulk_params
+            self.result['diff'] = self.validated_config
+            self.result['changed'] = True
             return self
 
         except Exception as e:
@@ -951,6 +1013,11 @@ class PnP(DnacBase):
         unmatch_count = 0
         for key, value in input_config.items():
             device_value = device_info.get(key)
+            if key == "authorize" and value:
+                authorize_value = device_info.get("validActions", {}).get(key)
+                if authorize_value != value:
+                    unmatch_count += 1
+
             if value != device_value:
                 self.log(
                     "Mismatch found for key '{0}': expected '{1}', got '{2}'".format(
@@ -1387,6 +1454,8 @@ class PnP(DnacBase):
 
             for each_device in pnp_devices:
                 serial_number = each_device.get("deviceInfo", {}).get("serialNumber")
+                authorize_flag = each_device.get("deviceInfo", {}).get("authorize")
+
                 if not serial_number:
                     self.log(
                         "Skipping device entry due to missing serial number: {0}".format(
@@ -1424,7 +1493,7 @@ class PnP(DnacBase):
                             "Updating device info for serial: '{0}' as it's not provisioned or config doesn't match.".format(
                                 serial_number
                             ),
-                            "DEBUG",
+                            "DEBUG"
                         )
                         self.update_device_info(
                             existing_device_info, device_info, device_response.get("id")
@@ -1471,6 +1540,18 @@ class PnP(DnacBase):
                             "DEBUG",
                         )
                         devices_exists.append(serial_number)
+                        if authorize_flag and claim_stat == "Claimed" and self.compare_dnac_versions(
+                           self.get_ccc_version(), "2.3.7.6") > 0:
+                            authorize_response = self.authorize_device(device_response.get("id"))
+                            self.log("Device authorize response: '{0}'".format(
+                                authorize_response), "INFO")
+
+                            if isinstance(authorize_response, dict):
+                                self.log("Device '{0}' authorized successfully.".format(
+                                    serial_number), "INFO")
+                            else:
+                                self.log("Unable to authorized device: '{0}', error: {1}".format(
+                                    serial_number, authorize_response), "INFO")
                 else:
                     self.log(
                         "No valid device info returned for serial: '{0}'. Marking as not existing.".format(
@@ -1584,6 +1665,20 @@ class PnP(DnacBase):
                     and self.have["deviceInfo"]
                 ):
                     self.result["msg"] = "Device Added and Claimed Successfully"
+                    authorize_flag = self.want.get("device_info").get("authorize", False)
+                    if authorize_flag and self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.6") > 0:
+                        authorize_response = self.authorize_device(claim_params["deviceId"])
+                        self.log("Device authorize response: '{0}'".format(
+                            authorize_response), "INFO")
+
+                        if isinstance(authorize_response, dict):
+                            self.log("Device '{0}' authorized successfully.".format(
+                                self.have["deviceInfo"].get("serialNumber")), "INFO")
+                            self.result['msg'] += " device authorized successfully"
+                        else:
+                            self.log("Unable to authorized device: '{0}', error: {1}".format(
+                                claim_params["deviceId"], authorize_response), "INFO")
+
                     self.log(self.result["msg"], "INFO")
                     self.result["response"] = claim_response
                     self.result["diff"] = self.validated_config
@@ -1675,6 +1770,20 @@ class PnP(DnacBase):
 
         if claim_response.get("response") == "Device Claimed":
             self.result["msg"] = "Only Device Claimed Successfully"
+            authorize_flag = self.want.get("device_info").get("authorize", False)
+            if authorize_flag and self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.6") > 0:
+                authorize_response = self.authorize_device(claim_params["deviceId"])
+                self.log("Device authorize response: '{0}'".format(
+                    authorize_response), "INFO")
+
+                if isinstance(authorize_response, dict):
+                    self.log("Device '{0}' authorized successfully.".format(
+                        self.have["deviceInfo"].get("serialNumber")), "INFO")
+                    self.result['msg'] += " device authorized successfully"
+                else:
+                    self.log("Unable to authorized device: '{0}', error: {1}".format(
+                        claim_params["deviceId"], authorize_response), "INFO")
+
             self.log(self.result["msg"], "INFO")
             self.result["response"] = claim_response
             self.result["diff"] = self.validated_config
