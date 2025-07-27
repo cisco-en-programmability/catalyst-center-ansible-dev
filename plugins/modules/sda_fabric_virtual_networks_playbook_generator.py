@@ -158,7 +158,7 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
 - name: Generate YAML Configuration with specific fabric vlan components only
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -172,9 +172,9 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["fabric_vlan"]
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["fabric_vlan"]
 - name: Generate YAML Configuration with specific virtual networks components only
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -188,9 +188,9 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["virtual_networks"]
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["virtual_networks"]
 - name: Generate YAML Configuration with specific anycast gateways components only
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -204,9 +204,9 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["anycast_gateways"]
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["anycast_gateways"]
 - name: Generate YAML Configuration for fabric vlans with vlan name filter
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -220,12 +220,12 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["fabric_vlan"]
-        fabric_vlan:
-          - vlan_name: "vlan_1"
-          - vlan_name: "vlan_2"
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["fabric_vlan"]
+          fabric_vlan:
+            - vlan_name: "vlan_1"
+            - vlan_name: "vlan_2"
 - name: Generate YAML Configuration for virtual networks with VN name filter
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -239,12 +239,12 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["virtual_networks"]
-        virtual_networks:
-          - vn_name: "vn_1"
-          - vn_name: "vn_2"
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["virtual_networks"]
+          virtual_networks:
+            - vn_name: "vn_1"
+            - vn_name: "vn_2"
 - name: Generate YAML Configuration for anycast gateways with multiple filters
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -258,12 +258,12 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["anycast_gateways"]
-        anycast_gateways:
-          - vn_name: "vn_1"
-          - ip_pool_name: "ip_pool_1"
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["anycast_gateways"]
+          anycast_gateways:
+            - vn_name: "vn_1"
+            - ip_pool_name: "ip_pool_1"
 - name: Generate YAML Configuration for fabric vlans and virtual networks with multiple filters
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -277,15 +277,15 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["fabric_vlan", "virtual_networks"]
-        fabric_vlan:
-          - vlan_name: "vlan_1"
-          - vlan_name: "vlan_2"
-        virtual_networks:
-          - vn_name: "vn_1"
-          - vn_name: "vn_2"
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["fabric_vlan", "virtual_networks"]
+          fabric_vlan:
+            - vlan_name: "vlan_1"
+            - vlan_name: "vlan_2"
+          virtual_networks:
+            - vn_name: "vn_1"
+            - vn_name: "vn_2"
 - name: Generate YAML Configuration for all components with no filters
   cisco.dnac.sda_fabric_virtual_networks_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -299,9 +299,9 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-    - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
-      component_specific_filters:
-        components_list: ["fabric_vlan", "virtual_networks", "anycast_gateways"]
+      - file_path: "/tmp/catc_virtual_networks_components_config.yaml"
+        component_specific_filters:
+          components_list: ["fabric_vlan", "virtual_networks", "anycast_gateways"]
 """
 
 
