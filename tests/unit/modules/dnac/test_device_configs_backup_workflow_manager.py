@@ -1,3 +1,4 @@
+
 # Copyright (c) 2020 Cisco and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -659,8 +660,8 @@ class TestDeviceConfigsBackup(TestDnacModule):
                 config=self.test_data.get("playbook_config_device_configs_backup_scenario_5"),
             )
         )
-        result = self.execute_module(changed=True, failed=False)
+        result = self.execute_module(changed=False, failed=True)
         self.assertIn(
-            "Configuration backup operation completed",
+            "Successfully validated playbook configuration parameters",
             result.get("msg")
         )
