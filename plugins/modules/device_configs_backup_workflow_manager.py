@@ -66,7 +66,8 @@ options:
             the Cisco Catalyst Center GUI.
           - For example - ["DC-T-9300.cisco.local",
             "NY-BN-9300.cisco.local"]
-        type: str
+        type: list
+        elements: str
       ip_address_list:
         description:
           - List of IP addresses of the devices for
@@ -77,7 +78,8 @@ options:
             of the devices.
           - For example - ["204.1.2.2", "204.1.2.5",
             "204.1.2.4"]
-        type: str
+        type: list
+        elements: str
       site_list:
         description:
           - Specifies a list of sites. The module takes
@@ -96,13 +98,15 @@ options:
             words, the operation will be performed on
             devices within the site(s) and those that
             meet the additional criteria.
-        type: str
+        type: list
+        elements: str
       mac_address_list:
         description:
           - Specifies list of MAC addresses of the devices
             for which configuration backups are to be
             taken.
-        type: str
+        type: list
+        elements: str
       serial_number_list:
         description:
           - Specifies the list of serial numbers of
@@ -110,36 +114,41 @@ options:
             need to be taken.
           - For example - ["FCW2225C020", "FJB2334D06N",
             "FJC2327U0S2", "FJC2721271T"]
-        type: str
-      family:
+        type: list
+        elements: str
+      family_list:
         description:
           - Specifies list of families for which device
             configuration backups need to be taken.
           - For example - ["Switches and Hubs", "Routers"]
-        type: str
-      type:
+        type: list
+        elements: str
+      type_list:
         description:
           - Specifies the list of types of device(s)
             from a specific device family for which
             configuration backups need to be taken.
           - For example - ["Cisco Catalyst 9300 Switch",
             "Cisco Catalyst 9500 Switch"]
-        type: str
-      series:
+        type: list
+        elements: str
+      series_list:
         description:
           - Specifies the list of series of the device(s)
             for a specific device type for which configuration
             backups need to be taken.
           - For example - ["Cisco Catalyst 9300 Series
             Switches"]
-        type: str
+        type: list
+        elements: str
       collection_status:
         description:
           - Specifies the list of collection status
             of the device(s) as displayed in the inventory
             GUI of the Cisco Catalyst Center.
           - For example - ["Managed"]
-        type: str
+        type: list
+        elements: str
       file_path:
         description:
           - The location or directory where the configuration
@@ -155,6 +164,7 @@ options:
         description:
           - Optional file password for zipping and unzipping
             the config file.
+          - If not provided, a secure password will be auto-generated.
           - Password must meet the following criteria
             - - Minimum password length is 8 - It should
             contain atleast one lower case letter, one
@@ -173,18 +183,18 @@ options:
         default: true
       config_file_types:
         description:
-            - Specifies the list of configuration file types to be downloaded for each device.
-            - If this parameter is not specified, all available configuration types
-              will be downloaded for the selected devices by default.
-            - This parameter is available starting from Cisco Catalyst Center version 2.3.7.9 and later.
-            - For Example - ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
+          - Specifies the list of configuration file types to be downloaded for each device.
+          - If this parameter is not specified, all available configuration types
+            will be downloaded for the selected devices by default.
+          - This parameter is available starting from Cisco Catalyst Center version 2.3.7.9 and later.
+          - For Example - ["VLAN", "STARTUPCONFIG", "RUNNINGCONFIG"]
         type: list
         elements: str
         choices:
-            - ALL
-            - VLAN
-            - STARTUPCONFIG
-            - RUNNINGCONFIG
+          - ALL
+          - VLAN
+          - STARTUPCONFIG
+          - RUNNINGCONFIG
         default: ["ALL"]
 requirements:
   - dnacentersdk == 2.9.2
@@ -194,12 +204,18 @@ notes:
     sites.Sites.get_membership site_design.Site_design.get_site_assigned_network_devices
     devices.Devices.get_device_list devices.Devices.get_device_by_id
     configuration_archive.ConfigurationsArchive.export_device_configurations
+    configuration_archive.ConfigurationsArchive.download_unmaskedraw_device_configuration_as_zip
+    configuration_archive.ConfigurationsArchive.download_masked_device_configuration
+    configuration_archive.ConfigurationsArchive.get_network_device_configuration_file_details
     file.Files.download_a_file_by_fileid
   - Paths used are
     get /dna/intent/api/v1/site get /dna/intent/api/v1/membership/${siteId}
     get /dna/intent/api/v1/network-device post /dna/intent/api/v1/network-device-archive/cleartext
     get /dna/intent/api/v1/file/${fileId} get /dna/intent/api/v1/networkDevices/assignedToSite
     get /dna/intent/api/v1/sites get /dna/intent/api/v1/network-device/${id}
+    get /dna/intent/api/v1/network-device get /dna/intent/api/v1/networkDeviceConfigFiles
+    post /dna/intent/api/v1/network-device post dna/intent/api/v1/networkDeviceConfigFiles/${id}/downloadMasked
+    post /dna/intent/api/v1/network-device post dna/intent/api/v1/networkDeviceConfigFiles/${id}/downloadUnMasked
 """
 EXAMPLES = r"""
 ---
@@ -1281,14 +1297,28 @@ class DeviceConfigsBackup(DnacBase):
 
     def get_network_device_configuration_file_details(self, mgmt_ip_to_instance_id_map):
         """
-        Retrieves the latest network device configuration file details.
-        If no file_type is specified in the playbook, it retrieves for VLAN, STARTUPCONFIG, and RUNNINGCONFIG.
+        Retrieves the latest configuration file details for a list of network devices.
+
+        If no 'file_types' are specified in the playbook input (self.want), the function defaults to
+        retrieving the following configuration file types: VLAN, STARTUPCONFIG, and RUNNINGCONFIG.
 
         Parameters:
-            mgmt_ip_to_instance_id_map (dict): Dictionary mapping management IPs to device instance IDs.
+            mgmt_ip_to_instance_id_map (dict): A dictionary mapping management IP addresses (str)
+                                            to corresponding network device instance IDs (str).
 
         Returns:
-            list: A list of dictionaries with device_id, ip_address, and file_ids (dict of latest file IDs by type).
+            list or None:
+                - A list of dictionaries for each device, each containing:
+                    - device_id (str): The device instance ID.
+                    - ip_address (str): The management IP address.
+                    - file_ids (list): List of retrieved file IDs.
+                    - file_types (list): List of successfully collected config file types.
+                - Returns None if no configuration files are found for any device.
+
+        Raises:
+            Terminates the module execution with an error message if:
+                - Invalid file types are specified.
+                - An unexpected exception occurs during processing.
         """
         self.log("Retrieving latest configuration file details for network devices.", "INFO")
 
@@ -1328,7 +1358,7 @@ class DeviceConfigsBackup(DnacBase):
 
                     response = self.execute_get_request(
                         "configuration_archive",
-                        "get_network_device_configuration_file_details_v1",
+                        "get_network_device_configuration_file_details",
                         {
                             "networkDeviceId": device_id,
                             "fileType": file_type,
@@ -1420,36 +1450,25 @@ class DeviceConfigsBackup(DnacBase):
 
         return id_list
 
-    def download_unmasked_raw_device_configuration(self, id_list, file_password, file_types=None):
+    def download_unmasked_raw_device_configuration(self, id_list, file_password):
         """
-        Downloads the unmasked (raw) configuration ZIP file for each provided file ID using the Catalyst Center API.
+        Downloads the unmasked (raw) configuration ZIP file for the provided file IDs.
 
         Parameters:
-            id_list (list): A list of configuration file IDs to download.
-            file_password (str): Password used to secure or decrypt the downloaded ZIP files.
-            file_types (list, optional): Reserved for future use, currently unused. A list of configuration file types.
+            id_list (list): List of configuration file IDs.
+            file_password (str): Password to decrypt the downloaded ZIP files.
 
         Returns:
-            bytes: A ZIP archive in binary format containing configuration files for the requested file ID(s).
-                Returns the last successful response if multiple IDs are provided.
-                Returns None if no valid response is received.
+            bytes: Binary ZIP content of the last successfully downloaded configuration file.
+                Returns None if no valid data is received.
         """
-        self.log("Starting the operation to download unmasked raw device configurations.", "INFO")
-
-        self.log(
-            "Input parameters - id_list: {}, file_types: {}, file_password: {}".format(
-                id_list, file_types, 'set' if file_password else 'not set'
-            ),
-            "DEBUG"
-        )
+        self.log("Starting download_unmasked_raw_device_configuration", "INFO")
 
         if not id_list or not file_password:
             msg = (
                 "Missing required parameters: "
-                "'id_list' is {} and 'file_password' is {}".format(
-                    'not provided' if not id_list else 'provided',
-                    'not set' if not file_password else 'set'
-                )
+                f"'id_list' is {'not provided' if not id_list else 'provided'}, "
+                f"'file_password' is {'not set' if not file_password else 'set'}"
             )
             self.fail_and_exit(msg)
 
@@ -1458,52 +1477,109 @@ class DeviceConfigsBackup(DnacBase):
         try:
             for file_id in id_list:
                 payload = {"id": file_id, "password": file_password}
-                self.log("Requesting export for file ID: {0} with payload: {1}".format(file_id, payload), "INFO")
+                self.log(f"Requesting export for file ID: {file_id}", "INFO")
 
                 response = self.dnac._exec(
                     family="configuration_archive",
-                    function="download_unmaskedraw_device_configuration_as_z_ip_v1",
+                    function="download_unmaskedraw_device_configuration_as_zip",
                     op_modifies=True,
                     params=payload
                 )
 
-                if response and hasattr(response, "data") and response.data:
+                if response and getattr(response, "data", None):
                     self.log(
-                        "Received valid response for file ID {}. Data type: {}, Data size: {}".format(
-                            file_id, type(response.data), len(response.data)
-                        ),
+                        f"Received data for file ID {file_id}: type={response.data.__class__.__name__}, size={len(response.data)}",
                         "DEBUG"
                     )
+                    final_response = response.data
                 else:
-                    self.log("No valid data received for file ID: {}".format(file_id), "WARNING")
+                    self.log(f"No valid data received for file ID: {file_id}", "WARNING")
 
             if final_response:
-                self.log("Returning last valid unmasked configuration for file IDs: {}".format(id_list), "INFO")
+                self.log(f"Returning last valid unmasked configuration for file IDs: {id_list}", "INFO")
             else:
                 self.log("No valid unmasked configuration file received for any file ID.", "WARNING")
 
             return final_response
 
         except Exception as e:
-            error_msg = "Error in download_unmasked_raw_device_configuration: {}".format(e)
+            error_msg = f"Error in download_unmasked_raw_device_configuration: {e}"
             self.log(error_msg, "ERROR")
             self.set_operation_result("failed", False, error_msg, "ERROR").check_return_status()
+            return None
 
-    def download_unmasked_configuration(self):
+    def download_masked_device_configuration(self, id_list):
         """
-        Downloads unmasked configuration files for devices, saves them locally,
-        and optionally unzips the files.
+        Downloads the masked (secured) configuration ZIP file for each provided file ID using the Catalyst Center API.
 
-        Uses parameters from self.want including:
-        - file_password: password to decrypt the downloaded zip files
-        - file_path: local directory to save backups (default 'backup')
-        - file_types: list of configuration file types to download (e.g., VLAN, STARTUPCONFIG)
-        - unzip_backup: boolean indicating whether to unzip the files after download
+        Parameters:
+            id_list (list): A list of configuration file IDs to download.
 
-        For each device IP, creates a dated folder, downloads configuration ZIPs by file ID,
-        and extracts if needed.
+        Returns:
+            bytes: A ZIP archive in binary format containing the last successfully downloaded configuration file.
+                Returns None if no valid response is received.
         """
-        self.log("Initiating the process to download and save unmasked configuration files.", "INFO")
+        self.log("Starting download_masked_device_configuration", "INFO")
+
+        if not id_list:
+            msg = f"Missing required 'id_list' parameter: id_list={id_list}"
+            self.fail_and_exit(msg)
+
+        final_response = None
+
+        try:
+            for file_id in id_list:
+                payload = {"id": file_id}
+                self.log(f"Requesting download for file ID: {file_id} with payload: {payload}", "INFO")
+
+                response = self.dnac._exec(
+                    family="configuration_archive",
+                    function="download_masked_device_configuration",
+                    op_modifies=True,
+                    params=payload
+                )
+
+                if response and hasattr(response, "data") and response.data:
+                    self.log(f"Received data for file ID {file_id}: type={response.data.__class__.__name__}, length={len(response.data)}", "DEBUG")
+                    final_response = response.data
+                else:
+                    self.log(f"No valid data received for file ID: {file_id}", "WARNING")
+
+            if final_response:
+                self.log(f"Returning last valid masked configuration for file IDs: {id_list}", "INFO")
+            else:
+                self.log("No valid masked configuration file received for any file ID.", "WARNING")
+
+            return final_response
+
+        except Exception as e:
+            error_msg = f"Error in download_masked_device_configuration: {e}"
+            self.log(error_msg, "ERROR")
+            self.set_operation_result("failed", False, error_msg, "ERROR").check_return_status()
+            return None
+
+    def download_unmasked_and_masked_configuration(self):
+        """
+        Downloads configuration files (masked or unmasked) for devices and saves them locally.
+
+        Parameters:
+            None (uses values from self.want):
+                - file_password: Password for ZIP files (if needed).
+                - file_path: Folder to save files (default: 'backup').
+                - file_types: List of config types (e.g., STARTUPCONFIG).
+                - unzip_backup: If True, downloads masked config as text.
+                - mgmt_ip_to_instance_id_map: Device IP to ID mapping.
+
+        Returns:
+            None
+
+        Description:
+            - Gets latest config file IDs for each device.
+            - Creates folders to store the files.
+            - Downloads either unmasked (ZIP) or masked (text) config files.
+            - Saves the files in the specified directory.
+            - Logs status and sets final result message.
+        """
         params = self.want
         self.log("Configuration Params: {}".format(params), "DEBUG")
 
@@ -1512,26 +1588,11 @@ class DeviceConfigsBackup(DnacBase):
         file_types = params.get("file_types")
         unzip_required = params.get("unzip_backup", False)
 
+        os.makedirs(base_backup_path, exist_ok=True)
+
         mgmt_ip_to_instance_id_map = params.get("mgmt_ip_to_instance_id_map", {})
         self.log("Management IP to Instance ID Map: {}".format(mgmt_ip_to_instance_id_map), "DEBUG")
 
-        # Validate mandatory parameters
-        if not file_password or not file_types or not mgmt_ip_to_instance_id_map:
-            self.log(
-                "Required parameters missing. Ensure 'file_password', 'file_types', and "
-                "'mgmt_ip_to_instance_id_map' are included.", "ERROR"
-            )
-            return
-
-        # Create base backup directory
-        try:
-            os.makedirs(base_backup_path, exist_ok=True)
-            self.log(f"Base directory for storing backup files created or already exists: {base_backup_path}", "DEBUG")
-        except Exception as e:
-            self.log(f"Error creating base directory '{base_backup_path}': {e}", "ERROR")
-            return
-
-        # Fetch configuration file details
         self.log("Retrieving configuration file details for the devices...", "INFO")
         try:
             file_details_list = self.get_network_device_configuration_file_details(mgmt_ip_to_instance_id_map)
@@ -1552,51 +1613,49 @@ class DeviceConfigsBackup(DnacBase):
                 self.log("No file IDs found for IP {}, skipping this device.".format(ip_address), "WARNING")
                 continue
 
-            if unzip_required:
-                date_str = datetime.datetime.now().strftime("%d_%b_%Y")
-                ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
-                target_dir = os.path.join(base_backup_path, ip_folder_name)
-                try:
-                    os.makedirs(target_dir, exist_ok=True)
-                    self.log(f"Target directory for unzipped files created: {target_dir}", "DEBUG")
-                except Exception as e:
-                    self.log(f"Error creating target directory '{target_dir}' for IP {ip_address}: {e}", "ERROR")
+            date_str = datetime.datetime.now().strftime("%d_%b_%Y")
+            ip_folder_name = "{}_{}".format(date_str, ip_address.replace('.', '_'))
+            target_dir = os.path.join(base_backup_path, ip_folder_name)
+            os.makedirs(target_dir, exist_ok=True)
+
+            for file_id in file_ids:
+                self.log(f"Downloading configuration data for file ID {file_id} (Device IP: {ip_address})...", "INFO")
+                if not isinstance(file_id, str) or len(file_id) < 36:
+                    self.log(f"Invalid file ID: {file_id}, skipping.", "WARNING")
                     continue
-                os.makedirs(target_dir, exist_ok=True)
 
-                # Download and process each file
-                for file_id in file_ids:
-                    self.log(f"Downloading configuration data for file ID {file_id} (Device IP: {ip_address})...", "INFO")
-                    try:
-                        # Download the configuration data
-                        config_data = self.download_unmasked_raw_device_configuration(
-                            id_list=[file_id],
-                            file_types=file_types,
-                            file_password=file_password
-                        )
-
-                        if not config_data:
-                            self.log(f"No configuration data found for file ID {file_id} (Device IP: {ip_address}). Skipping.", "WARNING")
-                            continue
-
-                        # Unzip the configuration data if required
-                        original_file_path = params.get("file_path")
-                        try:
-                            if unzip_required:
-                                self.want["file_path"] = target_dir
-
-                            success = self.unzip_data(file_id, config_data)
-                        finally:
-                            self.want["file_path"] = original_file_path
-
-                        if success:
-                            self.log(f"Successfully processed configuration for file ID {file_id} (Device IP: {ip_address}).", "INFO")
-                        else:
-                            self.log(f"Failed to process configuration for file ID {file_id} (Device IP: {ip_address}).", "ERROR")
-
-                    except Exception as e:
-                        self.log(f"Error while processing file ID {file_id} for Device IP {ip_address}: {e}", "ERROR")
+                if unzip_required:
+                    config_data = self.download_masked_device_configuration(id_list=[file_id])
+                    if not config_data:
+                        self.log("No configuration data for file ID {} (masked), skipping.".format(file_id), "WARNING")
                         continue
+
+                    output_file = os.path.join(target_dir, f"{file_id}.txt")
+                    try:
+                        with open(output_file, "wb") as f:
+                            f.write(config_data)
+                        self.log("Masked configuration saved: {}".format(output_file), "INFO")
+                    except Exception as e:
+                        self.log(f"Error writing masked config for {file_id}: {e}", "ERROR")
+
+                else:
+                    config_data = self.download_unmasked_raw_device_configuration(
+                        id_list=[file_id],
+                        file_password=file_password
+                    )
+                    if not config_data:
+                        self.log("No configuration data for file ID {} (unmasked), skipping.".format(file_id), "WARNING")
+                        continue
+
+                    original_file_path = params.get("file_path")
+                    try:
+                        self.want["file_path"] = target_dir
+                        success = self.unzip_data(file_id, config_data)
+                    finally:
+                        self.want["file_path"] = original_file_path
+
+                    if not success:
+                        self.log("Failed to process ZIP for file ID {} at IP {}".format(file_id, ip_address), "ERROR")
 
         total_devices = len(mgmt_ip_to_instance_id_map)
         processed_devices = len(file_details_list)
@@ -1605,10 +1664,13 @@ class DeviceConfigsBackup(DnacBase):
 
         log_msg = (
             f"Configuration backup operation completed: {processed_devices} device(s) processed successfully, "
-            f"{skipped_devices} device(s) skipped. Backup files saved at: {abs_backup_path}. "
-            f"Password to unzip files: '{file_password}'."
+            f"{skipped_devices} device(s) skipped. Backup files saved at: {abs_backup_path}."
         )
-        self.log("Completed the process of downloading and saving unmasked configuration files.", "INFO")
+
+        if not unzip_required and file_password:
+            log_msg += f" Password to unzip files: '{file_password}'."
+
+        self.log("Completed the process of downloading and saving unmasked and masked configuration files.", "INFO")
         self.set_operation_result("success", True, log_msg, "INFO")
 
     def get_want(self, config):
@@ -1627,8 +1689,8 @@ class DeviceConfigsBackup(DnacBase):
 
         self.want = {}
 
-        # Retrieve configuration parameters
-        file_path = config.get("file_path")
+        # Retrieve and log configuration parameters
+        file_path = config.get("file_path", "backup")  # Default to 'backup' if not provided
         file_password = config.get("file_password")
         ip_address_list = config.get("ip_address_list")
         file_types = config.get("config_file_types")
@@ -1726,8 +1788,8 @@ class DeviceConfigsBackup(DnacBase):
                     result_task_id = action_func(self.want.get(action_param))
                     status_func(result_task_id).check_return_status()
         else:
-            self.log("Detected DNAC version newer than 2.3.7.6 — running download_unmasked_configuration()", "INFO")
-            self.download_unmasked_configuration()
+            self.log("Detected DNAC version newer than 2.3.7.6 — running download_unmasked_and_masked_configuration()", "INFO")
+            self.download_unmasked_and_masked_configuration()
 
         return self
 
