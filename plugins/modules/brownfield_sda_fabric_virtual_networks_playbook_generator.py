@@ -353,7 +353,6 @@ except ImportError:
     HAS_YAML = False
     yaml = None
 from collections import OrderedDict
-import os
 
 
 if HAS_YAML:
