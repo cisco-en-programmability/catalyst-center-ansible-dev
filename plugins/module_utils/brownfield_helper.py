@@ -28,7 +28,6 @@ __metaclass__ = type
 from abc import ABCMeta
 
 
-
 class BrownFieldHelper():
 
     """Class contains members which can be reused for all workflow brownfield modules"""
@@ -728,8 +727,6 @@ class BrownFieldHelper():
     def get_site_id_name_mapping(self):
         """
         Retrieves the site name hierarchy for a given site ID.
-        Args:
-            
         Returns:
             str: The name hierarchy of the site.
         Raises:
