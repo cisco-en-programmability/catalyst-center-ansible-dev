@@ -558,7 +558,7 @@ class BrownFieldHelper():
                         ),
                         "DEBUG",
                     )
-                elif spec["type"] == "str" and spec.get("special_handling"):    
+                elif spec["type"] == "str" and spec.get("special_handling"):
                     mapped_detail[key] = transform(detail)
                     self.log(
                         "Mapped detail for key '{0}' using special handling: {1}".format(
@@ -724,7 +724,7 @@ class BrownFieldHelper():
         )
 
         return site_name_hierarchy
-    
+
     def get_site_id_name_mapping(self):
         """
         Retrieves the site name hierarchy for a given site ID.
