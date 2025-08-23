@@ -478,7 +478,7 @@ class VirtualNetworksPlaybookGenerator(DnacBase, BrownFieldHelper):
             },
             "global_filters": [],
         }
-    
+
     def transform_fabric_site_locations(self, vlan_details):
         """
         Transforms fabric site-related information for a given VLAN by extracting and mapping
