@@ -200,6 +200,44 @@ options:
               - Must be either 5, 15 or 25 representing
                 the proportion of APs to reboot at once.
             type: int
+      ap_authorization_list_name:
+        description: |
+          - The name of the Access Point (AP) authorization
+            list to be used during WLC provisioning.
+          type: str
+      authorize_mesh_and_non_mesh_aps:
+        description: |
+          - A flag that indicates whether to authorize
+            both mesh and non-mesh Access Points (APs)
+            during the WLC provisioning process.
+          type: bool
+      feature_template:
+        description: |
+          - A list of feature templates to be applied
+          - Each entry represents a feature template
+            with associated configuration details.
+          type: dict
+        suboptions:
+          design_name:
+            description: The name of the feature template.
+            type: str
+          additional_identifiers:
+            description: A list of additional identifiers
+              for the feature template.
+            type: list
+            elements: dict
+            suboptions:
+              wlan_profile_name:
+                description: The WLAN profile name.
+                type: str
+              site_name_hierarchy:
+                description: The site name hierarchy.
+                type: str
+          excluded_attributes:
+            description: A list of attributes to be excluded
+              from the feature template.
+            type: list
+            elements: str
       application_telemetry:
         description: |
           - A list of settings for enabling or disabling application telemetry on a group of network devices.
@@ -309,6 +347,9 @@ EXAMPLES = r"""
         rolling_ap_upgrade:
           enable_rolling_ap_upgrade: false
           ap_reboot_percentage: 5
+        ap_authorization_list_name: "AP-Auth-List"
+        authorize_mesh_and_non_mesh_aps: true
+
 - name: Provision a wired device to a site
   cisco.dnac.provision_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -457,6 +498,33 @@ EXAMPLES = r"""
           - application_telemetry:
               - device_ips: ["204.1.1.2", "204.192.6.200"]
                 telemetry: disable
+
+- name: Provision a wireless device to a site with feature template
+  cisco.dnac.provision_workflow_manager:
+    dnac_host: "{{ dnac_host }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    dnac_log: true
+    dnac_log_level: DEBUG
+    config_verify: false
+    dnac_api_task_timeout: 1000
+    dnac_task_poll_interval: 1
+    state: merged
+    config:
+      - site_name_hierarchy: Global/USA/SAN JOSE/BLD23
+        management_ip_address: 204.192.4.2
+        primary_managed_ap_locations:
+          - Global/USA/SAN JOSE/BLD23/FLOOR1_LEVEL2
+        feature_template:
+          - design_name: newtest
+            additional_identifiers:
+              wlan_profile_name: ARUBA_SSID_profile
+              site_name_hierarchy: Global/USA/SAN JOSE/BLD23
+            excluded_attributes: [example, test]
 """
 RETURN = r"""
 # Case_1: Successful creation/updation/deletion of provision
@@ -571,6 +639,8 @@ class Provision(DnacBase):
             },
             "skip_ap_provision": {"type": "bool", "required": False},
             "rolling_ap_upgrade": {"type": "dict", "required": False},
+            "ap_authorization_list_name": {"type": "str", "required": False},
+            "authorize_mesh_and_non_mesh_aps": {"type": "bool", "required": False, "default": False},
             "provisioning": {"type": "bool", "required": False, "default": True},
             "force_provisioning": {"type": "bool", "required": False, "default": False},
             "clean_config": {"type": "bool", "required": False, "default": False},
@@ -588,6 +658,20 @@ class Provision(DnacBase):
                     },
                 },
             },
+            "feature_template": {
+                "type": "list",
+                "elements": "dict",
+                "options": {
+                    "design_name": {"type": "str", "required": True},
+                    "attributes": {"type": "dict", "required": True},
+                    "additional_identifiers": {"type": "dict", "required": False},
+                    "excluded_attributes": {
+                        "type": "list",
+                        "elements": "str",
+                        "required": False,
+                    },
+                },
+            }
         }
 
         if state == "merged":
@@ -1402,6 +1486,10 @@ class Provision(DnacBase):
         if self.validated_config.get("rolling_ap_upgrade"):
             rolling_ap_upgrade = self.validated_config["rolling_ap_upgrade"]
             wireless_params[0]["rolling_ap_upgrade"] = rolling_ap_upgrade
+        if self.validated_config.get("ap_authorization_list_name"):
+            wireless_params[0]["ap_authorization_list_name"] = self.validated_config.get("ap_authorization_list_name")
+        if self.validated_config.get("authorize_mesh_and_non_mesh_aps") is not None:
+            wireless_params[0]["authorize_mesh_and_non_mesh_aps"] = self.validated_config.get("authorize_mesh_and_non_mesh_aps")
 
         response = self.dnac_apply["exec"](
             family="devices",
@@ -1423,7 +1511,82 @@ class Provision(DnacBase):
             ),
             "INFO",
         )
+
+        if self.validated_config.get("feature_template"):
+            feature_templates = self.validated_config.get("feature_template")
+            wireless_params[0]["feature_template"] = []
+
+            for template in feature_templates:
+                design_name = template.get("design_name")
+                attributes = template.get("attributes", [])
+                cleaned_attributes = []
+
+                if isinstance(attributes, dict):
+                    for key, value in attributes.items():
+                        cleaned_attributes.append({
+                            "name": key,
+                            "value": value
+                        })
+                else:
+                    self.log(f"Expected 'attributes' to be a dict, got: {type(attributes)}", "WARNING")
+
+                additional_identifiers = template.get("additional_identifiers", {})
+                excluded_attributes = template.get("excluded_attributes", [])
+
+                ft_entry = {
+                    "design_name": design_name,
+                    "attributes": cleaned_attributes
+                }
+
+                if additional_identifiers:
+                    ft_entry["additional_identifiers"] = additional_identifiers
+                if excluded_attributes:
+                    ft_entry["excluded_attributes"] = excluded_attributes
+
+                wireless_params[0]["feature_template"].append(ft_entry)
+
+        self.log(
+            "Parameters collected for the provisioning of wireless device: {0}".format(wireless_params),
+            "INFO",
+        )
         return wireless_params
+
+    def resolve_template_id(self, design_name):
+        """
+        Retrieves the feature template ID for a given design name.
+
+        Args:
+            design_name (str): Name of the feature template design to match.
+
+        Returns:
+            str or None: The featureTemplateId if found, else None.
+        """
+        try:
+            ft_response = self.dnac_apply["exec"](
+                family="wireless",
+                function="get_feature_template_summary",
+                params={'designName': design_name}
+            )
+
+            self.log("Feature template response: {0}".format(str(ft_response)), "DEBUG")
+
+            for template_group in ft_response.get("response", []):
+                for instance in template_group.get("instances", []):
+                    if (
+                        instance.get("designName") == design_name
+                        and not instance.get("systemTemplate", False)
+                    ):
+                        template_id = instance.get("id")
+                        self.log("Resolved featureTemplateId: {0} for designName: '{1}'".format(template_id, design_name), "INFO")
+                        return template_id
+
+            self.log("Feature template with designName '{0}' not found.".format(design_name), "WARNING")
+            return None
+
+        except Exception as e:
+            msg = "Failed to resolve featureTemplateId for designName '{0}': {1}".format(design_name, str(e))
+            self.log(msg, "ERROR")
+            return None
 
     def get_want(self, config):
         """
@@ -3104,6 +3267,54 @@ class Provision(DnacBase):
                         )
                 payload["rollingApUpgrade"] = rolling_ap_upgrade
 
+            if "ap_authorization_list_name" in prov_params:
+                payload["apAuthorizationListName"] = prov_params.get("ap_authorization_list_name")
+
+            if "authorize_mesh_and_non_mesh_aps" in prov_params:
+                payload["authorizeMeshAndNonMeshAPs"] = prov_params.get("authorize_mesh_and_non_mesh_aps")
+
+            if self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") >= 0:
+                self.log("Catalyst Center version >= 3.1.3.0 — processing 'feature_template'", "INFO")
+                self.log(prov_params, "DEBUG")
+                if "feature_template" in prov_params:
+                    ft = prov_params.get("feature_template", [])[0]
+                    self.log("Feature template data: {0}".format(ft), "DEBUG")
+                    wlan_profile = ft["additional_identifiers"]["wlan_profile_name"]
+                    site_hierarchy = ft["additional_identifiers"]["site_name_hierarchy"]
+                    excluded = ft.get("excluded_attributes", [])
+
+                    feature_template_id = self.resolve_template_id(ft["design_name"])
+                    site_exists, site_id = self.get_site_id(site_hierarchy)
+                    self.log(site_id, "DEBUG")
+                    site_uuid = site_id
+
+                    new_entry = {
+                        "featureTemplateId": feature_template_id,
+                        "attributes": {
+                        },
+                        "additionalIdentifiers": {
+                            "wlanProfileName": wlan_profile,
+                            "siteUuid": site_uuid
+                        },
+                        "excludedAttributes": excluded
+                    }
+
+                    if "featureTemplatesOverridenAttributes" not in payload:
+                        payload["featureTemplatesOverridenAttributes"] = {
+                            "editFeatureTemplates": []
+                        }
+
+                    payload["featureTemplatesOverridenAttributes"]["editFeatureTemplates"].append(new_entry)
+            else:
+                self.log("Catalyst Center version < 3.1.3.0 — skipping 'feature_template'", "INFO")
+
+            import json
+
+            self.log(
+                "Final constructed payload:\n{0}".format(json.dumps(payload, indent=2)),
+                "INFO",
+            )
+
             try:
                 response = self.dnac_apply["exec"](
                     family="wireless",
@@ -3181,10 +3392,11 @@ class Provision(DnacBase):
             self.set_operation_result("success", False, self.msg, "INFO")
             return self
 
-        if device_type != "wired":
-            self.result["msg"] = "APIs are not supported for the device"
-            self.log(self.result["msg"], "CRITICAL")
-            return self
+        if self.compare_dnac_versions(self.get_ccc_version(), "2.3.7.6") <= 0:
+            if device_type != "wired":
+                self.result["msg"] = "APIs are not supported for the device"
+                self.log(self.result["msg"], "CRITICAL")
+                return self
 
         device_id = self.get_device_id()
         provision_id, status = self.get_device_provision_status(device_id)
@@ -3194,7 +3406,7 @@ class Provision(DnacBase):
                 "Device associated with the passed IP address is not provisioned"
             )
             self.log(self.result["msg"], "CRITICAL")
-            self.result["response"] = self.want["prov_params"]
+            self.result["response"] = self.result["msg"]
             return self
 
         if self.compare_dnac_versions(self.get_ccc_version(), "2.3.5.3") <= 0:
