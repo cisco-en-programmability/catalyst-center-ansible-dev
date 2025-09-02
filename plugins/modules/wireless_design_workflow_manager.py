@@ -5283,8 +5283,19 @@ class WirelessDesign(DnacBase):
                     },
                 },
             },
+            "aaa_radius_attribute": {
+                "type": "list",
+                "elements": "dict",
+                "required": False,
+                "options": {
+                    "design_name": {"type": "str"},
+                    "called_station_id": {"type": "str"},
+                    "unlocked_attributes": {"type": "list"},
+                },
+            },
         }
-
+        self.log(self.temp_spec, "DEBUG")
+        self.log(self.config, "DEBUG")
         # Validate params against the expected schema
         valid_temp, invalid_params = validate_list_of_dicts(self.config, self.temp_spec)
 
@@ -16391,9 +16402,170 @@ class WirelessDesign(DnacBase):
                 elif state == "deleted":
                     have["delete_{0}".format(config_key)] = deleted_func(elements)
 
+        # --- New logic for AAA Radius Attributes ---
+        aaa_attr_list = config.get("aaa_radius_attribute")
+
+        if aaa_attr_list:
+            self.log("Processing AAA Radius Attributes for state: {0}".format(state), "DEBUG")
+
+            if state == "merged":
+                add_attrs, update_attrs, no_update_attrs = (
+                    self.verify_create_update_aaa_radius_attributes_requirement(aaa_attr_list)
+                )
+                have.update(
+                    {
+                        "add_aaa_radius_attribute": add_attrs,
+                        "update_aaa_radius_attribute": update_attrs,
+                        "no_update_aaa_radius_attribute": no_update_attrs,
+                    }
+                )
+            elif state == "deleted":
+                have["delete_aaa_radius_attribute"] = self.verify_delete_aaa_radius_attributes_requirement(
+                    aaa_attr_list
+                )
+
+
         self.have = have
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
         return self
+
+    def verify_create_update_aaa_radius_attributes_requirement(self, aaa_attr_list):
+        """
+        Compares desired AAA Radius Attributes against existing ones and determines
+        which need to be created, updated, or left unchanged.
+        """
+        add_attrs, update_attrs, no_update_attrs = [], [], []
+
+        # Fetch once
+        existing_blocks = self.get_aaa_radius_attributes()
+        self.log("Existing AAA Radius Attributes: {0}".format(existing_blocks), "DEBUG")
+
+        # Flatten instances into dict
+        existing_dict = {}
+        for block in existing_blocks:
+            for inst in block.get("instances", []):
+                existing_dict[inst["designName"]] = inst
+        self.log("Existing AAA Radius Attributes Dict: {0}".format(existing_dict), "DEBUG")
+
+        # Iterate requested attributes
+        for attr in aaa_attr_list:
+            self.log(aaa_attr_list, "DEBUG")
+            design_name = attr.get("design_name")
+            called_station_id = attr.get("called_station_id")
+            unlocked_attributes = attr.get("unlocked_attributes", [])
+
+            payload = {
+                "designName": design_name,
+                "featureAttributes": {"calledStationId": called_station_id},
+            }
+            if unlocked_attributes:
+                payload["unlockedAttributes"] = unlocked_attributes
+
+            existing = existing_dict.get(design_name)
+
+            if not existing:
+                add_attrs.append(payload)  # new
+            else:
+                details = self.get_aaa_radius_attribute_details(existing["id"])
+                self.log("Details for {0}: {1}".format(design_name, details), "DEBUG")
+
+                existing_called = details.get("featureAttributes", {}).get("calledStationId")
+                existing_unlocked = details.get("unlockedAttributes", [])
+
+                # Compare both fields
+                if (
+                    existing_called != called_station_id
+                    or set(existing_unlocked) != set(unlocked_attributes)
+                ):
+                    update_attrs.append(payload)
+                    self.log("AAA Radius Attribute '{0}' marked for update.".format(design_name), "DEBUG")
+                else:
+                    no_update_attrs.append(details)
+                    self.log("AAA Radius Attribute '{0}' requires no update.".format(design_name), "DEBUG")
+
+        self.log("AAA Radius Attributes to Add: {0}".format(add_attrs), "DEBUG")
+        self.log("AAA Radius Attributes to Update: {0}".format(update_attrs), "DEBUG")
+        self.log("AAA Radius Attributes with No Changes: {0}".format(no_update_attrs), "DEBUG")
+
+        return add_attrs, update_attrs, no_update_attrs
+
+    def get_aaa_radius_attribute_details(self, template_id):
+        """
+        Fetch detailed AAA Radius Attribute template by ID from Cisco DNAC.
+
+        Args:
+            template_id (str): The unique ID of the feature template.
+
+        Returns:
+            dict: Detailed AAA Radius Attribute template (with featureAttributes, unlockedAttributes).
+        """
+        self.log(
+            "Fetching AAA Radius Attribute details for ID: {0}".format(template_id),
+            "DEBUG",
+        )
+        self.template_id = template_id
+        try:
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_aaa_radius_attributes_configuration_feature_template",
+                op_modifies=False,
+                params={"id": template_id},
+            )
+
+            details = response.get("response", {})
+            self.log(
+                "Retrieved AAA Radius Attribute details for ID {0}: {1}".format(
+                    template_id, details
+                ),
+                "DEBUG",
+            )
+            return details
+
+        except Exception as e:
+            self.log(
+                "Failed to fetch AAA Radius Attribute details for ID {0}: {1}".format(
+                    template_id, str(e)
+                ),
+                "ERROR",
+            )
+            return {}
+
+
+    def get_aaa_radius_attributes(self, design_name=None):
+        """
+        Retrieve existing AAA Radius Attributes from Cisco DNAC.
+        Args:
+            design_name (str, optional): Specific feature template design name to fetch.
+        Returns:
+            list: A list of existing AAA Radius Attribute dicts.
+        """
+        self.log("Fetching existing AAA Radius Attributes from DNAC.", "DEBUG")
+
+        try:
+            params = {"type": "AAA_RADIUS_ATTRIBUTES_CONFIGURATION"}
+            # if design_name:
+            #     params["design_name"] = design_name
+
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_feature_template_summary",
+                op_modifies=False,
+                params=params,
+            )
+            self.log(response, "DEBUG")
+            existing_attrs = response.get("response", [])
+            self.log(
+                "Retrieved {0} AAA Radius Attributes.".format(len(existing_attrs)),
+                "DEBUG",
+            )
+            return existing_attrs
+
+        except Exception as e:
+            self.log(
+                "Failed to fetch AAA Radius Attributes: {0}".format(str(e)), "ERROR"
+            )
+            return []
+
 
     def get_want(self, config, state):
         """
@@ -16469,6 +16641,9 @@ class WirelessDesign(DnacBase):
                     "update_anchor_groups_params",
                     self.have.get("update_anchor_groups"),
                 ),
+                # --- New AAA Radius Attributes ---
+                ("add_aaa_radius_attribute", "add_aaa_radius_attribute_params", self.have.get("add_aaa_radius_attribute")),
+                ("update_aaa_radius_attribute", "update_aaa_radius_attribute_params", self.have.get("update_aaa_radius_attribute")),
             ],
             "deleted": [
                 ("delete_ssids", "delete_ssids_params", self.have.get("delete_ssids")),
@@ -16500,6 +16675,12 @@ class WirelessDesign(DnacBase):
                     "delete_anchor_groups",
                     "delete_anchor_groups_params",
                     self.have.get("delete_anchor_groups"),
+                ),
+                # --- New AAA Radius Attributes ---
+                (
+                    "delete_aaa_radius_attribute",
+                    "delete_aaa_radius_attribute_params",
+                    self.have.get("delete_aaa_radius_attribute"),
                 ),
             ],
         }
@@ -16595,6 +16776,16 @@ class WirelessDesign(DnacBase):
                 "UPDATE Anchor Groups",
                 self.process_update_anchor_groups,
             ),
+            (
+                "add_aaa_radius_attribute_params", 
+                "ADD AAA Radius Attributes", 
+                self.process_add_aaa_radius_attributes
+            ),
+            (
+                "update_aaa_radius_attribute_params", 
+                "UPDATE AAA Radius Attributes", 
+                self.process_update_aaa_radius_attributes
+            ),
         ]
 
         # Iterate over operations and process them
@@ -16654,6 +16845,115 @@ class WirelessDesign(DnacBase):
         )
         self.set_operation_result(final_status, is_changed, self.msg, "INFO")
         return self
+
+    def process_add_aaa_radius_attributes(self, params):
+        """
+        Handles the creation of AAA Radius Attributes in Cisco DNAC.
+        Args:
+            params (list): A list of AAA Radius Attribute payloads to create.
+        """
+        self.log("Processing ADD for AAA Radius Attributes.", "INFO")
+        self.log("Params for ADD: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params:
+                design_name = payload.get("designName")
+                self.log("Creating AAA Radius Attribute: {0}".format(design_name), "DEBUG")
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="create_aaa_radius_attributes_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    self.check_tasks_response_status(response, "create_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully created AAA Radius Attribute."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to create AAA Radius Attribute: {0}".format(
+                            fail_reason
+                        )
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as e:
+                    results[design_name] = "Exception while creating: {0}".format(str(e))
+                    self.log(results[design_name], "ERROR")
+
+            # Final message after all payloads processed
+            self.msg = {"aaa_radius_attributes_add": results}
+            self.status = (
+                "failed" if all("Failed" in v or "Exception" in v for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as e:
+            self.msg = {
+                "aaa_radius_attributes_add": "Exception during add: {0}".format(str(e))
+            }
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_update_aaa_radius_attributes(self, params):
+        """
+        Handles the update of AAA Radius Attributes in Cisco DNAC.
+        Args:
+            params (list): A list of AAA Radius Attribute payloads to update.
+        """
+        self.log("Processing UPDATE for AAA Radius Attributes.", "INFO")
+        self.log("Params for UPDATE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params:
+                design_name = payload.get("designName")
+                self.log("Updating AAA Radius Attribute: {0}".format(design_name), "DEBUG")
+
+                response = self.dnac._exec(
+                    family="wireless",
+                    function="update_aaa_radius_attributes_configuration_feature_template",
+                    op_modifies=True,
+                    params={"id": self.template_id, "payload": payload},
+                )
+
+                self.check_tasks_response_status(
+                    response, "update_aaa_radius_attributes_configuration_feature_template"
+                )
+
+                if self.status not in ["failed", "exited"]:
+                    results[design_name] = "Successfully updated AAA Radius Attribute."
+                else:
+                    fail_reason = self.msg
+                    results[design_name] = "Failed to update AAA Radius Attribute: {0}".format(
+                        fail_reason
+                    )
+                    self.log(results[design_name], "ERROR")
+
+            # Final result after all payloads processed
+            self.msg = {"aaa_radius_attributes_update": results}
+            # If all updates failed → status = failed, else = success
+            self.status = (
+                "failed" if all("Failed" in v for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as e:
+            self.msg = {
+                "aaa_radius_attributes_update": "Exception during update: {0}".format(str(e))
+            }
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
 
     def get_diff_deleted(self):
         """
