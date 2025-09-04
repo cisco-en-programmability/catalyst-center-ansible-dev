@@ -5293,6 +5293,77 @@ class WirelessDesign(DnacBase):
                     "unlocked_attributes": {"type": "list"},
                 },
             },
+            "advanced_ssid": {
+                "type": "list",
+                "elements": "dict",
+                "required": False,
+                "options": {
+                    "design_name": {"type": "str"},
+                    "feature_attributes": {
+                        "type": "dict",
+                        "required": False,
+                        "options": {
+                            "peer2peer_blocking": {"type": "str", "choices": ["DISABLE", "DROP", "FORWARD_UP", "ALLOW_PVT_GROUP"]},
+                            "passive_client": {"type": "bool"},
+                            "prediction_optimization": {"type": "bool"},
+                            "dual_band_neighbor_list": {"type": "bool"},
+                            "radius_nac_state": {"type": "bool"},
+                            "dhcp_required": {"type": "bool"},
+                            "dhcp_server": {"type": "str"},
+                            "flex_local_auth": {"type": "bool"},
+                            "target_wakeup_time": {"type": "bool"},
+                            "downlink_ofdma": {"type": "bool"},
+                            "uplink_ofdma": {"type": "bool"},
+                            "downlink_mu_mimo": {"type": "bool"},
+                            "uplink_mu_mimo": {"type": "bool"},
+                            "dot11ax": {"type": "bool"},
+                            "aironet_ie_support": {"type": "bool"},
+                            "load_balancing": {"type": "bool"},
+                            "dtim_period_5ghz": {"type": "int"},
+                            "dtim_period_24ghz": {"type": "int"},
+                            "scan_defer_time": {"type": "int"},
+                            "max_clients": {"type": "int"},
+                            "max_clients_per_radio": {"type": "int"},
+                            "max_clients_per_ap": {"type": "int"},
+                            "wmm_policy": {"type": "str", "choices": ["DISABLED", "ALLOWED", "REQUIRED"]},
+                            "multicast_buffer": {"type": "bool"},
+                            "multicast_buffer_value": {"type": "int"},
+                            "media_stream_multicast_direct": {"type": "bool"},
+                            "mu_mimo_11ac": {"type": "bool"},
+                            "wifi_to_cellular_steering": {"type": "bool"},
+                            "wifi_alliance_agile_multiband": {"type": "bool"},
+                            "fastlane_asr": {"type": "bool"},
+                            "dot11v_bss_max_idle_protected": {"type": "bool"},
+                            "universal_ap_admin": {"type": "bool"},
+                            "opportunistic_key_caching": {"type": "bool"},
+                            "ip_source_guard": {"type": "bool"},
+                            "dhcp_opt82_remote_id_sub_option": {"type": "bool"},
+                            "vlan_central_switching": {"type": "bool"},
+                            "call_snooping": {"type": "bool"},
+                            "send_disassociate": {"type": "bool"},
+                            "sent_486_busy": {"type": "bool"},
+                            "ip_mac_binding": {"type": "bool"},
+                            "idle_threshold": {"type": "int"},
+                            "defer_priority_0": {"type": "bool"},
+                            "defer_priority_1": {"type": "bool"},
+                            "defer_priority_2": {"type": "bool"},
+                            "defer_priority_3": {"type": "bool"},
+                            "defer_priority_4": {"type": "bool"},
+                            "defer_priority_5": {"type": "bool"},
+                            "defer_priority_6": {"type": "bool"},
+                            "defer_priority_7": {"type": "bool"},
+                            "share_data_with_client": {"type": "bool"},
+                            "advertise_support": {"type": "bool"},
+                            "advertise_pc_analytics_support": {"type": "bool"},
+                            "send_beacon_on_association": {"type": "bool"},
+                            "send_beacon_on_roam": {"type": "bool"},
+                            "fast_transition_reassociation_timeout": {"type": "int"},
+                            "mdns_mode": {"type": "str", "choices": ["MDNS_SD_BRIDGING", "MDNS_SD_DROP", "MDNS_SD_GATEWAY"]},
+                        },
+                    },
+                    "unlocked_attributes": {"type": "list", "elements": "str", "required": False},
+                },
+            },
         }
         self.log(self.temp_spec, "DEBUG")
         self.log(self.config, "DEBUG")
@@ -16424,10 +16495,211 @@ class WirelessDesign(DnacBase):
                     aaa_attr_list
                 )
 
+        # --- New logic for Advanced SSID ---
+        adv_ssid_list = config.get("advanced_ssid")
+        self.log(adv_ssid_list, "DEBUG")
+        if adv_ssid_list:
+            self.log("Processing Advanced SSID for state: {0}".format(state), "DEBUG")
+
+            if state == "merged":
+                add_adv, update_adv, no_update_adv = (
+                    self.verify_create_update_advanced_ssid_requirement(adv_ssid_list)
+                )
+                have.update(
+                    {
+                        "add_advanced_ssid": add_adv,
+                        "update_advanced_ssid": update_adv,
+                        "no_update_advanced_ssid": no_update_adv,
+                    }
+                )
+            elif state == "deleted":
+                have["delete_advanced_ssid"] = self.verify_delete_advanced_ssid_requirement(
+                    adv_ssid_list
+                )
 
         self.have = have
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
         return self
+
+    def verify_create_update_advanced_ssid_requirement(self, adv_ssid_list):
+        """
+        Determines whether Advanced SSIDs need to be created, updated, or require no updates.
+        Args:
+            adv_ssid_list (list): A list of dictionaries containing the requested Advanced SSID parameters.
+        Returns:
+            tuple: Three lists containing Advanced SSIDs to be created, updated, and not updated.
+        """
+        self.log("Starting verification for Advanced SSID create/update requirement.", "INFO")
+
+        # Retrieve all existing Advanced SSID templates
+        existing_adv_ssids = self.get_advanced_ssid_templates()
+
+        self.log("Existing Advanced SSIDs: {0}".format(existing_adv_ssids), "DEBUG")
+        self.log("Requested Advanced SSIDs: {0}".format(adv_ssid_list), "DEBUG")
+
+        instances = []
+        for group in existing_adv_ssids:
+            instances.extend(group.get("instances", []))
+
+        existing_dict = {ssid["designName"]: ssid for ssid in instances}
+        self.log("Converted existing Advanced SSIDs into lookup dictionary.", "DEBUG")
+
+        add_list, update_list, no_update_list = [], [], []
+
+        for requested in adv_ssid_list:
+            design_name = requested.get("design_name")
+            feature_attrs = requested.get("feature_attributes", {})
+            unlocked_attrs = requested.get("unlocked_attributes", [])
+
+            payload = {
+                "designName": design_name,
+                "featureAttributes": feature_attrs,
+            }
+            if unlocked_attrs:
+                payload["unlockedAttributes"] = unlocked_attrs
+
+            self.log("Checking Advanced SSID: {0}".format(design_name), "DEBUG")
+
+            existing = existing_dict.get(design_name)
+            if not existing:
+                add_list.append(payload)
+                self.log("Advanced SSID '{0}' marked for ADD.".format(design_name), "INFO")
+            else:
+                details = self.get_advanced_ssid_details(existing["id"])
+                existing_features = details.get("featureAttributes", {})
+                existing_unlocked = details.get("unlockedAttributes", [])
+
+                feature_diff = {
+                    key: (existing_features.get(key), feature_attrs.get(key))
+                    for key in set(existing_features.keys()).union(set(feature_attrs.keys()))
+                    if existing_features.get(key) != feature_attrs.get(key)
+                }
+
+                unlocked_diff = set(existing_unlocked) ^ set(unlocked_attrs)
+
+                if feature_diff or unlocked_diff:
+                    payload["id"] = existing.get("id")
+                    update_list.append(payload)
+                    self.log(
+                        "Advanced SSID '{0}' marked for UPDATE. Differences: {1}, Unlocked differences: {2}".format(
+                            design_name, feature_diff, unlocked_diff
+                        ),
+                        "INFO",
+                    )
+                else:
+                    no_update_list.append(existing)
+                    self.log("Advanced SSID '{0}' requires NO UPDATE.".format(design_name), "INFO")
+
+        self.log(
+            "Advanced SSIDs to ADD: {0}, UPDATE: {1}, NO-UPDATE: {2}".format(
+                len(add_list), len(update_list), len(no_update_list)
+            ),
+            "DEBUG",
+        )
+
+        return add_list, update_list, no_update_list
+
+
+    def get_advanced_ssid_templates(self, design_name=None):
+        """
+        Retrieve existing Advanced SSID feature templates from Cisco DNAC.
+        Args:
+            design_name (str, optional): Specific feature template design name to fetch.
+        Returns:
+            list: A list of existing Advanced SSID template dicts.
+        """
+        self.log("Fetching existing Advanced SSID Templates from DNAC.", "DEBUG")
+
+        try:
+            params = {"type": "ADVANCED_SSID_CONFIGURATION"}
+
+            if design_name:
+                params["design_name"] = design_name
+
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_feature_template_summary",
+                op_modifies=False,
+                params=params,
+            )
+            self.log(response, "DEBUG")
+            existing_ssids = response.get("response", [])
+            self.log(
+                "Retrieved {0} Advanced SSID Templates.".format(len(existing_ssids)),
+                "DEBUG",
+            )
+            return existing_ssids
+
+        except Exception as e:
+            self.log(
+                "Failed to fetch Advanced SSID Templates: {0}".format(str(e)), "ERROR"
+            )
+            return []
+
+    def verify_delete_aaa_radius_attributes_requirement(self, aaa_attr_list):
+        """
+        Determines whether AAA Radius Attributes need to be deleted based on the requested parameters.
+        Args:
+            aaa_attr_list (list): A list of dictionaries containing the requested AAA Radius Attribute parameters for deletion.
+                                Example: [{"design_name": "AAA_Radius_Template_01"}]
+        Returns:
+            list: A list of AAA Radius Attributes that need to be deleted, including their IDs.
+        """
+        delete_attrs_list = []
+
+        self.log("Starting verification of AAA Radius Attributes for deletion.", "INFO")
+
+        # Retrieve all existing AAA Radius Attributes
+        existing_blocks = self.get_aaa_radius_attributes()
+        instances = []
+        for block in existing_blocks:
+            instances.extend(block.get("instances", []))
+
+        self.log("Existing AAA Radius Attributes: {0}".format(instances), "DEBUG")
+
+        # Convert existing attributes into a dictionary for quick lookup by design name
+        existing_dict = {attr["designName"]: attr for attr in instances}
+        self.log("Converted existing AAA Radius Attributes to dictionary.", "DEBUG")
+
+        # Iterate over the requested attributes
+        for index, requested_attr in enumerate(aaa_attr_list, start=1):
+            design_name = requested_attr.get("design_name")
+            self.log(
+                "Iteration {0}: Checking AAA Radius Attribute '{1}' for deletion requirement.".format(
+                    index, design_name
+                ),
+                "DEBUG",
+            )
+
+            if design_name in existing_dict:
+                # Match found → prepare payload with ID
+                existing = existing_dict[design_name]
+                attr_to_delete = requested_attr.copy()
+                attr_to_delete["id"] = existing.get("id")
+                delete_attrs_list.append(attr_to_delete)
+                self.log(
+                    "Iteration {0}: AAA Radius Attribute '{1}' scheduled for deletion.".format(
+                        index, design_name
+                    ),
+                    "INFO",
+                )
+            else:
+                self.log(
+                    "Iteration {0}: Deletion not required for AAA Radius Attribute '{1}'. It does not exist.".format(
+                        index, design_name
+                    ),
+                    "INFO",
+                )
+
+        self.log(
+            "AAA Radius Attributes scheduled for deletion: {0} - {1}".format(
+                len(delete_attrs_list), delete_attrs_list
+            ),
+            "DEBUG",
+        )
+
+        return delete_attrs_list
+
 
     def verify_create_update_aaa_radius_attributes_requirement(self, aaa_attr_list):
         """
@@ -16464,7 +16736,7 @@ class WirelessDesign(DnacBase):
             existing = existing_dict.get(design_name)
 
             if not existing:
-                add_attrs.append(payload)  # new
+                add_attrs.append(payload)
             else:
                 details = self.get_aaa_radius_attribute_details(existing["id"])
                 self.log("Details for {0}: {1}".format(design_name, details), "DEBUG")
@@ -16776,6 +17048,7 @@ class WirelessDesign(DnacBase):
                 "UPDATE Anchor Groups",
                 self.process_update_anchor_groups,
             ),
+            # new enhancement for AAA Radius Attributes
             (
                 "add_aaa_radius_attribute_params", 
                 "ADD AAA Radius Attributes", 
@@ -16996,6 +17269,12 @@ class WirelessDesign(DnacBase):
                 "DELETE Anchor Groups",
                 self.process_delete_anchor_groups,
             ),
+            (
+                "delete_aaa_radius_attribute_params", 
+                "DELETE AAA Radius Attributes", 
+                self.process_delete_aaa_radius_attributes
+            ),
+
         ]
 
         # Iterate over operations and process deletions
@@ -17055,6 +17334,61 @@ class WirelessDesign(DnacBase):
         )
         self.set_operation_result(final_status, is_changed, self.msg, "INFO")
         return self
+
+    def process_delete_aaa_radius_attributes(self, params):
+        """
+        Handles the deletion of AAA Radius Attributes in Cisco DNAC.
+        Args:
+            params (list): A list of AAA Radius Attribute payloads to delete.
+                        Each payload must contain at least the template 'id' and optionally 'design_name'.
+        """
+        self.log("Processing DELETE for AAA Radius Attributes.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params:
+                design_name = payload.get("design_name", "Unknown")
+                template_id = payload.get("id")
+
+                self.log(
+                    "Deleting AAA Radius Attribute: design='{0}', id='{1}'".format(design_name, template_id),
+                    "DEBUG",
+                )
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_aaa_radius_attributes_configuration_feature_template",
+                        op_modifies=True,
+                        params={"id": template_id},
+                    )
+
+                    self.check_tasks_response_status(response, "delete_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully deleted AAA Radius Attribute."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to delete AAA Radius Attribute: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as e:
+                    results[design_name] = "Exception while deleting: {0}".format(str(e))
+                    self.log(results[design_name], "ERROR")
+
+            # Final result after processing all deletions
+            self.msg = {"aaa_radius_attributes_delete": results}
+            self.status = "failed" if all("Failed" in v or "Exception" in v for v in results.values()) else "success"
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as e:
+            self.msg = {"aaa_radius_attributes_delete": "Exception during delete: {0}".format(str(e))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
 
     def verify_diff_merged(self):
         """
