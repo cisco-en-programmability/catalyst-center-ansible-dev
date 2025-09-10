@@ -16523,72 +16523,180 @@ class WirelessDesign(DnacBase):
 
     def verify_create_update_advanced_ssid_requirement(self, adv_ssid_list):
         """
-        Determines whether Advanced SSIDs need to be created, updated, or require no updates.
-        Args:
-            adv_ssid_list (list): A list of dictionaries containing the requested Advanced SSID parameters.
-        Returns:
-            tuple: Three lists containing Advanced SSIDs to be created, updated, and not updated.
+        Single-function robust check for Advanced SSID create/update/no-update.
+        - Normalizes snake_case -> controller-style keys (camelCase / known overrides)
+        - Handles unlocked_attributes == None
+        - Applies tolerant canonicalization for enums/numbers/bools
+        - Returns (add_list, update_list, no_update_list)
         """
+        def snake_to_camel(s: str) -> str:
+            parts = s.split("_")
+            return parts[0] + "".join(p.capitalize() for p in parts[1:]) if len(parts) > 1 else s
+
+        # map incoming keys to controller keys where names differ
+        key_override_map = {
+            "peer2peer_blocking": "peer2peerblocking",
+            "passive_client": "passiveClient",
+            "prediction_optimization": "predictionOptimization",
+            "dhcp_required": "dhcpRequired",
+            "dhcp_server": "dhcpServer",
+            "dot11ax": "dot11ax",
+            "load_balancing": "loadBalancing",
+            "dtim_period_5ghz": "dtimPeriod5GHz",
+            "dtim_period_24ghz": "dtimPeriod24GHz",
+            "wmm_policy": "wmmPolicy",
+            "max_clients": "maxClients",
+            "max_clients_per_radio": "maxClientsPerRadio",
+            "max_clients_per_ap": "maxClientsPerAP",
+            "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
+            "mdns_mode": "mDNSMode",
+            # add more overrides as you discover them
+        }
+
+        # canonicalizers for specific keys: make request and existing comparable
+        def canon_peer2peer(v):
+            if v is None: return None
+            s = str(v).strip().upper()
+            if s in ("DISABLE", "DROP", "OFF", "FALSE", "0"): return "DROP"
+            if s in ("ENABLE", "ALLOW", "ON", "TRUE", "1"): return "ALLOW"
+            return s
+
+        def canon_wmm(v):
+            if v is None: return None
+            return str(v).upper()
+
+        def canon_int(v):
+            if v is None: return None
+            try:
+                return int(v)
+            except Exception:
+                try:
+                    # sometimes booleans or 'True'/'False'
+                    if str(v).lower() in ("true", "false"):
+                        return 1 if str(v).lower() == "true" else 0
+                except Exception:
+                    pass
+            return v
+
+        value_mappers = {
+            "peer2peerblocking": canon_peer2peer,
+            "wmmPolicy": canon_wmm,
+            "maxClients": canon_int,
+            "maxClientsPerRadio": canon_int,
+            "maxClientsPerAP": canon_int,
+            "dtimPeriod5GHz": canon_int,
+            "dtimPeriod24GHz": canon_int,
+            "fastTransitionReassociationTimeout": canon_int,
+            "mDNSMode": lambda v: str(v).upper() if v is not None else None,
+        }
+
+        def normalize_request_features(raw: dict) -> dict:
+            out = {}
+            for k, v in (raw or {}).items():
+                target = key_override_map.get(k, snake_to_camel(k))
+                # normalize booleans and boolean-like strings
+                if isinstance(v, str) and v.lower() in ("true", "false"):
+                    v = v.lower() == "true"
+                out[target] = v
+            return out
+
+        def apply_mappers(d: dict, mappers: dict) -> dict:
+            out = {}
+            for k, v in (d or {}).items():
+                if k in mappers:
+                    try:
+                        out[k] = mappers[k](v)
+                    except Exception:
+                        out[k] = v
+                else:
+                    out[k] = v
+            return out
+
+        # start main logic
         self.log("Starting verification for Advanced SSID create/update requirement.", "INFO")
-
-        # Retrieve all existing Advanced SSID templates
-        existing_adv_ssids = self.get_advanced_ssid_templates()
-
+        existing_adv_ssids = self.get_advanced_ssid_templates() or []
         self.log("Existing Advanced SSIDs: {0}".format(existing_adv_ssids), "DEBUG")
         self.log("Requested Advanced SSIDs: {0}".format(adv_ssid_list), "DEBUG")
 
         instances = []
         for group in existing_adv_ssids:
-            instances.extend(group.get("instances", []))
-
+            instances.extend(group.get("instances", []) or [])
         existing_dict = {ssid["designName"]: ssid for ssid in instances}
-        self.log("Converted existing Advanced SSIDs into lookup dictionary.", "DEBUG")
 
         add_list, update_list, no_update_list = [], [], []
 
-        for requested in adv_ssid_list:
+        for requested in adv_ssid_list or []:
             design_name = requested.get("design_name")
-            feature_attrs = requested.get("feature_attributes", {})
-            unlocked_attrs = requested.get("unlocked_attributes", [])
+            feature_attrs_raw = requested.get("feature_attributes") or {}
+            unlocked_attrs = requested.get("unlocked_attributes")
+            # coerce None -> []
+            unlocked_attrs = [] if unlocked_attrs is None else unlocked_attrs
 
-            payload = {
-                "designName": design_name,
-                "featureAttributes": feature_attrs,
-            }
+            payload = {"designName": design_name, "featureAttributes": feature_attrs_raw}
             if unlocked_attrs:
                 payload["unlockedAttributes"] = unlocked_attrs
 
             self.log("Checking Advanced SSID: {0}".format(design_name), "DEBUG")
-
             existing = existing_dict.get(design_name)
+            self.log("Existing match: {0}".format(existing), "DEBUG")
+
             if not existing:
                 add_list.append(payload)
                 self.log("Advanced SSID '{0}' marked for ADD.".format(design_name), "INFO")
-            else:
-                details = self.get_advanced_ssid_details(existing["id"])
-                existing_features = details.get("featureAttributes", {})
-                existing_unlocked = details.get("unlockedAttributes", [])
+                continue
 
-                feature_diff = {
-                    key: (existing_features.get(key), feature_attrs.get(key))
-                    for key in set(existing_features.keys()).union(set(feature_attrs.keys()))
-                    if existing_features.get(key) != feature_attrs.get(key)
-                }
+            # fetch details for accurate comparison
+            details = self.get_advanced_ssid_details(existing["id"]) or {}
+            self.log("Fetched details for existing Advanced SSID '{0}': {1}".format(design_name, details), "DEBUG")
+            existing_features = details.get("featureAttributes", {}) or {}
+            existing_unlocked = details.get("unlockedAttributes", []) or []
 
-                unlocked_diff = set(existing_unlocked) ^ set(unlocked_attrs)
+            # normalize keys on request and apply value mappers to both sides
+            req_norm = normalize_request_features(feature_attrs_raw)
+            req_norm = apply_mappers(req_norm, value_mappers)
+            exist_norm = apply_mappers(existing_features, value_mappers)
 
-                if feature_diff or unlocked_diff:
-                    payload["id"] = existing.get("id")
-                    update_list.append(payload)
-                    self.log(
-                        "Advanced SSID '{0}' marked for UPDATE. Differences: {1}, Unlocked differences: {2}".format(
-                            design_name, feature_diff, unlocked_diff
-                        ),
-                        "INFO",
-                    )
+            # compute union of keys and tolerant differences
+            all_keys = set(exist_norm.keys()) | set(req_norm.keys())
+            feature_diff = {}
+            for k in all_keys:
+                ev = exist_norm.get(k)
+                rv = req_norm.get(k)
+                # special-case: compare booleans and ints tolerantly
+                if isinstance(ev, bool) or isinstance(rv, bool):
+                    # coerce truthy/falsy
+                    ev_bool = bool(ev)
+                    rv_bool = bool(rv)
+                    if ev_bool != rv_bool:
+                        feature_diff[k] = (ev, rv)
+                elif isinstance(ev, (int, float)) or isinstance(rv, (int, float)):
+                    try:
+                        ev_num = float(ev) if ev is not None else None
+                        rv_num = float(rv) if rv is not None else None
+                        if ev_num != rv_num:
+                            feature_diff[k] = (ev, rv)
+                    except Exception:
+                        if ev != rv:
+                            feature_diff[k] = (ev, rv)
                 else:
-                    no_update_list.append(existing)
-                    self.log("Advanced SSID '{0}' requires NO UPDATE.".format(design_name), "INFO")
+                    if ev != rv:
+                        feature_diff[k] = (ev, rv)
+
+            # unlocked attributes difference (order-insensitive)
+            unlocked_diff = set(existing_unlocked) ^ set(unlocked_attrs or [])
+
+            if feature_diff or unlocked_diff:
+                payload["id"] = existing.get("id")
+                update_list.append(payload)
+                self.log(
+                    "Advanced SSID '{0}' marked for UPDATE. Differences: {1}, Unlocked differences: {2}".format(
+                        design_name, feature_diff, unlocked_diff
+                    ),
+                    "INFO",
+                )
+            else:
+                no_update_list.append(existing)
+                self.log("Advanced SSID '{0}' requires NO UPDATE.".format(design_name), "INFO")
 
         self.log(
             "Advanced SSIDs to ADD: {0}, UPDATE: {1}, NO-UPDATE: {2}".format(
@@ -16599,6 +16707,50 @@ class WirelessDesign(DnacBase):
 
         return add_list, update_list, no_update_list
 
+
+
+    def get_advanced_ssid_details(self, ssid_id):
+        """
+        Retrieve existing Advanced SSID feature templates from Cisco DNAC.
+        Args:
+            design_name (str, optional): Specific feature template design name to fetch.
+        Returns:
+            list: A list of existing Advanced SSID template dicts.
+        """
+        self.log("Fetching existing Advanced SSID Templates from DNAC.", "DEBUG")
+        try:
+            # Prepare API parameters
+            params = {}
+            if ssid_id:
+                params["id"] = ssid_id
+                
+            # Execute API call to DNA Center
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_advanced_ssid_configuration_feature_template",
+                op_modifies=False,
+                params=params,
+            )
+            
+            # Log raw response for debugging
+            self.log(f"API Response: {response}", "DEBUG")
+            
+            # Extract templates from response
+            existing_ssids = response.get("response", [])
+            # Validate response data
+            if not isinstance(existing_ssids, dict):
+                self.log(
+                    f"Unexpected response format. Expected list, got {type(existing_ssids)}", 
+                    "WARNING"
+                )
+                return []
+            return existing_ssids
+
+        except Exception as e:
+            self.log(
+                "Failed to fetch Advanced SSID Templates: {0}".format(str(e)), "ERROR"
+            )
+            return []
 
     def get_advanced_ssid_templates(self, design_name=None):
         """

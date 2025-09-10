@@ -23,7 +23,7 @@
         state: merged
         config:
           - advanced_ssid:
-              - design_name: ""
+              - design_name: "Corporate_WLAN_Design_1"
                 feature_attributes:
                   peer2peer_blocking: "DISABLE"  #enum : DROP, FORWARD_UP, ALLOW_PVT_GROUP, DISABLE
                   passive_client: false
