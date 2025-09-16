@@ -5364,6 +5364,80 @@ class WirelessDesign(DnacBase):
                     "unlocked_attributes": {"type": "list", "elements": "str", "required": False},
                 },
             },
+            "clean_air_configuration": {
+                "type": "list",
+                "elements": "dict",
+                "required": False,
+                "options": {
+                    "design_name": {"type": "str"},
+                    "radio_band": {
+                        "type": "str",
+                        "choices": ["2_4GHZ", "5GHZ", "6GHZ"]
+                    },
+                    "feature_attributes": {
+                        "type": "dict",
+                        "required": False,
+                        "options": {
+                            "clean_air": {"type": "bool"},
+                            "clean_air_device_reporting": {"type": "bool"},
+                            "persistent_device_propagation": {"type": "bool"},
+                            "description": {"type": "str"},
+                            "interferers_features": {
+                                "type": "dict",
+                                "required": False,
+                                "options": {
+                                    "ble_beacon": {"type": "bool"},
+                                    "bluetooth_paging_inquiry": {"type": "bool"},
+                                    "bluetooth_sco_acl": {"type": "bool"},
+                                    "continuous_transmitter": {"type": "bool"},
+                                    "generic_dect": {"type": "bool"},
+                                    "generic_tdd": {"type": "bool"},
+                                    "jammer": {"type": "bool"},
+                                    "microwave_oven": {"type": "bool"},
+                                    "motorola_canopy": {"type": "bool"},
+                                    "si_fhss": {"type": "bool"},
+                                    "spectrum80211_fh": {"type": "bool"},
+                                    "spectrum80211_non_standard_channel": {"type": "bool"},
+                                    "spectrum802154": {"type": "bool"},
+                                    "spectrum_inverted": {"type": "bool"},
+                                    "super_ag": {"type": "bool"},
+                                    "video_camera": {"type": "bool"},
+                                    "wimax_fixed": {"type": "bool"},
+                                    "wimax_mobile": {"type": "bool"},
+                                    "xbox": {"type": "bool"},
+                                },
+                            },
+                        },
+                    },
+                    "unlocked_attributes": {"type": "list", "elements": "str", "required": False},
+                },
+            },
+            "dot11ax_configuration": {
+              "type": "list",
+              "elements": "dict",
+              "required": False,
+              "options": {
+                "design_name": {"type": "str"},
+                "feature_attributes": {
+                  "type": "dict",
+                  "options": {
+                    "radio_band": {"type": "str"},
+                    "bss_color": {"type": "bool"},
+                    "target_waketime_broadcast": {"type": "bool"},
+                    "non_srg_obss_pd_max_threshold": {"type": "int"},
+                    "target_wake_up_time_11ax": {"type": "bool"},
+                    "obss_pd": {"type": "bool"},
+                    "multiple_bssid": {"type": "bool"},
+                  },
+                },
+                "unlocked_attributes": {
+                  "type": "list",
+                  "elements": "str"
+                },
+              },
+            }
+
+
         }
         self.log(self.temp_spec, "DEBUG")
         self.log(self.config, "DEBUG")
@@ -16517,197 +16591,1130 @@ class WirelessDesign(DnacBase):
                     adv_ssid_list
                 )
 
+        # --- New logic for CleanAir profiles ---
+        clean_air_list = config.get("clean_air_configuration")
+        self.log(clean_air_list, "DEBUG")
+        if clean_air_list:
+            self.log("Processing CleanAir configuration for state: {0}".format(state), "DEBUG")
+
+            if state == "merged":
+                add_clean_air, update_clean_air, no_update_clean_air = (
+                    self.verify_create_update_clean_air_requirement(clean_air_list)
+                )
+                have.update(
+                    {
+                        "add_clean_air_configuration": add_clean_air,
+                        "update_clean_air_configuration": update_clean_air,
+                        "no_update_clean_air_configuration": no_update_clean_air,
+                    }
+                )
+            elif state == "deleted":
+                have["delete_clean_air_configuration"] = self.verify_delete_clean_air_requirement(
+                    clean_air_list
+                )
+
+        # --- New logic for 802.11ax profiles ---
+        dot11ax_list = config.get("dot11ax_configuration")
+        self.log(dot11ax_list, "DEBUG")
+        if dot11ax_list:
+            self.log("Processing 802.11ax configuration for state: {0}".format(state), "DEBUG")
+
+            if state == "merged":
+                add_dot11ax, update_dot11ax, no_update_dot11ax = (
+                    self.verify_create_update_dot11axs_requirement(dot11ax_list)
+                )
+                have.update(
+                    {
+                        "add_dot11ax_configuration": add_dot11ax,
+                        "update_dot11ax_configuration": update_dot11ax,
+                        "no_update_dot11ax_configuration": no_update_dot11ax,
+                    }
+                )
+            elif state == "deleted":
+                have["delete_dot11ax_configuration"] = self.verify_delete_dot11axs_requirement(
+                    dot11ax_list
+                )
+
+
         self.have = have
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
         return self
 
-    def verify_create_update_advanced_ssid_requirement(self, adv_ssid_list):
+    def verify_delete_dot11axs_requirement(self, dot11ax_list):
         """
-        Single-function robust check for Advanced SSID create/update/no-update.
-        - Normalizes snake_case -> controller-style keys (camelCase / known overrides)
-        - Handles unlocked_attributes == None
-        - Applies tolerant canonicalization for enums/numbers/bools
-        - Returns (add_list, update_list, no_update_list)
+        Determines which dot11ax configuration templates need to be deleted 
+        based on the requested parameters.
+
+        Args:
+            dot11ax_list (list): A list of dicts containing the requested dot11ax
+                                configuration parameters for deletion.
+                                Example: [{"design_name": "dot11ax_24ghz_design"}]
+
+        Returns:
+            list: A list of dot11ax configuration templates scheduled for deletion,
+                including their IDs.
         """
-        def snake_to_camel(s: str) -> str:
-            parts = s.split("_")
-            return parts[0] + "".join(p.capitalize() for p in parts[1:]) if len(parts) > 1 else s
+        delete_list = []
 
-        # map incoming keys to controller keys where names differ
-        key_override_map = {
-            "peer2peer_blocking": "peer2peerblocking",
-            "passive_client": "passiveClient",
-            "prediction_optimization": "predictionOptimization",
-            "dhcp_required": "dhcpRequired",
-            "dhcp_server": "dhcpServer",
-            "dot11ax": "dot11ax",
-            "load_balancing": "loadBalancing",
-            "dtim_period_5ghz": "dtimPeriod5GHz",
-            "dtim_period_24ghz": "dtimPeriod24GHz",
-            "wmm_policy": "wmmPolicy",
-            "max_clients": "maxClients",
-            "max_clients_per_radio": "maxClientsPerRadio",
-            "max_clients_per_ap": "maxClientsPerAP",
-            "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
-            "mdns_mode": "mDNSMode",
-            # add more overrides as you discover them
-        }
+        self.log("Starting verification of dot11ax configurations for deletion.", "INFO")
 
-        # canonicalizers for specific keys: make request and existing comparable
-        def canon_peer2peer(v):
-            if v is None: return None
-            s = str(v).strip().upper()
-            if s in ("DISABLE", "DROP", "OFF", "FALSE", "0"): return "DROP"
-            if s in ("ENABLE", "ALLOW", "ON", "TRUE", "1"): return "ALLOW"
-            return s
-
-        def canon_wmm(v):
-            if v is None: return None
-            return str(v).upper()
-
-        def canon_int(v):
-            if v is None: return None
-            try:
-                return int(v)
-            except Exception:
-                try:
-                    # sometimes booleans or 'True'/'False'
-                    if str(v).lower() in ("true", "false"):
-                        return 1 if str(v).lower() == "true" else 0
-                except Exception:
-                    pass
-            return v
-
-        value_mappers = {
-            "peer2peerblocking": canon_peer2peer,
-            "wmmPolicy": canon_wmm,
-            "maxClients": canon_int,
-            "maxClientsPerRadio": canon_int,
-            "maxClientsPerAP": canon_int,
-            "dtimPeriod5GHz": canon_int,
-            "dtimPeriod24GHz": canon_int,
-            "fastTransitionReassociationTimeout": canon_int,
-            "mDNSMode": lambda v: str(v).upper() if v is not None else None,
-        }
-
-        def normalize_request_features(raw: dict) -> dict:
-            out = {}
-            for k, v in (raw or {}).items():
-                target = key_override_map.get(k, snake_to_camel(k))
-                # normalize booleans and boolean-like strings
-                if isinstance(v, str) and v.lower() in ("true", "false"):
-                    v = v.lower() == "true"
-                out[target] = v
-            return out
-
-        def apply_mappers(d: dict, mappers: dict) -> dict:
-            out = {}
-            for k, v in (d or {}).items():
-                if k in mappers:
-                    try:
-                        out[k] = mappers[k](v)
-                    except Exception:
-                        out[k] = v
-                else:
-                    out[k] = v
-            return out
-
-        # start main logic
-        self.log("Starting verification for Advanced SSID create/update requirement.", "INFO")
-        existing_adv_ssids = self.get_advanced_ssid_templates() or []
-        self.log("Existing Advanced SSIDs: {0}".format(existing_adv_ssids), "DEBUG")
-        self.log("Requested Advanced SSIDs: {0}".format(adv_ssid_list), "DEBUG")
-
+        # Retrieve all existing dot11ax configurations
+        existing_blocks = self.get_dot11ax_templates()
         instances = []
-        for group in existing_adv_ssids:
-            instances.extend(group.get("instances", []) or [])
-        existing_dict = {ssid["designName"]: ssid for ssid in instances}
+        for block in existing_blocks:
+            instances.extend(block.get("instances", []))
 
-        add_list, update_list, no_update_list = [], [], []
+        self.log("Existing dot11ax configurations: {0}".format(instances), "DEBUG")
 
-        for requested in adv_ssid_list or []:
-            design_name = requested.get("design_name")
-            feature_attrs_raw = requested.get("feature_attributes") or {}
-            unlocked_attrs = requested.get("unlocked_attributes")
-            # coerce None -> []
-            unlocked_attrs = [] if unlocked_attrs is None else unlocked_attrs
+        # Convert existing instances into a dictionary for quick lookup
+        existing_dict = {cfg["designName"]: cfg for cfg in instances}
+        self.log("Converted existing dot11ax configs to dictionary.", "DEBUG")
 
-            payload = {"designName": design_name, "featureAttributes": feature_attrs_raw}
-            if unlocked_attrs:
-                payload["unlockedAttributes"] = unlocked_attrs
+        # Iterate over requested configurations
+        for index, requested_cfg in enumerate(dot11ax_list, start=1):
+            design_name = requested_cfg.get("design_name")
+            self.log(
+                "Iteration {0}: Checking dot11ax config '{1}' for deletion.".format(
+                    index, design_name
+                ),
+                "DEBUG",
+            )
 
-            self.log("Checking Advanced SSID: {0}".format(design_name), "DEBUG")
-            existing = existing_dict.get(design_name)
-            self.log("Existing match: {0}".format(existing), "DEBUG")
-
-            if not existing:
-                add_list.append(payload)
-                self.log("Advanced SSID '{0}' marked for ADD.".format(design_name), "INFO")
-                continue
-
-            # fetch details for accurate comparison
-            details = self.get_advanced_ssid_details(existing["id"]) or {}
-            self.log("Fetched details for existing Advanced SSID '{0}': {1}".format(design_name, details), "DEBUG")
-            existing_features = details.get("featureAttributes", {}) or {}
-            existing_unlocked = details.get("unlockedAttributes", []) or []
-
-            # normalize keys on request and apply value mappers to both sides
-            req_norm = normalize_request_features(feature_attrs_raw)
-            req_norm = apply_mappers(req_norm, value_mappers)
-            exist_norm = apply_mappers(existing_features, value_mappers)
-
-            # compute union of keys and tolerant differences
-            all_keys = set(exist_norm.keys()) | set(req_norm.keys())
-            feature_diff = {}
-            for k in all_keys:
-                ev = exist_norm.get(k)
-                rv = req_norm.get(k)
-                # special-case: compare booleans and ints tolerantly
-                if isinstance(ev, bool) or isinstance(rv, bool):
-                    # coerce truthy/falsy
-                    ev_bool = bool(ev)
-                    rv_bool = bool(rv)
-                    if ev_bool != rv_bool:
-                        feature_diff[k] = (ev, rv)
-                elif isinstance(ev, (int, float)) or isinstance(rv, (int, float)):
-                    try:
-                        ev_num = float(ev) if ev is not None else None
-                        rv_num = float(rv) if rv is not None else None
-                        if ev_num != rv_num:
-                            feature_diff[k] = (ev, rv)
-                    except Exception:
-                        if ev != rv:
-                            feature_diff[k] = (ev, rv)
-                else:
-                    if ev != rv:
-                        feature_diff[k] = (ev, rv)
-
-            # unlocked attributes difference (order-insensitive)
-            unlocked_diff = set(existing_unlocked) ^ set(unlocked_attrs or [])
-
-            if feature_diff or unlocked_diff:
-                payload["id"] = existing.get("id")
-                update_list.append(payload)
+            if design_name in existing_dict:
+                existing = existing_dict[design_name]
+                cfg_to_delete = requested_cfg.copy()
+                cfg_to_delete["id"] = existing.get("id")
+                delete_list.append(cfg_to_delete)
                 self.log(
-                    "Advanced SSID '{0}' marked for UPDATE. Differences: {1}, Unlocked differences: {2}".format(
-                        design_name, feature_diff, unlocked_diff
+                    "Iteration {0}: dot11ax config '{1}' scheduled for deletion.".format(
+                        index, design_name
                     ),
                     "INFO",
                 )
             else:
-                no_update_list.append(existing)
-                self.log("Advanced SSID '{0}' requires NO UPDATE.".format(design_name), "INFO")
+                self.log(
+                    "Iteration {0}: dot11ax config '{1}' not found -> no deletion required.".format(
+                        index, design_name
+                    ),
+                    "INFO",
+                )
 
         self.log(
-            "Advanced SSIDs to ADD: {0}, UPDATE: {1}, NO-UPDATE: {2}".format(
-                len(add_list), len(update_list), len(no_update_list)
+            "dot11ax configurations scheduled for deletion: {0} - {1}".format(
+                len(delete_list), delete_list
             ),
             "DEBUG",
         )
 
+        return delete_list
+
+    def verify_create_update_dot11axs_requirement(self, dot11ax_list):
+        """
+        Compare requested dot11ax profiles against existing templates and determine
+        which should be added, updated, or left unchanged.
+
+        Expects playbook items like:
+        - design_name: "name"
+            feature_attributes:
+            radio_band: "5GHZ"
+            bss_color: true
+            target_waketime_broadcast: false
+            non_srg_obss_pd_max_threshold: 20
+            target_wake_up_time_11ax: true
+            obss_pd: false
+            multiple_bssid: false
+            unlocked_attributes: [ ... ]
+
+        Returns:
+            (add_list, update_list, no_update_list)
+        """
+        add_list, update_list, no_update_list = [], [], []
+
+        self.log("verify_create_update_dot11axs_requirement input: {0}".format(dot11ax_list), "DEBUG")
+
+        # map snake_case keys from playbook to controller keys (adjust if controller uses different names)
+        key_name_map = {
+            "design_name": "designName",
+            "feature_attributes": "featureAttributes",
+            "unlocked_attributes": "unlockedAttributes",
+            "radio_band": "radioBand",
+            "bss_color": "bssColor",
+            "target_waketime_broadcast": "targetWaketimeBroadcast",
+            "non_srg_obss_pd_max_threshold": "nonSrgObssPdMaxThreshold",
+            "target_wake_up_time_11ax": "targetWakeUpTime11ax",
+            "obss_pd": "obssPd",
+            "multiple_bssid": "multipleBssid",
+        }
+
+        # helper: snake_case -> lowerCamelCase fallback
+        def snake_to_camel(s):
+            parts = s.split("_")
+            return parts[0] + "".join(p.capitalize() for p in parts[1:]) if len(parts) > 1 else s
+
+        # fetch existing dot11ax templates once and flatten by designName
+        existing_blocks = self.get_dot11ax_templates() or []
+        self.log("Existing dot11ax templates: {0}".format(existing_blocks), "DEBUG")
+        existing_dict = {}
+        for block in existing_blocks or []:
+            for inst in block.get("instances", []) or []:
+                existing_dict[inst.get("designName")] = inst
+        self.log("Existing dot11ax templates dict: {0}".format(existing_dict), "DEBUG")
+
+        # iterate requests
+        for requested in dot11ax_list or []:
+            design_name = requested.get("design_name")
+            feature_attrs_raw = requested.get("feature_attributes") or {}
+            unlocked_attrs = requested.get("unlocked_attributes") or []
+
+            # Build normalized payload (controller-style keys)
+            normalized_features = {}
+            for rk, rv in feature_attrs_raw.items():
+                tk = key_name_map.get(rk) or snake_to_camel(rk)
+                normalized_features[tk] = rv
+
+            payload = {"designName": design_name, "featureAttributes": normalized_features}
+            if unlocked_attrs:
+                payload["unlockedAttributes"] = unlocked_attrs
+
+            self.log("Checking dot11ax profile: {0}".format(design_name), "DEBUG")
+
+            existing = existing_dict.get(design_name)
+
+            # If not existing -> add
+            if not existing:
+                add_list.append(payload)
+                self.log("dot11ax '{0}' marked for ADD.".format(design_name), "INFO")
+                continue
+
+            # fetch full details for accurate comparison
+            details = self.get_dot11ax_details(existing.get("id")) or {}
+            self.log("Details for {0}: {1}".format(design_name, details), "DEBUG")
+
+            existing_features = details.get("featureAttributes", {}) or {}
+            existing_unlocked = details.get("unlockedAttributes", []) or []
+
+            needs_update = False
+
+            # Compare only the keys supplied by the user
+            for key, req_value in normalized_features.items():
+                exist_value = existing_features.get(key)
+
+                # normalize boolean-like strings on request side
+                if isinstance(req_value, str) and req_value.lower() in ("true", "false"):
+                    req_value = req_value.lower() == "true"
+                # if controller omitted the key and request is boolean, treat omitted as False
+                if exist_value is None and isinstance(req_value, bool):
+                    exist_value = False
+                # normalize controller boolean strings
+                if isinstance(exist_value, str) and exist_value.lower() in ("true", "false"):
+                    exist_value = exist_value.lower() == "true"
+
+                lower_key = key.lower()
+
+                # numeric comparison for numeric-looking keys
+                if isinstance(req_value, (int, float)) or (isinstance(req_value, str) and req_value.isdigit()) or any(sub in lower_key for sub in ("threshold", "max", "count")):
+                    try:
+                        ev_num = int(exist_value) if exist_value is not None else None
+                    except Exception:
+                        ev_num = exist_value
+                    try:
+                        rv_num = int(req_value) if req_value is not None else None
+                    except Exception:
+                        rv_num = req_value
+                    if ev_num != rv_num:
+                        self.log("Diff for {0}: existing({1}) != requested({2})".format(key, ev_num, rv_num), "DEBUG")
+                        needs_update = True
+                        break
+
+                else:
+                    # default strict equality
+                    if exist_value != req_value:
+                        self.log("Diff for {0}: existing({1}) != requested({2})".format(key, exist_value, req_value), "DEBUG")
+                        needs_update = True
+                        break
+
+            # compare unlocked attributes (order-insensitive)
+            if not needs_update:
+                if set(existing_unlocked) != set(unlocked_attrs):
+                    self.log("Unlocked attributes differ: existing({0}) != requested({1})".format(existing_unlocked, unlocked_attrs), "DEBUG")
+                    needs_update = True
+
+            # finalize
+            if needs_update:
+                payload["id"] = existing.get("id")
+                update_list.append(payload)
+                self.log("dot11ax '{0}' marked for UPDATE.".format(design_name), "INFO")
+            else:
+                no_update_list.append(details)
+                self.log("dot11ax '{0}' requires NO UPDATE.".format(design_name), "INFO")
+
+        self.log("dot11ax to ADD: {0}, UPDATE: {1}, NO-UPDATE: {2}".format(len(add_list), len(update_list), len(no_update_list)), "DEBUG")
         return add_list, update_list, no_update_list
 
+    def get_dot11ax_details(self, template_id):
+        """
+        Retrieve detailed information for a specific dot11ax configuration template from Cisco DNAC.
 
+        Args:
+            template_id (str): The unique ID of the dot11ax feature template.
+
+        Returns:
+            dict: The details of the dot11ax feature template, or {} if fetch fails.
+        """
+        self.log("Fetching dot11ax configuration details for template_id='{0}'".format(template_id), "DEBUG")
+
+        try:
+            if not template_id:
+                self.log("No template_id provided for dot11ax details.", "ERROR")
+                return {}
+
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_dot11ax_configuration_feature_template",
+                op_modifies=False,
+                params={"id": template_id},
+            )
+            self.log("API Response: {0}".format(response), "DEBUG")
+
+            details = response.get("response") or {}
+            return details
+
+        except Exception as e:
+            self.log("Failed to fetch dot11ax configuration details: {0}".format(str(e)), "ERROR")
+            return {}
+
+    def get_dot11ax_templates(self, design_name=None, template_type="DOT11AX_CONFIGURATION"):
+        """
+        Retrieve existing CleanAir feature templates from Cisco DNAC.
+
+        Args:
+            design_name (str, optional): Specific feature template design name to filter by.
+            template_type (str, optional): Feature template type string used by DNAC. Defaults to "CLEAN_AIR_CONFIGURATION".
+                                        Adjust if your DNAC uses a different type identifier.
+
+        Returns:
+            list: A list of existing CleanAir template dicts (the API 'response' list), or [] on failure.
+        """
+        self.log("Fetching existing CleanAir Templates from DNAC.", "DEBUG")
+
+        try:
+            params = {"type": template_type}
+            if design_name:
+                params["design_name"] = design_name
+
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_feature_template_summary",
+                op_modifies=False,
+                params=params,
+            )
+            self.log(response, "DEBUG")
+            existing_clean_air = response.get("response", [])
+            self.log(
+                "Retrieved {0} CleanAir Templates.".format(len(existing_clean_air)),
+                "DEBUG",
+            )
+            return existing_clean_air
+
+        except Exception as e:
+            self.log("Failed to fetch CleanAir Templates: {0}".format(str(e)), "ERROR")
+            return []
+
+    def verify_delete_clean_air_requirement(self, clean_air_list):
+        """
+        Determines which CleanAir profiles need to be deleted based on the requested parameters.
+
+        Args:
+            clean_air_list (list): A list of dicts containing the requested CleanAir parameters for deletion.
+                                Example: [{"design_name": "sample_cleanair_design_24ghz"}]
+
+        Returns:
+            list: A list of CleanAir entries to delete. Each entry is the original requested dict
+                with an added "id" key (the controller template id) when a match is found.
+        """
+        delete_clean_air_list = []
+
+        self.log("Starting verification of CleanAir profiles for deletion.", "INFO")
+
+        # Retrieve all existing CleanAir templates
+        existing_blocks = self.get_clean_air_templates() or []
+        instances = []
+        for block in existing_blocks:
+            instances.extend(block.get("instances", []) or [])
+
+        self.log("Existing CleanAir instances: {0}".format(instances), "DEBUG")
+
+        # Convert existing instances into a dictionary keyed by designName
+        existing_dict = {item["designName"]: item for item in instances}
+        self.log("Converted existing CleanAir templates to dictionary.", "DEBUG")
+
+        # Iterate over the requested entries for deletion
+        for idx, requested in enumerate(clean_air_list or [], start=1):
+            design_name = requested.get("design_name")
+            self.log(
+                "Iteration {0}: Checking CleanAir '{1}' for deletion requirement.".format(idx, design_name),
+                "DEBUG",
+            )
+
+            if not design_name:
+                self.log(
+                    "Iteration {0}: Skipping entry with missing design_name: {1}".format(idx, requested),
+                    "WARNING",
+                )
+                continue
+
+            if design_name in existing_dict:
+                existing = existing_dict[design_name]
+                to_delete = requested.copy()
+                to_delete["id"] = existing.get("id")
+                delete_clean_air_list.append(to_delete)
+                self.log(
+                    "Iteration {0}: CleanAir '{1}' scheduled for deletion (id={2}).".format(
+                        idx, design_name, existing.get("id")
+                    ),
+                    "INFO",
+                )
+            else:
+                self.log(
+                    "Iteration {0}: CleanAir '{1}' not found - no deletion required.".format(idx, design_name),
+                    "INFO",
+                )
+
+        self.log(
+            "CleanAir profiles scheduled for deletion: {0} - {1}".format(len(delete_clean_air_list), delete_clean_air_list),
+            "DEBUG",
+        )
+
+        return delete_clean_air_list
+
+    def verify_create_update_clean_air_requirement(self, clean_air_list, field_to_check=None):
+        """
+        Determine which CleanAir profiles to add, update, or leave unchanged.
+
+        Args:
+            clean_air_list (list): list of requested clean-air dicts from the playbook
+            field_to_check (str|None): optional single-field to check (snake_case or camelCase, supports dot notation)
+
+        Returns:
+            tuple: (add_list, update_list, no_update_list)
+        Side effect:
+            sets self.clean_air_update_diffs = { designName: [(key, existing, requested), ...], ... }
+        """
+        add_list, update_list, no_update_list = [], [], []
+        clean_air_update_diffs = {}
+        self.log("verify_create_update_clean_air_requirement input: {0}".format(clean_air_list), "DEBUG")
+
+        # key map: playbook snake_case -> controller camelCase
+        key_name_map = {
+            "design_name": "designName",
+            "radio_band": "radioBand",
+            "feature_attributes": "featureAttributes",
+            "unlocked_attributes": "unlockedAttributes",
+            "clean_air": "cleanAir",
+            "clean_air_device_reporting": "cleanAirDeviceReporting",
+            "persistent_device_propagation": "persistentDevicePropagation",
+            "description": "description",
+            "interferers_features": "interferersFeatures",
+            # inner interferers keys left as-is in payload (we'll keep snake as keys inside interferersFeatures
+            # but you can change to camel if your controller expects it)
+            "ble_beacon": "ble_beacon",
+            "bluetooth_paging_inquiry": "bluetooth_paging_inquiry",
+            "bluetooth_sco_acl": "bluetooth_sco_acl",
+            "continuous_transmitter": "continuous_transmitter",
+            "generic_dect": "generic_dect",
+            "generic_tdd": "generic_tdd",
+            "jammer": "jammer",
+            "microwave_oven": "microwave_oven",
+            "motorola_canopy": "motorola_canopy",
+            "si_fhss": "si_fhss",
+            "spectrum80211_fh": "spectrum80211_fh",
+            "spectrum80211_non_standard_channel": "spectrum80211_non_standard_channel",
+            "spectrum802154": "spectrum802154",
+            "spectrum_inverted": "spectrum_inverted",
+            "super_ag": "super_ag",
+            "video_camera": "video_camera",
+            "wimax_fixed": "wimax_fixed",
+            "wimax_mobile": "wimax_mobile",
+            "xbox": "xbox",
+        }
+
+        # optional per-key boolean defaults when controller omits key (controller-style names)
+        boolean_defaults = {
+            # Example: "cleanAir": False,
+            # For nested interferersFeatures you could default to {} or set specific inner keys
+            # e.g. "interferersFeatures": {}
+        }
+
+        # helper: snake_case -> lowerCamelCase
+        def snake_to_camel(s):
+            parts = s.split("_")
+            return parts[0] + "".join(p.capitalize() for p in parts[1:]) if len(parts) > 1 else s
+
+        # normalize field_to_check (support dot notation like 'interferers_features.ble_beacon')
+        def normalize_field_key(raw_key):
+            if raw_key is None:
+                return None
+            if "." in raw_key:
+                left, right = raw_key.split(".", 1)
+                left_mapped = key_name_map.get(left, snake_to_camel(left))
+                # keep nested part as provided (we will compare nested dicts specially)
+                return left_mapped + "." + right
+            return key_name_map.get(raw_key, snake_to_camel(raw_key))
+
+        field_check_key = normalize_field_key(field_to_check)
+
+        # helper to coerce "true"/"false" strings to bool
+        def to_bool_if_str(v):
+            if isinstance(v, str) and v.lower() in ("true", "false"):
+                return v.lower() == "true"
+            return v
+
+        # Fetch existing templates and flatten by designName
+        existing_blocks = self.get_clean_air_templates() or []
+        instances = []
+        for block in existing_blocks:
+            instances.extend(block.get("instances", []) or [])
+        existing_by_design = {inst["designName"]: inst for inst in instances}
+        self.log("Existing CleanAir instances: {0}".format(instances), "DEBUG")
+
+        # Iterate requested profiles
+        for requested_entry in clean_air_list or []:
+            design_name = requested_entry.get("design_name")
+            radio_band = requested_entry.get("radio_band")
+            requested_features_raw = requested_entry.get("feature_attributes") or {}
+            requested_unlocked = requested_entry.get("unlocked_attributes")
+            requested_unlocked = [] if requested_unlocked is None else requested_unlocked
+
+            # Build normalized request payload (convert top-level keys)
+            normalized_features = {}
+            # handle simple keys
+            for raw_k, raw_v in requested_features_raw.items():
+                if raw_k == "interferers_features" and isinstance(raw_v, dict):
+                    # nested interferersFeatures: normalize inner keys optionally
+                    interferers = {}
+                    for ik, iv in raw_v.items():
+                        # keep inner keys as-is (snake) unless you want camel conversion
+                        # you can map inner keys via key_name_map if needed
+                        inner_key = key_name_map.get(ik, ik)
+                        interferers[inner_key] = iv
+                    normalized_features["interferersFeatures"] = interferers
+                else:
+                    mapped_key = key_name_map.get(raw_k, snake_to_camel(raw_k))
+                    normalized_features[mapped_key] = raw_v
+
+            payload = {"designName": design_name, "radioBand": radio_band, "featureAttributes": normalized_features}
+            if requested_unlocked:
+                # transform unlocked dot-notation to controller-style left-hand mapping
+                normalized_unlocked = []
+                for u in requested_unlocked:
+                    if "." in u:
+                        left, right = u.split(".", 1)
+                        left_mapped = key_name_map.get(left, snake_to_camel(left))
+                        normalized_unlocked.append(left_mapped + "." + right)
+                    else:
+                        normalized_unlocked.append(key_name_map.get(u, snake_to_camel(u)))
+                payload["unlockedAttributes"] = normalized_unlocked
+
+            # check existing
+            existing_entry = existing_by_design.get(design_name)
+            if not existing_entry:
+                add_list.append(payload)
+                self.log("CleanAir design '{0}' not found -> ADD".format(design_name), "INFO")
+                continue
+
+            # fetch full existing details (adjust getter function name if needed)
+            existing_details = self.get_clean_air_details(existing_entry["id"]) or {}
+            self.log("Existing clean-air details for {0}: {1}".format(design_name, existing_details), "DEBUG")
+            existing_features = existing_details.get("featureAttributes", {}) or {}
+            existing_unlocked = existing_details.get("unlockedAttributes", []) or []
+
+            needs_update = False
+            per_design_diffs = []
+
+            # helper to register diff
+            def _reg_diff(k, ev, rv):
+                per_design_diffs.append((k, ev, rv))
+
+            # Determine keys to compare
+            if field_check_key is None:
+                keys_to_check = list(normalized_features.keys())
+                # ensure we compare nested interferers keys if present
+                if "interferersFeatures" in normalized_features:
+                    # we'll handle nested comparison below
+                    pass
+            else:
+                # if it's nested like interferersFeatures.ble_beacon
+                if "." in field_check_key:
+                    keys_to_check = [field_check_key]
+                else:
+                    keys_to_check = [field_check_key]
+
+            # Compare keys
+            for key in keys_to_check:
+                # nested interferersFeatures handling
+                if key.startswith("interferersFeatures"):
+                    # if single-field check might be "interferersFeatures.ble_beacon"
+                    if "." in key:
+                        _, inner = key.split(".", 1)
+                        req_map = normalized_features.get("interferersFeatures", {})
+                        req_val = req_map.get(inner)
+                        exist_map = existing_features.get("interferersFeatures", {}) or {}
+                        exist_val = exist_map.get(inner)
+                        # coerce bool-like strings
+                        req_val = to_bool_if_str(req_val)
+                        if exist_val is None and isinstance(req_val, bool):
+                            # fallback default
+                            exist_val = boolean_defaults.get("interferersFeatures", {}).get(inner) if isinstance(boolean_defaults.get("interferersFeatures"), dict) else False
+                        if isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
+                            exist_val = exist_val.lower() == "true"
+                        if exist_val != req_val:
+                            _reg_diff("interferersFeatures." + inner, exist_val, req_val)
+                            needs_update = True
+                    else:
+                        # compare entire interferersFeatures map shallowly: any inner mismatch triggers diff entries
+                        req_map = normalized_features.get("interferersFeatures", {}) or {}
+                        exist_map = existing_features.get("interferersFeatures", {}) or {}
+                        # check union of inner keys
+                        for inner_key in set(list(req_map.keys()) + list(exist_map.keys())):
+                            req_val = to_bool_if_str(req_map.get(inner_key))
+                            exist_val = exist_map.get(inner_key)
+                            if exist_val is None and isinstance(req_val, bool):
+                                exist_val = boolean_defaults.get("interferersFeatures", {}).get(inner_key) if isinstance(boolean_defaults.get("interferersFeatures"), dict) else False
+                            if isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
+                                exist_val = exist_val.lower() == "true"
+                            if exist_val != req_val:
+                                _reg_diff("interferersFeatures." + inner_key, exist_val, req_val)
+                                needs_update = True
+                    # continue to next key
+                    continue
+
+                # non-nested key comparison
+                req_value = normalized_features.get(key)
+                exist_value = existing_features.get(key)
+
+                # coerce boolean-like strings
+                req_value = to_bool_if_str(req_value)
+
+                # consult boolean_defaults for missing exist_value (controller omitted)
+                if exist_value is None:
+                    if key in boolean_defaults:
+                        exist_value = boolean_defaults[key]
+                    elif isinstance(req_value, bool):
+                        exist_value = False  # safe fallback
+
+                if isinstance(exist_value, str) and exist_value.lower() in ("true", "false"):
+                    exist_value = exist_value.lower() == "true"
+
+                # numeric-ish checks
+                lower_key = key.lower()
+                if lower_key in ("description",):
+                    # string compare
+                    if exist_value != req_value:
+                        _reg_diff(key, exist_value, req_value)
+                        needs_update = True
+                elif isinstance(req_value, bool) or isinstance(exist_value, bool):
+                    # boolean compare
+                    if bool(exist_value) != bool(req_value):
+                        _reg_diff(key, exist_value, req_value)
+                        needs_update = True
+                elif isinstance(req_value, (int, float)) or isinstance(exist_value, (int, float)):
+                    # numeric tolerant compare
+                    try:
+                        evn = int(exist_value) if exist_value is not None else None
+                    except Exception:
+                        evn = exist_value
+                    try:
+                        rvn = int(req_value) if req_value is not None else None
+                    except Exception:
+                        rvn = req_value
+                    if evn != rvn:
+                        _reg_diff(key, evn, rvn)
+                        needs_update = True
+                else:
+                    # default equality
+                    if exist_value != req_value:
+                        _reg_diff(key, exist_value, req_value)
+                        needs_update = True
+
+            # unlocked attributes diff
+            if (field_check_key is None) or (field_check_key and field_check_key.startswith("unlockedAttributes")):
+                if set(existing_unlocked) != set(payload.get("unlockedAttributes", [])):
+                    _reg_diff("unlockedAttributes", existing_unlocked, payload.get("unlockedAttributes", []))
+                    needs_update = True
+
+            # finalize
+            if needs_update:
+                payload["id"] = existing_entry.get("id")
+                update_list.append(payload)
+                clean_air_update_diffs[design_name] = per_design_diffs
+                self.log("CleanAir design '{0}' marked for UPDATE. Diffs: {1}".format(design_name, per_design_diffs), "INFO")
+            else:
+                no_update_list.append(existing_details)
+                self.log("CleanAir design '{0}' requires NO UPDATE".format(design_name), "INFO")
+
+        # attach diffs to self for inspection (no change to return signature)
+        self.clean_air_update_diffs = clean_air_update_diffs
+        self.log("Collected CleanAir diffs: {0}".format(clean_air_update_diffs), "DEBUG")
+        self.log("ADD: {0}, UPDATE: {1}, NO-CHANGE: {2}".format(len(add_list), len(update_list), len(no_update_list)), "DEBUG")
+        return add_list, update_list, no_update_list
+
+    def verify_delete_advanced_ssid_requirement(self, adv_ssid_list):
+        """
+        Determines which Advanced SSIDs need to be deleted based on the requested parameters.
+
+        Args:
+            adv_ssid_list (list): A list of dicts containing the requested Advanced SSID parameters for deletion.
+                                Example: [{"design_name": "Corporate_WLAN_Design"}]
+
+        Returns:
+            list: A list of Advanced SSID entries to delete. Each entry is the original requested dict
+                with an added "id" key (the controller template id) when a match is found.
+        """
+        delete_ssid_list = []
+
+        self.log("Starting verification of Advanced SSIDs for deletion.", "INFO")
+
+        # Retrieve all existing Advanced SSID templates
+        existing_blocks = self.get_advanced_ssid_templates() or []
+        instances = []
+        for block in existing_blocks:
+            instances.extend(block.get("instances", []) or [])
+
+        self.log("Existing Advanced SSID instances: {0}".format(instances), "DEBUG")
+
+        # Convert existing instances into a dictionary keyed by designName
+        existing_dict = {ssid["designName"]: ssid for ssid in instances}
+        self.log("Converted existing Advanced SSIDs to dictionary.", "DEBUG")
+
+        # Iterate over the requested entries for deletion
+        for idx, requested in enumerate(adv_ssid_list or [], start=1):
+            design_name = requested.get("design_name")
+            self.log(
+                "Iteration {0}: Checking Advanced SSID '{1}' for deletion requirement.".format(idx, design_name),
+                "DEBUG",
+            )
+
+            if not design_name:
+                self.log(
+                    "Iteration {0}: Skipping entry with missing design_name: {1}".format(idx, requested),
+                    "WARNING",
+                )
+                continue
+
+            if design_name in existing_dict:
+                existing = existing_dict[design_name]
+                to_delete = requested.copy()
+                to_delete["id"] = existing.get("id")
+                delete_ssid_list.append(to_delete)
+                self.log(
+                    "Iteration {0}: Advanced SSID '{1}' scheduled for deletion (id={2}).".format(
+                        idx, design_name, existing.get("id")
+                    ),
+                    "INFO",
+                )
+            else:
+                self.log(
+                    "Iteration {0}: Advanced SSID '{1}' not found - no deletion required.".format(idx, design_name),
+                    "INFO",
+                )
+
+        self.log(
+            "Advanced SSIDs scheduled for deletion: {0} - {1}".format(len(delete_ssid_list), delete_ssid_list),
+            "DEBUG",
+        )
+
+        return delete_ssid_list
+
+    def verify_create_update_advanced_ssid_requirement(self, adv_ssid_list, field_to_check=None):
+        """
+        Determine which Advanced SSIDs to add, update, or leave unchanged.
+        - Single function (no nested helpers except two small inline helpers for clarity).
+        - Basic snake_case -> lowerCamelCase key normalization (inline).
+        - Treats unlocked_attributes=None as [].
+        - If `field_to_check` is provided, only that field (or 'unlocked_attributes') is compared.
+        Accepts camelCase or snake_case field names for `field_to_check`.
+        Returns: (add_payloads, update_payloads, no_change_payloads)
+        where update_diffs is { "DesignName": [(key, existing_value, requested_value), ...], ... }
+        """
+        add_payloads, update_payloads, no_change_payloads = [], [], []
+        update_diffs = {}
+        self.log("verify_create_update_advanced_ssid_requirement input: {0}".format(adv_ssid_list), "DEBUG")
+
+        # key name map (complete map from your playbook)
+        key_name_map = {
+            # top-level
+            "design_name": "designName",
+            "feature_attributes": "featureAttributes",
+            "unlocked_attributes": "unlockedAttributes",
+
+            # common ssid fields / enums / booleans
+            "peer2peer_blocking": "peer2peerblocking",
+            "passive_client": "passiveClient",
+            "prediction_optimization": "predictionOptimization",
+            "dual_band_neighbor_list": "dualBandNeighborList",
+            "radius_nac_state": "radiusNacState",
+            "dhcp_required": "dhcpRequired",
+            "dhcp_server": "dhcpServer",
+            "flex_local_auth": "flexLocalAuth",
+            "target_wakeup_time": "targetWakeupTime",
+
+            # OFDMA / MU-MIMO / 802.11ax
+            "downlink_ofdma": "downlinkOfdma",
+            "uplink_ofdma": "uplinkOfdma",
+            "downlink_mu_mimo": "downlinkMuMimo",
+            "uplink_mu_mimo": "uplinkMuMimo",
+            "dot11ax": "dot11ax",
+            "mu_mimo_11ac": "muMimo11ac",
+
+            # vendor / extra flags
+            "aironet_ie_support": "aironetIeSupport",
+            "load_balancing": "loadBalancing",
+
+            # timing / counts / numeric
+            "dtim_period_5ghz": "dtimPeriod5GHz",
+            "dtim_period_24ghz": "dtimPeriod24GHz",
+            "scan_defer_time": "scanDeferTime",
+            "max_clients": "maxClients",
+            "max_clients_per_radio": "maxClientsPerRadio",
+            "max_clients_per_ap": "maxClientsPerAP",
+            "idle_threshold": "idleThreshold",
+            "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
+
+            # WMM / multicast
+            "wmm_policy": "wmmPolicy",
+            "multicast_buffer": "multicastBuffer",
+            "multicast_buffer_value": "multicastBufferValue",
+            "media_stream_multicast_direct": "mediaStreamMulticastDirect",
+
+            # steering / agile multiband / fastlane
+            "wifi_to_cellular_steering": "wifiToCellularSteering",
+            "wifi_alliance_agile_multiband": "wifiAllianceAgileMultiband",
+            "fastlane_asr": "fastlaneAsr",
+
+            # 11v / AP admin / caching / security guards
+            "dot11v_bss_max_idle_protected": "dot11vBssMaxIdleProtected",
+            "universal_ap_admin": "universalApAdmin",
+            "opportunistic_key_caching": "opportunisticKeyCaching",
+            "ip_source_guard": "ipSourceGuard",
+            "dhcp_opt82_remote_id_sub_option": "dhcpOpt82RemoteIdSubOption",
+            "vlan_central_switching": "vlanCentralSwitching",
+
+            # call / snooping / disassociate / busy
+            "call_snooping": "callSnooping",
+            "send_disassociate": "sendDisassociate",
+            "sent_486_busy": "sent486Busy",
+
+            # ip/mac binding
+            "ip_mac_binding": "ipMacBinding",
+
+            # defer priorities (0..7)
+            "defer_priority_0": "deferPriority0",
+            "defer_priority_1": "deferPriority1",
+            "defer_priority_2": "deferPriority2",
+            "defer_priority_3": "deferPriority3",
+            "defer_priority_4": "deferPriority4",
+            "defer_priority_5": "deferPriority5",
+            "defer_priority_6": "deferPriority6",
+            "defer_priority_7": "deferPriority7",
+
+            # sharing / analytics / beacons
+            "share_data_with_client": "shareDataWithClient",
+            "advertise_support": "advertiseSupport",
+            "advertise_pc_analytics_support": "advertisePcAnalyticsSupport",
+            "send_beacon_on_association": "sendBeaconOnAssociation",
+            "send_beacon_on_roam": "sendBeaconOnRoam",
+
+            # mdns
+            "mdns_mode": "mDNSMode",
+        }
+
+        # small helper to normalize a provided field_to_check into controller key style
+        def _normalize_field_check_key(raw_key):
+            if raw_key is None:
+                return None
+            if raw_key in key_name_map:
+                return key_name_map[raw_key]
+            if "_" in raw_key:
+                parts = raw_key.split("_")
+                return parts[0] + "".join(p.capitalize() for p in parts[1:])
+            return raw_key
+
+        # small helper to canonicalize peer2peer-like values for tolerant compare
+        def _canon_peer2peer_value(v):
+            if v is None:
+                return None
+            s = str(v).strip().upper()
+            if s in ("DISABLE", "DROP", "OFF", "FALSE", "0"):
+                return "DROP"
+            if s in ("ENABLE", "ALLOW", "ON", "TRUE", "1"):
+                return "ALLOW"
+            return s
+
+        field_check_key = _normalize_field_check_key(field_to_check)
+
+        # Fetch existing templates once and flatten by designName
+        existing_templates = self.get_advanced_ssid_templates() or []
+        self.log("Existing Advanced SSID templates: {0}".format(existing_templates), "DEBUG")
+        existing_by_design = {}
+        for block in existing_templates:
+            for instance in block.get("instances", []) or []:
+                existing_by_design[instance["designName"]] = instance
+
+        # Iterate requested SSIDs
+        for requested_entry in adv_ssid_list or []:
+            design_name = requested_entry.get("design_name")
+            requested_feature_attrs_raw = requested_entry.get("feature_attributes") or {}
+            requested_unlocked = requested_entry.get("unlocked_attributes")
+            requested_unlocked = [] if requested_unlocked is None else requested_unlocked
+
+            # Inline snake_case -> lowerCamelCase normalization for payload
+            normalized_feature_attrs = {}
+            for raw_key, raw_val in requested_feature_attrs_raw.items():
+                if raw_key in key_name_map:
+                    target_key = key_name_map[raw_key]
+                else:
+                    if "_" in raw_key:
+                        parts = raw_key.split("_")
+                        target_key = parts[0] + "".join(p.capitalize() for p in parts[1:])
+                    else:
+                        target_key = raw_key
+                normalized_feature_attrs[target_key] = raw_val
+
+            payload = {"designName": design_name, "featureAttributes": normalized_feature_attrs}
+            if requested_unlocked:
+                payload["unlockedAttributes"] = requested_unlocked
+
+            self.log("Evaluating design: {0} (field_to_check={1})".format(design_name, field_to_check), "DEBUG")
+
+            existing_entry = existing_by_design.get(design_name)
+            self.log("Existing entry match: {0}".format(existing_entry), "DEBUG")
+
+            # If design doesn't exist yet, schedule for creation
+            if not existing_entry:
+                add_payloads.append(payload)
+                self.log("Design '{0}' not found -> ADD".format(design_name), "INFO")
+                continue
+
+            # Fetch complete details to compare real stored values
+            existing_details = self.get_advanced_ssid_details(existing_entry["id"]) or {}
+            self.log("Existing design details: {0}".format(existing_details), "DEBUG")
+            existing_features = existing_details.get("featureAttributes", {}) or {}
+            existing_unlocked = existing_details.get("unlockedAttributes", []) or []
+
+            needs_update = False
+            per_design_diffs = []  # collect all diffs for this design
+
+            # If no single-field restriction, check all requested keys
+            if field_check_key is None:
+                # Compare only keys the user provided
+                for attr_key, req_value in normalized_feature_attrs.items():
+                    # read raw existing value from controller
+                    exist_value = existing_features.get(attr_key)
+
+                    # coerce boolean-like strings to bool for requested side
+                    if isinstance(req_value, str) and req_value.lower() in ("true", "false"):
+                        req_value = req_value.lower() == "true"
+
+                    # If controller omitted the key (exist_value is None) but the requested value is boolean,
+                    # treat the missing controller value as False (common when controllers omit default/false flags).
+                    if exist_value is None and isinstance(req_value, bool):
+                        exist_value = False
+
+                    # normalize controller-side boolean strings
+                    if isinstance(exist_value, str) and exist_value.lower() in ("true", "false"):
+                        exist_value = exist_value.lower() == "true"
+
+                    lower_key = attr_key.lower()
+
+                    # peer2peer tolerant comparison
+                    if "peer2peer" in lower_key:
+                        if _canon_peer2peer_value(exist_value) != _canon_peer2peer_value(req_value):
+                            self.log("Diff for {0}: existing({1}) != requested({2})".format(attr_key, exist_value, req_value), "DEBUG")
+                            per_design_diffs.append((attr_key, exist_value, req_value))
+                            needs_update = True
+                            # continue scanning to capture all diffs
+                            continue
+
+                    # wmmPolicy tolerant (case-insensitive)
+                    elif attr_key.lower() == "wmmpolicy" or attr_key == "wmmPolicy":
+                        ev = None if exist_value is None else str(exist_value).upper()
+                        rv = None if req_value is None else str(req_value).upper()
+                        if ev != rv:
+                            self.log("Diff for {0}: existing({1}) != requested({2})".format(attr_key, ev, rv), "DEBUG")
+                            per_design_diffs.append((attr_key, ev, rv))
+                            needs_update = True
+                            continue
+
+                    # numeric-ish fields: try int comparison
+                    elif any(sub in lower_key for sub in ("dtim", "maxclients", "idle", "timeout", "value", "scan", "defer")):
+                        try:
+                            ev_num = int(existing_features.get(attr_key)) if existing_features.get(attr_key) is not None else None
+                        except Exception:
+                            ev_num = existing_features.get(attr_key)
+                        try:
+                            rv_num = int(req_value) if req_value is not None else None
+                        except Exception:
+                            rv_num = req_value
+                        if ev_num != rv_num:
+                            self.log("Diff for {0}: existing({1}) != requested({2})".format(attr_key, ev_num, rv_num), "DEBUG")
+                            per_design_diffs.append((attr_key, ev_num, rv_num))
+                            needs_update = True
+                            continue
+
+                    # default strict equality
+                    else:
+                        if exist_value != req_value:
+                            self.log("Diff for {0}: existing({1}) != requested({2})".format(attr_key, exist_value, req_value), "DEBUG")
+                            per_design_diffs.append((attr_key, exist_value, req_value))
+                            needs_update = True
+                            continue
+
+                # If still no difference found, compare unlocked attributes
+                if set(existing_unlocked) != set(requested_unlocked):
+                    self.log("Unlocked attrs differ: existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked), "DEBUG")
+                    per_design_diffs.append(("unlockedAttributes", existing_unlocked, requested_unlocked))
+                    needs_update = True
+
+            else:
+                # Only compare the single requested field or unlocked attributes
+                if field_to_check in ("unlocked_attributes", "unlockedAttributes") or field_check_key == "unlockedAttributes":
+                    if set(existing_unlocked) != set(requested_unlocked):
+                        self.log("Unlocked attrs differ (single-field check): existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked), "DEBUG")
+                        per_design_diffs.append(("unlockedAttributes", existing_unlocked, requested_unlocked))
+                        needs_update = True
+                else:
+                    # if the requested payload didn't include the field to check, treat as NO-UPDATE
+                    if field_check_key not in normalized_feature_attrs:
+                        self.log("Requested entry missing field_to_check '{0}' -> treating NO-UPDATE for design {1}".format(field_to_check, design_name), "DEBUG")
+                        needs_update = False
+                    else:
+                        req_value = normalized_feature_attrs.get(field_check_key)
+                        exist_value = existing_features.get(field_check_key)
+
+                        # coerce boolean-like strings
+                        if isinstance(req_value, str) and req_value.lower() in ("true", "false"):
+                            req_value = req_value.lower() == "true"
+                        # same missing-key -> False heuristic for boolean requested values
+                        if exist_value is None and isinstance(req_value, bool):
+                            exist_value = False
+                        if isinstance(exist_value, str) and exist_value.lower() in ("true", "false"):
+                            exist_value = exist_value.lower() == "true"
+
+                        lower_key = field_check_key.lower()
+                        if "peer2peer" in lower_key:
+                            if _canon_peer2peer_value(exist_value) != _canon_peer2peer_value(req_value):
+                                self.log("Diff for {0}: existing({1}) != requested({2})".format(field_check_key, exist_value, req_value), "DEBUG")
+                                per_design_diffs.append((field_check_key, exist_value, req_value))
+                                needs_update = True
+                        elif field_check_key.lower() == "wmmpolicy" or field_check_key == "wmmPolicy":
+                            ev = None if exist_value is None else str(exist_value).upper()
+                            rv = None if req_value is None else str(req_value).upper()
+                            if ev != rv:
+                                self.log("Diff for {0}: existing({1}) != requested({2})".format(field_check_key, ev, rv), "DEBUG")
+                                per_design_diffs.append((field_check_key, ev, rv))
+                                needs_update = True
+                        elif any(sub in lower_key for sub in ("dtim", "maxclients", "idle", "timeout", "value", "scan", "defer")):
+                            try:
+                                ev_num = int(existing_features.get(field_check_key)) if existing_features.get(field_check_key) is not None else None
+                            except Exception:
+                                ev_num = existing_features.get(field_check_key)
+                            try:
+                                rv_num = int(req_value) if req_value is not None else None
+                            except Exception:
+                                rv_num = req_value
+                            if ev_num != rv_num:
+                                self.log("Diff for {0}: existing({1}) != requested({2})".format(field_check_key, ev_num, rv_num), "DEBUG")
+                                per_design_diffs.append((field_check_key, ev_num, rv_num))
+                                needs_update = True
+                        else:
+                            if exist_value != req_value:
+                                self.log("Diff for {0}: existing({1}) != requested({2})".format(field_check_key, exist_value, req_value), "DEBUG")
+                                per_design_diffs.append((field_check_key, exist_value, req_value))
+                                needs_update = True
+
+            # Finalize lists
+            if needs_update:
+                payload["id"] = existing_entry.get("id")
+                update_payloads.append(payload)
+                update_diffs[design_name] = per_design_diffs
+                self.log("Design '{0}' marked for UPDATE. Diffs: {1}".format(design_name, per_design_diffs), "INFO")
+            else:
+                no_change_payloads.append(existing_details)
+                self.log("Design '{0}' requires NO UPDATE".format(design_name), "INFO")
+
+        self.log("ADD: {0}, UPDATE: {1}, NO-CHANGE: {2}".format(len(add_payloads), len(update_payloads), len(no_change_payloads)), "DEBUG")
+        return add_payloads, update_payloads, no_change_payloads, 
+
+
+    def get_clean_air_templates(self, design_name=None, template_type="CLEANAIR_CONFIGURATION"):
+        """
+        Retrieve existing CleanAir feature templates from Cisco DNAC.
+
+        Args:
+            design_name (str, optional): Specific feature template design name to filter by.
+            template_type (str, optional): Feature template type string used by DNAC. Defaults to "CLEAN_AIR_CONFIGURATION".
+                                        Adjust if your DNAC uses a different type identifier.
+
+        Returns:
+            list: A list of existing CleanAir template dicts (the API 'response' list), or [] on failure.
+        """
+        self.log("Fetching existing CleanAir Templates from DNAC.", "DEBUG")
+
+        try:
+            params = {"type": template_type}
+            if design_name:
+                params["design_name"] = design_name
+
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_feature_template_summary",
+                op_modifies=False,
+                params=params,
+            )
+            self.log(response, "DEBUG")
+            existing_clean_air = response.get("response", [])
+            self.log(
+                "Retrieved {0} CleanAir Templates.".format(len(existing_clean_air)),
+                "DEBUG",
+            )
+            return existing_clean_air
+
+        except Exception as e:
+            self.log("Failed to fetch CleanAir Templates: {0}".format(str(e)), "ERROR")
+            return []
+
+
+    def get_clean_air_details(self, template_id):
+        """
+        Retrieve full details for a specific CleanAir feature template.
+
+        Args:
+            template_id (str): The feature template ID to fetch.
+
+        Returns:
+            dict: The template details (API 'response' object) or {} on failure.
+        """
+        self.log("Fetching CleanAir template details for id: {0}".format(template_id), "DEBUG")
+
+        if not template_id:
+            self.log("get_clean_air_details called without template_id.", "WARNING")
+            return {}
+
+        try:
+            response = self.dnac._exec(
+                family="wireless",
+                function="get_clean_air_configuration_feature_template",
+                op_modifies=False,
+                params={"id": template_id},
+            )
+            self.log(response, "DEBUG")
+            details = response.get("response", {}) or {}
+            self.log("Retrieved CleanAir template details: {0}".format(details), "DEBUG")
+            return details
+
+        except Exception as e:
+            self.log("Failed to fetch CleanAir template details: {0}".format(str(e)), "ERROR")
+            return {}
 
     def get_advanced_ssid_details(self, ssid_id):
         """
@@ -17068,7 +18075,35 @@ class WirelessDesign(DnacBase):
                 # --- New AAA Radius Attributes ---
                 ("add_aaa_radius_attribute", "add_aaa_radius_attribute_params", self.have.get("add_aaa_radius_attribute")),
                 ("update_aaa_radius_attribute", "update_aaa_radius_attribute_params", self.have.get("update_aaa_radius_attribute")),
+
+                # --- New Advanced SSID ---
+                ("add_advanced_ssid", "add_advanced_ssid_params", self.have.get("add_advanced_ssid")),
+                ("update_advanced_ssid", "update_advanced_ssid_params", self.have.get("update_advanced_ssid")),
+
+                # --- New CleanAir ---
+                (
+                    "add_clean_air_configuration",
+                    "add_clean_air_configuration_params",
+                    self.have.get("add_clean_air_configuration"),
+                ),
+                (
+                    "update_clean_air_configuration",
+                    "update_clean_air_configuration_params",
+                    self.have.get("update_clean_air_configuration"),
+                ),
+                # --- New dot11ax Configuration ---
+                (
+                    "add_dot11ax_configuration",
+                    "add_dot11ax_configuration_params",
+                    self.have.get("add_dot11ax_configuration"),
+                ),
+                (
+                    "update_dot11ax_configuration",
+                    "update_dot11ax_configuration_params",
+                    self.have.get("update_dot11ax_configuration"),
+                ),
             ],
+
             "deleted": [
                 ("delete_ssids", "delete_ssids_params", self.have.get("delete_ssids")),
                 (
@@ -17105,6 +18140,24 @@ class WirelessDesign(DnacBase):
                     "delete_aaa_radius_attribute",
                     "delete_aaa_radius_attribute_params",
                     self.have.get("delete_aaa_radius_attribute"),
+                ),
+                # --- New Advanced SSIDs ---
+                (
+                    "delete_advanced_ssid",
+                    "delete_advanced_ssid_params",
+                    self.have.get("delete_advanced_ssid"),
+                ),
+                # --- New CleanAir ---
+                (
+                    "delete_clean_air_configuration",
+                    "delete_clean_air_configuration_params",
+                    self.have.get("delete_clean_air_configuration"),
+                ),
+                # --- New dot11ax Configuration ---
+                (   
+                    "delete_dot11ax_configuration",
+                    "delete_dot11ax_configuration_params",
+                    self.have.get("delete_dot11ax_configuration"),
                 ),
             ],
         }
@@ -17211,6 +18264,39 @@ class WirelessDesign(DnacBase):
                 "UPDATE AAA Radius Attributes", 
                 self.process_update_aaa_radius_attributes
             ),
+            # --- New Advanced SSID ---
+            (
+                "add_advanced_ssid_params",
+                "ADD Advanced SSIDs",
+                self.process_add_advanced_ssids
+            ),
+            (
+                "update_advanced_ssid_params",
+                "UPDATE Advanced SSIDs",
+                self.process_update_advanced_ssids
+            ),
+            # --- New CleanAir ---
+            (
+                "add_clean_air_configuration_params",
+                "ADD CleanAir Profiles",
+                self.process_add_clean_air,
+            ),
+            (
+                "update_clean_air_configuration_params",
+                "UPDATE CleanAir Profiles",
+                self.process_update_clean_air,
+            ),
+            # --- New dot11ax Configuration ---
+            (
+                "add_dot11ax_configuration_params",
+                "ADD dot11ax Configurations",
+                self.process_add_dot11ax,
+            ),
+            (
+                "update_dot11ax_configuration_params",
+                "UPDATE dot11ax Configurations",
+                self.process_update_dot11ax,
+            ),
         ]
 
         # Iterate over operations and process them
@@ -17270,6 +18356,347 @@ class WirelessDesign(DnacBase):
         )
         self.set_operation_result(final_status, is_changed, self.msg, "INFO")
         return self
+
+    def process_add_dot11ax(self, params):
+        """
+        Handles the creation of dot11ax configurations in Cisco DNAC.
+
+        Args:
+            params (list): A list of dot11ax payloads to create. Each payload should include at least 'designName'
+                        and 'featureAttributes' as produced by your verifier.
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing ADD for dot11ax Configurations.", "INFO")
+        self.log("Params for ADD: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("designName") or payload.get("design_name") or "<unknown>"
+                self.log("Creating dot11ax configuration: {0}".format(design_name), "DEBUG")
+
+                try:
+                    # NOTE: adjust function name if your DNAC SDK uses a different API name
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="create_dot11ax_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    # validate returned tasks (keeps parity with other handlers)
+                    self.check_tasks_response_status(response, "create_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully created dot11ax configuration."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to create dot11ax configuration: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while creating: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"dot11ax_add": results}
+            self.status = "failed" if all(("Failed" in v or "Exception" in v) for v in results.values()) else "success"
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"dot11ax_add": "Exception during add: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_update_dot11ax(self, params):
+        """
+        Handles the update of dot11ax configurations in Cisco DNAC.
+
+        Args:
+            params (list): A list of dot11ax payloads to update. Each payload should include 'id' (existing template id)
+                        and may include 'designName' and 'featureAttributes'.
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing UPDATE for dot11ax Configurations.", "INFO")
+        self.log("Params for UPDATE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("designName") or payload.get("design_name") or "<unknown>"
+                template_id = payload.get("id")
+                self.log("Updating dot11ax configuration: design='{0}', id='{1}'".format(design_name, template_id), "DEBUG")
+
+                if not template_id:
+                    results[design_name] = "Skipped update: missing 'id' in payload."
+                    self.log(results[design_name], "ERROR")
+                    continue
+
+                try:
+                    # NOTE: adjust function name if your DNAC SDK uses a different API name
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="update_dot11ax_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    # validate returned tasks (keeps parity with other handlers)
+                    self.check_tasks_response_status(response, "update_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully updated dot11ax configuration."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to update dot11ax configuration: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while updating: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"dot11ax_update": results}
+            # If every result contains 'Failed' or 'Exception' or 'Skipped', mark overall as failed; else success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"dot11ax_update": "Exception during update: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_add_clean_air(self, params):
+        """
+        Handles the creation of CleanAir Profiles in Cisco DNAC.
+        Args:
+            params (list): A list of CleanAir payloads to create.
+        """
+        self.log("Processing ADD for CleanAir Profiles.", "INFO")
+        self.log("Params for ADD: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params:
+                design_name = payload.get("designName")
+                self.log("Creating CleanAir Profile: {0}".format(design_name), "DEBUG")
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="create_clean_air_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    self.check_tasks_response_status(response, "create_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully created CleanAir Profile."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to create CleanAir Profile: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as e:
+                    results[design_name] = "Exception while creating: {0}".format(str(e))
+                    self.log(results[design_name], "ERROR")
+
+            # Final message after all payloads processed
+            self.msg = {"clean_air_add": results}
+            self.status = "failed" if all("Failed" in v or "Exception" in v for v in results.values()) else "success"
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as e:
+            self.msg = {"clean_air_add": "Exception during add: {0}".format(str(e))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+
+    def process_update_clean_air(self, params):
+        """
+        Handles the update of CleanAir Profiles in Cisco DNAC.
+        Args:
+            params (list): A list of CleanAir payloads to update. Each must include 'id'.
+        """
+        self.log("Processing UPDATE for CleanAir Profiles.", "INFO")
+        self.log("Params for UPDATE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params:
+                design_name = payload.get("designName")
+                template_id = payload.get("id")
+                self.log("Updating CleanAir Profile: design='{0}', id='{1}'".format(design_name, template_id), "DEBUG")
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="update_clean_air_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    self.check_tasks_response_status(response, "update_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully updated CleanAir Profile."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to update CleanAir Profile: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as e:
+                    results[design_name] = "Exception while updating: {0}".format(str(e))
+                    self.log(results[design_name], "ERROR")
+
+            # Final result after processing all updates
+            self.msg = {"clean_air_update": results}
+            self.status = "failed" if all("Failed" in v or "Exception" in v for v in results.values()) else "success"
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as e:
+            self.msg = {"clean_air_update": "Exception during update: {0}".format(str(e))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_update_advanced_ssids(self, params):
+        """
+        Handles updating Advanced SSIDs in Cisco DNAC.
+
+        Args:
+            params (list): A list of Advanced SSID payloads to update. Each payload should include 'id' (existing template id).
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing UPDATE for Advanced SSIDs.", "INFO")
+        self.log("Advanced SSID update params: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("designName") or payload.get("design_name") or "<unknown>"
+                template_id = payload.get("id")
+                self.log("Updating Advanced SSID: {0} (id={1})".format(design_name, template_id), "DEBUG")
+
+                if not template_id:
+                    results[design_name] = "Skipped update: missing 'id' in payload."
+                    self.log(results[design_name], "ERROR")
+                    continue
+
+                try:
+                    # NOTE: replace function name if your DNAC SDK expects a different update function
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="update_advanced_ssid_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    # validate the returned task(s)
+                    self.check_tasks_response_status(response, "update_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully updated Advanced SSID."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to update Advanced SSID: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while updating: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"advanced_ssids_update": results}
+            # If every result contains 'Failed' or 'Exception', mark overall as failed; else success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"advanced_ssids_update": "Exception during update: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_add_advanced_ssids(self, params):
+        """
+        Handles the creation of Advanced SSIDs in Cisco DNAC.
+
+        Args:
+            params (list): A list of Advanced SSID payloads to create (each payload should contain 'designName' and 'featureAttributes', etc.)
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing ADD for Advanced SSIDs.", "INFO")
+        self.log("Advanced SSID add params: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("designName") or "<unknown>"
+                self.log("Creating Advanced SSID: {0}".format(design_name), "DEBUG")
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="create_advanced_ssid_configuration_feature_template",
+                        op_modifies=True,
+                        params=payload,
+                    )
+
+                    # Reuse your existing task-check helper to validate task status
+                    self.check_tasks_response_status(response, "create_feature_template")
+
+                    # self.status / self.msg are expected to be set by check_tasks_response_status (or set below on failure)
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully created Advanced SSID."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to create Advanced SSID: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while creating: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Summarize outcome
+            self.msg = {"advanced_ssids_add": results}
+            # If every result contains 'Failed' or 'Exception', mark overall as failed; otherwise success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            # catastrophic failure while iterating/processing
+            self.msg = {"advanced_ssids_add": "Exception during add: {0}".format(str(exc))}
+            self.status = "failed"
+            # set_operation_result(...).check_return_status() matches your AAA pattern
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
 
     def process_add_aaa_radius_attributes(self, params):
         """
@@ -17426,7 +18853,20 @@ class WirelessDesign(DnacBase):
                 "DELETE AAA Radius Attributes", 
                 self.process_delete_aaa_radius_attributes
             ),
-
+            # --- New Advanced SSIDs ---
+            ("delete_advanced_ssid_params", "DELETE Advanced SSIDs", self.process_delete_advanced_ssids),
+            # --- New CleanAir ---
+            (
+                "delete_clean_air_configuration_params",
+                "DELETE CleanAir Profiles",
+                self.process_delete_clean_air,
+            ),
+            # --- New dot11ax Configuration ---
+            (
+                "delete_dot11ax_configuration_params",
+                "DELETE dot11ax Configurations",
+                self.process_delete_dot11ax,
+            ),
         ]
 
         # Iterate over operations and process deletions
@@ -17486,6 +18926,208 @@ class WirelessDesign(DnacBase):
         )
         self.set_operation_result(final_status, is_changed, self.msg, "INFO")
         return self
+
+    def process_delete_dot11ax(self, params):
+        """
+        Handles deletion of dot11ax configurations in Cisco DNAC.
+
+        Args:
+            params (list): A list of dot11ax payloads to delete.
+                        Each payload must contain at least the template 'id' and optionally 'design_name' or 'designName'.
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing DELETE for dot11ax Configurations.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("design_name") or payload.get("designName") or "Unknown"
+                template_id = payload.get("id")
+
+                self.log(
+                    "Deleting dot11ax configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "DEBUG",
+                )
+
+                if not template_id:
+                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    self.log(results[design_name], "ERROR")
+                    continue
+
+                try:
+                    # NOTE: change function name if your DNAC SDK expects a different API name
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_dot11ax_configuration_feature_template",
+                        op_modifies=True,
+                        params={"id": template_id},
+                    )
+
+                    # validate the returned task(s)
+                    self.check_tasks_response_status(response, "delete_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully deleted dot11ax configuration."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to delete dot11ax configuration: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"dot11ax_delete": results}
+            # If every result contains 'Failed' or 'Exception' or 'Skipped', mark overall as failed; else success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"dot11ax_delete": "Exception during delete: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_delete_clean_air(self, params):
+        """
+        Handles the deletion of CleanAir profiles in Cisco DNAC.
+
+        Args:
+            params (list): A list of CleanAir payloads to delete.
+                        Each payload must contain at least the template 'id' and optionally 'design_name' or 'designName'.
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing DELETE for CleanAir Profiles.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("design_name") or payload.get("designName") or "Unknown"
+                template_id = payload.get("id")
+
+                self.log(
+                    "Deleting CleanAir Profile: design='{0}', id='{1}'".format(design_name, template_id),
+                    "DEBUG",
+                )
+
+                if not template_id:
+                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    self.log(results[design_name], "ERROR")
+                    continue
+
+                try:
+                    # NOTE: replace function name if your DNAC SDK expects a different delete function
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_clean_air_configuration_feature_template",
+                        op_modifies=True,
+                        params={"id": template_id},
+                    )
+
+                    # validate the returned task(s)
+                    self.check_tasks_response_status(response, "delete_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully deleted CleanAir Profile."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to delete CleanAir Profile: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"clean_air_delete": results}
+            # If every result contains 'Failed' or 'Exception' or 'Skipped', mark overall as failed; else success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"clean_air_delete": "Exception during delete: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_delete_advanced_ssids(self, params):
+        """
+        Handles the deletion of Advanced SSIDs in Cisco DNAC.
+
+        Args:
+            params (list): A list of Advanced SSID payloads to delete.
+                        Each payload must contain at least the template 'id' and optionally 'design_name'.
+        """
+        self.log("Processing DELETE for Advanced SSIDs.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                design_name = payload.get("design_name") or payload.get("designName") or "Unknown"
+                template_id = payload.get("id")
+
+                self.log(
+                    "Deleting Advanced SSID: design='{0}', id='{1}'".format(design_name, template_id),
+                    "DEBUG",
+                )
+
+                if not template_id:
+                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    self.log(results[design_name], "ERROR")
+                    continue
+
+                try:
+                    # NOTE: replace function name if your DNAC SDK expects a different delete function
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_advanced_ssid_configuration_feature_template",
+                        op_modifies=True,
+                        params={"id": template_id},
+                    )
+
+                    # validate the returned task(s)
+                    self.check_tasks_response_status(response, "delete_feature_template")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[design_name] = "Successfully deleted Advanced SSID."
+                    else:
+                        fail_reason = self.msg
+                        results[design_name] = "Failed to delete Advanced SSID: {0}".format(fail_reason)
+                        self.log(results[design_name], "ERROR")
+
+                except Exception as exc:
+                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    self.log(results[design_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"advanced_ssids_delete": results}
+            # If every result contains 'Failed' or 'Exception', mark overall as failed; else success
+            self.status = (
+                "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"advanced_ssids_delete": "Exception during delete: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
 
     def process_delete_aaa_radius_attributes(self, params):
         """

@@ -20,98 +20,54 @@
         config_verify: true
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1
-        state: merged
+        state: deleted
         config:
-          - advanced_ssid:
-              - design_name: "Corporate_WLAN_Design_1"
+          - dot11ax_configuration:
+              - design_name: "dot11ax_24ghz_design"
                 feature_attributes:
-                  peer2peer_blocking: "DISABLE"  #enum : DROP, FORWARD_UP, ALLOW_PVT_GROUP, DISABLE
-                  passive_client: false
-                  prediction_optimization: false
-                  dual_band_neighbor_list: false
-                  radius_nac_state: true
-                  dhcp_required: true
-                  dhcp_server: "10.10.10.5"
-                  flex_local_auth: false
-                  target_wakeup_time: true
-                  downlink_ofdma: true
-                  uplink_ofdma: true
-                  downlink_mu_mimo: true
-                  uplink_mu_mimo: true
-                  dot11ax: true
-                  aironet_ie_support: true
-                  load_balancing: false
-                  dtim_period_5ghz: 2  # 1 -255
-                  dtim_period_24ghz: 2 # 1 -255
-                  scan_defer_time: 100 
-                  max_clients: 200  
-                  # For physical 9800 series controllers
-                  # [0-5000] - 9800-L series
-                  # [0-32000] - 9800-40 series
-                  # [0-64000] - 9800-80 series
-
-                  # 9800-80 series For 9800-CL series controllers
-                  # [0-10000] Small (S) VM 
-                  # 0-32000]  Medium (M) VM
-                  # [0-64000] Large (L) VM
-
-                  # For Embedded Wireless Controller and Mobility Express - [0-2000]9300 platform.
-                  # 9300 platform - [0-4000]
-                  # AireOS platform[0-3000]
-                  # 3500 series - [0-3000]
-                  #  5500 series - [0-20000]
-                  # 8500 series - [0 - 64000]
-
-                  max_clients_per_radio: 100 #0 to 500
-                  max_clients_per_ap: 300  # 0 to 1200
-                  wmm_policy: "ALLOWED" #DISABLED, REQUIRED, ALLOWED
-                  multicast_buffer: true 
-                  multicast_buffer_value: 50 
-                  media_stream_multicast_direct: true
-                  mu_mimo_11ac: true
-                  wifi_to_cellular_steering: false
-                  wifi_alliance_agile_multiband: false
-                  fastlane_asr: false
-                  dot11v_bss_max_idle_protected: false
-                  universal_ap_admin: false
-                  opportunistic_key_caching: false
-                  ip_source_guard: false
-                  dhcp_opt82_remote_id_sub_option: false
-                  vlan_central_switching: false
-                  call_snooping: false
-                  send_disassociate: false
-                  sent_486_busy: false
-                  ip_mac_binding: false
-                  idle_threshold: 300 #
-                  defer_priority_0: false
-                  defer_priority_1: false
-                  defer_priority_2: false
-                  defer_priority_3: false
-                  defer_priority_4: false
-                  defer_priority_5: false
-                  defer_priority_6: false
-                  defer_priority_7: false
-                  share_data_with_client: false
-                  advertise_support: false
-                  advertise_pc_analytics_support: false
-                  send_beacon_on_association: false
-                  send_beacon_on_roam: false
-                  fast_transition_reassociation_timeout: 200 
-                  mdns_mode: "MDNS_SD_BRIDGING" #MDNS_SD_BRIDGING, MDNS_SD_DROP, MDNS_SD_GATEWAY
+                  radio_band: "2_4GHZ"
+                  bss_color: true
+                  target_waketime_broadcast: true
+                  non_srg_obss_pd_max_threshold: -62
+                  target_wake_up_time_11ax: true
+                  obss_pd: true
                 unlocked_attributes:
-                  # - "peer2peer_blocking"
-                  # - "passive_client"
-                  # - "dot11ax"
-                  # - "load_balancing"
-                  # - "max_clients"
-                  # - "max_clients_per_radio"
-                  # - "max_clients_per_ap"
-                  # - "wmm_policy"
-                  # - "dtim_period_5ghz"
-                  # - "dtim_period_24ghz"
-                  # - "scan_defer_time"
-                  # - "mdns_mode"
+                  # - "radio_band"
+                  # - "bss_color"
+                  # - "target_waketime_broadcast"
+                  # - "non_srg_obss_pd_max_threshold"
+                  # - "target_wake_up_time_11ax"
+                  # - "obss_pd"
 
+              # - design_name: "dot11ax_5ghz_design"
+              #   feature_attributes:
+              #     radio_band: "5GHZ"
+              #     bss_color: true
+              #     target_waketime_broadcast: true
+              #     non_srg_obss_pd_max_threshold: -75
+              #     target_wake_up_time_11ax: true
+              #     obss_pd: true
+              #   unlocked_attributes:
+              #     - "radio_band"
+              #     - "bss_color"
+              #     - "target_waketime_broadcast"
+              #     - "non_srg_obss_pd_max_threshold"
+              #     - "target_wake_up_time_11ax"
+              #     - "obss_pd"
+
+              # - design_name: "dot11ax_6ghz_design"
+              #   feature_attributes:
+              #     radio_band: "6GHZ"
+              #     bss_color: true
+              #     target_waketime_broadcast: true
+              #     multiple_bssid: true
+              #     target_wake_up_time_11ax: true
+              #   unlocked_attributes:
+              #     - "radio_band"
+              #     - "bss_color"
+              #     - "target_waketime_broadcast"
+              #     - "multiple_bssid"
+              #     - "target_wake_up_time_11ax"
 
 
 
