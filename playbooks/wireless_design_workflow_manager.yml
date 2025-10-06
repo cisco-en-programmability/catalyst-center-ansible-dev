@@ -22,52 +22,39 @@
         dnac_task_poll_interval: 1
         state: deleted
         config:
-          - dot11ax_configuration:
-              - design_name: "dot11ax_24ghz_design"
-                feature_attributes:
-                  radio_band: "2_4GHZ"
-                  bss_color: true
-                  target_waketime_broadcast: true
-                  non_srg_obss_pd_max_threshold: -62
-                  target_wake_up_time_11ax: true
-                  obss_pd: true
-                unlocked_attributes:
-                  # - "radio_band"
-                  # - "bss_color"
-                  # - "target_waketime_broadcast"
-                  # - "non_srg_obss_pd_max_threshold"
-                  # - "target_wake_up_time_11ax"
-                  # - "obss_pd"
+          - feature_template_config:
+              - rrm_general_configuration:
+                  - design_name: "rrm_general_5ghz_default"
+                    feature_attributes:
+                      radio_band: "5GHZ"                           # enum: 2_4GHZ, 5GHZ, 6GHZ
+                      monitoring_channels: "MONITORING_CHANNELS_DCA"   # enum: MONITORING_CHANNELS_ALL, MONITORING_CHANNELS_COUNTRY, MONITORING_CHANNELS_DCA
+                      neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT"  # enum: NEIGHBOR_DISCOVER_TYPE_TRANSPARENT, NEIGHBOR_DISCOVER_TYPE_PROTECTED
+                      throughput_threshold: 3000                  # 1000..10000000
+                      coverage_hole_detection: true
+                    unlocked_attributes:
+                      - "monitoring_channels"
+                      - "neighbor_discover_type"
+                      - "throughput_threshold"
+                      - "coverage_hole_detection"
 
-              # - design_name: "dot11ax_5ghz_design"
-              #   feature_attributes:
-              #     radio_band: "5GHZ"
-              #     bss_color: true
-              #     target_waketime_broadcast: true
-              #     non_srg_obss_pd_max_threshold: -75
-              #     target_wake_up_time_11ax: true
-              #     obss_pd: true
-              #   unlocked_attributes:
-              #     - "radio_band"
-              #     - "bss_color"
-              #     - "target_waketime_broadcast"
-              #     - "non_srg_obss_pd_max_threshold"
-              #     - "target_wake_up_time_11ax"
-              #     - "obss_pd"
+          # - design_name: "rrm_general_6ghz_high_thr"
+          #   feature_attributes:
+          #     radio_band: "6GHZ"
+          #     monitoring_channels: "MONITORING_CHANNELS_ALL"
+          #     neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_PROTECTED"
+          #     throughput_threshold: 2500000
+          #     coverage_hole_detection: false
+          #   unlocked_attributes:
+          #     - "throughput_threshold"
 
-              # - design_name: "dot11ax_6ghz_design"
-              #   feature_attributes:
-              #     radio_band: "6GHZ"
-              #     bss_color: true
-              #     target_waketime_broadcast: true
-              #     multiple_bssid: true
-              #     target_wake_up_time_11ax: true
-              #   unlocked_attributes:
-              #     - "radio_band"
-              #     - "bss_color"
-              #     - "target_waketime_broadcast"
-              #     - "multiple_bssid"
-              #     - "target_wake_up_time_11ax"
-
-
-
+          # # 2.4 GHz example (note controller support requirement per your spec)
+          # - design_name: "rrm_general_24ghz_country_scope"
+          #   feature_attributes:
+          #     radio_band: "2_4GHZ"                          # supported only on IOS-XE >= 17.9.1
+          #     monitoring_channels: "MONITORING_CHANNELS_COUNTRY"
+          #     neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT"
+          #     throughput_threshold: 150000
+          #     coverage_hole_detection: true
+          #   unlocked_attributes:
+          #     - "monitoring_channels"
+          #     - "coverage_hole_detection"
