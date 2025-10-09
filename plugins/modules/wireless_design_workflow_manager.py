@@ -1186,7 +1186,7 @@ options:
                 elements: str
               aaa:
                 description:
-                  - Certain arameters within "aaa" are
+                  - Certain parameters within "aaa" are
                     eligible for site-specific overrides.
                   - For a detailed description of this
                     parameter, refer to the explanation
@@ -3048,6 +3048,912 @@ options:
                   - True means it is managed by the
                     Network Controller.
                 type: bool
+      feature_template_config:
+        description:
+          - Configuration for wireless feature templates in Cisco Catalyst Center.
+          - Enables advanced wireless features and policies for specific design requirements.
+          - Each feature template can be applied to different designs and radio bands.
+          - Supports both creation and deletion of feature template configurations.
+        type: list
+        elements: dict
+        required: false
+        suboptions:
+          aaa_radius_attribute:
+            description:
+              - Configuration for AAA RADIUS attributes for wireless authentication.
+              - Defines RADIUS attributes sent during wireless client authentication.
+              - Used to customize authentication behavior and client identification.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply AAA RADIUS attribute configuration.
+                  - Must match an existing design in Cisco Catalyst Center.
+                  - Design name is case-sensitive and must be unique.
+                type: str
+                required: true
+              called_station_id:
+                description:
+                  - RADIUS Called-Station-Id attribute value.
+                  - Identifies the access point or SSID that the client is connecting to.
+                  - Commonly used for accounting and policy enforcement.
+                  - Format typically includes AP MAC address and SSID name.
+                type: str
+                required: true
+              unlocked_attributes:
+                description:
+                  - Set to true to unlock attributes for manual configuration.
+                  - When false, attributes are locked and managed by the template.
+                  - Allows flexibility in attribute configuration when needed.
+                type: bool
+                default: false
+          advanced_ssid:
+            description:
+              - Advanced SSID configuration parameters for enhanced wireless features.
+              - Provides fine-grained control over SSID behavior and performance.
+              - Includes settings for client management, power optimization, and advanced protocols.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply advanced SSID configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              feature_attributes:
+                description:
+                  - Collection of advanced SSID feature settings and parameters.
+                  - Controls various aspects of SSID operation and client behavior.
+                type: dict
+                required: false
+                suboptions:
+                  peer2peer_blocking:
+                    description:
+                      - Controls peer-to-peer communication between wireless clients.
+                      - DISABLE allows all peer-to-peer traffic.
+                      - DROP blocks all peer-to-peer communication.
+                      - FORWARD_UP forwards traffic to the wired network.
+                      - ALLOW_PVT_GROUP allows communication within private groups.
+                    type: str
+                    choices: ["DISABLE", "DROP", "FORWARD_UP", "ALLOW_PVT_GROUP"]
+                  passive_client:
+                    description:
+                      - Enable passive client detection for better roaming experience.
+                      - Helps identify clients that don't actively probe for networks.
+                    type: bool
+                  prediction_optimization:
+                    description:
+                      - Enable predictive optimization for client connectivity.
+                      - Improves roaming decisions based on client behavior patterns.
+                    type: bool
+                  dual_band_neighbor_list:
+                    description:
+                      - Enable dual-band neighbor list for 802.11k support.
+                      - Helps clients make better roaming decisions across bands.
+                    type: bool
+                  radius_nac_state:
+                    description:
+                      - Enable RADIUS Network Access Control (NAC) state tracking.
+                      - Provides enhanced security and compliance monitoring.
+                    type: bool
+                  dhcp_required:
+                    description:
+                      - Require DHCP for client IP address assignment.
+                      - Prevents clients from using static IP addresses.
+                    type: bool
+                  dhcp_server:
+                    description:
+                      - IP address of the DHCP server for client assignments.
+                      - Must be reachable from the wireless infrastructure.
+                    type: str
+                  flex_local_auth:
+                    description:
+                      - Enable local authentication for FlexConnect deployments.
+                      - Allows authentication when WAN connectivity is unavailable.
+                    type: bool
+                  target_wakeup_time:
+                    description:
+                      - Enable Target Wake Time (TWT) for power management.
+                      - Reduces power consumption for Wi-Fi 6 capable devices.
+                    type: bool
+                  downlink_ofdma:
+                    description:
+                      - Enable downlink Orthogonal Frequency Division Multiple Access.
+                      - Improves efficiency in dense client environments (Wi-Fi 6).
+                    type: bool
+                  uplink_ofdma:
+                    description:
+                      - Enable uplink OFDMA for improved upload performance.
+                      - Reduces latency and improves spectral efficiency (Wi-Fi 6).
+                    type: bool
+                  downlink_mu_mimo:
+                    description:
+                      - Enable downlink Multi-User Multiple-Input Multiple-Output.
+                      - Allows simultaneous transmission to multiple clients.
+                    type: bool
+                  uplink_mu_mimo:
+                    description:
+                      - Enable uplink MU-MIMO for improved upload capacity.
+                      - Multiple clients can transmit simultaneously.
+                    type: bool
+                  dot11ax:
+                    description:
+                      - Enable 802.11ax (Wi-Fi 6) features and optimizations.
+                      - Activates Wi-Fi 6 specific enhancements.
+                    type: bool
+                  aironet_ie_support:
+                    description:
+                      - Enable Cisco Aironet Information Element support.
+                      - Provides enhanced Cisco-specific wireless features.
+                    type: bool
+                  load_balancing:
+                    description:
+                      - Enable client load balancing across access points.
+                      - Distributes clients evenly for optimal performance.
+                    type: bool
+                  dtim_period_5ghz:
+                    description:
+                      - Delivery Traffic Indication Message period for 5GHz band.
+                      - Controls power save behavior for multicast/broadcast traffic.
+                      - Range typically 1-255 beacon intervals.
+                    type: int
+                  dtim_period_24ghz:
+                    description:
+                      - DTIM period for 2.4GHz band operations.
+                      - Lower values provide better responsiveness but higher power consumption.
+                    type: int
+                  scan_defer_time:
+                    description:
+                      - Time in milliseconds to defer scanning operations.
+                      - Helps reduce interference during active data transmission.
+                    type: int
+                  max_clients:
+                    description:
+                      - Maximum number of clients allowed on this SSID.
+                      - Helps control resource utilization and performance.
+                    type: int
+                  max_clients_per_radio:
+                    description:
+                      - Maximum clients allowed per radio interface.
+                      - Provides per-radio client density control.
+                    type: int
+                  max_clients_per_ap:
+                    description:
+                      - Maximum clients allowed per access point.
+                      - Overall client limit regardless of radio configuration.
+                    type: int
+                  wmm_policy:
+                    description:
+                      - Wi-Fi Multimedia (WMM) quality of service policy.
+                      - DISABLED turns off QoS prioritization.
+                      - ALLOWED permits QoS-capable clients to use prioritization.
+                      - REQUIRED mandates QoS support for client connectivity.
+                    type: str
+                    choices: ["DISABLED", "ALLOWED", "REQUIRED"]
+                  multicast_buffer:
+                    description:
+                      - Enable multicast frame buffering for power-save clients.
+                      - Improves delivery of multicast traffic to sleeping clients.
+                    type: bool
+                  multicast_buffer_value:
+                    description:
+                      - Size of multicast buffer in number of frames.
+                      - Higher values improve delivery but use more memory.
+                    type: int
+                  media_stream_multicast_direct:
+                    description:
+                      - Enable direct multicast delivery for media streams.
+                      - Optimizes video and audio multicast performance.
+                    type: bool
+                  mu_mimo_11ac:
+                    description:
+                      - Enable MU-MIMO support for 802.11ac clients.
+                      - Allows multiple 11ac clients to be served simultaneously.
+                    type: bool
+                  wifi_to_cellular_steering:
+                    description:
+                      - Enable steering between Wi-Fi and cellular networks.
+                      - Helps optimize connectivity based on network conditions.
+                    type: bool
+                  wifi_alliance_agile_multiband:
+                    description:
+                      - Enable Wi-Fi Alliance Agile Multiband features.
+                      - Improves band steering and roaming performance.
+                    type: bool
+                  fastlane_asr:
+                    description:
+                      - Enable FastLane Automatic Speech Recognition optimization.
+                      - Prioritizes voice traffic for better call quality.
+                    type: bool
+                  dot11v_bss_max_idle_protected:
+                    description:
+                      - Enable 802.11v BSS Max Idle Period protection.
+                      - Prevents premature client disconnection during idle periods.
+                    type: bool
+                  universal_ap_admin:
+                    description:
+                      - Enable Universal AP Admin access capabilities.
+                      - Provides enhanced management access to access points.
+                    type: bool
+                  opportunistic_key_caching:
+                    description:
+                      - Enable Opportunistic Key Caching for faster roaming.
+                      - Reduces authentication time during client roaming.
+                    type: bool
+                  ip_source_guard:
+                    description:
+                      - Enable IP Source Guard to prevent IP spoofing.
+                      - Validates source IP addresses against DHCP bindings.
+                    type: bool
+                  dhcp_opt82_remote_id_sub_option:
+                    description:
+                      - Enable DHCP Option 82 Remote ID sub-option.
+                      - Provides location information in DHCP requests.
+                    type: bool
+                  vlan_central_switching:
+                    description:
+                      - Enable VLAN-based central switching mode.
+                      - Routes traffic through the wireless controller.
+                    type: bool
+                  call_snooping:
+                    description:
+                      - Enable call snooping for voice optimization.
+                      - Monitors voice calls for quality improvements.
+                    type: bool
+                  send_disassociate:
+                    description:
+                      - Send disassociate messages for call management.
+                      - Helps manage client connections during voice calls.
+                    type: bool
+                  sent_486_busy:
+                    description:
+                      - Send SIP 486 Busy response for call control.
+                      - Manages voice call admission control.
+                    type: bool
+                  ip_mac_binding:
+                    description:
+                      - Enable IP-MAC address binding for security.
+                      - Prevents MAC address spoofing attacks.
+                    type: bool
+                  idle_threshold:
+                    description:
+                      - Idle timeout threshold in seconds for client management.
+                      - Disconnects inactive clients to free resources.
+                    type: int
+                  defer_priority_0:
+                    description:
+                      - Enable traffic deferral for priority 0 (background) traffic.
+                      - Delays low-priority traffic during congestion.
+                    type: bool
+                  defer_priority_1:
+                    description:
+                      - Enable traffic deferral for priority 1 (best effort) traffic.
+                    type: bool
+                  defer_priority_2:
+                    description:
+                      - Enable traffic deferral for priority 2 (excellent effort) traffic.
+                    type: bool
+                  defer_priority_3:
+                    description:
+                      - Enable traffic deferral for priority 3 (critical applications) traffic.
+                    type: bool
+                  defer_priority_4:
+                    description:
+                      - Enable traffic deferral for priority 4 (video) traffic.
+                    type: bool
+                  defer_priority_5:
+                    description:
+                      - Enable traffic deferral for priority 5 (video) traffic.
+                    type: bool
+                  defer_priority_6:
+                    description:
+                      - Enable traffic deferral for priority 6 (voice) traffic.
+                    type: bool
+                  defer_priority_7:
+                    description:
+                      - Enable traffic deferral for priority 7 (network control) traffic.
+                    type: bool
+                  share_data_with_client:
+                    description:
+                      - Enable sharing of network analytics data with clients.
+                      - Provides performance insights to client applications.
+                    type: bool
+                  advertise_support:
+                    description:
+                      - Advertise support for advanced wireless features.
+                      - Informs clients about available capabilities.
+                    type: bool
+                  advertise_pc_analytics_support:
+                    description:
+                      - Advertise support for PC analytics capabilities.
+                      - Enables enhanced analytics for computer clients.
+                    type: bool
+                  send_beacon_on_association:
+                    description:
+                      - Send beacon frames immediately upon client association.
+                      - Improves initial connectivity experience.
+                    type: bool
+                  send_beacon_on_roam:
+                    description:
+                      - Send beacon frames when clients roam between APs.
+                      - Facilitates faster roaming completion.
+                    type: bool
+                  fast_transition_reassociation_timeout:
+                    description:
+                      - Timeout in milliseconds for fast transition reassociation.
+                      - Controls how long to wait for roaming completion.
+                    type: int
+                  mdns_mode:
+                    description:
+                      - Multicast DNS (mDNS) handling mode for service discovery.
+                      - MDNS_SD_BRIDGING bridges mDNS across network segments.
+                      - MDNS_SD_DROP blocks mDNS traffic.
+                      - MDNS_SD_GATEWAY provides mDNS gateway functionality.
+                    type: str
+                    choices: ["MDNS_SD_BRIDGING", "MDNS_SD_DROP", "MDNS_SD_GATEWAY"]
+              unlocked_attributes:
+                description:
+                  - List of attribute names that should be unlocked for manual configuration.
+                  - Attributes not in this list will be managed by the template.
+                  - Allows selective override of template-managed settings.
+                type: list
+                elements: str
+                required: false
+          clean_air_configuration:
+            description:
+              - Configuration for Cisco CleanAir spectrum intelligence and interference detection.
+              - Provides automatic RF interference detection and mitigation.
+              - Helps maintain optimal wireless performance in challenging RF environments.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply CleanAir configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              radio_band:
+                description:
+                  - Radio frequency band for CleanAir monitoring and interference detection.
+                  - 2_4GHZ monitors 2.4 GHz spectrum for interference sources.
+                  - 5GHZ monitors 5 GHz spectrum for interference sources.
+                  - 6GHZ monitors 6 GHz spectrum for interference sources.
+                type: str
+                required: true
+                choices: ["2_4GHZ", "5GHZ", "6GHZ"]
+              feature_attributes:
+                description:
+                  - CleanAir feature settings and interference detection parameters.
+                  - Controls spectrum monitoring and interference reporting behavior.
+                type: dict
+                required: false
+                suboptions:
+                  clean_air:
+                    description:
+                      - Enable CleanAir spectrum intelligence functionality.
+                      - Activates automatic interference detection and reporting.
+                    type: bool
+                  clean_air_device_reporting:
+                    description:
+                      - Enable reporting of detected interference devices.
+                      - Provides detailed information about interference sources.
+                    type: bool
+                  persistent_device_propagation:
+                    description:
+                      - Enable propagation of persistent interference device information.
+                      - Shares interference data across the wireless infrastructure.
+                    type: bool
+                  description:
+                    description:
+                      - Optional description for the CleanAir configuration.
+                      - Provides context about the monitoring setup and purpose.
+                    type: str
+                  interferers_features:
+                    description:
+                      - Specific interference source detection and classification settings.
+                      - Controls which types of interference sources are monitored.
+                    type: dict
+                    required: false
+                    suboptions:
+                      ble_beacon:
+                        description:
+                          - Enable detection of Bluetooth Low Energy beacon interference.
+                        type: bool
+                      bluetooth_paging_inquiry:
+                        description:
+                          - Enable detection of Bluetooth paging and inquiry interference.
+                        type: bool
+                      bluetooth_sco_acl:
+                        description:
+                          - Enable detection of Bluetooth SCO/ACL traffic interference.
+                        type: bool
+                      continuous_transmitter:
+                        description:
+                          - Enable detection of continuous transmitter interference.
+                        type: bool
+                      generic_dect:
+                        description:
+                          - Enable detection of generic DECT phone interference.
+                        type: bool
+                      generic_tdd:
+                        description:
+                          - Enable detection of generic Time Division Duplex interference.
+                        type: bool
+                      jammer:
+                        description:
+                          - Enable detection of intentional jamming devices.
+                        type: bool
+                      microwave_oven:
+                        description:
+                          - Enable detection of microwave oven interference.
+                        type: bool
+                      motorola_canopy:
+                        description:
+                          - Enable detection of Motorola Canopy interference.
+                        type: bool
+                      si_fhss:
+                        description:
+                          - Enable detection of Frequency Hopping Spread Spectrum interference.
+                        type: bool
+                      spectrum80211_fh:
+                        description:
+                          - Enable detection of 802.11 frequency hopping interference.
+                        type: bool
+                      spectrum80211_non_standard_channel:
+                        description:
+                          - Enable detection of 802.11 non-standard channel interference.
+                        type: bool
+                      spectrum802154:
+                        description:
+                          - Enable detection of 802.15.4 (ZigBee) interference.
+                        type: bool
+                      spectrum_inverted:
+                        description:
+                          - Enable detection of spectrum inverted interference.
+                        type: bool
+                      super_ag:
+                        description:
+                          - Enable detection of Super AG interference.
+                        type: bool
+                      video_camera:
+                        description:
+                          - Enable detection of wireless video camera interference.
+                        type: bool
+                      wimax_fixed:
+                        description:
+                          - Enable detection of fixed WiMAX interference.
+                        type: bool
+                      wimax_mobile:
+                        description:
+                          - Enable detection of mobile WiMAX interference.
+                        type: bool
+                      xbox:
+                        description:
+                          - Enable detection of Xbox gaming console interference.
+                        type: bool
+              unlocked_attributes:
+                description:
+                  - List of CleanAir attribute names unlocked for manual configuration.
+                  - Allows override of template-managed interference detection settings.
+                type: list
+                elements: str
+                required: false
+          dot11ax_configuration:
+            description:
+              - Configuration for 802.11ax (Wi-Fi 6) specific features and optimizations.
+              - Enables advanced Wi-Fi 6 capabilities for improved performance and efficiency.
+              - Includes settings for spatial reuse, BSS coloring, and target wake time.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply 802.11ax configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              feature_attributes:
+                description:
+                  - 802.11ax specific feature settings and optimization parameters.
+                  - Controls Wi-Fi 6 enhancements for better spectral efficiency.
+                type: dict
+                required: false
+                suboptions:
+                  radio_band:
+                    description:
+                      - Radio frequency band for 802.11ax feature application.
+                      - Specifies which band should use these Wi-Fi 6 settings.
+                    type: str
+                  bss_color:
+                    description:
+                      - Enable BSS (Basic Service Set) coloring for spatial reuse.
+                      - Helps distinguish between overlapping BSSs to reduce interference.
+                    type: bool
+                  target_waketime_broadcast:
+                    description:
+                      - Enable broadcast Target Wake Time (TWT) announcements.
+                      - Coordinates sleep schedules for multiple clients simultaneously.
+                    type: bool
+                  non_srg_obss_pd_max_threshold:
+                    description:
+                      - Maximum threshold for non-SRG OBSS Packet Detection in dBm.
+                      - Controls sensitivity for detecting overlapping BSS transmissions.
+                      - Range typically -82 to -62 dBm.
+                    type: int
+                  target_wake_up_time_11ax:
+                    description:
+                      - Enable Target Wake Time feature for 802.11ax clients.
+                      - Allows clients to negotiate sleep schedules to save power.
+                    type: bool
+                  obss_pd:
+                    description:
+                      - Enable Overlapping BSS Packet Detection for spatial reuse.
+                      - Improves spectrum efficiency in dense deployments.
+                    type: bool
+                  multiple_bssid:
+                    description:
+                      - Enable Multiple BSSID feature for 802.11ax.
+                      - Allows transmission of multiple SSID beacons efficiently.
+                    type: bool
+              unlocked_attributes:
+                description:
+                  - List of 802.11ax attribute names unlocked for manual configuration.
+                  - Allows selective override of Wi-Fi 6 template settings.
+                type: list
+                elements: str
+                required: false
+          dot11be_configuration:
+            description:
+              - Configuration for 802.11be (Wi-Fi 7) features and capabilities.
+              - Enables next-generation Wi-Fi 7 enhancements for maximum performance.
+              - Provides settings for Wi-Fi 7 operation on different frequency bands.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply 802.11be configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              feature_attributes:
+                description:
+                  - 802.11be specific feature settings and optimization parameters.
+                  - Controls Wi-Fi 7 operation and performance enhancements.
+                type: dict
+                required: false
+                suboptions:
+                  dot11be_status:
+                    description:
+                      - Enable or disable 802.11be (Wi-Fi 7) operation.
+                      - Activates Wi-Fi 7 features and protocol enhancements.
+                    type: bool
+                  radio_band:
+                    description:
+                      - Radio frequency band for 802.11be operation.
+                      - Specifies which band should support Wi-Fi 7 features.
+                      - 6GHz band provides optimal Wi-Fi 7 performance.
+                    type: str
+                    choices: ["2_4GHZ", "5GHZ", "6GHZ"]
+              unlocked_attributes:
+                description:
+                  - List of 802.11be attribute names unlocked for manual configuration.
+                  - Allows override of Wi-Fi 7 template-managed settings.
+                type: list
+                elements: str
+                required: false
+          event_driven_rrm_configuration:
+            description:
+              - Configuration for Event-Driven Radio Resource Management (RRM).
+              - Enables dynamic RF optimization based on real-time network conditions.
+              - Provides automatic channel and power adjustments for optimal performance.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply Event-Driven RRM configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              feature_attributes:
+                description:
+                  - Event-Driven RRM feature settings and threshold parameters.
+                  - Controls automatic RF optimization behavior and sensitivity.
+                type: dict
+                required: true
+                suboptions:
+                  radio_band:
+                    description:
+                      - Radio frequency band for Event-Driven RRM operation.
+                      - RRM algorithms will monitor and optimize this band.
+                      - Note that 6GHz band is not supported for Event-Driven RRM.
+                    type: str
+                    required: true
+                    choices: ["2_4GHZ", "5GHZ"]
+                  event_driven_rrm_enable:
+                    description:
+                      - Enable Event-Driven RRM for automatic RF optimization.
+                      - When enabled, system responds to interference and performance changes.
+                    type: bool
+                    required: false
+                  event_driven_rrm_threshold_level:
+                    description:
+                      - Sensitivity level for triggering Event-Driven RRM actions.
+                      - LOW requires significant changes before RRM activation.
+                      - MEDIUM provides balanced sensitivity to network changes.
+                      - HIGH triggers RRM with minor network condition changes.
+                      - CUSTOM allows specification of custom threshold values.
+                    type: str
+                    required: false
+                    choices: ["LOW", "MEDIUM", "HIGH", "CUSTOM"]
+                  event_driven_rrm_custom_threshold_val:
+                    description:
+                      - Custom threshold value when threshold_level is set to CUSTOM.
+                      - Defines the specific sensitivity level for RRM activation.
+                      - Higher values require more significant changes to trigger RRM.
+                    type: int
+                    required: false
+              unlocked_attributes:
+                description:
+                  - List of Event-Driven RRM attribute names unlocked for manual configuration.
+                  - Allows override of template-managed RRM settings.
+                type: list
+                elements: str
+                required: false
+          flexconnect_configuration:
+            description:
+              - Configuration for FlexConnect deployment and local switching capabilities.
+              - Enables branch office wireless deployments with local data switching.
+              - Provides settings for overlay IP functionality and local survivability.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply FlexConnect configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                type: str
+                required: true
+              feature_attributes:
+                description:
+                  - FlexConnect feature settings and operational parameters.
+                  - Controls local switching and overlay IP capabilities.
+                type: dict
+                required: false
+                suboptions:
+                  overlap_ip_enable:
+                    description:
+                      - Enable overlapping IP address support for FlexConnect.
+                      - Allows multiple sites to use the same IP address ranges.
+                      - Useful for branch deployments with NAT or VPN connectivity.
+                    type: bool
+              unlocked_attributes:
+                description:
+                  - List of FlexConnect attribute names unlocked for manual configuration.
+                  - Allows override of template-managed FlexConnect settings.
+                type: list
+                elements: str
+                required: false
+          multicast_configuration:
+            description:
+              - Configuration for wireless multicast traffic handling and optimization.
+              - Controls how multicast and broadcast traffic is processed and delivered.
+              - Includes settings for both IPv4 and IPv6 multicast operations.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply multicast configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                  - Design name must not exceed 64 characters in length.
+                type: str
+                required: true
+                maxlength: 64
+              feature_attributes:
+                description:
+                  - Multicast feature settings and delivery parameters.
+                  - Controls global multicast behavior and protocol-specific settings.
+                type: dict
+                required: true
+                suboptions:
+                  global_multicast_enabled:
+                    description:
+                      - Enable global multicast functionality for the wireless network.
+                      - Must be enabled for any multicast traffic processing.
+                    type: bool
+                    required: true
+                  multicast_ipv4_mode:
+                    description:
+                      - Delivery mode for IPv4 multicast traffic handling.
+                      - UNICAST converts multicast to unicast for individual delivery.
+                      - MULTICAST preserves native multicast delivery method.
+                    type: str
+                    required: false
+                    choices: ["UNICAST", "MULTICAST"]
+                  multicast_ipv4_address:
+                    description:
+                      - IPv4 multicast group address for multicast operations.
+                      - Must be a valid IPv4 multicast address (224.0.0.0 to 239.255.255.255).
+                      - Used when multicast_ipv4_mode is set to MULTICAST.
+                    type: str
+                    required: false
+                  multicast_ipv6_mode:
+                    description:
+                      - Delivery mode for IPv6 multicast traffic handling.
+                      - UNICAST converts multicast to unicast for individual delivery.
+                      - MULTICAST preserves native multicast delivery method.
+                    type: str
+                    required: false
+                    choices: ["UNICAST", "MULTICAST"]
+                  multicast_ipv6_address:
+                    description:
+                      - IPv6 multicast group address for multicast operations.
+                      - Must be a valid IPv6 multicast address (FF00::/8 prefix).
+                      - Used when multicast_ipv6_mode is set to MULTICAST.
+                    type: str
+                    required: false
+              unlocked_attributes:
+                description:
+                  - List of multicast attribute names unlocked for manual configuration.
+                  - Allows override of template-managed multicast settings.
+                type: list
+                elements: str
+                required: false
+          rrm_fra_configuration:
+            description:
+              - Configuration for Radio Resource Management Flexible Radio Assignment (RRM-FRA).
+              - Enables dynamic radio role assignment for optimal spectrum utilization.
+              - Provides automatic adaptation to changing RF conditions and client demands.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply RRM-FRA configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                  - Design name must not exceed 64 characters in length.
+                type: str
+                required: true
+                maxlength: 64
+              feature_attributes:
+                description:
+                  - RRM-FRA feature settings and operational parameters.
+                  - Controls flexible radio assignment behavior and sensitivity.
+                type: dict
+                required: true
+                suboptions:
+                  radio_band:
+                    description:
+                      - Radio band combination for FRA operation.
+                      - 2_4GHZ_5GHZ enables FRA between 2.4GHz and 5GHz bands.
+                      - 5GHZ_6GHZ enables FRA between 5GHz and 6GHz bands.
+                    type: str
+                    required: true
+                    choices: ["2_4GHZ_5GHZ", "5GHZ_6GHZ"]
+                  fra_freeze:
+                    description:
+                      - Freeze FRA decisions to prevent automatic changes.
+                      - When enabled, current radio assignments are maintained.
+                    type: bool
+                    required: false
+                  fra_status:
+                    description:
+                      - Enable or disable Flexible Radio Assignment functionality.
+                      - Controls whether radios can dynamically change their band assignment.
+                    type: bool
+                    required: false
+                  fra_interval:
+                    description:
+                      - Interval in minutes for FRA evaluation and potential changes.
+                      - Determines how frequently the system considers radio reassignment.
+                    type: int
+                    required: false
+                  fra_sensitivity:
+                    description:
+                      - Sensitivity level for triggering FRA band changes.
+                      - LOW requires significant load differences for reassignment.
+                      - MEDIUM provides balanced sensitivity to load changes.
+                      - HIGH responds quickly to minor load variations.
+                      - HIGHER, EVEN_HIGHER, SUPER_HIGH provide progressively more sensitive responses.
+                    type: str
+                    required: false
+                    choices: ["LOW", "MEDIUM", "HIGH", "HIGHER", "EVEN_HIGHER", "SUPER_HIGH"]
+              unlocked_attributes:
+                description:
+                  - List of RRM-FRA attribute names unlocked for manual configuration.
+                  - Allows override of template-managed FRA settings.
+                type: list
+                elements: str
+                required: false
+          rrm_general_configuration:
+            description:
+              - Configuration for general Radio Resource Management (RRM) parameters.
+              - Controls overall RF optimization behavior and monitoring settings.
+              - Includes channel monitoring, neighbor discovery, and coverage optimization.
+            type: list
+            elements: dict
+            required: false
+            suboptions:
+              design_name:
+                description:
+                  - Name of the wireless design to apply RRM general configuration.
+                  - Must correspond to an existing design in Cisco Catalyst Center.
+                  - Design name must not exceed 64 characters in length.
+                type: str
+                required: true
+                maxlength: 64
+              feature_attributes:
+                description:
+                  - General RRM feature settings and optimization parameters.
+                  - Controls channel monitoring, neighbor discovery, and performance thresholds.
+                type: dict
+                required: true
+                suboptions:
+                  radio_band:
+                    description:
+                      - Radio frequency band for RRM general configuration.
+                      - RRM algorithms will monitor and optimize the specified band.
+                    type: str
+                    required: true
+                    choices: ["2_4GHZ", "5GHZ", "6GHZ"]
+                  monitoring_channels:
+                    description:
+                      - Channel monitoring scope for RRM analysis and optimization.
+                      - MONITORING_CHANNELS_ALL monitors all available channels.
+                      - MONITORING_CHANNELS_COUNTRY monitors country-specific channels.
+                      - MONITORING_CHANNELS_DCA monitors Dynamic Channel Assignment channels.
+                    type: str
+                    required: false
+                    choices: [
+                      "MONITORING_CHANNELS_ALL",
+                      "MONITORING_CHANNELS_COUNTRY", 
+                      "MONITORING_CHANNELS_DCA"
+                    ]
+                  neighbor_discover_type:
+                    description:
+                      - Method for discovering neighboring access points and interference.
+                      - NEIGHBOR_DISCOVER_TYPE_TRANSPARENT uses passive monitoring.
+                      - NEIGHBOR_DISCOVER_TYPE_PROTECTED uses active discovery with protection.
+                    type: str
+                    required: false
+                    choices: [
+                      "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT",
+                      "NEIGHBOR_DISCOVER_TYPE_PROTECTED"
+                    ]
+                  throughput_threshold:
+                    description:
+                      - Minimum throughput threshold in Mbps for RRM optimization triggers.
+                      - RRM considers optimization when throughput falls below this value.
+                    type: int
+                    required: false
+                  coverage_hole_detection:
+                    description:
+                      - Enable automatic detection and mitigation of coverage holes.
+                      - Identifies areas with poor signal coverage and attempts optimization.
+                    type: bool
+                    required: false
+              unlocked_attributes:
+                description:
+                  - List of RRM general attribute names unlocked for manual configuration.
+                  - Allows override of template-managed RRM settings.
+                type: list
+                elements: str
+                required: false
+ 
 requirements:
   - dnacentersdk >= 2.10.3
   - python >= 3.9
@@ -22466,6 +23372,40 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
+    def verify_add_aaa_radius_attributes(self, add_aaa_params):
+        """Verifies whether AAA Radius attributes were successfully added."""
+        existing_blocks = self.get_aaa_radius_attributes()
+        existing_names = {inst["designName"] for b in existing_blocks for inst in b.get("instances", [])}
+
+        failed = []
+        for attr in add_aaa_params:
+            name = attr.get("designName")
+            if name not in existing_names:
+                failed.append(name)
+
+        if failed:
+            self.log("ADD AAA Radius Attributes failed for: {0}".format(failed), "ERROR")
+        else:
+            self.log("Verified success of ADD AAA Radius Attributes: {0}".format(add_aaa_params), "INFO")
+
+
+    def verify_update_aaa_radius_attributes(self, update_aaa_params):
+        """Verifies whether AAA Radius attributes were successfully updated."""
+        existing_blocks = self.get_aaa_radius_attributes()
+        existing_dict = {inst["designName"]: inst for b in existing_blocks for inst in b.get("instances", [])}
+
+        failed = []
+        for attr in update_aaa_params:
+            name = attr.get("designName")
+            if name not in existing_dict:
+                failed.append(name)
+
+        if failed:
+            self.log("UPDATE AAA Radius Attributes failed for: {0}".format(failed), "ERROR")
+        else:
+            self.log("Verified success of UPDATE AAA Radius Attributes: {0}".format(update_aaa_params), "INFO")
+
+
     def verify_diff_merged(self):
         """
         Verifies the merge operations for various network configurations.
@@ -22531,9 +23471,38 @@ class WirelessDesign(DnacBase):
             ),
             (
                 "update_anchor_groups_params",
-                "UPDATE Anchor Groups",
+                "UPDATE Anchor x",
                 self.verify_update_anchor_groups_operation,
             ),
+            ("add_aaa_radius_attribute_params", "ADD AAA Radius Attributes", self.verify_add_aaa_radius_attributes),
+            ("update_aaa_radius_attribute_params", "UPDATE AAA Radius Attributes", self.verify_update_aaa_radius_attributes),
+
+            # ("add_advanced_ssid_params", "ADD Advanced SSIDs", self.verify_add_advanced_ssid),
+            # ("update_advanced_ssid_params", "UPDATE Advanced SSIDs", self.verify_update_advanced_ssid),
+
+            # ("add_clean_air_configuration_params", "ADD CleanAir Configurations", self.verify_add_clean_air),
+            # ("update_clean_air_configuration_params", "UPDATE CleanAir Configurations", self.verify_update_clean_air),
+
+            # ("add_dot11ax_configuration_params", "ADD dot11ax Configurations", self.verify_add_dot11ax),
+            # ("update_dot11ax_configuration_params", "UPDATE dot11ax Configurations", self.verify_update_dot11ax),
+
+            # ("add_dot11be_configuration_params", "ADD dot11be Configurations", self.verify_add_dot11be),
+            # ("update_dot11be_configuration_params", "UPDATE dot11be Configurations", self.verify_update_dot11be),
+
+            # ("add_event_driven_rrm_configuration_params", "ADD Event-Driven RRM Configurations", self.verify_add_event_driven_rrm),
+            # ("update_event_driven_rrm_configuration_params", "UPDATE Event-Driven RRM Configurations", self.verify_update_event_driven_rrm),
+
+            # ("add_flexconnect_configuration_params", "ADD FlexConnect Configurations", self.verify_add_flexconnect),
+            # ("update_flexconnect_configuration_params", "UPDATE FlexConnect Configurations", self.verify_update_flexconnect),
+
+            # ("add_multicast_configuration_params", "ADD Multicast Configurations", self.verify_add_multicast),
+            # ("update_multicast_configuration_params", "UPDATE Multicast Configurations", self.verify_update_multicast),
+
+            # ("add_rrm_fra_configuration_params", "ADD RRM-FRA Configurations", self.verify_add_rrm_fra),
+            # ("update_rrm_fra_configuration_params", "UPDATE RRM-FRA Configurations", self.verify_update_rrm_fra),
+
+            # ("add_rrm_general_configuration_params", "ADD RRM-General Configurations", self.verify_add_rrm_general),
+            # ("update_rrm_general_configuration_params", "UPDATE RRM-General Configurations", self.verify_update_rrm_general),
         ]
 
         # Iterate over operations and perform verification
