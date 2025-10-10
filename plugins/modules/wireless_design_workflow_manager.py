@@ -17684,254 +17684,255 @@ class WirelessDesign(DnacBase):
                     have["delete_{0}".format(config_key)] = deleted_func(elements)
 
         # --- New logic for AAA Radius Attributes ---
-        aaa_attr_list = []
-        for item in config.get("feature_template_config", []):
-            if "aaa_radius_attribute" in item:
-                aaa_attr_list.extend(item.get("aaa_radius_attribute", []))
+        if config.get("feature_template_config", []):
+            aaa_attr_list = []
+            for item in config.get("feature_template_config", []):
+                if "aaa_radius_attribute" in item:
+                    aaa_attr_list.extend(item.get("aaa_radius_attribute", []))
 
-        if aaa_attr_list:
-            self.log("Processing AAA Radius Attributes for state: {0}".format(state), "DEBUG")
+            if aaa_attr_list:
+                self.log("Processing AAA Radius Attributes for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_attrs, update_attrs, no_update_attrs = (
-                    self.verify_create_update_aaa_radius_attributes_requirement(aaa_attr_list)
-                )
-                have.update(
-                    {
-                        "add_aaa_radius_attribute": add_attrs,
-                        "update_aaa_radius_attribute": update_attrs,
-                        "no_update_aaa_radius_attribute": no_update_attrs,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_aaa_radius_attribute"] = self.verify_delete_aaa_radius_attributes_requirement(
-                    aaa_attr_list
-                )
+                if state == "merged":
+                    add_attrs, update_attrs, no_update_attrs = (
+                        self.verify_create_update_aaa_radius_attributes_requirement(aaa_attr_list)
+                    )
+                    have.update(
+                        {
+                            "add_aaa_radius_attribute": add_attrs,
+                            "update_aaa_radius_attribute": update_attrs,
+                            "no_update_aaa_radius_attribute": no_update_attrs,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_aaa_radius_attribute"] = self.verify_delete_aaa_radius_attributes_requirement(
+                        aaa_attr_list
+                    )
 
-        # --- New logic for Advanced SSID ---
-        adv_ssid_list = []
-        for item in config.get("feature_template_config", []):
-            if "advanced_ssid" in item:
-                adv_ssid_list.extend(item.get("advanced_ssid", []))
+            # --- New logic for Advanced SSID ---
+            adv_ssid_list = []
+            for item in config.get("feature_template_config", []):
+                if "advanced_ssid" in item:
+                    adv_ssid_list.extend(item.get("advanced_ssid", []))
 
-        if adv_ssid_list:
-            self.log("Processing Advanced SSID for state: {0}".format(state), "DEBUG")
+            if adv_ssid_list:
+                self.log("Processing Advanced SSID for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_adv, update_adv, no_update_adv = (
-                    self.verify_create_update_advanced_ssid_requirement(adv_ssid_list)
-                )
-                have.update(
-                    {
-                        "add_advanced_ssid": add_adv,
-                        "update_advanced_ssid": update_adv,
-                        "no_update_advanced_ssid": no_update_adv,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_advanced_ssid"] = self.verify_delete_advanced_ssid_requirement(
-                    adv_ssid_list
-                )
+                if state == "merged":
+                    add_adv, update_adv, no_update_adv = (
+                        self.verify_create_update_advanced_ssid_requirement(adv_ssid_list)
+                    )
+                    have.update(
+                        {
+                            "add_advanced_ssid": add_adv,
+                            "update_advanced_ssid": update_adv,
+                            "no_update_advanced_ssid": no_update_adv,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_advanced_ssid"] = self.verify_delete_advanced_ssid_requirement(
+                        adv_ssid_list
+                    )
 
-        # --- New logic for CleanAir profiles ---
-        clean_air_list = []
-        for item in config.get("feature_template_config", []):
-            if "clean_air_configuration" in item:
-                clean_air_list.extend(item.get("clean_air_configuration", []))
+            # --- New logic for CleanAir profiles ---
+            clean_air_list = []
+            for item in config.get("feature_template_config", []):
+                if "clean_air_configuration" in item:
+                    clean_air_list.extend(item.get("clean_air_configuration", []))
 
-        if clean_air_list:
-            self.log("Processing CleanAir configuration for state: {0}".format(state), "DEBUG")
+            if clean_air_list:
+                self.log("Processing CleanAir configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_clean_air, update_clean_air, no_update_clean_air = (
-                    self.verify_create_update_clean_air_requirement(clean_air_list)
-                )
-                have.update(
-                    {
-                        "add_clean_air_configuration": add_clean_air,
-                        "update_clean_air_configuration": update_clean_air,
-                        "no_update_clean_air_configuration": no_update_clean_air,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_clean_air_configuration"] = self.verify_delete_clean_air_requirement(
-                    clean_air_list
-                )
+                if state == "merged":
+                    add_clean_air, update_clean_air, no_update_clean_air = (
+                        self.verify_create_update_clean_air_requirement(clean_air_list)
+                    )
+                    have.update(
+                        {
+                            "add_clean_air_configuration": add_clean_air,
+                            "update_clean_air_configuration": update_clean_air,
+                            "no_update_clean_air_configuration": no_update_clean_air,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_clean_air_configuration"] = self.verify_delete_clean_air_requirement(
+                        clean_air_list
+                    )
 
-        # --- New logic for 802.11ax profiles ---
-        dot11ax_list = []
-        for item in config.get("feature_template_config", []):
-            if "dot11ax_configuration" in item:
-                dot11ax_list.extend(item.get("dot11ax_configuration", []))
+            # --- New logic for 802.11ax profiles ---
+            dot11ax_list = []
+            for item in config.get("feature_template_config", []):
+                if "dot11ax_configuration" in item:
+                    dot11ax_list.extend(item.get("dot11ax_configuration", []))
 
-        if dot11ax_list:
-            self.log("Processing 802.11ax configuration for state: {0}".format(state), "DEBUG")
+            if dot11ax_list:
+                self.log("Processing 802.11ax configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_dot11ax, update_dot11ax, no_update_dot11ax = (
-                    self.verify_create_update_dot11axs_requirement(dot11ax_list)
-                )
-                have.update(
-                    {
-                        "add_dot11ax_configuration": add_dot11ax,
-                        "update_dot11ax_configuration": update_dot11ax,
-                        "no_update_dot11ax_configuration": no_update_dot11ax,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_dot11ax_configuration"] = self.verify_delete_dot11axs_requirement(
-                    dot11ax_list
-                )
+                if state == "merged":
+                    add_dot11ax, update_dot11ax, no_update_dot11ax = (
+                        self.verify_create_update_dot11axs_requirement(dot11ax_list)
+                    )
+                    have.update(
+                        {
+                            "add_dot11ax_configuration": add_dot11ax,
+                            "update_dot11ax_configuration": update_dot11ax,
+                            "no_update_dot11ax_configuration": no_update_dot11ax,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_dot11ax_configuration"] = self.verify_delete_dot11axs_requirement(
+                        dot11ax_list
+                    )
 
-        # --- New logic for 802.11be profiles ---
-        dot11be_list = []
-        for item in config.get("feature_template_config", []):
-            if "dot11be_configuration" in item:
-                dot11be_list.extend(item.get("dot11be_configuration", []))
+            # --- New logic for 802.11be profiles ---
+            dot11be_list = []
+            for item in config.get("feature_template_config", []):
+                if "dot11be_configuration" in item:
+                    dot11be_list.extend(item.get("dot11be_configuration", []))
 
-        if dot11be_list:
-            self.log("Processing 802.11be configuration for state: {0}".format(state), "DEBUG")
+            if dot11be_list:
+                self.log("Processing 802.11be configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_dot11be, update_dot11be, no_update_dot11be = (
-                    self.verify_create_update_dot11be_requirement(dot11be_list)
-                )
-                have.update(
-                    {
-                        "add_dot11be_configuration": add_dot11be,
-                        "update_dot11be_configuration": update_dot11be,
-                        "no_update_dot11be_configuration": no_update_dot11be,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_dot11be_configuration"] = self.verify_delete_dot11be_requirement(
-                    dot11be_list
-                )
+                if state == "merged":
+                    add_dot11be, update_dot11be, no_update_dot11be = (
+                        self.verify_create_update_dot11be_requirement(dot11be_list)
+                    )
+                    have.update(
+                        {
+                            "add_dot11be_configuration": add_dot11be,
+                            "update_dot11be_configuration": update_dot11be,
+                            "no_update_dot11be_configuration": no_update_dot11be,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_dot11be_configuration"] = self.verify_delete_dot11be_requirement(
+                        dot11be_list
+                    )
 
-        # --- New logic for Event Driven RRM profiles ---
-        event_rrm_list = []
-        for item in config.get("feature_template_config", []):
-            if "event_driven_rrm_configuration" in item:
-                event_rrm_list.extend(item.get("event_driven_rrm_configuration", []))
+            # --- New logic for Event Driven RRM profiles ---
+            event_rrm_list = []
+            for item in config.get("feature_template_config", []):
+                if "event_driven_rrm_configuration" in item:
+                    event_rrm_list.extend(item.get("event_driven_rrm_configuration", []))
 
-        if event_rrm_list:
-            self.log("Processing Event Driven RRM configuration for state: {0}".format(state), "DEBUG")
+            if event_rrm_list:
+                self.log("Processing Event Driven RRM configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_event_rrm, update_event_rrm, no_update_event_rrm = (
-                    self.verify_create_update_event_rrm_requirement(event_rrm_list)
-                )
-                have.update(
-                    {
-                        "add_event_driven_rrm_configuration": add_event_rrm,
-                        "update_event_driven_rrm_configuration": update_event_rrm,
-                        "no_update_event_driven_rrm_configuration": no_update_event_rrm,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_event_driven_rrm_configuration"] = self.verify_delete_event_rrm_requirement(
-                    event_rrm_list
-                )
+                if state == "merged":
+                    add_event_rrm, update_event_rrm, no_update_event_rrm = (
+                        self.verify_create_update_event_rrm_requirement(event_rrm_list)
+                    )
+                    have.update(
+                        {
+                            "add_event_driven_rrm_configuration": add_event_rrm,
+                            "update_event_driven_rrm_configuration": update_event_rrm,
+                            "no_update_event_driven_rrm_configuration": no_update_event_rrm,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_event_driven_rrm_configuration"] = self.verify_delete_event_rrm_requirement(
+                        event_rrm_list
+                    )
 
-        # --- New logic for FlexConnect profiles ---
-        flexconnect_list = []
-        for item in config.get("feature_template_config", []):
-            if "flexconnect_configuration" in item:
-                flexconnect_list.extend(item.get("flexconnect_configuration", []))
+            # --- New logic for FlexConnect profiles ---
+            flexconnect_list = []
+            for item in config.get("feature_template_config", []):
+                if "flexconnect_configuration" in item:
+                    flexconnect_list.extend(item.get("flexconnect_configuration", []))
 
-        if flexconnect_list:
-            self.log("Processing FlexConnect configuration for state: {0}".format(state), "DEBUG")
+            if flexconnect_list:
+                self.log("Processing FlexConnect configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_flexconnect, update_flexconnect, no_update_flexconnect = (
-                    self.verify_create_update_flexconnect_requirement(flexconnect_list)
-                )
-                have.update(
-                    {
-                        "add_flexconnect_configuration": add_flexconnect,
-                        "update_flexconnect_configuration": update_flexconnect,
-                        "no_update_flexconnect_configuration": no_update_flexconnect,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_flexconnect_configuration"] = self.verify_delete_flexconnect_requirement(
-                    flexconnect_list
-                )
+                if state == "merged":
+                    add_flexconnect, update_flexconnect, no_update_flexconnect = (
+                        self.verify_create_update_flexconnect_requirement(flexconnect_list)
+                    )
+                    have.update(
+                        {
+                            "add_flexconnect_configuration": add_flexconnect,
+                            "update_flexconnect_configuration": update_flexconnect,
+                            "no_update_flexconnect_configuration": no_update_flexconnect,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_flexconnect_configuration"] = self.verify_delete_flexconnect_requirement(
+                        flexconnect_list
+                    )
 
-        # --- New logic for Multicast profiles ---
-        multicast_list = []
-        for item in config.get("feature_template_config", []):
-            if "multicast_configuration" in item:
-                multicast_list.extend(item.get("multicast_configuration", []))
+            # --- New logic for Multicast profiles ---
+            multicast_list = []
+            for item in config.get("feature_template_config", []):
+                if "multicast_configuration" in item:
+                    multicast_list.extend(item.get("multicast_configuration", []))
 
-        if multicast_list:
-            self.log("Processing Multicast configuration for state: {0}".format(state), "DEBUG")
+            if multicast_list:
+                self.log("Processing Multicast configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_multicast, update_multicast, no_update_multicast = (
-                    self.verify_create_update_multicast_requirement(multicast_list)
-                )
-                have.update(
-                    {
-                        "add_multicast_configuration": add_multicast,
-                        "update_multicast_configuration": update_multicast,
-                        "no_update_multicast_configuration": no_update_multicast,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_multicast_configuration"] = self.verify_delete_multicast_requirement(
-                    multicast_list
-                )
+                if state == "merged":
+                    add_multicast, update_multicast, no_update_multicast = (
+                        self.verify_create_update_multicast_requirement(multicast_list)
+                    )
+                    have.update(
+                        {
+                            "add_multicast_configuration": add_multicast,
+                            "update_multicast_configuration": update_multicast,
+                            "no_update_multicast_configuration": no_update_multicast,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_multicast_configuration"] = self.verify_delete_multicast_requirement(
+                        multicast_list
+                    )
 
-        # --- New logic for RRM-FRA profiles ---
-        rrm_fra_list = []
-        for item in config.get("feature_template_config", []):
-            if "rrm_fra_configuration" in item:
-                rrm_fra_list.extend(item.get("rrm_fra_configuration", []))
+            # --- New logic for RRM-FRA profiles ---
+            rrm_fra_list = []
+            for item in config.get("feature_template_config", []):
+                if "rrm_fra_configuration" in item:
+                    rrm_fra_list.extend(item.get("rrm_fra_configuration", []))
 
-        if rrm_fra_list:
-            self.log("Processing RRM-FRA configuration for state: {0}".format(state), "DEBUG")
+            if rrm_fra_list:
+                self.log("Processing RRM-FRA configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_rrm_fra, update_rrm_fra, no_update_rrm_fra = (
-                    self.verify_create_update_rrm_fra_requirement(rrm_fra_list)
-                )
-                have.update(
-                    {
-                        "add_rrm_fra_configuration": add_rrm_fra,
-                        "update_rrm_fra_configuration": update_rrm_fra,
-                        "no_update_rrm_fra_configuration": no_update_rrm_fra,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_rrm_fra_configuration"] = self.verify_delete_rrm_fra_requirement(
-                    rrm_fra_list
-                )
+                if state == "merged":
+                    add_rrm_fra, update_rrm_fra, no_update_rrm_fra = (
+                        self.verify_create_update_rrm_fra_requirement(rrm_fra_list)
+                    )
+                    have.update(
+                        {
+                            "add_rrm_fra_configuration": add_rrm_fra,
+                            "update_rrm_fra_configuration": update_rrm_fra,
+                            "no_update_rrm_fra_configuration": no_update_rrm_fra,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_rrm_fra_configuration"] = self.verify_delete_rrm_fra_requirement(
+                        rrm_fra_list
+                    )
 
-        # --- New logic for RRM General profiles ---
-        rrm_general_list = []
-        for item in config.get("feature_template_config", []):
-            if "rrm_general_configuration" in item:
-                rrm_general_list.extend(item.get("rrm_general_configuration", []))
+            # --- New logic for RRM General profiles ---
+            rrm_general_list = []
+            for item in config.get("feature_template_config", []):
+                if "rrm_general_configuration" in item:
+                    rrm_general_list.extend(item.get("rrm_general_configuration", []))
 
-        if rrm_general_list:
-            self.log("Processing RRM General configuration for state: {0}".format(state), "DEBUG")
+            if rrm_general_list:
+                self.log("Processing RRM General configuration for state: {0}".format(state), "DEBUG")
 
-            if state == "merged":
-                add_rrm_general, update_rrm_general, no_update_rrm_general = (
-                    self.verify_create_update_rrm_general_requirement(rrm_general_list)
-                )
-                have.update(
-                    {
-                        "add_rrm_general_configuration": add_rrm_general,
-                        "update_rrm_general_configuration": update_rrm_general,
-                        "no_update_rrm_general_configuration": no_update_rrm_general,
-                    }
-                )
-            elif state == "deleted":
-                have["delete_rrm_general_configuration"] = self.verify_delete_rrm_general_requirement(
-                    rrm_general_list
-                )
+                if state == "merged":
+                    add_rrm_general, update_rrm_general, no_update_rrm_general = (
+                        self.verify_create_update_rrm_general_requirement(rrm_general_list)
+                    )
+                    have.update(
+                        {
+                            "add_rrm_general_configuration": add_rrm_general,
+                            "update_rrm_general_configuration": update_rrm_general,
+                            "no_update_rrm_general_configuration": no_update_rrm_general,
+                        }
+                    )
+                elif state == "deleted":
+                    have["delete_rrm_general_configuration"] = self.verify_delete_rrm_general_requirement(
+                        rrm_general_list
+                    )
 
         self.have = have
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
