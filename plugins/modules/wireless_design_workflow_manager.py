@@ -3761,7 +3761,6 @@ options:
                   - Design name must not exceed 64 characters in length.
                 type: str
                 required: true
-                maxlength: 64
               feature_attributes:
                 description:
                   - Multicast feature settings and delivery parameters.
@@ -3828,7 +3827,6 @@ options:
                   - Design name must not exceed 64 characters in length.
                 type: str
                 required: true
-                maxlength: 64
               feature_attributes:
                 description:
                   - RRM-FRA feature settings and operational parameters.
@@ -3895,7 +3893,6 @@ options:
                   - Design name must not exceed 64 characters in length.
                 type: str
                 required: true
-                maxlength: 64
               feature_attributes:
                 description:
                   - General RRM feature settings and optimization parameters.
@@ -3920,7 +3917,7 @@ options:
                     required: false
                     choices: [
                       "MONITORING_CHANNELS_ALL",
-                      "MONITORING_CHANNELS_COUNTRY", 
+                      "MONITORING_CHANNELS_COUNTRY",
                       "MONITORING_CHANNELS_DCA"
                     ]
                   neighbor_discover_type:
@@ -3953,7 +3950,7 @@ options:
                 type: list
                 elements: str
                 required: false
- 
+
 requirements:
   - dnacentersdk >= 2.10.3
   - python >= 3.9
@@ -17810,7 +17807,7 @@ class WirelessDesign(DnacBase):
                 have["delete_dot11be_configuration"] = self.verify_delete_dot11be_requirement(
                     dot11be_list
                 )
-    
+
         # --- New logic for Event Driven RRM profiles ---
         event_rrm_list = []
         for item in config.get("feature_template_config", []):
@@ -18192,16 +18189,17 @@ class WirelessDesign(DnacBase):
             existing_unl = (details.get("unlockedAttributes") or existing.get("unlockedAttributes") or [])
 
             # normalize enums for fair compare
-            def U(v): return (str(v).upper() if isinstance(v, str) else v)
+            def U(v):
+                return str(v).upper() if isinstance(v, str) else v
 
             needs_update = (
                 U(existing_fa.get("radioBand")) != U(fa_payload.get("radioBand")) or
                 U(existing_fa.get("monitoringChannels")) != U(fa_payload.get("monitoringChannels")) or
                 U(existing_fa.get("neighborDiscoverType")) != U(fa_payload.get("neighborDiscoverType")) or
                 normalize_value(existing_fa.get("throughputThreshold"), "int")
-                    != normalize_value(fa_payload.get("throughputThreshold"), "int") or
+                != normalize_value(fa_payload.get("throughputThreshold"), "int") or
                 normalize_value(existing_fa.get("coverageHoleDetection"), "bool")
-                    != normalize_value(fa_payload.get("coverageHoleDetection"), "bool") or
+                != normalize_value(fa_payload.get("coverageHoleDetection"), "bool") or
                 set(existing_unl) != set(payload.get("unlockedAttributes", []))
             )
 
@@ -18259,7 +18257,7 @@ class WirelessDesign(DnacBase):
 
         Args:
             design_name (str, optional): Specific feature template design name to filter by.
-            template_type (str, optional): DNAC template type identifier. 
+            template_type (str, optional): DNAC template type identifier.
                                         Defaults to "RRM_GENERAL_CONFIGURATION".
 
         Returns:
@@ -18293,7 +18291,7 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_rrm_fra_requirement(self, rrm_fra_list):
         """
-        Determines which RRM-FRA configuration templates need to be deleted 
+        Determines which RRM-FRA configuration templates need to be deleted
         based on the requested parameters.
 
         Args:
@@ -18485,9 +18483,11 @@ class WirelessDesign(DnacBase):
                 existing_fa.get("fraFreeze") != desired_fa.get("fraFreeze") or
                 existing_fa.get("fraStatus") != desired_fa.get("fraStatus") or
                 existing_fa.get("fraInterval") != desired_fa.get("fraInterval") or
-                (str(existing_fa.get("fraSensitivity") or "").upper()
-                != str(desired_fa.get("fraSensitivity") or "").upper()) or
-                set(existing_unl) != set(desired_unl)
+                (
+                    str(existing_fa.get("fraSensitivity") or "").upper()
+                    != str(desired_fa.get("fraSensitivity") or "").upper()
+                    or set(existing_unl) != set(desired_unl)
+                )
             )
 
             if needs_update:
@@ -18573,7 +18573,7 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_multicast_requirement(self, multicast_list):
         """
-        Determines which multicast configuration templates need to be deleted 
+        Determines which multicast configuration templates need to be deleted
         based on the requested parameters.
 
         Args:
@@ -19006,10 +19006,9 @@ class WirelessDesign(DnacBase):
             self.log("Failed to fetch FlexConnect details: {0}".format(str(e)), "ERROR")
             return {}
 
-
     def verify_delete_dot11be_requirement(self, dot11be_list):
         """
-        Determines which dot11be configuration templates need to be deleted 
+        Determines which dot11be configuration templates need to be deleted
         based on the requested parameters.
 
         Args:
@@ -19249,7 +19248,7 @@ class WirelessDesign(DnacBase):
         except Exception as e:
             self.log("Failed to fetch 802.11be configuration details: {0}".format(str(e)), "ERROR")
             return {}
-        
+
     def verify_create_update_event_rrm_requirement(self, event_rrm_list):
         """
         Compares desired Event Driven RRM profiles against existing ones and determines
@@ -19426,7 +19425,7 @@ class WirelessDesign(DnacBase):
         except Exception as e:
             self.log("Failed to fetch Event Driven RRM configuration details: {0}".format(str(e)), "ERROR")
             return {}
-        
+
     def get_event_rrm_profiles(self, design_name=None, template_type="EVENT_DRIVEN_RRM_CONFIGURATION"):
         """
         Retrieve existing Event Driven RRM feature templates (summary) from Cisco DNAC.
@@ -19465,7 +19464,7 @@ class WirelessDesign(DnacBase):
         except Exception as e:
             self.log("Failed to fetch Event Driven RRM Templates: {0}".format(str(e)), "ERROR")
             return []
-        
+
     def verify_delete_event_rrm_requirement(self, event_rrm_list):
         """
         Determines which Event-Driven RRM configuration templates need to be deleted
@@ -19534,10 +19533,9 @@ class WirelessDesign(DnacBase):
 
         return delete_list
 
-
     def verify_delete_dot11axs_requirement(self, dot11ax_list):
         """
-        Determines which dot11ax configuration templates need to be deleted 
+        Determines which dot11ax configuration templates need to be deleted
         based on the requested parameters.
 
         Args:
@@ -19707,7 +19705,11 @@ class WirelessDesign(DnacBase):
                 lower_key = key.lower()
 
                 # numeric comparison for numeric-looking keys
-                if isinstance(req_value, (int, float)) or (isinstance(req_value, str) and req_value.isdigit()) or any(sub in lower_key for sub in ("threshold", "max", "count")):
+                if (
+                    isinstance(req_value, (int, float))
+                    or (isinstance(req_value, str) and req_value.isdigit())
+                    or any(sub in lower_key for sub in ("threshold", "max", "count"))
+                ):
                     try:
                         ev_num = int(exist_value) if exist_value is not None else None
                     except Exception:
@@ -19910,25 +19912,25 @@ class WirelessDesign(DnacBase):
             "persistent_device_propagation": "persistentDevicePropagation",
             "description": "description",
             "interferers_features": "interferersFeatures",
-            "ble_beacon": "bleBeacon", #2.4GHZ
-            "bluetooth_paging_inquiry": "bluetoothPagingInquiry",  #2.4GHZ
+            "ble_beacon": "bleBeacon",
+            "bluetooth_paging_inquiry": "bluetoothPagingInquiry",
             "bluetooth_sco_acl": "bluetoothScoAcl",
-            "continuous_transmitter": "continuousTransmitter",   #2.4GHz 5GHZ 6GHZ
-            "generic_dect": "genericDect",   #2.4GHZ 5GHZ
-            "generic_tdd": "genericTdd",    #2.4GHZ 5GHZ
-            "jammer": "jammer",    #2.4GHZ 5GHZ
-            "microwave_oven": "microwaveOven",   #2.4GHz 
-            "motorola_canopy": "motorolaCanopy",   #2.4GHZ 5GHZ
-            "si_fhss": "siFHSS",    #2.4GHZ 5GHZ
-            "spectrum80211_fh": "spectrum80211FH",   #2.4GHZ
-            "spectrum80211_non_standard_channel": "spectrum80211NonStandardChannel",  #2.4GHZ 5GHZ
-            "spectrum802154": "spectrum802154",   #2.4GHZ
-            "spectrum_inverted": "spectrumInverted",    #2.4GHZ 5GHZ
-            "super_ag": "superAg",    #2.4GHZ 5GHZ
-            "video_camera": "videoCamera",   #2.4GHZ 5GHZ
-            "wimax_fixed": "wimaxFixed",    #2.4GHZ 5GHZ
-            "wimax_mobile": "wimaxMobile", #2.4GHZ 5GHZ
-            "xbox": "xbox",    #2.4GHZ
+            "continuous_transmitter": "continuousTransmitter",
+            "generic_dect": "genericDect",
+            "generic_tdd": "genericTdd",
+            "jammer": "jammer",
+            "microwave_oven": "microwaveOven",
+            "motorola_canopy": "motorolaCanopy",
+            "si_fhss": "siFHSS",
+            "spectrum80211_fh": "spectrum80211FH",
+            "spectrum80211_non_standard_channel": "spectrum80211NonStandardChannel",
+            "spectrum802154": "spectrum802154",
+            "spectrum_inverted": "spectrumInverted",
+            "super_ag": "superAg",
+            "video_camera": "videoCamera",
+            "wimax_fixed": "wimaxFixed",
+            "wimax_mobile": "wimaxMobile",
+            "xbox": "xbox",
         }
 
         # optional per-key boolean defaults when controller omits key (controller-style names)
@@ -20048,7 +20050,7 @@ class WirelessDesign(DnacBase):
                 if key.startswith("interferersFeatures"):
                     # if single-field check might be "interferersFeatures.ble_beacon"
                     if "." in key:
-                        _, inner = key.split(".", 1)
+                        outer, inner = key.split(".", 1)
                         req_map = normalized_features.get("interferersFeatures", {})
                         req_val = req_map.get(inner)
                         exist_map = existing_features.get("interferersFeatures", {}) or {}
@@ -20057,7 +20059,11 @@ class WirelessDesign(DnacBase):
                         req_val = to_bool_if_str(req_val)
                         if exist_val is None and isinstance(req_val, bool):
                             # fallback default
-                            exist_val = boolean_defaults.get("interferersFeatures", {}).get(inner) if isinstance(boolean_defaults.get("interferersFeatures"), dict) else False
+                            exist_val = (
+                                boolean_defaults.get("interferersFeatures", {}).get(inner)
+                                if isinstance(boolean_defaults.get("interferersFeatures"), dict)
+                                else False
+                            )
                         if isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
                             exist_val = exist_val.lower() == "true"
                         if exist_val != req_val:
@@ -20072,7 +20078,11 @@ class WirelessDesign(DnacBase):
                             req_val = to_bool_if_str(req_map.get(inner_key))
                             exist_val = exist_map.get(inner_key)
                             if exist_val is None and isinstance(req_val, bool):
-                                exist_val = boolean_defaults.get("interferersFeatures", {}).get(inner_key) if isinstance(boolean_defaults.get("interferersFeatures"), dict) else False
+                                exist_val = (
+                                    boolean_defaults.get("interferersFeatures", {}).get(inner_key)
+                                    if isinstance(boolean_defaults.get("interferersFeatures"), dict)
+                                    else False
+                                )
                             if isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
                                 exist_val = exist_val.lower() == "true"
                             if exist_val != req_val:
@@ -20472,13 +20482,21 @@ class WirelessDesign(DnacBase):
                 # Only compare the single requested field or unlocked attributes
                 if field_to_check in ("unlocked_attributes", "unlockedAttributes") or field_check_key == "unlockedAttributes":
                     if set(existing_unlocked) != set(requested_unlocked):
-                        self.log("Unlocked attrs differ (single-field check): existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked), "DEBUG")
+                        self.log(
+                            "Unlocked attrs differ (single-field check): "
+                            "existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked),
+                            "DEBUG",
+                        )
                         per_design_diffs.append(("unlockedAttributes", existing_unlocked, requested_unlocked))
                         needs_update = True
                 else:
                     # if the requested payload didn't include the field to check, treat as NO-UPDATE
                     if field_check_key not in normalized_feature_attrs:
-                        self.log("Requested entry missing field_to_check '{0}' -> treating NO-UPDATE for design {1}".format(field_to_check, design_name), "DEBUG")
+                        self.log(
+                            "Requested entry missing field_to_check '{0}' -> "
+                            "treating NO-UPDATE for design {1}".format(field_to_check, design_name),
+                            "DEBUG",
+                        )
                         needs_update = False
                     else:
                         req_value = normalized_feature_attrs.get(field_check_key)
@@ -20536,8 +20554,7 @@ class WirelessDesign(DnacBase):
                 self.log("Design '{0}' requires NO UPDATE".format(design_name), "INFO")
 
         self.log("ADD: {0}, UPDATE: {1}, NO-CHANGE: {2}".format(len(add_payloads), len(update_payloads), len(no_change_payloads)), "DEBUG")
-        return add_payloads, update_payloads, no_change_payloads, 
-
+        return add_payloads, update_payloads, no_change_payloads
 
     def get_clean_air_templates(self, design_name=None, template_type="CLEANAIR_CONFIGURATION"):
         """
@@ -20575,7 +20592,6 @@ class WirelessDesign(DnacBase):
         except Exception as e:
             self.log("Failed to fetch CleanAir Templates: {0}".format(str(e)), "ERROR")
             return []
-
 
     def get_clean_air_details(self, template_id):
         """
@@ -20623,7 +20639,7 @@ class WirelessDesign(DnacBase):
             params = {}
             if ssid_id:
                 params["id"] = ssid_id
-                
+
             # Execute API call to DNA Center
             response = self.dnac._exec(
                 family="wireless",
@@ -20631,16 +20647,16 @@ class WirelessDesign(DnacBase):
                 op_modifies=False,
                 params=params,
             )
-            
+
             # Log raw response for debugging
             self.log(f"API Response: {response}", "DEBUG")
-            
+
             # Extract templates from response
             existing_ssids = response.get("response", [])
             # Validate response data
             if not isinstance(existing_ssids, dict):
                 self.log(
-                    f"Unexpected response format. Expected list, got {type(existing_ssids)}", 
+                    f"Unexpected response format. Expected list, got {type(existing_ssids)}",
                     "WARNING"
                 )
                 return []
@@ -20751,7 +20767,6 @@ class WirelessDesign(DnacBase):
         )
 
         return delete_attrs_list
-
 
     def verify_create_update_aaa_radius_attributes_requirement(self, aaa_attr_list):
         """
@@ -20877,7 +20892,6 @@ class WirelessDesign(DnacBase):
             )
             return {}
 
-
     def get_aaa_radius_attributes(self, design_name=None):
         """
         Retrieve existing AAA Radius Attributes from Cisco DNAC.
@@ -20912,7 +20926,6 @@ class WirelessDesign(DnacBase):
                 "Failed to fetch AAA Radius Attributes: {0}".format(str(e)), "ERROR"
             )
             return []
-
 
     def get_want(self, config, state):
         """
@@ -21137,13 +21150,13 @@ class WirelessDesign(DnacBase):
                     self.have.get("delete_clean_air_configuration"),
                 ),
                 # --- New dot11ax Configuration ---
-                (   
+                (
                     "delete_dot11ax_configuration",
                     "delete_dot11ax_configuration_params",
                     self.have.get("delete_dot11ax_configuration"),
                 ),
                 # --- New dot11be Configuration ---
-                (   
+                (
                     "delete_dot11be_configuration",
                     "delete_dot11be_configuration_params",
                     self.have.get("delete_dot11be_configuration"),
@@ -21274,13 +21287,13 @@ class WirelessDesign(DnacBase):
             ),
             # new enhancement for AAA Radius Attributes
             (
-                "add_aaa_radius_attribute_params", 
-                "ADD AAA Radius Attributes", 
+                "add_aaa_radius_attribute_params",
+                "ADD AAA Radius Attributes",
                 self.process_add_aaa_radius_attributes
             ),
             (
-                "update_aaa_radius_attribute_params", 
-                "UPDATE AAA Radius Attributes", 
+                "update_aaa_radius_attribute_params",
+                "UPDATE AAA Radius Attributes",
                 self.process_update_aaa_radius_attributes
             ),
             # --- New Advanced SSID ---
@@ -21503,6 +21516,7 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
+
     def process_update_rrm_general(self, params):
         """
         Handles the update of RRM General configurations in Cisco DNAC.
@@ -21631,7 +21645,6 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
-
     def process_update_rrm_fra(self, params):
         """
         Handles the update of RRM-FRA configurations in Cisco DNAC.
@@ -21756,7 +21769,6 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
-
     def process_update_multicast(self, params):
         """
         Handles update of Multicast configurations in Cisco DNAC.
@@ -21821,7 +21833,6 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
-
 
     def process_delete_multicast(self, params):
         """
@@ -21903,8 +21914,11 @@ class WirelessDesign(DnacBase):
                         params=payload,
                     )
                     self.check_tasks_response_status(resp, "create_flex_connect_configuration_feature_template")
-                    results[dn] = "Successfully created FlexConnect." if self.status not in ["failed", "exited"] \
-                                else "Failed to create FlexConnect: {0}".format(self.msg)
+                    results[dn] = (
+                        "Successfully created FlexConnect."
+                        if self.status not in ["failed", "exited"]
+                        else f"Failed to create FlexConnect: {self.msg}"
+                    )
                 except Exception as exc:
                     results[dn] = "Exception while creating: {0}".format(str(exc))
                     self.log(results[dn], "ERROR")
@@ -21938,8 +21952,11 @@ class WirelessDesign(DnacBase):
                         params=payload,
                     )
                     self.check_tasks_response_status(resp, "update_flex_connect_configuration_feature_template")
-                    results[dn] = "Successfully updated FlexConnect." if self.status not in ["failed", "exited"] \
-                                else "Failed to update FlexConnect: {0}".format(self.msg)
+                    results[dn] = (
+                        "Successfully updated FlexConnect."
+                        if self.status not in ["failed", "exited"]
+                        else f"Failed to update FlexConnect: {self.msg}"
+                    )
                 except Exception as exc:
                     results[dn] = "Exception while updating: {0}".format(str(exc))
                     self.log(results[dn], "ERROR")
@@ -22010,7 +22027,7 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
-        
+
     def process_update_event_driven_rrm(self, params):
         """
         Handles updating of Event-Driven RRM configurations in Cisco DNAC.
@@ -22078,7 +22095,6 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
-
 
     def process_add_dot11be(self, params):
         """
@@ -22363,7 +22379,6 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
-
     def process_update_clean_air(self, params):
         """
         Handles the update of CleanAir Profiles in Cisco DNAC.
@@ -22644,7 +22659,6 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
-
     def get_diff_deleted(self):
         """
         Executes the deletion operations for various network configurations in the Cisco Catalyst Center.
@@ -22687,8 +22701,8 @@ class WirelessDesign(DnacBase):
                 self.process_delete_anchor_groups,
             ),
             (
-                "delete_aaa_radius_attribute_params", 
-                "DELETE AAA Radius Attributes", 
+                "delete_aaa_radius_attribute_params",
+                "DELETE AAA Radius Attributes",
                 self.process_delete_aaa_radius_attributes
             ),
             # --- New Advanced SSIDs ---
@@ -22961,8 +22975,11 @@ class WirelessDesign(DnacBase):
                         params={"id": tid},
                     )
                     self.check_tasks_response_status(resp, "delete_feature_template")
-                    results[dn] = "Successfully deleted FlexConnect." if self.status not in ["failed", "exited"] \
-                                else "Failed to delete FlexConnect: {0}".format(self.msg)
+                    results[dn] = (
+                        "Successfully deleted FlexConnect."
+                        if self.status not in ["failed", "exited"]
+                        else f"Failed to delete FlexConnect: {self.msg}"
+                    )
                 except Exception as exc:
                     results[dn] = "Exception while deleting: {0}".format(str(exc))
                     self.log(results[dn], "ERROR")
@@ -23179,7 +23196,7 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
-        
+
     def process_delete_event_driven_rrm(self, params):
         """
         Handles deletion of Event-Driven RRM configurations in Cisco DNAC.
@@ -23249,7 +23266,6 @@ class WirelessDesign(DnacBase):
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
-
 
     def process_delete_advanced_ssids(self, params):
         """
@@ -23372,40 +23388,6 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
-    def verify_add_aaa_radius_attributes(self, add_aaa_params):
-        """Verifies whether AAA Radius attributes were successfully added."""
-        existing_blocks = self.get_aaa_radius_attributes()
-        existing_names = {inst["designName"] for b in existing_blocks for inst in b.get("instances", [])}
-
-        failed = []
-        for attr in add_aaa_params:
-            name = attr.get("designName")
-            if name not in existing_names:
-                failed.append(name)
-
-        if failed:
-            self.log("ADD AAA Radius Attributes failed for: {0}".format(failed), "ERROR")
-        else:
-            self.log("Verified success of ADD AAA Radius Attributes: {0}".format(add_aaa_params), "INFO")
-
-
-    def verify_update_aaa_radius_attributes(self, update_aaa_params):
-        """Verifies whether AAA Radius attributes were successfully updated."""
-        existing_blocks = self.get_aaa_radius_attributes()
-        existing_dict = {inst["designName"]: inst for b in existing_blocks for inst in b.get("instances", [])}
-
-        failed = []
-        for attr in update_aaa_params:
-            name = attr.get("designName")
-            if name not in existing_dict:
-                failed.append(name)
-
-        if failed:
-            self.log("UPDATE AAA Radius Attributes failed for: {0}".format(failed), "ERROR")
-        else:
-            self.log("Verified success of UPDATE AAA Radius Attributes: {0}".format(update_aaa_params), "INFO")
-
-
     def verify_diff_merged(self):
         """
         Verifies the merge operations for various network configurations.
@@ -23471,38 +23453,9 @@ class WirelessDesign(DnacBase):
             ),
             (
                 "update_anchor_groups_params",
-                "UPDATE Anchor x",
+                "UPDATE Anchor Groups",
                 self.verify_update_anchor_groups_operation,
             ),
-            ("add_aaa_radius_attribute_params", "ADD AAA Radius Attributes", self.verify_add_aaa_radius_attributes),
-            ("update_aaa_radius_attribute_params", "UPDATE AAA Radius Attributes", self.verify_update_aaa_radius_attributes),
-
-            # ("add_advanced_ssid_params", "ADD Advanced SSIDs", self.verify_add_advanced_ssid),
-            # ("update_advanced_ssid_params", "UPDATE Advanced SSIDs", self.verify_update_advanced_ssid),
-
-            # ("add_clean_air_configuration_params", "ADD CleanAir Configurations", self.verify_add_clean_air),
-            # ("update_clean_air_configuration_params", "UPDATE CleanAir Configurations", self.verify_update_clean_air),
-
-            # ("add_dot11ax_configuration_params", "ADD dot11ax Configurations", self.verify_add_dot11ax),
-            # ("update_dot11ax_configuration_params", "UPDATE dot11ax Configurations", self.verify_update_dot11ax),
-
-            # ("add_dot11be_configuration_params", "ADD dot11be Configurations", self.verify_add_dot11be),
-            # ("update_dot11be_configuration_params", "UPDATE dot11be Configurations", self.verify_update_dot11be),
-
-            # ("add_event_driven_rrm_configuration_params", "ADD Event-Driven RRM Configurations", self.verify_add_event_driven_rrm),
-            # ("update_event_driven_rrm_configuration_params", "UPDATE Event-Driven RRM Configurations", self.verify_update_event_driven_rrm),
-
-            # ("add_flexconnect_configuration_params", "ADD FlexConnect Configurations", self.verify_add_flexconnect),
-            # ("update_flexconnect_configuration_params", "UPDATE FlexConnect Configurations", self.verify_update_flexconnect),
-
-            # ("add_multicast_configuration_params", "ADD Multicast Configurations", self.verify_add_multicast),
-            # ("update_multicast_configuration_params", "UPDATE Multicast Configurations", self.verify_update_multicast),
-
-            # ("add_rrm_fra_configuration_params", "ADD RRM-FRA Configurations", self.verify_add_rrm_fra),
-            # ("update_rrm_fra_configuration_params", "UPDATE RRM-FRA Configurations", self.verify_update_rrm_fra),
-
-            # ("add_rrm_general_configuration_params", "ADD RRM-General Configurations", self.verify_add_rrm_general),
-            # ("update_rrm_general_configuration_params", "UPDATE RRM-General Configurations", self.verify_update_rrm_general),
         ]
 
         # Iterate over operations and perform verification
