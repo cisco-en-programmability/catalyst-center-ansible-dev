@@ -24,7 +24,7 @@ description:
   - This module interacts with Cisco Catalyst Center's
     to create profile name, SSID details, additional
     interface details destination port and protocol.
-version_added: "6.31.0"
+version_added: "6.37.0"
 extends_documentation_fragment:
   - cisco.dnac.workflow_manager_params
 author:
@@ -151,6 +151,53 @@ options:
         type: list
         elements: str
         required: false
+      feature_template_designs:
+        description: |
+          List of feature template designs to be assigned or removed to/from the wireless network profile.
+          Feature templates provide advanced configuration capabilities for wireless infrastructure
+          including AAA settings, SSID configurations, CleanAir parameters, and RRM settings.
+          These templates enable standardized configuration deployment across wireless network profiles.
+        type: list
+        elements: dict
+        required: false
+        suboptions:
+          design_type:
+            description: |
+                The category or name of the feature template to be applied.
+                This defines the functional area of the configuration (For example, AAA, SSID, CleanAir).
+                Only one feature template category can be specified per entry in this list.
+                For support values:
+                - AAA_RADIUS_ATTRIBUTES_CONFIGURATION
+                - ADVANCED_SSID_CONFIGURATION
+                - CLEANAIR_CONFIGURATION
+                - DOT11AX_CONFIGURATION
+                - DOT11BE_STATUS_CONFIGURATION
+                - EVENT_DRIVEN_RRM_CONFIGURATION
+                - FLEX_CONFIGURATION
+                - MULTICAST_CONFIGURATION
+                - RRM_FRA_CONFIGURATION
+                - RRM_GENERAL_CONFIGURATION
+            type: str
+            required: false
+          feature_templates:
+            description: |
+              A list of specific design names or IDs to apply within the chosen feature template category.
+              These designs include various parameters and settings for wireless infrastructure configuration.
+              If "Default Advanced SSID Design" is included in this list, it is comprehensive for SSID configuration,
+              and no other template designs are typically needed for that specific SSID feature.
+            type: list
+            elements: str
+            required: true
+          applicability_ssids:
+            description: |
+              A list of SSIDs to which this feature template applies.
+              If "Default Advanced SSID Design" is selected for the 'feature_templates', this feature template
+              will automatically apply to all SSIDs, regardless of this list's content.
+              For example, ["SSID1", "SSID2"].
+            type: list
+            elements: str
+            required: false
+            default: ["All"]
       additional_interfaces:
         description: |
           Specifies additional interfaces to be added to this wireless profile.
@@ -213,36 +260,197 @@ EXAMPLES = r"""
         dnac_task_poll_interval: 1
         state: merged
         config:
-          - profile_name: "Corporate_Wireless_Profile"
+          - profile_name: Corporate_Wireless_Profile
             site_names:
-              - "Global/Headquarters"
-              - "Global/BranchOffice"
+              - Global/Headquarters
+              - Global/BranchOffice
             ssid_details:
-              - ssid_name: "Corporate_WiFi"
+              - ssid_name: Corporate_WiFi
                 enable_fabric: false
-                dot11be_profile_name: "Corporate_VLAN"
-                vlan_group_name: "Corporate_VLAN_Group"
-              - ssid_name: "Guest_WiFi"
+                dot11be_profile_name: Corporate_VLAN
+                vlan_group_name: Corporate_VLAN_Group
+              - ssid_name: Guest_WiFi
                 enable_fabric: false
-                dot11be_profile_name: "Corporate_VLAN"
-                interface_name: "guest_network"
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
                 local_to_vlan: 3002
             ap_zones:
-              - ap_zone_name: "HQ_AP_Zone"
-                rf_profile_name: "HIGH"
+              - ap_zone_name: HQ_AP_Zone
+                rf_profile_name: HIGH
                 ssids:
-                  - "Corporate_WiFi"
-              - ap_zone_name: "Branch_AP_Zone"
-                rf_profile_name: "TYPICAL"
+                  - Corporate_WiFi
+              - ap_zone_name: Branch_AP_Zone
+                rf_profile_name: TYPICAL
                 ssids:
-                  - "Guest_WiFi"
+                  - Guest_WiFi
             additional_interfaces:
-              - interface_name: "Corp_Interface_1"
+              - interface_name: Corp_Interface_1
                 vlan_id: 100
-              - interface_name: "Guest_Interface_1"
+              - interface_name: Guest_Interface_1
                 vlan_id: 3002
             day_n_templates:
-              - "Wireless_Controller_Config"
+              - Wireless_Controller_Config
+            feature_template_designs:
+              - design_type: Advanced SSID Configuration
+                feature_templates:
+                  - Default Advanced SSID Design
+                applicability_ssids:
+                  - HQ_WiFi
+                  - Branch_Secure
+
+    - name: Create network wireless profile name only
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+
+    - name: Create network wireless profile assign to site
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+            site_names:
+              - Global/USA/SAN JOSE/SJ_BLD20
+
+    - name: Create network wireless profile with feature template assign to site
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+            site_names:
+              - Global/USA/SAN JOSE/SJ_BLD20/FLOOR3
+            feature_template_designs:
+              - design_type: AAA_RADIUS_ATTRIBUTES_CONFIGURATION
+                feature_templates:
+                  - Default AAA_Radius_Attributes_Configuration
+
+    - name: Update network wireless profile with feature template
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+            site_names:
+              - Global/USA/SAN JOSE/SJ_BLD20/FLOOR3
+            feature_template_designs:
+              - design_type: AAA_RADIUS_ATTRIBUTES_CONFIGURATION
+                feature_templates:
+                  - Default AAA_Radius_Attributes_Configuration
+              - design_type: CLEANAIR_CONFIGURATION
+                feature_templates:
+                  - SAMPLE
+                  - Default CleanAir 6GHz Design
+
+    - name: Create network wireless profile with SSID details
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+            ssid_details:
+              - ssid_name: Guest_WiFi
+                enable_fabric: false
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
+                local_to_vlan: 3002
+              - ssid_name: ODC_WiFi
+                enable_fabric: false
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
+                local_to_vlan: 3001
+
+    - name: Update network wireless profile with additional SSID details
+      cisco.dnac.network_profile_wireless_workflow_manager:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        config_verify: true
+        dnac_api_task_timeout: 1000
+        dnac_task_poll_interval: 1
+        state: merged
+        config:
+          - profile_name: Corporate_Wireless_Profile
+            ssid_details:
+              - ssid_name: Guest_WiFi
+                enable_fabric: false
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
+                local_to_vlan: 3002
+              - ssid_name: ODC_WiFi
+                enable_fabric: false
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
+                local_to_vlan: 3001
+              - ssid_name: Corporate_WiFi
+                enable_fabric: false
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
+                local_to_vlan: 3003
+
     - name: Update wireless network profile
       cisco.dnac.network_profile_wireless_workflow_manager:
         dnac_host: "{{ dnac_host }}"
@@ -259,27 +467,27 @@ EXAMPLES = r"""
         dnac_task_poll_interval: 1
         state: merged
         config:
-          - profile_name: "Corporate_Wireless_Profile"
+          - profile_name: Corporate_Wireless_Profile
             site_names:
-              - "Global/FrontOffice"
+              - Global/FrontOffice
             ssid_details:
-              - ssid_name: "Guest_WiFi"
+              - ssid_name: Guest_WiFi
                 enable_fabric: false
-                dot11be_profile_name: "Corporate_VLAN"
-                interface_name: "guest_network"
+                dot11be_profile_name: Corporate_VLAN
+                interface_name: guest_network
                 local_to_vlan: 3002
             ap_zones:
-              - ap_zone_name: "Branch_AP_Zone"
-                rf_profile_name: "TYPICAL"
+              - ap_zone_name: Branch_AP_Zone
+                rf_profile_name: TYPICAL
                 ssids:
-                  - "Guest_WiFi"
+                  - Guest_WiFi
             additional_interfaces:
-              - interface_name: "Guest_Interface_4"
+              - interface_name: Guest_Interface_4
                 vlan_id: 2002
             day_n_templates:
-              - "Wireless_Controller_Config"
-    - name: Delete wireless profile from Cisco Catalyst
-        Center.
+              - Wireless_Controller_Config
+
+    - name: Delete wireless profile from Cisco Catalyst Center.
       cisco.dnac.network_profile_wireless_workflow_manager:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -295,46 +503,122 @@ EXAMPLES = r"""
         dnac_task_poll_interval: 1
         state: deleted
         config:
-          - profile_name: "Corporate_Wireless_Profile"
+          - profile_name: Corporate_Wireless_Profile
 """
 
 RETURN = r"""
-# Case 1: Successful creation/update of wireless profile
-response_create:
-  description: A dictionary or list containing the response returned by the Cisco Catalyst Center Python SDK.
-    This response indicates that the wireless profile was either created or updated successfully.
-  returned: always
+# Case 1: Successful wireless profile operations (create/update)
+response_merged:
+  description: Response returned when wireless profile operations complete successfully.
+    Contains details about profile creation, updates, site assignments, and template associations.
+  returned: always when state=merged
   type: dict
-  sample: >
-    {
-        "msg": "Wireless Profile created/updated successfully for '[{'profile_name': 'Corporate_Wireless_Profile',
-            'status': 'Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully created'}]'.",
-        "response": [
-            {
-                "profile_name": "Corporate_Wireless_Profile",
-                "status": "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] created Successfully"
-            }
-        ],
-        "status": "success"
-    }
-# Case 2: Successfully deleted wireless profile
-response_delete:
-  description: A dictionary or list containing the response returned by the Cisco Catalyst Center Python SDK.
-    This response indicates that the wireless profile was successfully deleted from the system.
-  returned: always
+  sample:
+    # Basic profile creation
+    profile_create_basic:
+      msg: "Wireless profile(s) created/updated and verified successfully"
+      response:
+        - profile_name: "Corporate_Wireless_Profile"
+          profile_status: "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Created"
+      status: "success"
+      changed: true
+
+    # Profile with site assignment
+    profile_create_with_sites:
+      msg: "Wireless profile(s) created/updated and verified successfully"
+      response:
+        - profile_name: "Corporate_Wireless_Profile"
+          profile_status: "Network Profile [9a1c37bd-52a9-436c-af8c-35e64f788abd] Successfully Created"
+          site_status: "Sites ['Global/USA/SAN JOSE/SJ_BLD20/FLOOR3',
+                        'Global/USA/SAN JOSE/SJ_BLD20/FLOOR1'] successfully associated
+                        to network profile: Corporate_Wireless_Profile"
+      status: "success"
+      changed: true
+
+    # Profile update with template assignment
+    profile_update_with_template_assignment:
+      msg: "Wireless profile(s) created/updated and verified successfully"
+      response:
+        - profile_name: "Corporate_Wireless_Profile"
+          profile_status: "Network Profile [bba6fd01-9d65-4bde-973a-a7ba6a9ad9b4] Successfully Updated"
+          template_status: "Templates successfully attached to network profile"
+      status: "success"
+      changed: true
+
+# Case 2: Successful wireless profile deletion
+response_deleted:
+  description: Response returned when wireless profile deletion completes successfully.
+    Contains details about profile removal and site disassociation.
+  returned: always when state=deleted
   type: dict
-  sample: >
-    {
-        "msg": "Wireless Profile deleted successfully for '[{'profile_name': 'Corporate_Wireless_Profile',
-        'status': 'Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Deleted'}]'.",
-        "response": [
-            {
-                "profile_name": "Corporate_Wireless_Profile",
-                "status": "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Deleted"
-            }
-        ],
-        "status": "success"
-    }
+  sample:
+    msg: "Wireless profile(s) deleted and verified successfully"
+    response:
+      - profile_name: "Corporate_Wireless_Profile"
+        status: "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Deleted"
+        sites_unassigned: "Sites successfully disassociated before deletion"
+    status: "success"
+    changed: true
+
+# Case 3: No changes required (idempotent)
+response_no_changes:
+  description: Response when no changes are required as the desired state already exists.
+  returned: when configuration already matches desired state
+  type: dict
+  sample:
+    msg: "No changes required, profile(s) already exist and match desired configuration"
+    response: []
+    status: "success"
+    changed: false
+
+# Case 4: Partial success with warnings
+response_partial_success:
+  description: Response when some operations succeed but others encounter issues.
+    Contains details about successful operations and any warnings or failures.
+  returned: when some operations succeed but others fail
+  type: dict
+  sample:
+    msg: "Wireless profile(s) created/updated with warnings"
+    response:
+      - profile_name: "Corporate_Wireless_Profile"
+        profile_status: "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Created"
+        warnings:
+          - "Some templates could not be attached due to permission issues"
+          - "Site assignment failed for 1 out of 3 sites"
+    status: "success"
+    changed: true
+    warnings: 2
+
+# Case 5: Operation failure
+response_failed:
+  description: Response when wireless profile operations fail.
+    Contains error details and information about what failed.
+  returned: when operations fail
+  type: dict
+  sample:
+    msg: "Failed to create/update wireless profile: API validation error"
+    response:
+      - profile_name: "Corporate_Wireless_Profile"
+        error: "Invalid SSID configuration: AP Zone SSID names does not exist."
+        failed_operation: "profile_creation"
+    status: "failed"
+    changed: false
+
+# Case 6: Verification failure
+response_verification_failed:
+  description: Response when profile operations complete but verification fails.
+    Indicates the operation may have succeeded but the final state doesn't match expectations.
+  returned: when config_verify=true and verification fails
+  type: dict
+  sample:
+    msg: "Profile operation completed but verification failed"
+    response:
+      - profile_name: "Corporate_Wireless_Profile"
+        operation_status: "Network Profile [ff0003b4-adab-4de4-af0e-0cf07d6df07f] Successfully Created"
+        verification_error: "Unable to verify the profile doesn't match expected state"
+    status: "failed"
+    changed: true
+
 """
 
 import re
@@ -371,6 +655,18 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
             policy_profile_name="policyProfileName",
             ap_zone_name="apZoneName",
         )
+        self.available_design_types = [
+            "AAA_RADIUS_ATTRIBUTES_CONFIGURATION",
+            "ADVANCED_SSID_CONFIGURATION",
+            "CLEANAIR_CONFIGURATION",
+            "DOT11AX_CONFIGURATION",
+            "DOT11BE_STATUS_CONFIGURATION",
+            "EVENT_DRIVEN_RRM_CONFIGURATION",
+            "FLEX_CONFIGURATION",
+            "MULTICAST_CONFIGURATION",
+            "RRM_FRA_CONFIGURATION",
+            "RRM_GENERAL_CONFIGURATION",
+        ]
 
     def validate_input(self):
         """
@@ -428,6 +724,21 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                     "range_min": 1,
                     "range_max": 4095,
                     "required": True,
+                },
+            },
+            "feature_template_designs": {
+                "type": "list",
+                "elements": "dict",
+                "design_type": {"type": "str", "required": False},
+                "feature_templates": {
+                    "type": "list",
+                    "elements": "str",
+                    "required": False
+                },
+                "applicability_ssids": {
+                    "type": "list",
+                    "elements": "str",
+                    "required": False
                 },
             },
         }
@@ -738,6 +1049,10 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                     if ap_zones:
                         self.validate_ap_zone(ap_zones, ssid_list, errormsg)
 
+        feature_template_designs = config.get("feature_template_designs")
+        if feature_template_designs:
+            self.validate_feature_templates(feature_template_designs, ssid_list, errormsg)
+
     def validate_ap_zone(self, ap_zones, ssid_list, errormsg):
         """
         Extends validation for AP zone values.
@@ -799,6 +1114,290 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                     )
                 )
                 errormsg.append(zone_msg)
+
+    def validate_feature_templates(self, feature_template_designs, ssid_list, errormsg):
+        """
+        Validate feature templates provided in the playbook configuration.
+
+        Parameters:
+            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            feature_template_designs (list): List of dictionaries containing feature template details.
+            ssid_list (list): List of dictionaries containing SSID details.
+            errormsg (list): List to collect error messages in case of validation failures.
+
+        Returns:
+            None: This function updates the errormsg list directly if any validation errors are found.
+        """
+        self.log("Validating feature template configurations for wireless network profile template assignment", "DEBUG")
+        self.log("Processing {0} feature templates for validation against wireless profile requirements".format(
+            len(feature_template_designs) if isinstance(feature_template_designs, list) else 0), "DEBUG")
+
+        if not isinstance(feature_template_designs, list):
+            errormsg.append("feature_template_designs: Expected a list, but got a non-list value.")
+            return None
+
+        if len(feature_template_designs) > 500:
+            errormsg.append(
+                "feature_template_designs: List contains more than 500 entries, which exceeds the allowed limit."
+            )
+            return None
+
+        if feature_template_designs \
+           and self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") < 0:
+            errormsg.append(
+                "The specified version '{0}' does not support for feature template."
+                "Supported version(s) start from '3.1.3.0' onwards.".format(
+                    self.get_ccc_version())
+            )
+            return None
+
+        self.log("Feature template basic validation passed - proceeding with detailed template configuration validation", "DEBUG")
+
+        # Track validation statistics for operational visibility
+        templates_processed = 0
+        templates_with_errors = 0
+        advanced_ssid_templates_found = 0
+        default_design_templates_found = 0
+        for feature_template_design in feature_template_designs:
+            templates_processed += 1
+            template_has_errors = False
+
+            self.log("Validating feature template design configuration {0}/{1}".format(
+                templates_processed, len(feature_template_designs)), "DEBUG")
+
+            # Validate design type configuration
+            design_type = feature_template_design.get("design_type")
+            if design_type:
+                validate_str(
+                    design_type,
+                    dict(type="str"),
+                    "design_type",
+                    errormsg,
+                )
+
+                # Special case validation for Advanced SSID Configuration
+                if design_type == "ADVANCED_SSID_CONFIGURATION":
+                    advanced_ssid_templates_found += 1
+                    if len(feature_template_designs) > 1:
+                        errormsg.append(
+                            "design_type: 'ADVANCED_SSID_CONFIGURATION' is a special case and should be the only design type in feature_templates." +
+                            "Please remove other design types if 'ADVANCED_SSID_CONFIGURATION' is used."
+                        )
+                        template_has_errors = True
+                        self.log("Advanced SSID Configuration validation failed - cannot be combined with other design types", "ERROR")
+
+                # Validate design type against supported categories
+                if design_type not in self.available_design_types:
+                    errormsg.append(
+                        "design_type: Invalid design type '{0}' in playbook. "
+                        "Available design types are: {1}".format(
+                            design_type, self.available_design_types
+                        )
+                    )
+                    template_has_errors = True
+                    self.log("Design type validation failed for '{0}' - not in supported design types".format(design_type), "ERROR")
+            else:
+                errormsg.append("design_type: Design type is missing in feature template configuration.")
+                template_has_errors = True
+
+            feature_templates = feature_template_design.get("feature_templates", [])
+            if not feature_templates:
+                errormsg.append(
+                    "feature_templates: 'feature_templates' is missing in feature_template_design."
+                )
+                template_has_errors = True
+            elif not isinstance(feature_templates, list):
+                errormsg.append(
+                    "feature_templates: Expected a list for 'feature_templates', but got a non-list value."
+                )
+                template_has_errors = True
+            else:
+                # Validate each template design entry
+                for design in feature_templates:
+                    if not isinstance(design, str):
+                        errormsg.append(
+                            "feature_templates: Expected a string for each item in 'feature_templates', but got a non-string value."
+                        )
+                        template_has_errors = True
+                    elif "Default Advanced SSID Design" in feature_templates and len(feature_templates) > 1:
+                        default_design_templates_found += 1
+                        if len(feature_templates) > 1:
+                            errormsg.append(
+                                "feature_templates: 'Default Advanced SSID Design' is a special case and should be the only " +
+                                "template design in feature_template_designs. " +
+                                "Please remove other template designs if 'Default Advanced SSID Design' is used."
+                            )
+                            template_has_errors = True
+                            self.log("Default Advanced SSID Design validation failed - cannot be combined with other designs", "ERROR")
+
+            applicability_ssids = feature_template_design.get("applicability_ssids", [])
+            if applicability_ssids:
+                self.log("Validating SSID applicability for {0} SSIDs".format(
+                    len(applicability_ssids)), "DEBUG")
+                if "Default Advanced SSID Design" not in feature_templates:
+                    errormsg.append(
+                        "applicability_ssids: 'applicability_ssids' should only be used with 'Default Advanced SSID Design' template design."
+                    )
+                    template_has_errors = True
+
+                if len(applicability_ssids) > 16:
+                    errormsg.append(
+                        "applicability_ssids: List contains more than 16 entries, which exceeds the allowed limit."
+                    )
+                    template_has_errors = True
+
+                for feature_ssid in applicability_ssids:
+                    if not isinstance(feature_ssid, str):
+                        errormsg.append(
+                            "applicability_ssids: Expected a string for each item in 'applicability_ssids', but got a non-string value."
+                        )
+                        template_has_errors = True
+                    else:
+                        validate_str(feature_ssid,
+                                     dict(type="str", length_max=32),
+                                     "applicability_ssids", errormsg)
+
+                        # Cross-reference SSID with ssid_details
+                        if not self.value_exists(ssid_list, "ssid_name", feature_ssid):
+                            errormsg.append(
+                                "applicability_ssids: SSID '{0}' does not exist in ssid_details.".format(
+                                    feature_ssid
+                                )
+                            )
+                            template_has_errors = True
+                            self.log("SSID applicability validation failed - SSID '{0}' not found in ssid_details".format(
+                                feature_ssid), "ERROR")
+
+            if template_has_errors:
+                templates_with_errors += 1
+
+            self.log("Checking for duplicate template designs across feature template configurations", "DEBUG")
+
+            duplicates, matches = self.find_duplicates_in_feature_templates(feature_template_designs)
+            if duplicates or matches:
+                errormsg.append(
+                    "feature_templates: Duplicate feature_template '{0} {1}' found in playbook.".format(
+                        str(duplicates), str(matches)
+                    )
+                )
+                self.log("Duplicate feature_template validation failed - found duplicates: {0} {1}".format(
+                    str(duplicates), str(matches)), "ERROR")
+
+        if templates_with_errors > 0:
+            self.log("Feature template validation completed with errors - {0}/{1} templates failed validation".format(
+                templates_with_errors, templates_processed), "WARNING")
+        else:
+            self.log("Feature template validation completed successfully - all {0} templates passed validation".format(
+                templates_processed), "INFO")
+
+        if advanced_ssid_templates_found > 0:
+            self.log("Advanced SSID Configuration templates found: {0}".format(
+                advanced_ssid_templates_found), "INFO")
+
+        if default_design_templates_found > 0:
+            self.log("Default Advanced SSID Design templates found: {0}".format(
+                default_design_templates_found), "INFO")
+
+    def find_duplicates_in_feature_templates(self, feature_template_designs):
+        """
+        Checks for duplicate entries within each 'feature_templates' list in the provided feature templates,
+        and identifies dictionaries with identical 'feature_templates' lists.
+
+        Args:
+            feature_template_designs (list of dict): A list where each dictionary contains at least the key
+                'feature_templates', which is expected to be a list of template identifiers.
+
+        Returns:
+            tuple:
+                - List[dict]: Dictionaries from feature_template_designs that contain duplicate entries within
+                              their 'feature_templates' list.
+                - List[Tuple[int, int]]: Pairs of indices from feature_template_designs where
+                                         the 'feature_templates' lists are identical.
+
+        Notes:
+            - A 'duplicate' within a 'feature_templates' means the same template identifier
+              appears more than once in the list.
+            - 'Matching' means two different dictionaries have exactly the same
+              'feature_templates' list (order matters).
+        """
+        self.log("Analyzing feature template configurations for duplicate feature_templates and identical feature_templates lists", "DEBUG")
+        self.log("Processing {0} feature templates for duplicate detection analysis".format(
+            len(feature_template_designs)), "DEBUG")
+
+        duplicates_found = []
+        matching_indices = []
+        combine_designs = []
+
+        templates_processed = 0
+        intra_template_duplicates = 0
+        inter_template_duplicates = 0
+        identical_lists_found = 0
+
+        # Track seen template design lists for identical list detection
+        seen_template_designs = {}
+        global_template_designs = []
+
+        # Process each feature template for duplicate detection
+        for template_index, feature_template_design in enumerate(feature_template_designs):
+            templates_processed += 1
+            template_design_list = feature_template_design.get('feature_templates', [])
+
+            self.log("Analyzing feature template {0}/{1} with {2} feature templates".format(
+                template_index + 1, len(feature_template_designs), len(template_design_list)), "DEBUG")
+
+            # Check for intra-template duplicates (within same feature_templates list)
+            if len(template_design_list) != len(set(template_design_list)):
+                intra_template_duplicates += 1
+                duplicates_found.append(feature_template_design)
+                self.log("Intra-template duplicate detected in feature_templates at index {0}: {1}".format(
+                    template_index, template_design_list), "DEBUG")
+
+            # Check for identical feature_templates lists across feature templates
+            template_design_tuple = tuple(template_design_list)
+            if template_design_tuple in seen_template_designs:
+                identical_lists_found += 1
+                matching_indices.append((seen_template_designs[template_design_tuple], template_index))
+                self.log("Identical feature_templates lists found between indices {0} and {1}: {2}".format(
+                    seen_template_designs[template_design_tuple], template_index, template_design_list), "DEBUG")
+            else:
+                seen_template_designs[template_design_tuple] = template_index
+
+            # Check for inter-template duplicates (same design across different templates)
+            for feature_template in template_design_list:
+                if feature_template in global_template_designs:
+                    inter_template_duplicates += 1
+                    if feature_template_design not in duplicates_found:
+                        duplicates_found.append(feature_template_design)
+                    self.log("Inter-template duplicate design '{0}' found in feature template at index {1}".format(
+                        feature_template, template_index), "DEBUG")
+                else:
+                    global_template_designs.append(feature_template)
+
+        total_duplicates = len(duplicates_found)
+        total_matches = len(matching_indices)
+
+        if total_duplicates > 0 or total_matches > 0:
+            self.log("Duplicate detection completed - found {0} templates with duplicates and {1} identical template lists".format(
+                total_duplicates, total_matches), "WARNING")
+
+            if intra_template_duplicates > 0:
+                self.log("Intra-template duplicates found in {0} feature templates".format(
+                    intra_template_duplicates), "WARNING")
+
+            if inter_template_duplicates > 0:
+                self.log("Inter-template duplicate designs detected: {0} occurrences".format(
+                    inter_template_duplicates), "WARNING")
+
+            if identical_lists_found > 0:
+                self.log("Identical template design lists found: {0} matches".format(
+                    identical_lists_found), "WARNING")
+
+            return duplicates_found, matching_indices
+
+        self.log("Duplicate detection completed successfully - no duplicates or identical lists found in {0} feature templates".format(
+            templates_processed), "INFO")
+
+        return None, None
 
     def get_want(self, config):
         """
@@ -985,6 +1584,12 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
             self.log("Fetching additional interface information.", "DEBUG")
             self.get_additional_interface_info(additional_interfaces, profile_info)
 
+        feature_template_designs = config.get("feature_template_designs")
+        if feature_template_designs \
+           and self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") >= 0:
+            self.log("Fetching feature template information.", "DEBUG")
+            self.get_feature_template_info(feature_template_designs, profile_info)
+
         onboarding_templates = config.get("onboarding_templates")
         day_n_templates = config.get("day_n_templates")
         profile_id = profile_info.get("profile_info", {}).get("id")
@@ -1104,6 +1709,7 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                 "additional_interfaces",
                 "onboarding_templates",
                 "day_n_templates",
+                "feature_template_designs",
             ]
         ):
             self.log(
@@ -1316,6 +1922,151 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
             self.log(msg, "ERROR")
             self.fail_and_exit(msg)
 
+    def get_feature_template_info(self, feature_template_designs, profile_info):
+        """
+        Retrieve feature template configuration details for wireless network profile management.
+
+        This method queries the Catalyst Center wireless API to collect comprehensive feature
+        template information including template designs, device types, and SSID applicability
+        for specified feature template configurations. It processes template mappings to retrieve
+        design identifiers and SSID associations essential for wireless network profile
+        feature template assignment and configuration management.
+
+        Parameters:
+            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            feature_template_designs (list): List of dictionaries containing feature template configurations.
+                                    Format: [{"design_type": "AAA_RADIUS_ATTRIBUTES_CONFIGURATION",
+                                            "feature_templates": ["design1", "design2"],
+                                            "applicability_ssids": ["SSID1", "SSID2"]}]
+                                    Each dictionary contains design type, template designs,
+                                    and optional SSID applicability.
+            profile_info (dict): Dictionary to store collected feature template information.
+                                Updated with "feature_template_designs" key containing template details
+                                for wireless profile configuration processing.
+
+        Returns:
+            None: This method updates the profile_info dictionary directly with feature template
+            details. Returns None if no templates found or if errors occur during processing.
+
+            Note:
+                Feature template information is essential for wireless profile configuration
+                and defines how specific wireless features are applied to network profiles
+                and associated SSIDs within the Catalyst Center wireless infrastructure.
+        """
+        self.log("Retrieving feature template configuration details for wireless network profile management", "DEBUG")
+        self.log("Processing {0} feature template configurations for template design collection".format(
+            len(feature_template_designs)), "DEBUG")
+
+        if not feature_template_designs:
+            self.log("No feature template designs provided for template information retrieval - returning without processing", "DEBUG")
+            return None
+
+        all_template_details = []
+        templates_processed = 0
+        designs_collected = 0
+        templates_with_errors = 0
+
+        try:
+            for feature_template_design in feature_template_designs:
+                templates_processed += 1
+
+                design_type = feature_template_design.get("design_type")
+                feature_templates = feature_template_design.get("feature_templates", [])
+
+                self.log("Processing feature template {0}/{1} with design type '{2}' and {3} feature templates".format(
+                    templates_processed, len(feature_template_designs), design_type, len(feature_templates)), "DEBUG")
+
+                if not design_type:
+                    self.log("Design type missing in feature template configuration - skipping template", "WARNING")
+                    continue
+
+                if not feature_templates or not isinstance(feature_templates, list):
+                    self.log("Feature templates missing or invalid in feature template configuration - skipping template", "WARNING")
+                    continue
+
+                payload_template = {"type": design_type}
+
+                # Process each template design within the feature template
+                for feature_template in feature_templates:
+                    payload_template["design_name"] = feature_template
+
+                    self.log("Querying feature template design '{0}' for design type '{1}'".format(
+                        feature_template, design_type), "DEBUG")
+
+                    try:
+                        design_response = self.execute_get_request(
+                            "wireless", "get_feature_template_summary", payload_template
+                        )
+
+                        self.log("Feature template design query completed for '{0}'".format(
+                            feature_template), "DEBUG")
+
+                        # Validate and process template design response
+                        if design_response and isinstance(design_response.get("response"), list):
+                            response_data = design_response.get("response", [])
+
+                            if response_data and len(response_data) > 0:
+                                instances = response_data[0].get("instances", [])
+
+                                if instances and len(instances) > 0:
+                                    design_id = instances[0].get("id")
+
+                                    if design_id:
+                                        designs_collected += 1
+                                        template_detail = {
+                                            "design_id": design_id,
+                                            "design_name": feature_template,
+                                            "design_type": design_type
+                                        }
+
+                                        # Add SSID applicability if specified
+                                        applicability_ssids = feature_template_design.get("applicability_ssids")
+                                        if applicability_ssids:
+                                            template_detail["ssids"] = applicability_ssids
+                                            self.log("Added SSID applicability for feature templates '{0}': {1}".format(
+                                                feature_template, applicability_ssids), "DEBUG")
+
+                                        all_template_details.append(template_detail)
+                                        self.log("Feature template design '{0}' collected successfully with ID '{1}'".format(
+                                            feature_template, design_id), "DEBUG")
+                                    else:
+                                        self.log("No design ID found in template response for '{0}'".format(
+                                            feature_template), "WARNING")
+                                else:
+                                    self.log("No instances found in template response for '{0}'".format(
+                                        feature_template), "WARNING")
+                            else:
+                                self.log("Empty response data received for feature template '{0}'".format(
+                                    feature_template), "WARNING")
+                        else:
+                            self.log("Invalid or empty response received for feature template '{0}'".format(
+                                feature_template), "WARNING")
+
+                    except Exception as design_exception:
+                        templates_with_errors += 1
+                        self.log("Failed to retrieve feature template design '{0}': {1}".format(
+                            feature_template, str(design_exception)), "ERROR")
+
+            # Update profile_info with collected template details
+            if all_template_details:
+                profile_info["feature_template_designs"] = all_template_details
+                self.log("Feature template information collection completed - collected {0} template designs from {1} feature templates".format(
+                    designs_collected, templates_processed), "INFO")
+
+                if templates_with_errors > 0:
+                    self.log("Warning: {0} template designs encountered errors during collection".format(
+                        templates_with_errors), "WARNING")
+
+                return self
+
+            self.log("No feature template designs found for the provided feature template configurations", "DEBUG")
+            return None
+
+        except Exception as api_exception:
+            error_message = "Failed to retrieve feature template information: {0}".format(str(api_exception))
+            self.log(error_message, "ERROR")
+            return None
+
     def compare_config_data(self, input_config, have_info):
         """
         This function used to compare the playbook input with the have data and
@@ -1341,9 +2092,12 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
         ssid_list = input_config.get("ssid_details", [])
         have_ssid_details = have_prof_info.get("ssidDetails", [])
         ap_zones_list = input_config.get("ap_zones", [])
-        have_ap_zones = have_prof_info.get("ssidDetails", [])
+        feature_template_designs = have_info.get("feature_template_designs", [])
+
+        have_ap_zones = have_prof_info.get("apZones", [])
         additional_interfaces = input_config.get("additional_interfaces", [])
         have_additional_interfaces = have_prof_info.get("additionalInterfaces", [])
+        have_feature_templates = have_prof_info.get("featureTemplates", [])
 
         if ssid_list:
             if not have_ssid_details:
@@ -1352,8 +2106,14 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
             else:
                 if ssid_list:
                     for each_ssid in ssid_list:
+                        self.log("Comparing Input SSID configurations for {0}".format(
+                            each_ssid.get("ssid_name")), "INFO")
+                        input_ssid_exist_state = False
                         for have_ssid in have_ssid_details:
                             if each_ssid.get("ssid_name") == have_ssid.get("ssidName"):
+                                input_ssid_exist_state = True
+                                self.log("Matching SSID found: {0}. Comparing configurations...".format(
+                                    each_ssid.get("ssid_name")), "INFO")
                                 ssid_match, unmatched_values = (
                                     self.compare_each_config_with_have(
                                         each_ssid, have_ssid, "ssid_details"
@@ -1368,37 +2128,124 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                                         "WARNING",
                                     )
 
-                if ap_zones_list:
-                    for ap_zone in ap_zones_list:
-                        for have_zone in have_ap_zones:
-                            if ap_zone.get("ap_zone_name") == have_zone.get(
-                                "apZoneName"
-                            ):
-                                zone_match, unmatched_values = (
-                                    self.compare_each_config_with_have(
-                                        ap_zone, have_zone, "ap_zones"
-                                    )
-                                )
-                                if not zone_match:
-                                    self.log(
-                                        "AP Zone mismatch found: {0}".format(
-                                            unmatched_values
-                                        ),
-                                        "WARNING",
-                                    )
-                                    unmatched_keys.append(unmatched_values)
-
-                if additional_interfaces:
-                    for each_interface in additional_interfaces:
-                        interface_name = each_interface.get("interface_name")
-                        if interface_name not in have_additional_interfaces:
-                            unmatched_keys.append(unmatched_values)
+                        if not input_ssid_exist_state:
+                            unmatched_keys.append(each_ssid)
                             self.log(
-                                "Additional interface '{0}' not found in existing config.".format(
-                                    interface_name
+                                "SSID '{0}' not found in existing profile.".format(
+                                    each_ssid.get("ssid_name")
                                 ),
                                 "WARNING",
                             )
+
+        if ap_zones_list:
+            if not have_ap_zones:
+                self.log("No AP Zone details found in the existing profile.", "DEBUG")
+                unmatched_keys.append(ap_zones_list)
+            else:
+                self.log("Comparing AP Zone configurations with existing profile AP Zones", "INFO")
+                for ap_zone in ap_zones_list:
+                    self.log("Comparing Input AP Zone configuration for {0}".format(
+                        ap_zone.get("ap_zone_name")), "INFO")
+                    input_ap_zone_exist_state = False
+                    for have_zone in have_ap_zones:
+                        if ap_zone.get("ap_zone_name") == have_zone.get(
+                            "apZoneName"
+                        ):
+                            input_ap_zone_exist_state = True
+                            self.log("Matching AP Zone found: {0}. Comparing configurations...".format(
+                                ap_zone.get("ap_zone_name")), "INFO")
+                            zone_match, unmatched_values = (
+                                self.compare_each_config_with_have(
+                                    ap_zone, have_zone, "ap_zones"
+                                )
+                            )
+                            if not zone_match:
+                                self.log(
+                                    "AP Zone mismatch found: {0}".format(
+                                        unmatched_values
+                                    ),
+                                    "WARNING",
+                                )
+                                unmatched_keys.append(unmatched_values)
+
+                    if not input_ap_zone_exist_state:
+                        ap_zone_name = ap_zone.get("ap_zone_name", "Unknown") if ap_zone else "Unknown"
+                        unmatched_keys.append(ap_zone)
+                        self.log(
+                            "AP Zone '{0}' not found in existing profile configuration.".format(
+                                ap_zone_name
+                            ),
+                            "WARNING",
+                        )
+
+        if additional_interfaces:
+            if not have_additional_interfaces:
+                self.log("No Additional interface details found in the existing profile.", "DEBUG")
+                unmatched_keys.append(additional_interfaces)
+            else:
+                self.log("Validating additional interface configurations against existing profile interfaces", "INFO")
+                for each_interface in additional_interfaces:
+                    interface_name = each_interface.get("interface_name")
+                    if interface_name not in have_additional_interfaces:
+                        unmatched_keys.append(unmatched_values)
+                        self.log(
+                            "Additional interface '{0}' not found in existing config.".format(
+                                interface_name
+                            ),
+                            "WARNING",
+                        )
+
+        if feature_template_designs \
+           and self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") >= 0:
+            if not have_feature_templates:
+                self.log("No Feature template details found in the existing profile.", "DEBUG")
+                unmatched_keys.append(feature_template_designs)
+            else:
+                self.log("Validating feature template configurations against existing profile template assignments", "DEBUG")
+                self.log("Processing {0} feature template designs for configuration comparison with existing assignments".format(
+                    len(feature_template_designs)), "DEBUG")
+
+                feature_templates_processed = 0
+                feature_templates_with_mismatches = 0
+                for feature_template_design in feature_template_designs:
+                    feature_templates_processed += 1
+                    template_design_name = feature_template_design.get("design_name")
+                    template_design_id = feature_template_design.get("design_id")
+                    template_ssids = feature_template_design.get("ssids")
+
+                    self.log("Validating feature template {0}/{1} with design '{2}'".format(
+                        feature_templates_processed, len(feature_template_designs), template_design_name), "DEBUG")
+
+                    # Validate template design ID exists in current profile assignments
+                    if template_design_id and not self.value_exists(have_feature_templates, "id", template_design_id):
+                        feature_templates_with_mismatches += 1
+                        unmatched_keys.append(
+                            "Feature template designs with feature template '{0}' not found.".format(template_design_name)
+                        )
+                        self.log(
+                            "Feature template design mismatch detected - feature template "
+                            "'{0}' (ID: {1}) not found in existing profile assignments".format(
+                                template_design_name, template_design_id), "WARNING")
+
+                    # Validate SSID applicability exists in current profile assignments
+                    if template_ssids and not self.value_exists(have_feature_templates, "ssids", template_ssids):
+                        feature_templates_with_mismatches += 1
+                        unmatched_keys.append(
+                            "Feature template with applicability_ssids '{0}' not found.".format(template_ssids)
+                        )
+                        self.log(
+                            "Feature template SSID applicability number of mismatch "
+                            "detected '{0}'- SSIDs '{1}' not found in existing profile template assignments".format(
+                                len(unmatched_keys), template_ssids), "WARNING")
+
+                # Log comprehensive feature template validation summary
+                if feature_templates_with_mismatches > 0:
+                    self.log("Feature template validation completed with mismatches"
+                             " - {0}/{1} templates have configuration differences".format(
+                                 feature_templates_with_mismatches, feature_templates_processed), "WARNING")
+                else:
+                    self.log("Feature template validation completed successfully - all {0} templates match existing profile assignments".format(
+                        feature_templates_processed), "DEBUG")
 
         if unmatched_keys:
             self.log(
@@ -1625,9 +2472,12 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
         Returns:
             No return, parse the input data and load the parsed data to the payload_data
         """
+        self.log(
+            "Parsing input data for payload: {0}".format(self.pprint(wireless_data)),
+            "DEBUG",
+        )
         exclude_keys = [
             "site_names",
-            "feature_templates",
             "onboarding_templates",
             "day_n_templates",
             "provision_group",
@@ -1704,8 +2554,35 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                                     payload_data["additionalInterfaces"].append(
                                         interface.get("interface_name")
                                     )
+
+                    elif (
+                        key == "feature_template_designs"
+                        and isinstance(value, list)
+                        and self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") >= 0
+                    ):
+                        payload_data["featureTemplates"] = []
+                        feature_template_designs = wireless_data[key]
+                        if feature_template_designs:
+                            have_feature = self.have.get("wireless_profile").get("feature_template_designs", [])
+                            for template in have_feature:
+                                mapped_template = {}
+                                if template.get("design_id"):
+                                    mapped_template["id"] = template.get("design_id")
+
+                                if template.get("ssids"):
+                                    mapped_template["ssids"] = template.get("ssids")
+
+                                if mapped_template:
+                                    payload_data["featureTemplates"].append(
+                                        mapped_template
+                                    )
+
                     else:
                         payload_data[mapped_key] = value
+
+            self.log(
+                "Parsed payload data: {0}".format(self.pprint(payload_data)), "INFO"
+            )
 
         except Exception as e:
             msg = "An error occurred during Parsing for payload: {0}".format(str(e))
@@ -1875,6 +2752,17 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
                                 ),
                                 "DEBUG",
                             )
+
+                    have_zone_value = have_data.get(zone_key)
+                    if zone_value != have_zone_value:
+                        self.log(
+                            "SSID list mismatch in AP Zone. Expected: {0}, Found: {1}".format(
+                                zone_value, have_zone_value
+                            ),
+                            "DEBUG",
+                        )
+                        un_match_data[zone_key] = zone_value
+
                 elif zone_key in ["ap_zone_name", "rf_profile_name"]:
                     if input_data[zone_key] != have_data.get(self.keymap[zone_key]):
                         un_match_data[zone_key] = zone_value
@@ -2063,6 +2951,7 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
         ssid_details = config.get("ssid_details")
         ap_zones = config.get("ap_zones")
         additional_interfaces = config.get("additional_interfaces")
+        feature_template_designs = config.get("feature_template_designs")
 
         profile_unmatch_stat = self.have["wireless_profile"].get("profile_compare_stat")
         template_unmatch_stat = self.have["wireless_profile"].get(
@@ -2077,6 +2966,10 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
             ),
             "DEBUG",
         )
+
+        if feature_template_designs \
+           and self.compare_dnac_versions(self.get_ccc_version(), "3.1.3.0") < 0:
+            del config["feature_template_designs"]
 
         for profile in self.have["wireless_profile_list"]:
             if profile.get("name") == config.get("profile_name"):
@@ -2135,7 +3028,7 @@ class NetworkWirelessProfile(NetworkProfileFunctions):
         elif (
             profile_id
             and not profile_unmatch_stat
-            and (ssid_details or ap_zones or additional_interfaces)
+            and (ssid_details or ap_zones or additional_interfaces or feature_template_designs)
         ):
             self.log(
                 "Starting update for existing wireless profile '{0}' (ID: {1}) with new configuration.".format(
