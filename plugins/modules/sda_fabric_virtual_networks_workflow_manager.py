@@ -1988,6 +1988,7 @@ class VirtualNetwork(DnacBase):
 
             vlan_update_payload["isResourceGuardEnabled"] = resource_guard_enable
             vlan_update_payload["layer2FloodingAddressAssignment"] = flooding_address_assignment
+            vlan_update_payload["isWirelessFloodingEnabled"] = wireless_flooding_enable
 
             if flooding_address_assignment == "CUSTOM":
                 self.log(
@@ -2025,8 +2026,6 @@ class VirtualNetwork(DnacBase):
                 )
 
                 return vlan_update_payload
-
-            vlan_update_payload["isWirelessFloodingEnabled"] = vlan_update_payload["isFabricEnabledWireless"]
 
         self.log(
             "Constructed update payload for fabric VLAN: {0}".format(
