@@ -460,6 +460,12 @@ options:
             description: The actual script or code constituting
               the body of the template.
             type: str
+          template_content_file_path:
+            description:
+              - Path to a local file containing the template content to be used during create or update operations.
+              - Supported file extensions are '.j2' (Jinja) and '.txt'. Files with other extensions will be rejected.
+              - When provided, this field takes precedence over 'template_content'.
+            type: str
           template_params:
             description: The customization of the contents
               within the template.
@@ -798,6 +804,12 @@ options:
                         description: The actual script
                           or code constituting the body
                           of the template.
+                        type: str
+                      template_content_file_path:
+                        description:
+                          - Path to a local file containing the template content to be used during import operations.
+                          - Supported file extensions are '.j2' (Jinja) and '.txt'. Files with other extensions will be rejected.
+                          - When provided, this field takes precedence over 'template_content'.
                         type: str
                       template_params:
                         description: The customization
@@ -1963,6 +1975,45 @@ EXAMPLES = r"""
         software_type: "IOS-XE"
         device_types:
           - product_family: "Switches and Hubs"
+
+- name: Create template using file path content
+  cisco.dnac.template_workflow_manager:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    dnac_log_level: "{{ dnac_log_level }}"
+    dnac_log: true
+    config_verify: true
+    state: merged
+    config:
+      - configuration_templates:
+          author: string
+          composite: true
+          custom_params_order: true
+          template_description: string
+          device_types:
+            - product_family: string
+              product_series: string
+              product_type: string
+          failure_policy: string
+          id: string
+          language: string
+          template_name: string
+          project_name: string
+          project_description: string
+          profile_names:
+            - string
+          software_type: string
+          software_version: string
+          tags:
+            - id: string
+              name: string
+          template_content_file_path: "/path/to/template/file"
+          version: string
 """
 
 RETURN = r"""
