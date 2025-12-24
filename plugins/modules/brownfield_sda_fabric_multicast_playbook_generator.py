@@ -125,9 +125,9 @@ EXAMPLES = r"""
     dnac_log_level: INFO
     config_verify: false
     state: gathered
-    config:
-    - generate_all_configurations: true
-      file_path: "/path/to/output/all_fabric_multicast_configs.yml"
+      config:
+      - generate_all_configurations: true
+        file_path: "/path/to/output/all_fabric_multicast_configs.yml"
 
 - name: Generate YAML playbook for specific fabric site
   cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
@@ -140,13 +140,13 @@ EXAMPLES = r"""
     dnac_debug: "{{ dnac_debug }}"
     dnac_log: true
     state: gathered
-    config:
-    - file_path: "/path/to/output/site_specific_multicast.yml"
-      component_specific_filters:
-        components_list:
-        - fabric_multicast
-        fabric_multicast:
-        - fabric_name: "Global/USA/San Jose/Building1"
+      config:
+      - file_path: "/path/to/output/site_specific_multicast.yml"
+        component_specific_filters:
+          components_list:
+          - fabric_multicast
+          fabric_multicast:
+          - fabric_name: "Global/USA/San Jose/Building1"
 
 - name: Generate YAML playbook for specific fabric and virtual network
   cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
@@ -158,11 +158,11 @@ EXAMPLES = r"""
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
     state: gathered
-    config:
-    - component_specific_filters:
-        fabric_multicast:
-        - fabric_name: "Global/USA/San Jose/Building1"
-          layer3_virtual_network: "GUEST_VN"
+      config:
+      - component_specific_filters:
+          fabric_multicast:
+          - fabric_name: "Global/USA/San Jose/Building1"
+            layer3_virtual_network: "GUEST_VN"
 
 - name: Generate playbook for multiple fabric sites with auto-generated filename
   cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
@@ -174,12 +174,12 @@ EXAMPLES = r"""
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
     state: gathered
-    config:
-    - component_specific_filters:
-        fabric_multicast:
-        - fabric_name: "Global/USA/San Jose/Building1"
-        - fabric_name: "Global/USA/San Jose/Building2"
-        - fabric_name: "Global/Europe/London/DataCenter1"
+      config:
+      - component_specific_filters:
+          fabric_multicast:
+          - fabric_name: "Global/USA/San Jose/Building1"
+          - fabric_name: "Global/USA/San Jose/Building2"
+          - fabric_name: "Global/Europe/London/DataCenter1"
 """
 
 
@@ -536,7 +536,8 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
         """
 
         self.log(
-            f"Starting to retrieve fabric multicast configuration with network element: {network_element} and component-specific filters: {component_specific_filters}",
+            f"Starting to retrieve fabric multicast configuration with network element: {network_element} and "
+            f"component-specific filters: {component_specific_filters}",
             "DEBUG",
         )
 
