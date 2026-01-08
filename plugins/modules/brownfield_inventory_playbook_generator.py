@@ -21,7 +21,7 @@ version_added: 6.17.0
 extends_documentation_fragment:
 - cisco.dnac.workflow_manager_params
 author:
-- 
+- Mridul Saurabh (@msaurabh)
 - Madhan Sankaranarayanan (@madhansansel)
 options:
   config_verify:
@@ -160,7 +160,7 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
         super().__init__(module)
         self.module_schema = self.get_workflow_filters_schema()
         # self.site_id_name_dict = self.get_site_id_name_mapping()
-        self.module_name = "<module_name>"
+        self.module_name = "inventory_workflow_manager"
 
     def validate_input(self):
         """
@@ -217,10 +217,10 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
         return {
             "network_elements": {
                 "inventory_workflow_manager": {
-                    "filters" : ["ip_address", "device_type", "platform_id", "software_type", "software_version"],
-                    "api_function": "add_device",
+                    "filters" : ["ip_address", "device_type"],
+                    "api_function":"get_device_list",
                     "api_family": "devices",
-                    "reverse_mapping_function": self.inventory_device_reverse_mapping,
+                    "reverse_mapping_function": self.inventory_get_device_reverse_mapping,
                     "get_function_name": self.get_inventory_workflow_manager_details,  
                 }
             },
@@ -463,7 +463,7 @@ def main():
     ):
         ccc_inventory_playbook_generator.msg = (
             "The specified version '{0}' does not support the YAML Playbook generation "
-            "for <module_name_caps> Module. Supported versions start from '2.3.7.9' onwards. ".format(
+            "for INVENTORY Module. Supported versions start from '2.3.7.9' onwards. ".format(
                 ccc_inventory_playbook_generator.get_ccc_version()
             )
         )
