@@ -156,7 +156,7 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
         Returns:
             The method does not return a value.
         """
-        self.supported_states = ["merged"]
+        self.supported_states = ["gathered"]
         super().__init__(module)
         self.module_schema = self.get_workflow_filters_schema()
         # self.site_id_name_dict = self.get_site_id_name_mapping()
@@ -217,18 +217,256 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
         return {
             "network_elements": {
                 "inventory_workflow_manager": {
-                    "filters" : ["ip_address", "device_type"],
+                    "filters" : ["ip_address"],
                     "api_function":"get_device_list",
                     "api_family": "devices",
                     "reverse_mapping_function": self.inventory_get_device_reverse_mapping,
                     "get_function_name": self.get_inventory_workflow_manager_details,  
                 }
             },
-            "global_filters": [],
+            "global_filters": {
+                "ip_address_list": {
+                    "type": "list",
+                    "required": False,
+                    "elements": "str",
+                    "validate_ip": True,
+                },
+                "hostname_list": {"type": "list", "required": False, "elements": "str"},
+                "serial_number_list": {
+                    "type": "list",
+                    "required": False,
+                    "elements": "str",
+                },
+            },
         }
 
     def process_global_filters(self, global_filters):
         pass
+
+    def inventory_get_device_reverse_mapping(self):
+        """
+        Returns reverse mapping specification for inventory devices.
+        Transforms API response from credential API back to inventory_workflow_manager format.
+        """
+        return OrderedDict({
+            "ip_address_list": {
+                "type": "list",
+                "elements": "str",
+                "source_key": "ipAddress",
+                "transform": self.transform_ip_address_list
+            },
+            "cli_transport": {
+                "type": "str",
+                "source_key": "cliTransport",
+                "transform": lambda x: x.lower() if x else None
+            },
+            "compute_device": {
+                "type": "bool",
+                "source_key": "computeDevice",
+                "transform": lambda x: x if isinstance(x, bool) else x.lower() == "true"
+            },
+            "password": {
+                "type": "str",
+                "source_key": "password",
+                "transform": lambda x: x if x else None
+            },
+            "enable_password": {
+                "type": "str",
+                "source_key": "enablePassword",
+                "transform": lambda x: x if x else None
+            },
+            "extended_discovery_info": {
+                "type": "str",
+                "source_key": "extendedDiscoveryInfo",
+                "transform": lambda x: x if x else None
+            },
+            "http_username": {
+                "type": "str",
+                "source_key": "httpUserName",
+                "transform": lambda x: x if x else None
+            },
+            "http_password": {
+                "type": "str",
+                "source_key": "httpPassword",
+                "transform": lambda x: x if x else None
+            },
+            "http_port": {
+                "type": "str",
+                "source_key": "httpPort",
+                "transform": lambda x: str(x) if x else None
+            },
+            "http_secure": {
+                "type": "bool",
+                "source_key": "httpSecure",
+                "transform": lambda x: x if isinstance(x, bool) else x.lower() == "true"
+            },
+            "netconf_port": {
+                "type": "int",
+                "source_key": "netconfPort",
+                "transform": lambda x: int(x) if x else None
+            },
+            "snmp_auth_passphrase": {
+                "type": "str",
+                "source_key": "snmpAuthPassphrase",
+                "transform": lambda x: x if x else None
+            },
+            "snmp_auth_protocol": {
+                "type": "str",
+                "source_key": "snmpAuthProtocol",
+                "transform": lambda x: x.upper() if x else None
+            },
+            "snmp_mode": {
+                "type": "str",
+                "source_key": "snmpMode",
+                "transform": lambda x: x.upper() if x else None
+            },
+            "snmp_priv_passphrase": {
+                "type": "str",
+                "source_key": "snmpPrivPassphrase",
+                "transform": lambda x: x if x else None
+            },
+            "snmp_priv_protocol": {
+                "type": "str",
+                "source_key": "snmpPrivProtocol",
+                "transform": lambda x: x.upper() if x else None
+            },
+            "snmp_ro_community": {
+                "type": "str",
+                "source_key": "snmpROCommunity",
+                "transform": lambda x: x if x else None
+            },
+            "snmp_rw_community": {
+                "type": "str",
+                "source_key": "snmpRWCommunity",
+                "transform": lambda x: x if x else None
+            },
+            "snmp_retry": {
+                "type": "int",
+                "source_key": "snmpRetry",
+                "transform": lambda x: int(x) if x else None
+            },
+            "snmp_timeout": {
+                "type": "int",
+                "source_key": "snmpTimeout",
+                "transform": lambda x: int(x) if x else None
+            },
+            "snmp_username": {
+                "type": "str",
+                "source_key": "snmpUserName",
+                "transform": lambda x: x if x else None
+            },
+            "snmp_version": {
+                "type": "str",
+                "source_key": "snmpVersion",
+                "transform": lambda x: x.lower() if x else None
+            },
+            "type": {
+                "type": "str",
+                "source_key": "type",
+                "transform": lambda x: x if x else "NETWORK_DEVICE"
+            },
+            "username": {
+                "type": "str",
+                "source_key": "userName",
+                "transform": lambda x: x if x else None
+            }
+        })
+
+    def transform_ip_address_list(self, api_value):
+        """
+        Transform API ipAddress to ip_address_list format.
+        Ensures it's always returned as a list.
+        """
+        if not api_value:
+            return []
+        if isinstance(api_value, list):
+            return api_value
+        return [api_value]
+
+    def get_inventory_workflow_manager_details(self, network_element, filters):
+        """
+        Retrieves inventory device credentials from Cisco Catalyst Center API.
+        Processes the response and transforms it using the reverse mapping specification.
+        
+        Args:
+            network_element (dict): Network element configuration containing API details
+            filters (dict): Filters containing global_filters and component_specific_filters
+            
+        Returns:
+            list: List of processed device credential configurations
+        """
+        self.log("Starting get_inventory_workflow_manager_details", "INFO")
+        self.log("Network element configuration: {0}".format(network_element), "DEBUG")
+        self.log("Applied filters: {0}".format(filters), "DEBUG")
+        
+        try:
+            # Get reverse mapping specification
+            reverse_mapping_spec = self.inventory_get_device_reverse_mapping()
+            self.log("Reverse mapping spec retrieved", "DEBUG")
+            
+            # Process global filters to obtain device IP to ID mapping
+            self.log("Processing global filters to obtain device details", "DEBUG")
+            global_filters = filters.get("global_filters", {})
+            
+            # Check if this is generate_all_configurations mode
+            if self.generate_all_configurations:
+                self.log(
+                    "Generate all configurations mode detected - retrieving all managed devices",
+                    "INFO",
+                )
+                # Get all devices without any parameters to retrieve everything
+                device_ip_to_id_mapping = self.get_network_device_details()
+            else:
+                processed_global_filters = self.process_global_filters(global_filters)
+                device_ip_to_id_mapping = processed_global_filters.get(
+                    "device_ip_to_id_mapping", {}
+                )
+                
+                # If no device filters provided, get all devices
+                if not device_ip_to_id_mapping and not any(
+                    [
+                        global_filters.get("ip_address_list"),
+                        global_filters.get("hostname_list"),
+                        global_filters.get("serial_number_list"),
+                    ]
+                ):
+                    self.log(
+                        "No device filters provided - retrieving all managed devices",
+                        "INFO",
+                    )
+                    device_ip_to_id_mapping = self.get_network_device_details()
+            
+            if not device_ip_to_id_mapping:
+                self.log("No devices found from global filters. Terminating retrieval.", "WARNING")
+                return []
+            
+            self.log(
+                "Found {0} devices to process from global filters".format(
+                    len(device_ip_to_id_mapping)
+                ),
+                "INFO",
+            )
+            
+            # Extract device details from the mapping
+            device_response = []
+            for device_ip, device_info in device_ip_to_id_mapping.items():
+                device_response.append(device_info)
+            
+            self.log("Device details retrieved: {0} devices".format(len(device_response)), "INFO")
+            
+            if not device_response:
+                self.log("No device details found", "WARNING")
+                return []
+            
+            # Transform the response using modify_parameters
+            transformed_devices = self.modify_parameters(reverse_mapping_spec, device_response)
+            self.log("Devices transformed successfully: {0} devices".format(len(transformed_devices)), "INFO")
+            
+            return transformed_devices
+            
+        except Exception as e:
+            self.log("Error in get_inventory_workflow_manager_details: {0}".format(str(e)), "ERROR")
+            return []
 
     def yaml_config_generator(self, yaml_config_generator):
         """

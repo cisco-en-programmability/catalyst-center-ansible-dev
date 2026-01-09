@@ -21,9 +21,11 @@
         state: merged
         config:
           - generate_all_configurations: true
+            global_filters:  # Updated to include global_filters
+              ip_address_list: []
             file_path: "tmp/all_configurations.yml"
 
         register: result
 
         tags : 
-          - brownfield_inventory_playbook_generator    
+          - brownfield_inventory_playbook_generator
