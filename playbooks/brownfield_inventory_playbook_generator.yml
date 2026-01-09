@@ -1,31 +1,479 @@
 ---
-- name: Generate YML playbook for Inventory on Cisco DNA Center
-  hosts: localhost
-  connection: local
-  gather_facts: false  # This space must be "no". It was set to false due to formatting errors.but the correct value is "no".
+# ===================================================================================================
+# BROWNFIELD INVENTORY PLAYBOOK GENERATOR - EXAMPLE PLAYBOOK
+# ===================================================================================================
+#
+# This playbook demonstrates comprehensive usage examples for the Brownfield Inventory
+# Playbook Generator module. It includes various scenarios for generating YAML
+# configurations from existing device inventory with different filtering options.
+#
+# ===================================================================================================
+
+- name: Cisco DNA Center Brownfield Inventory Playbook Generator Examples
+  hosts: dnac_servers
+  gather_facts: false
   vars_files:
     - "credentials.yml"
+  vars:
+    # DNA Center connection parameters
+    dnac_login: &dnac_login
+      dnac_host: "{{ dnac_host }}"
+      dnac_username: "{{ dnac_username }}"
+      dnac_password: "{{ dnac_password }}"
+      dnac_verify: "{{ dnac_verify }}"
+      dnac_port: "{{ dnac_port }}"
+      dnac_version: "{{ dnac_version }}"
+      dnac_debug: "{{ dnac_debug }}"
+      dnac_log: true
+      dnac_log_level: DEBUG
+      config_verify: true
+
   tasks:
-    - name: Add/Update/Resync/Delete the devices in Cisco DNA Center Inventory.
-      cisco.dnac.inventory_workflow_manager:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log_level: DEBUG
-        dnac_log: true
-        config_verify: true
-        state: merged
+    # =============================================================================
+    # COMPLETE INFRASTRUCTURE CONFIGURATION GENERATION
+    # =============================================================================
+
+    - name: "EXAMPLE: Auto-generate YAML Configuration for all devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
         config:
           - generate_all_configurations: true
-            global_filters:  # Updated to include global_filters
-              ip_address_list: []
-            file_path: "tmp/all_configurations.yml"
+      register: result_generate_all
+      tags: [generate_all, complete]
 
-        register: result
+    - name: "EXAMPLE: Auto-generate YAML Configuration with custom file path"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - generate_all_configurations: true
+            file_path: "/tmp/inventory_all_devices.yml"
+      register: result_custom_path
+      tags: [generate_all, custom_path]
 
-        tags : 
-          - brownfield_inventory_playbook_generator
+    # =============================================================================
+    # DEVICE FILTERING BY IP ADDRESS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration for specific devices by IP address"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_by_ip.yml"
+            global_filters:
+              ip_address_list: ["192.168.1.10", "192.168.1.11", "10.1.1.5"]
+      register: result_by_ip
+      tags: [device_filtering, ip_address]
+
+    - name: "EXAMPLE: Generate configuration for single device by IP"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_single_device.yml"
+            global_filters:
+              ip_address_list: ["192.168.1.10"]
+      register: result_single_device
+      tags: [device_filtering, single_device]
+
+    - name: "EXAMPLE: Generate configuration for network devices only"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_network_devices.yml"
+            global_filters:
+              ip_address_list: ["204.1.2.2", "204.1.2.3", "204.1.2.4"]
+      register: result_network_devices
+      tags: [device_filtering, network_devices]
+
+    # =============================================================================
+    # DEVICE FILTERING BY HOSTNAME
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration for specific devices by hostname"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_by_hostname.yml"
+            global_filters:
+              hostname_list: ["switch01.lab.com", "switch02.lab.com", "router01.lab.com"]
+      register: result_by_hostname
+      tags: [device_filtering, hostname]
+
+    - name: "EXAMPLE: Generate configuration for core switches only"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_core_switches.yml"
+            global_filters:
+              hostname_list: ["core-sw-01.lab.com", "core-sw-02.lab.com"]
+      register: result_core_switches
+      tags: [device_filtering, core_switches]
+
+    - name: "EXAMPLE: Generate configuration for access switches"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_access_switches.yml"
+            global_filters:
+              hostname_list: ["access-sw-floor1", "access-sw-floor2", "access-sw-floor3"]
+      register: result_access_switches
+      tags: [device_filtering, access_switches]
+
+    # =============================================================================
+    # DEVICE FILTERING BY SERIAL NUMBER
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration for specific devices by serial number"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_by_serial.yml"
+            global_filters:
+              serial_number_list: ["FCW2140L05Y", "FCW2140L06Z", "9080V0I41J3"]
+      register: result_by_serial
+      tags: [device_filtering, serial_number]
+
+    - name: "EXAMPLE: Generate configuration for specific hardware units"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_specific_hardware.yml"
+            global_filters:
+              serial_number_list: ["944EKLE2HPL", "JAE12345678"]
+      register: result_specific_hardware
+      tags: [device_filtering, hardware_units]
+
+    # =============================================================================
+    # MIXED DEVICE IDENTIFICATION (AND LOGIC)
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration with mixed device identification (AND logic)"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_mixed_filters.yml"
+            global_filters:
+              ip_address_list: ["192.168.1.10", "192.168.1.11"]
+              hostname_list: ["switch03.lab.com"]
+              serial_number_list: ["FCW2140L05Y"]
+      register: result_mixed_filters
+      tags: [device_filtering, mixed_identification]
+
+    # =============================================================================
+    # COMPONENT-SPECIFIC FILTERING
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration using explicit components list"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_explicit_components.yml"
+            global_filters:
+              ip_address_list: ["192.168.1.10", "192.168.1.11"]
+            component_specific_filters:
+              components_list: ["inventory_workflow_manager"]
+      register: result_explicit_components
+      tags: [component_filtering, explicit]
+
+    # =============================================================================
+    # DEVICE TYPE SPECIFIC SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for compute devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_compute_devices.yml"
+            global_filters:
+              ip_address_list: ["10.10.10.20", "10.10.10.21"]
+      register: result_compute_devices
+      tags: [device_type, compute_devices]
+
+    - name: "EXAMPLE: Generate configuration for wireless controllers"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_wireless_controllers.yml"
+            global_filters:
+              hostname_list: ["wlc-01.lab.com", "wlc-02.lab.com"]
+      register: result_wlc
+      tags: [device_type, wireless_controllers]
+
+    - name: "EXAMPLE: Generate configuration for third party devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_third_party.yml"
+            global_filters:
+              ip_address_list: ["172.16.10.50", "172.16.10.51"]
+      register: result_third_party
+      tags: [device_type, third_party]
+
+    - name: "EXAMPLE: Generate configuration for Meraki devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_meraki.yml"
+            global_filters:
+              hostname_list: ["meraki-dashboard.lab.com"]
+      register: result_meraki
+      tags: [device_type, meraki]
+
+    - name: "EXAMPLE: Generate configuration for Firepower Management Systems"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_firepower.yml"
+            global_filters:
+              ip_address_list: ["192.168.100.10"]
+      register: result_firepower
+      tags: [device_type, firepower]
+
+    # =============================================================================
+    # NETWORK SEGMENTATION SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for data center devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_datacenter.yml"
+            global_filters:
+              ip_address_list: ["10.0.1.1", "10.0.1.2", "10.0.1.3", "10.0.1.4"]
+      register: result_datacenter
+      tags: [network_segment, datacenter]
+
+    - name: "EXAMPLE: Generate configuration for campus network devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_campus.yml"
+            global_filters:
+              hostname_list: ["campus-dist-01", "campus-dist-02", "campus-access-01"]
+      register: result_campus
+      tags: [network_segment, campus]
+
+    - name: "EXAMPLE: Generate configuration for branch office devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_branch.yml"
+            global_filters:
+              hostname_list: ["branch-router-01", "branch-switch-01"]
+      register: result_branch
+      tags: [network_segment, branch]
+
+    # =============================================================================
+    # CREDENTIAL TYPE SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for devices with SNMPv3 credentials"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_snmpv3_devices.yml"
+            global_filters:
+              ip_address_list: ["192.168.1.10", "192.168.1.11", "192.168.1.12"]
+      register: result_snmpv3
+      tags: [credentials, snmpv3]
+
+    - name: "EXAMPLE: Generate configuration for devices with SSH credentials"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_ssh_devices.yml"
+            global_filters:
+              hostname_list: ["switch-ssh-01", "switch-ssh-02"]
+      register: result_ssh
+      tags: [credentials, ssh]
+
+    - name: "EXAMPLE: Generate configuration for devices with HTTP credentials"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_http_devices.yml"
+            global_filters:
+              ip_address_list: ["10.20.30.40", "10.20.30.41"]
+      register: result_http
+      tags: [credentials, http]
+
+    # =============================================================================
+    # DEFAULT FILE PATH SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate YAML Configuration with default file path"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - global_filters:
+              ip_address_list: ["192.168.1.10"]
+      register: result_default_path
+      tags: [default_settings, default_path]
+
+    - name: "EXAMPLE: Generate configuration for lab environment with defaults"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - global_filters:
+              hostname_list: ["lab-switch-01.test.com", "lab-switch-02.test.com"]
+      register: result_lab_default
+      tags: [lab_environment, defaults]
+
+    # =============================================================================
+    # SPECIALIZED USE CASES
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for distribution layer switches"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_distribution_layer.yml"
+            global_filters:
+              hostname_list: ["dist-sw-01", "dist-sw-02", "dist-sw-03"]
+      register: result_distribution
+      tags: [use_case, distribution_layer]
+
+    - name: "EXAMPLE: Generate configuration for access layer switches"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_access_layer.yml"
+            global_filters:
+              hostname_list: ["access-sw-01", "access-sw-02", "access-sw-03"]
+      register: result_access_layer
+      tags: [use_case, access_layer]
+
+    - name: "EXAMPLE: Generate configuration for core routers"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_core_routers.yml"
+            global_filters:
+              hostname_list: ["core-router-01", "core-router-02"]
+      register: result_core_routers
+      tags: [use_case, core_routers]
+
+    - name: "EXAMPLE: Generate configuration for specific building infrastructure"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_building_a.yml"
+            global_filters:
+              hostname_list: ["bldg-a-floor1-sw01", "bldg-a-floor2-sw01", "bldg-a-floor3-sw01"]
+      register: result_building_specific
+      tags: [use_case, building_specific]
+
+    - name: "EXAMPLE: Generate configuration for disaster recovery site"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_dr_site.yml"
+            global_filters:
+              hostname_list: ["dr-switch-01", "dr-switch-02", "dr-router-01"]
+      register: result_dr_site
+      tags: [use_case, disaster_recovery]
+
+    # =============================================================================
+    # BULK OPERATIONS SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for multiple sites"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_multi_site.yml"
+            global_filters:
+              hostname_list: 
+                - "site1-sw-01"
+                - "site1-sw-02"
+                - "site2-sw-01"
+                - "site2-sw-02"
+                - "site3-sw-01"
+                - "site3-sw-02"
+      register: result_multi_site
+      tags: [bulk, multi_site]
+
+    - name: "EXAMPLE: Generate configuration for large deployment"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_large_deployment.yml"
+            global_filters:
+              ip_address_list:
+                - "10.1.1.1"
+                - "10.1.1.2"
+                - "10.1.1.3"
+                - "10.2.1.1"
+                - "10.2.1.2"
+                - "10.3.1.1"
+                - "10.3.1.2"
+      register: result_large_deployment
+      tags: [bulk, large_deployment]
+
+    # =============================================================================
+    # DEVICE ROLE BASED SCENARIOS
+    # =============================================================================
+
+    - name: "EXAMPLE: Generate configuration for access role devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_access_role.yml"
+            global_filters:
+              hostname_list: ["access-device-01", "access-device-02"]
+      register: result_access_role
+      tags: [device_role, access]
+
+    - name: "EXAMPLE: Generate configuration for core role devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_core_role.yml"
+            global_filters:
+              hostname_list: ["core-device-01", "core-device-02"]
+      register: result_core_role
+      tags: [device_role, core]
+
+    - name: "EXAMPLE: Generate configuration for distribution role devices"
+      cisco.dnac.brownfield_inventory_playbook_generator:
+        <<: *dnac_login
+        state: gathered
+        config:
+          - file_path: "/tmp/inventory_distribution_role.yml"
+            global_filters:
+              hostname_list: ["dist-device-01", "dist-device-02"]
+      register: result_distribution_role
+      tags: [device_role, distribution]
