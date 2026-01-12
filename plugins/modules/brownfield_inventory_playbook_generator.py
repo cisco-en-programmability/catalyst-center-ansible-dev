@@ -11,12 +11,15 @@ __author__ = "Mridul Saurabh, Madhan Sankaranarayanan"
 
 DOCUMENTATION = r"""
 ---
-module: <brownfield_inventory_playbook_generator>
+module: brownfield_inventory_playbook_generator
 short_description: Generate YAML configurations playbook for 'inventory_workflow_manager' module.
 description:
-- Generates YAML configurations compatible with the '<inventory_workflow_manager>'
+- Generates YAML configurations compatible with the 'inventory_workflow_manager'
   module, reducing the effort required to manually create Ansible playbooks and
   enabling programmatic modifications.
+- The YAML configurations generated represent the network device inventory configurations
+  such as device credentials, management IP addresses, device types, and other device-specific
+  attributes configured on the Cisco Catalyst Center.
 version_added: 6.17.0
 extends_documentation_fragment:
 - cisco.dnac.workflow_manager_params
@@ -36,9 +39,9 @@ options:
     default: merged
   config:
     description:
-    - A list of filters for generating YAML playbook compatible with the `<module_name>`
+    - A list of filters for generating YAML playbook compatible with the 'inventory_workflow_manager'
       module.
-    - Filters specify which components to include in the YAML configuration file.
+    - Filters specify which devices and credentials to include in the YAML configuration file.
     - If "components_list" is specified, only those components are included, regardless of the filters.
     type: list
     elements: dict
@@ -46,8 +49,8 @@ options:
     suboptions:
       generate_all_configurations:
         description:
-          - When set to True, automatically generates YAML configurations for all devices and all supported features.
-          - This mode discovers all managed devices in Cisco Catalyst Center and extracts all supported configurations.
+          - When set to True, automatically generates YAML configurations for all devices in Cisco Catalyst Center.
+          - This mode discovers all managed devices in Cisco Catalyst Center and extracts all device inventory configurations.
           - When enabled, the config parameter becomes optional and will use default values if not provided.
           - A default filename will be generated automatically if file_path is not specified.
           - This is useful for complete brownfield infrastructure discovery and documentation.
@@ -58,19 +61,40 @@ options:
         description:
         - Path where the YAML configuration file will be saved.
         - If not provided, the file will be saved in the current working directory with
-          a default file name  "<module_name>_playbook_<DD_Mon_YYYY_HH_MM_SS_MS>.yml".
-        - For example, "<module_name>_playbook_22_Apr_2025_21_43_26_379.yml".
+          a default file name "inventory_workflow_manager_playbook_<DD_Mon_YYYY_HH_MM_SS_MS>.yml".
+        - For example, "inventory_workflow_manager_playbook_22_Apr_2025_21_43_26_379.yml".
         type: str
       global_filters:
         description:
         - Global filters to apply when generating the YAML configuration file.
         - These filters apply to all components unless overridden by component-specific filters.
+        - Supports filtering devices by IP address, hostname, or serial number.
         type: dict
         suboptions:
+          ip_address_list:
+            description:
+            - List of device IP addresses to include in the YAML configuration file.
+            - When specified, only devices with matching management IP addresses will be included.
+            - For example, ["192.168.1.1", "192.168.1.2", "192.168.1.3"]
+            type: list
+            elements: str
+          hostname_list:
+            description:
+            - List of device hostnames to include in the YAML configuration file.
+            - When specified, only devices with matching hostnames will be included.
+            - For example, ["switch-1", "router-1", "firewall-1"]
+            type: list
+            elements: str
+          serial_number_list:
+            description:
+            - List of device serial numbers to include in the YAML configuration file.
+            - When specified, only devices with matching serial numbers will be included.
+            - For example, ["ABC123456789", "DEF987654321"]
+            type: list
+            elements: str
       component_specific_filters:
         description:
-        - Filters to specify which components to include in the YAML configuration
-          file.
+        - Filters to specify which components to include in the YAML configuration file.
         - If "components_list" is specified, only those components are included,
           regardless of other filters.
         type: dict
@@ -78,38 +102,166 @@ options:
           components_list:
             description:
             - List of components to include in the YAML configuration file.
-            - Valid values are
+            - Valid values are "inventory_devices".
+            - If not specified, all components are included.
+            type: list
+            elements: str
+requirements:
+- dnacentersdk >= 2.10.10
+- python >= 3.9
+notes:
+- SDK Methods used are
+    - devices.Devices.get_device_list
+    - devices.Devices.get_network_device_by_ip
+- Paths used are
+    - GET /dna/intent/api/v2/devices
+    - GET /dna/intent/api/v2/network-device
 """
 
 EXAMPLES = r"""
+- name: Generate inventory playbook for all devices
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - generate_all_configurations: true
+        file_path: "./inventory_devices_all.yml"
 
+- name: Generate inventory playbook for specific devices by IP address
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          ip_address_list:
+            - "10.195.225.40"
+            - "10.195.225.42"
+        file_path: "./inventory_devices_by_ip.yml"
+
+- name: Generate inventory playbook for devices by hostname
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          hostname_list:
+            - "cat9k_1"
+            - "cat9k_2"
+            - "switch_1"
+        file_path: "./inventory_devices_by_hostname.yml"
+
+- name: Generate inventory playbook for devices by serial number
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          serial_number_list:
+            - "FCW2147L0AR1"
+            - "FCW2147L0AR2"
+        file_path: "./inventory_devices_by_serial.yml"
+
+- name: Generate inventory playbook for mixed device filtering
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          ip_address_list:
+            - "10.195.225.40"
+          hostname_list:
+            - "cat9k_1"
+        file_path: "./inventory_devices_mixed_filter.yml"
+
+- name: Generate inventory playbook with default file path
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          ip_address_list:
+            - "10.195.225.40"
+
+- name: Generate inventory playbook for multiple devices
+  cisco.dnac.brownfield_inventory_playbook_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    state: merged
+    config:
+      - global_filters:
+          ip_address_list:
+            - "10.195.225.40"
+            - "10.195.225.41"
+            - "10.195.225.42"
+            - "10.195.225.43"
+        file_path: "./inventory_devices_multiple.yml"
 """
 
 
 RETURN = r"""
 # Case_1: Success Scenario
 response_1:
-  description: A dictionary with  with the response returned by the Cisco Catalyst Center Python SDK
-  returned: always
+  description: A dictionary with the response returned by the Cisco Catalyst Center Python SDK
+  returned: success
   type: dict
   sample: >
     {
-      "response":
-        {
-          "response": String,
-          "version": String
-        },
-      "msg": String
+      "response": {
+        "response": "Generated YAML file successfully at path: /path/to/inventory_workflow_manager_playbook_22_Apr_2025_21_43_26_379.yml",
+        "version": "2.3.7.9"
+      },
+      "msg": "Successfully generated YAML playbook configuration file for inventory_workflow_manager module"
     }
 # Case_2: Error Scenario
 response_2:
-  description: A string with the response returned by the Cisco Catalyst Center Python SDK
-  returned: always
-  type: list
+  description: A string with the error message returned by the Cisco Catalyst Center Python SDK
+  returned: on failure
+  type: dict
   sample: >
     {
       "response": [],
-      "msg": String
+      "msg": "Failed to generate playbook: Invalid filters provided or no matching devices found"
     }
 """
 

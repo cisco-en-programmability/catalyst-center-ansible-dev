@@ -1,0 +1,403 @@
+{
+  "playbook_config_generate_all_configurations": [
+    {
+      "generate_all_configurations": true
+    }
+  ],
+  "playbook_config_generate_all_with_custom_path": [
+    {
+      "generate_all_configurations": true,
+      "file_path": "/tmp/inventory_all_devices.yml"
+    }
+  ],
+  "playbook_config_filter_by_ip_address": [
+    {
+      "file_path": "/tmp/inventory_by_ip.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10",
+          "192.168.1.11",
+          "10.1.1.5"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_single_device_by_ip": [
+    {
+      "file_path": "/tmp/inventory_single_device.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_network_devices_by_ip": [
+    {
+      "file_path": "/tmp/inventory_network_devices.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "204.1.2.2",
+          "204.1.2.3",
+          "204.1.2.4"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_by_hostname": [
+    {
+      "file_path": "/tmp/inventory_by_hostname.yml",
+      "global_filters": {
+        "hostname_list": [
+          "switch01.lab.com",
+          "switch02.lab.com",
+          "router01.lab.com"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_core_switches_by_hostname": [
+    {
+      "file_path": "/tmp/inventory_core_switches.yml",
+      "global_filters": {
+        "hostname_list": [
+          "core-sw-01.lab.com",
+          "core-sw-02.lab.com"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_access_switches_by_hostname": [
+    {
+      "file_path": "/tmp/inventory_access_switches.yml",
+      "global_filters": {
+        "hostname_list": [
+          "access-sw-floor1",
+          "access-sw-floor2",
+          "access-sw-floor3"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_by_serial_number": [
+    {
+      "file_path": "/tmp/inventory_by_serial.yml",
+      "global_filters": {
+        "serial_number_list": [
+          "FCW2140L05Y",
+          "FCW2140L06Z",
+          "9080V0I41J3"
+        ]
+      }
+    }
+  ],
+  "playbook_config_filter_hardware_units_by_serial": [
+    {
+      "file_path": "/tmp/inventory_specific_hardware.yml",
+      "global_filters": {
+        "serial_number_list": [
+          "944EKLE2HPL",
+          "JAE12345678"
+        ]
+      }
+    }
+  ],
+  "playbook_config_mixed_device_identification": [
+    {
+      "file_path": "/tmp/inventory_mixed_filters.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10",
+          "192.168.1.11"
+        ],
+        "hostname_list": [
+          "switch03.lab.com"
+        ],
+        "serial_number_list": [
+          "FCW2140L05Y"
+        ]
+      }
+    }
+  ],
+  "playbook_config_explicit_components_list": [
+    {
+      "file_path": "/tmp/inventory_explicit_components.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10",
+          "192.168.1.11"
+        ]
+      },
+      "component_specific_filters": {
+        "components_list": [
+          "inventory_workflow_manager"
+        ]
+      }
+    }
+  ],
+  "playbook_config_compute_devices": [
+    {
+      "file_path": "/tmp/inventory_compute_devices.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "10.10.10.20",
+          "10.10.10.21"
+        ]
+      }
+    }
+  ],
+  "playbook_config_wireless_controllers": [
+    {
+      "file_path": "/tmp/inventory_wireless_controllers.yml",
+      "global_filters": {
+        "hostname_list": [
+          "wlc-01.lab.com",
+          "wlc-02.lab.com"
+        ]
+      }
+    }
+  ],
+  "playbook_config_third_party_devices": [
+    {
+      "file_path": "/tmp/inventory_third_party.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "172.16.10.50",
+          "172.16.10.51"
+        ]
+      }
+    }
+  ],
+  "playbook_config_meraki_devices": [
+    {
+      "file_path": "/tmp/inventory_meraki.yml",
+      "global_filters": {
+        "hostname_list": [
+          "meraki-dashboard.lab.com"
+        ]
+      }
+    }
+  ],
+  "playbook_config_firepower_management_systems": [
+    {
+      "file_path": "/tmp/inventory_firepower.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.100.10"
+        ]
+      }
+    }
+  ],
+  "playbook_config_datacenter_devices": [
+    {
+      "file_path": "/tmp/inventory_datacenter.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "10.0.1.1",
+          "10.0.1.2",
+          "10.0.1.3",
+          "10.0.1.4"
+        ]
+      }
+    }
+  ],
+  "playbook_config_campus_network_devices": [
+    {
+      "file_path": "/tmp/inventory_campus.yml",
+      "global_filters": {
+        "hostname_list": [
+          "campus-dist-01",
+          "campus-dist-02",
+          "campus-access-01"
+        ]
+      }
+    }
+  ],
+  "playbook_config_branch_office_devices": [
+    {
+      "file_path": "/tmp/inventory_branch.yml",
+      "global_filters": {
+        "hostname_list": [
+          "branch-router-01",
+          "branch-switch-01"
+        ]
+      }
+    }
+  ],
+  "playbook_config_snmpv3_credentials": [
+    {
+      "file_path": "/tmp/inventory_snmpv3_devices.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10",
+          "192.168.1.11",
+          "192.168.1.12"
+        ]
+      }
+    }
+  ],
+  "playbook_config_ssh_credentials": [
+    {
+      "file_path": "/tmp/inventory_ssh_devices.yml",
+      "global_filters": {
+        "hostname_list": [
+          "switch-ssh-01",
+          "switch-ssh-02"
+        ]
+      }
+    }
+  ],
+  "playbook_config_http_credentials": [
+    {
+      "file_path": "/tmp/inventory_http_devices.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "10.20.30.40",
+          "10.20.30.41"
+        ]
+      }
+    }
+  ],
+  "playbook_config_default_file_path": [
+    {
+      "global_filters": {
+        "ip_address_list": [
+          "192.168.1.10"
+        ]
+      }
+    }
+  ],
+  "playbook_config_lab_environment_defaults": [
+    {
+      "global_filters": {
+        "hostname_list": [
+          "lab-switch-01.test.com",
+          "lab-switch-02.test.com"
+        ]
+      }
+    }
+  ],
+  "playbook_config_distribution_layer_switches": [
+    {
+      "file_path": "/tmp/inventory_distribution_layer.yml",
+      "global_filters": {
+        "hostname_list": [
+          "dist-sw-01",
+          "dist-sw-02",
+          "dist-sw-03"
+        ]
+      }
+    }
+  ],
+  "playbook_config_access_layer_switches": [
+    {
+      "file_path": "/tmp/inventory_access_layer.yml",
+      "global_filters": {
+        "hostname_list": [
+          "access-sw-01",
+          "access-sw-02",
+          "access-sw-03"
+        ]
+      }
+    }
+  ],
+  "playbook_config_core_routers": [
+    {
+      "file_path": "/tmp/inventory_core_routers.yml",
+      "global_filters": {
+        "hostname_list": [
+          "core-router-01",
+          "core-router-02"
+        ]
+      }
+    }
+  ],
+  "playbook_config_building_specific_infrastructure": [
+    {
+      "file_path": "/tmp/inventory_building_a.yml",
+      "global_filters": {
+        "hostname_list": [
+          "bldg-a-floor1-sw01",
+          "bldg-a-floor2-sw01",
+          "bldg-a-floor3-sw01"
+        ]
+      }
+    }
+  ],
+  "playbook_config_disaster_recovery_site": [
+    {
+      "file_path": "/tmp/inventory_dr_site.yml",
+      "global_filters": {
+        "hostname_list": [
+          "dr-switch-01",
+          "dr-switch-02",
+          "dr-router-01"
+        ]
+      }
+    }
+  ],
+  "playbook_config_multi_site_bulk_operation": [
+    {
+      "file_path": "/tmp/inventory_multi_site.yml",
+      "global_filters": {
+        "hostname_list": [
+          "site1-sw-01",
+          "site1-sw-02",
+          "site2-sw-01",
+          "site2-sw-02",
+          "site3-sw-01",
+          "site3-sw-02"
+        ]
+      }
+    }
+  ],
+  "playbook_config_large_deployment": [
+    {
+      "file_path": "/tmp/inventory_large_deployment.yml",
+      "global_filters": {
+        "ip_address_list": [
+          "10.1.1.1",
+          "10.1.1.2",
+          "10.1.1.3",
+          "10.2.1.1",
+          "10.2.1.2",
+          "10.3.1.1",
+          "10.3.1.2"
+        ]
+      }
+    }
+  ],
+  "playbook_config_access_role_devices": [
+    {
+      "file_path": "/tmp/inventory_access_role.yml",
+      "global_filters": {
+        "hostname_list": [
+          "access-device-01",
+          "access-device-02"
+        ]
+      }
+    }
+  ],
+  "playbook_config_core_role_devices": [
+    {
+      "file_path": "/tmp/inventory_core_role.yml",
+      "global_filters": {
+        "hostname_list": [
+          "core-device-01",
+          "core-device-02"
+        ]
+      }
+    }
+  ],
+  "playbook_config_distribution_role_devices": [
+    {
+      "file_path": "/tmp/inventory_distribution_role.yml",
+      "global_filters": {
+        "hostname_list": [
+          "dist-device-01",
+          "dist-device-02"
+        ]
+      }
+    }
+  ]
+}
