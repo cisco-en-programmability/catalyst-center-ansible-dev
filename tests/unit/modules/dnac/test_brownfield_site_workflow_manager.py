@@ -107,7 +107,9 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         if "generate_all_configurations" in self._testMethodName:
             self.run_dnac_exec.side_effect = [
-                self.test_data.get("get_all_sites_response"),
+                self.test_data.get("get_area_response"),
+                self.test_data.get("get_multiple_building_response"),
+                self.test_data.get("get_multiple_floor_response"),
             ]
 
         elif "area_by_site_name_single" in self._testMethodName:
