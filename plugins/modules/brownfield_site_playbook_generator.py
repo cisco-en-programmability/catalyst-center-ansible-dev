@@ -25,6 +25,102 @@ extends_documentation_fragment:
 author:
 - Vidhya Rathinam (@virathin)
 options:
+  catc_host:
+    description:
+      - The hostname of the Cisco Catalyst Center.
+    type: str
+    required: true
+  catc_port:
+    description:
+      - Specifies the port number associated with the Cisco Catalyst Center.
+    type: str
+    default: '443'
+  catc_username:
+    description:
+      - The username for authentication at the Cisco Catalyst Center.
+    type: str
+    default: admin
+    aliases: [ user ]
+  catc_password:
+    description:
+      - The password for authentication at the Cisco Catalyst Center.
+    type: str
+  catc_verify:
+    description:
+      - Flag to enable or disable SSL certificate verification.
+    type: bool
+    default: true
+  catc_version:
+    description:
+      - Specifies the version of the Cisco Catalyst Center that the SDK should use.
+    type: str
+    default: 2.2.3.3
+  catc_debug:
+    description:
+      - Indicates whether debugging is enabled in the Cisco Catalyst Center SDK.
+    type: bool
+    default: false
+  catc_log:
+    description:
+      - Flag to enable/disable playbook execution logging.
+      - When true and catc_log_file_path is provided,
+        - Create the log file at the execution location with the specified name.
+      - When true and catc_log_file_path is not provided,
+        - Create the log file at the execution location with the name 'dnac.log'.
+      - When false,
+        - Logging is disabled.
+      - If the log file doesn't exist,
+        - It is created in append or write mode based on the "catc_log_append" flag.
+      - If the log file exists,
+        - It is overwritten or appended based on the "catc_log_append" flag.
+    type: bool
+    default: false
+  catc_log_level:
+    description:
+      - Sets the threshold for log level. Messages with a level equal to or higher than
+        this will be logged. Levels are listed in order of severity [CRITICAL, ERROR, WARNING, INFO, DEBUG].
+      - CRITICAL indicates serious errors halting the program. Displays only CRITICAL messages.
+      - ERROR indicates problems preventing a function. Displays ERROR and CRITICAL messages.
+      - WARNING indicates potential future issues. Displays WARNING, ERROR, CRITICAL messages.
+      - INFO tracks normal operation. Displays INFO, WARNING, ERROR, CRITICAL messages.
+      - DEBUG provides detailed diagnostic info. Displays all log messages.
+    type: str
+    default: WARNING
+  catc_log_file_path:
+    description:
+    - Governs logging. Logs are recorded if catc_log is True.
+    - If path is not specified,
+      - When 'catc_log_append' is True, 'dnac.log' is generated in the
+        current Ansible directory; logs are appended.
+      - When 'catc_log_append' is False, 'dnac.log' is generated; logs
+        are overwritten.
+    - If path is specified,
+      - When 'catc_log_append' is True, the file opens in append mode.
+      - When 'catc_log_append' is False, the file opens in write (w) mode.
+      - In shared file scenarios, without append mode, content is
+        overwritten after each module execution.
+      - For a shared log file, set append to False for the 1st module
+        (to overwrite); for subsequent modules, set append to True.
+    type: str
+    default: dnac.log
+  catc_log_append:
+    description: Determines the mode of the file. Set to True for 'append' mode. Set to False for 'write' mode.
+    type: bool
+    default: True
+  validate_response_schema:
+    description:
+      - Flag for Cisco Catalyst Center SDK to enable the validation of request bodies against a JSON schema.
+    type: bool
+    default: true
+  catc_api_task_timeout:
+    description: Defines the timeout in seconds for API calls to retrieve task details. If the task details
+      are not received within this period, the process will end, and a timeout notification will be logged.
+    type: int
+    default: 1200
+  catc_task_poll_interval:
+    description: Specifies the interval in seconds between successive calls to the API to retrieve task details.
+    type: int
+    default: 2
   config_verify:
     description: Set to True to verify the Cisco Catalyst
       Center after applying the playbook config.
