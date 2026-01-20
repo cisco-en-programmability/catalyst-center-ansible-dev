@@ -1,4 +1,4 @@
-#  Copyright (c) 2025 Cisco and/or its affiliates.
+#  Copyright (c) 2026 Cisco and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 #   Vidhya Rathinam <virathin@cisco.com>
 #
 # Description:
-#   Unit tests for the Ansible module `brownfield_site_workflow_manager`.
+#   Unit tests for the Ansible module `brownfield_site_playbook_generator`.
 #   These tests cover various scenarios for generating YAML playbooks from brownfield
 #   site configurations including areas, buildings, and floors.
 
@@ -25,15 +25,15 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 from unittest.mock import patch, mock_open
 from ansible_collections.cisco.dnac.plugins.modules import (
-    brownfield_site_workflow_manager,
+    brownfield_site_playbook_generator,
 )
 from .dnac_module import TestDnacModule, set_module_args, loadPlaybookData
 
 
 class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
-    module = brownfield_site_workflow_manager
-    test_data = loadPlaybookData("brownfield_site_workflow_manager")
+    module = brownfield_site_playbook_generator
+    test_data = loadPlaybookData("brownfield_site_playbook_generator")
 
     # Load all playbook configurations
     playbook_config_generate_all_configurations = test_data.get(
@@ -196,7 +196,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_generate_all_configurations(
+    def test_brownfield_site_playbook_generator_generate_all_configurations(
         self, mock_exists, mock_file
     ):
         """
@@ -210,11 +210,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_generate_all_configurations,
             )
@@ -224,7 +224,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_area_by_site_name_single(
+    def test_brownfield_site_playbook_generator_area_by_site_name_single(
         self, mock_exists, mock_file
     ):
         """
@@ -237,11 +237,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_site_name_single,
             )
@@ -251,7 +251,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_area_by_site_name_multiple(
+    def test_brownfield_site_playbook_generator_area_by_site_name_multiple(
         self, mock_exists, mock_file
     ):
         """
@@ -264,11 +264,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_site_name_multiple,
             )
@@ -278,7 +278,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_area_by_parent_site(
+    def test_brownfield_site_playbook_generator_area_by_parent_site(
         self, mock_exists, mock_file
     ):
         """
@@ -291,11 +291,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_parent_site,
             )
@@ -305,7 +305,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_building_by_site_name_single(
+    def test_brownfield_site_playbook_generator_building_by_site_name_single(
         self, mock_exists, mock_file
     ):
         """
@@ -318,11 +318,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_site_name_single,
             )
@@ -332,7 +332,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_building_by_site_name_multiple(
+    def test_brownfield_site_playbook_generator_building_by_site_name_multiple(
         self, mock_exists, mock_file
     ):
         """
@@ -345,11 +345,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_site_name_multiple,
             )
@@ -359,7 +359,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_building_by_parent_site(
+    def test_brownfield_site_playbook_generator_building_by_parent_site(
         self, mock_exists, mock_file
     ):
         """
@@ -372,11 +372,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_parent_site,
             )
@@ -386,7 +386,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_floor_by_site_name_single(
+    def test_brownfield_site_playbook_generator_floor_by_site_name_single(
         self, mock_exists, mock_file
     ):
         """
@@ -399,11 +399,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_site_name_single,
             )
@@ -413,7 +413,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_floor_by_site_name_multiple(
+    def test_brownfield_site_playbook_generator_floor_by_site_name_multiple(
         self, mock_exists, mock_file
     ):
         """
@@ -426,11 +426,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_site_name_multiple,
             )
@@ -440,7 +440,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_floor_by_parent_site(
+    def test_brownfield_site_playbook_generator_floor_by_parent_site(
         self, mock_exists, mock_file
     ):
         """
@@ -453,11 +453,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_parent_site,
             )
@@ -467,7 +467,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_floor_by_rf_model(
+    def test_brownfield_site_playbook_generator_floor_by_rf_model(
         self, mock_exists, mock_file
     ):
         """
@@ -480,11 +480,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_rf_model,
             )
@@ -494,7 +494,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_areas_and_buildings(
+    def test_brownfield_site_playbook_generator_areas_and_buildings(
         self, mock_exists, mock_file
     ):
         """
@@ -507,11 +507,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_areas_and_buildings,
             )
@@ -521,7 +521,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_buildings_and_floors(
+    def test_brownfield_site_playbook_generator_buildings_and_floors(
         self, mock_exists, mock_file
     ):
         """
@@ -534,11 +534,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_buildings_and_floors,
             )
@@ -548,7 +548,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_all_components(
+    def test_brownfield_site_playbook_generator_all_components(
         self, mock_exists, mock_file
     ):
         """
@@ -561,11 +561,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_all_components,
             )
@@ -575,7 +575,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_empty_filters(
+    def test_brownfield_site_playbook_generator_empty_filters(
         self, mock_exists, mock_file
     ):
         """
@@ -588,11 +588,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_empty_filters,
             )
@@ -602,7 +602,7 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.exists")
-    def test_brownfield_site_workflow_manager_no_file_path(
+    def test_brownfield_site_playbook_generator_no_file_path(
         self, mock_exists, mock_file
     ):
         """
@@ -615,11 +615,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                dnac_host="1.1.1.1",
-                dnac_username="dummy",
-                dnac_password="dummy",
-                dnac_version="2.3.7.9",
-                dnac_log=True,
+                catc_host="1.1.1.1",
+                catc_username="dummy",
+                catc_password="dummy",
+                catc_version="2.3.7.9",
+                catc_log=True,
                 state="gathered",
                 config=self.playbook_config_no_file_path,
             )

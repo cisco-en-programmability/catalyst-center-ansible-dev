@@ -7,16 +7,16 @@
     - "credentials.yml"
   tasks:
     - name: Generate the playbook for site hierarchy (areas, buildings, floors) from Cisco Catalyst Center
-      brownfield_site_workflow_manager:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log_level: DEBUG
-        dnac_log: true
+      cisco.dnac.brownfield_site_playbook_generator:
+        catc_host: "{{ catc_host }}"
+        catc_username: "{{ catc_username }}"
+        catc_password: "{{ catc_password }}"
+        catc_verify: "{{ catc_verify }}"
+        catc_port: "{{ catc_port }}"
+        catc_version: "{{ catc_version }}"
+        catc_debug: "{{ catc_debug }}"
+        catc_log_level: DEBUG
+        catc_log: true
         state: gathered
         config:
           # ====================================================================================
@@ -160,19 +160,26 @@
           # Scenario 14: Fetch All without Filters presented in components_list
           # Tests behavior when components_list is specified but no filter criteria provided
           # ====================================================================================
-          - file_path: "/tmp/site_empty_filter.yaml"  # optional
-            component_specific_filters:  # optional
-              components_list: ["areas"]
+          # - file_path: "/tmp/site_empty_filter.yaml"
+          #   component_specific_filters:
+          #     components_list: ["areas"]
 
-              # ====================================================================================
-              # Scenario 15: No File Path - Default File Generation
-              # Tests default file name generation when file_path is not provided
-              # Default format: site_workflow_manager_playbook_<timestamp>.yml
-              # ====================================================================================
-              # - component_specific_filters:
-              #     components_list: ["buildings"]
-              #     buildings:
-              #       - site_name: "Global/USA/San Jose/Building1"
+          # ====================================================================================
+          # Scenario 15: No File Path - Default File Generation
+          # Tests default file name generation when file_path is not provided
+          # Default format: site_workflow_manager_playbook_<timestamp>.yml
+          # ====================================================================================
+          # - component_specific_filters:
+          #     components_list: ["buildings"]
+          #     buildings:
+          #       - site_name: "Global/USA/San Jose/Building1"
+
+          # ====================================================================================
+          # Scenario 16: Generate buildings-only config in current working directory
+          # Default format: <module_name>_<DD_Mon_YYYY_HH_MM_SS_MS>.yml
+          # ====================================================================================
+          - component_specific_filters:
+              components_list: ["buildings"]
 
       register: result
 
