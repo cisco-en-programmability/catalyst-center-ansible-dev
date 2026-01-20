@@ -210,11 +210,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_generate_all_configurations,
             )
@@ -237,11 +237,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_site_name_single,
             )
@@ -264,11 +264,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_site_name_multiple,
             )
@@ -291,11 +291,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_area_by_parent_site,
             )
@@ -318,11 +318,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_site_name_single,
             )
@@ -345,11 +345,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_site_name_multiple,
             )
@@ -372,11 +372,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_building_by_parent_site,
             )
@@ -399,11 +399,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_site_name_single,
             )
@@ -426,11 +426,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_site_name_multiple,
             )
@@ -453,11 +453,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_parent_site,
             )
@@ -480,11 +480,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_floor_by_rf_model,
             )
@@ -507,11 +507,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_areas_and_buildings,
             )
@@ -534,11 +534,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_buildings_and_floors,
             )
@@ -561,11 +561,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_all_components,
             )
@@ -588,11 +588,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_empty_filters,
             )
@@ -615,11 +615,11 @@ class TestBrownfieldSiteWorkflowManager(TestDnacModule):
 
         set_module_args(
             dict(
-                catc_host="1.1.1.1",
-                catc_username="dummy",
-                catc_password="dummy",
-                catc_version="2.3.7.9",
-                catc_log=True,
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_no_file_path,
             )
