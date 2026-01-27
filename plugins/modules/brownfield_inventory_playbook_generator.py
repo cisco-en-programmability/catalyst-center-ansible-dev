@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2026, Cisco Systems
+# Copyright (c) 2024, Cisco Systems
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """Ansible module to generate YAML configurations for Wired Campus Automation Module."""
@@ -21,13 +21,18 @@ description:
   such as device credentials, management IP addresses, device types, and other device-specific
   attributes configured on the Cisco Catalyst Center.
 - Note: Devices with type 'NETWORK_DEVICE' are automatically excluded from all generated configurations.
-version_added: 6.44.0
+version_added: 6.17.0
 extends_documentation_fragment:
 - cisco.dnac.workflow_manager_params
 author:
 - Mridul Saurabh (@msaurabh)
 - Madhan Sankaranarayanan (@madhansansel)
 options:
+  config_verify:
+    description: Set to True to verify the Cisco Catalyst
+      Center after applying the playbook config.
+    type: bool
+    default: false
   state:
     description: The desired state of Cisco Catalyst Center after module execution.
     type: str
@@ -58,8 +63,8 @@ options:
         description:
         - Path where the YAML configuration file will be saved.
         - If not provided, the file will be saved in the current working directory with
-          a default file name  C(inventory_workflow_manager_playbook_<YYYY-MM-DD_HH-MM-SS>.yml).
-        - For example, C(inventory_workflow_manager_playbook_2026-01-24_12-33-20.yml).
+          a default file name "inventory_workflow_manager_playbook_<DD_Mon_YYYY_HH_MM_SS_MS>.yml".
+        - For example, "inventory_workflow_manager_playbook_22_Apr_2025_21_43_26_379.yml".
         type: str
       global_filters:
         description:
@@ -103,7 +108,6 @@ options:
             - If not specified, all components are included.
             type: list
             elements: str
-            choices: ["role"]
           inventory_workflow_manager:
             description:
             - Specific filters for inventory_workflow_manager component.
@@ -130,9 +134,6 @@ notes:
     - GET /dna/intent/api/v2/devices
     - GET /dna/intent/api/v2/network-device
 - Devices with type 'NETWORK_DEVICE' are automatically excluded from all generated configurations.
-seealso:
-- module: cisco.dnac.inventory_workflow_manager
-  description: Module for managing inventory configurations in Cisco Catalyst Center.
 """
 
 EXAMPLES = r"""
@@ -145,7 +146,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - generate_all_configurations: true
         file_path: "./inventory_devices_all.yml"
@@ -159,7 +160,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           ip_address_list:
@@ -176,7 +177,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           hostname_list:
@@ -194,7 +195,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           serial_number_list:
@@ -211,7 +212,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           ip_address_list:
@@ -229,7 +230,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           ip_address_list:
@@ -244,7 +245,7 @@ EXAMPLES = r"""
     dnac_verify: "{{ dnac_verify }}"
     dnac_version: "{{ dnac_version }}"
     dnac_debug: "{{ dnac_debug }}"
-    state: gathered
+    state: merged
     config:
       - global_filters:
           ip_address_list:
@@ -282,19 +283,12 @@ response_1:
   type: dict
   sample: >
     {
-        "msg": {
-            "YAML config generation Task succeeded for module 'inventory_workflow_manager'.": {
-            "file_path": "inventory_specific_ips.yml"
-            }
-        },
-        "response": {
-            "YAML config generation Task succeeded for module 'inventory_workflow_manager'.": {
-            "file_path": "inventory_specific_ips.yml"
-            }
-        },
-        "status": "success"
+      "response": {
+        "response": "Generated YAML file successfully at path: /path/to/inventory_workflow_manager_playbook_22_Apr_2025_21_43_26_379.yml",
+        "version": "2.3.7.9"
+      },
+      "msg": "Successfully generated YAML playbook configuration file for inventory_workflow_manager module"
     }
-
 # Case_2: Error Scenario
 response_2:
   description: A string with the error message returned by the Cisco Catalyst Center Python SDK
@@ -302,8 +296,8 @@ response_2:
   type: dict
   sample: >
     {
-      "msg": "Invalid 'global_filters' found for module 'inventory_workflow_manager': [\"Filter 'ip_address_list' must be a list, got NoneType\"]",
-      "response": "Invalid 'global_filters' found for module 'inventory_workflow_manager': [\"Filter 'ip_address_list' must be a list, got NoneType\"]"
+      "response": [],
+      "msg": "Failed to generate playbook: Invalid filters provided or no matching devices found"
     }
 """
 
@@ -387,16 +381,12 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
         from ansible_collections.cisco.dnac.plugins.module_utils.dnac import validate_list_of_dicts
 
         # Validate params
-        self.log("Validating configuration against schema.", "DEBUG")
         valid_temp, invalid_params = validate_list_of_dicts(self.config, temp_spec)
 
         if invalid_params:
             self.msg = "Invalid parameters in playbook: {0}".format(invalid_params)
             self.set_operation_result("failed", False, self.msg, "ERROR")
             return self
-        
-        self.log("Validating minimum requirements against provided config: {0}".format(self.config), "DEBUG")
-        self.validate_minimum_requirements(self.config)
 
         # Set the validated configuration and update the result with success status
         self.validated_config = valid_temp
@@ -1168,7 +1158,7 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
 
         Args:
             config (dict): The configuration data for the network elements.
-            state (str): The desired state of the network elements ('gathered' or 'deleted').
+            state (str): The desired state of the network elements ('merged' or 'deleted').
         """
 
         self.log(
@@ -1196,14 +1186,11 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
 
     def get_diff_gathered(self):
         """
-        Executes YAML configuration file generation for brownfield Inventory workflow.
-
-        Processes the desired state parameters prepared by get_want() and generates a
-        YAML configuration file containing network element details from Catalyst Center.
-        This method orchestrates the yaml_config_generator operation and tracks execution
-        time for performance monitoring.
+        Executes the merge operations for various network configurations in the Cisco Catalyst Center.
+        This method processes additions and updates for SSIDs, interfaces, power profiles, access point profiles,
+        radio frequency profiles, and anchor groups. It logs detailed information about each operation,
+        updates the result status, and returns a consolidated result.
         """
-
 
         start_time = time.time()
         self.log("Starting 'get_diff_gathered' operation.", "DEBUG")
@@ -1214,13 +1201,11 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
                 self.yaml_config_generator,
             )
         ]
-        operations_executed = 0
-        operations_skipped = 0
 
         # Iterate over operations and process them
-        self.log("Beginning iteration over defined workflow operations for processing.", "DEBUG")
+        self.log("Beginning iteration over defined operations for processing.", "DEBUG")
         for index, (param_key, operation_name, operation_func) in enumerate(
-            workflow_operations, start=1
+            operations, start=1
         ):
             self.log(
                 "Iteration {0}: Checking parameters for {1} operation with param_key '{2}'.".format(
@@ -1236,27 +1221,8 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
                     ),
                     "INFO",
                 )
-
-                try:
-                    operation_func(params).check_return_status()
-                    operations_executed += 1
-                    self.log(
-                        "{0} operation completed successfully".format(operation_name),
-                        "DEBUG"
-                    )
-                except Exception as e:
-                    self.log(
-                        "{0} operation failed with error: {1}".format(operation_name, str(e)),
-                        "ERROR"
-                    )
-                    self.set_operation_result(
-                        "failed", True,
-                        "{0} operation failed: {1}".format(operation_name, str(e)),
-                        "ERROR"
-                    ).check_return_status()
-
+                operation_func(params).check_return_status()
             else:
-                operations_skipped += 1
                 self.log(
                     "Iteration {0}: No parameters found for {1}. Skipping operation.".format(
                         index, operation_name
@@ -1266,7 +1232,7 @@ class InventoryPlaybookGenerator(DnacBase, BrownFieldHelper):
 
         end_time = time.time()
         self.log(
-            "Completed 'get_diff_gathered' operation in {0:.2f} seconds.".format(
+            "Completed 'get_diff_merged' operation in {0:.2f} seconds.".format(
                 end_time - start_time
             ),
             "DEBUG",
@@ -1553,6 +1519,7 @@ def main():
         "dnac_log_append": {"type": "bool", "default": True},
         "dnac_log": {"type": "bool", "default": False},
         "validate_response_schema": {"type": "bool", "default": True},
+        "config_verify": {"type": "bool", "default": False},
         "dnac_api_task_timeout": {"type": "int", "default": 1200},
         "dnac_task_poll_interval": {"type": "int", "default": 2},
         "config": {"required": True, "type": "list", "elements": "dict"},
