@@ -46,7 +46,7 @@ options:
     elements: dict
     required: true
     suboptions:
-      generate_all_configurations:
+      generate_all_components:
         description:
         - If true, all components are included in the YAML configuration file i.e fabric_sites,
           fabric_zones.
@@ -182,7 +182,7 @@ EXAMPLES = r"""
     dnac_log_level: "{{ dnac_log_level }}"
     state: gathered
     config:
-      - generate_all_configurations: true
+      - generate_all_components: true
 """
 
 
