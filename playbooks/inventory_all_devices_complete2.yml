@@ -1,0 +1,836 @@
+---
+config:
+- device_type: Cisco Catalyst 9800-CL Wireless Controller for Cloud
+  family: Wireless Controller
+  series: Cisco Catalyst 9800 Wireless Controllers for Cloud
+  role: ACCESS
+  role_source: AUTO
+  hostname: ATB3-VeWLC1.autoagni1.com
+  management_ip_address: 100.1.1.61
+  serial_number: 944EKLE2HPL
+  mac_address: 00:1e:e5:bf:9f:ff
+  platform_id: C9800-CL-K9
+  device_id: 491650cb-2880-4e31-9bf9-e09055e6c803
+  instance_uuid: 491650cb-2880-4e31-9bf9-e09055e6c803
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.15.1prd21
+  description: 'Cisco IOS Software [IOSXE], C9800-CL Software (C9800-CL-K9_IOSXE),
+    Version 17.15.1prd21, RELEASE SOFTWARE (fc1) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Mon 15-Jul-24 18:18 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Unreachable
+  reachability_failure_reason: SNMP Connectivity Failed
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="DEV_UNREACHED"/></status>
+  last_update_time: 1769065296944
+  last_updated: '2026-01-22 07:01:36'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 07:00:39'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 100.1.1.61
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 82 days, 22:27:45.07
+  uptime_seconds: 7235288
+  boot_date_time: '2025-10-31 08:34:36'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: DEV-UNREACHED
+  error_description: 'NCIM12013: SNMP timeouts are occurring with this device. Either
+    the SNMP credentials are not correctly provided to Catalyst Center or the device
+    is responding slow and SNMP timeout is low. If it’s a timeout issue, Catalyst
+    Center will attempt to progressively adjust the timeout in subsequent collection
+    cycles to get device to managed state. User can also run discovery again only
+    for this device using the discovery feature after adjusting the timeout and SNMP
+    credentials as required. Or user can update the timeout and SNMP credentials as
+    required using update credentials.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9800-CL Wireless Controller for Cloud
+  family: Wireless Controller
+  series: Cisco Catalyst 9800 Wireless Controllers for Cloud
+  role: ACCESS
+  role_source: AUTO
+  hostname: ATB4-VeWLC1.autoagni.com
+  management_ip_address: 100.1.1.71
+  serial_number: 9XUE0H6B32U
+  mac_address: 00:1e:f6:a3:0e:ff
+  platform_id: C9800-CL-K9
+  device_id: 25862a8b-d5a9-4fac-b3ef-1a5e57cf78c5
+  instance_uuid: 25862a8b-d5a9-4fac-b3ef-1a5e57cf78c5
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.2
+  description: 'Cisco IOS Software [Dublin], C9800-CL Software (C9800-CL-K9_IOSXE),
+    Version 17.12.2, RELEASE SOFTWARE (fc2) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2023 by Cisco Systems, Inc. Compiled Tue 14-Nov-23 06:01 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Unreachable
+  reachability_failure_reason: SNMP Connectivity Failed
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="DEV_UNREACHED"/></status>
+  last_update_time: 1769065297925
+  last_updated: '2026-01-22 07:01:37'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 07:00:40'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 100.1.1.71
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 82 days, 22:27:42.07
+  uptime_seconds: 7235288
+  boot_date_time: '2025-10-31 08:34:37'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: DEV-UNREACHED
+  error_description: 'NCIM12013: SNMP timeouts are occurring with this device. Either
+    the SNMP credentials are not correctly provided to Catalyst Center or the device
+    is responding slow and SNMP timeout is low. If it’s a timeout issue, Catalyst
+    Center will attempt to progressively adjust the timeout in subsequent collection
+    cycles to get device to managed state. User can also run discovery again only
+    for this device using the discovery feature after adjusting the timeout and SNMP
+    credentials as required. Or user can update the timeout and SNMP credentials as
+    required using update credentials.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-c9k-27.autoagni1.com
+  management_ip_address: 172.27.248.223
+  serial_number: 9ODWZQTV7RY
+  mac_address: 00:0c:29:82:f9:62
+  platform_id: C9KV-UADP-8P
+  device_id: 75b209d5-48f2-428e-96c9-f9e1ec4922dd
+  instance_uuid: 75b209d5-48f2-428e-96c9-f9e1ec4922dd
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.13.20230531:131112
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.13.20230531:131112 [BLD_POLARIS_DEV_S2C_20230531_125400:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2023 by Cisco Systems, Inc. Compiled Wed 31-May-
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769075341873
+  last_updated: '2026-01-22 09:49:01'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 09:45:37'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.223
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 16 days, 14:29:59.00
+  uptime_seconds: 1494164
+  boot_date_time: '2026-01-05 19:20:01'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-c9k-28
+  management_ip_address: 172.27.248.224
+  serial_number: 91GRFWNYCL6
+  mac_address: 00:0c:29:4e:63:a9
+  platform_id: C9KV-UADP-8P
+  device_id: 41052c0d-aff3-404f-9b2a-97dc554cb5d5
+  instance_uuid: 41052c0d-aff3-404f-9b2a-97dc554cb5d5
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.13.20230531:131112
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.13.20230531:131112 [BLD_POLARIS_DEV_S2C_20230531_125400:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2023 by Cisco Systems, Inc. Compiled Wed 31-May-
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769075381938
+  last_updated: '2026-01-22 09:49:41'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 09:45:36'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.224
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 16 days, 14:29:01.00
+  uptime_seconds: 1494123
+  boot_date_time: '2026-01-05 19:20:41'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-c9k-29
+  management_ip_address: 172.27.248.81
+  serial_number: 9EAJIUOFBUK
+  mac_address: 00:0c:29:a1:bd:78
+  platform_id: C9KV-UADP-8P
+  device_id: 4edfbefd-7eb6-4f79-b177-53f84ab239bf
+  instance_uuid: 4edfbefd-7eb6-4f79-b177-53f84ab239bf
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.20240917:155629
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.12.20240917:155629 [BLD_V1712_THROTTLE_S2C_20240917_150546:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 17-S
+  device_support_level: Supported
+  reachability_status: Unreachable
+  reachability_failure_reason: SNMP Connectivity Failed
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="DEV_UNREACHED"/></status>
+  last_update_time: 1769075177181
+  last_updated: '2026-01-22 09:46:17'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 09:45:36'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.81
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 67 days, 18:24:04.00
+  uptime_seconds: 5914828
+  boot_date_time: '2025-11-15 15:22:17'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: DEV-UNREACHED
+  error_description: 'NCIM12013: SNMP timeouts are occurring with this device. Either
+    the SNMP credentials are not correctly provided to Catalyst Center or the device
+    is responding slow and SNMP timeout is low. If it’s a timeout issue, Catalyst
+    Center will attempt to progressively adjust the timeout in subsequent collection
+    cycles to get device to managed state. User can also run discovery again only
+    for this device using the discovery feature after adjusting the timeout and SNMP
+    credentials as required. Or user can update the timeout and SNMP credentials as
+    required using update credentials.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-c9k-30
+  management_ip_address: 172.27.248.82
+  serial_number: 92CGWJVZ8OS
+  mac_address: 00:0c:29:c9:ee:a0
+  platform_id: C9KV-UADP-8P
+  device_id: 61ff5b6a-6075-4a8e-87b6-ac1e5f87b762
+  instance_uuid: 61ff5b6a-6075-4a8e-87b6-ac1e5f87b762
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.20240917:155629
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.12.20240917:155629 [BLD_V1712_THROTTLE_S2C_20240917_150546:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 17-S
+  device_support_level: Supported
+  reachability_status: Unreachable
+  reachability_failure_reason: SNMP Connectivity Failed
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="DEV_UNREACHED"/></status>
+  last_update_time: 1769075177171
+  last_updated: '2026-01-22 09:46:17'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 09:45:36'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.82
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 162 days, 5:13:22.00
+  uptime_seconds: 14075368
+  boot_date_time: '2025-08-13 04:33:17'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: DEV-UNREACHED
+  error_description: 'NCIM12013: SNMP timeouts are occurring with this device. Either
+    the SNMP credentials are not correctly provided to Catalyst Center or the device
+    is responding slow and SNMP timeout is low. If it’s a timeout issue, Catalyst
+    Center will attempt to progressively adjust the timeout in subsequent collection
+    cycles to get device to managed state. User can also run discovery again only
+    for this device using the discovery feature after adjusting the timeout and SNMP
+    credentials as required. Or user can update the timeout and SNMP credentials as
+    required using update credentials.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-c9k-31
+  management_ip_address: 172.27.248.83
+  serial_number: 9O8U674ROIT
+  mac_address: 00:50:56:be:98:20
+  platform_id: C9KV-UADP-8P
+  device_id: 14e689d9-550c-485d-97b3-13705157d479
+  instance_uuid: 14e689d9-550c-485d-97b3-13705157d479
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.20240917:155629
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.12.20240917:155629 [BLD_V1712_THROTTLE_S2C_20240917_150546:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 17-S
+  device_support_level: Supported
+  reachability_status: Unreachable
+  reachability_failure_reason: SNMP Connectivity Failed
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="DEV_UNREACHED"/></status>
+  last_update_time: 1769075177165
+  last_updated: '2026-01-22 09:46:17'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 09:45:36'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.83
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 160 days, 21:10:17.00
+  uptime_seconds: 13959988
+  boot_date_time: '2025-08-14 12:36:17'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: DEV-UNREACHED
+  error_description: 'NCIM12013: SNMP timeouts are occurring with this device. Either
+    the SNMP credentials are not correctly provided to Catalyst Center or the device
+    is responding slow and SNMP timeout is low. If it’s a timeout issue, Catalyst
+    Center will attempt to progressively adjust the timeout in subsequent collection
+    cycles to get device to managed state. User can also run discovery again only
+    for this device using the discovery feature after adjusting the timeout and SNMP
+    credentials as required. Or user can update the timeout and SNMP credentials as
+    required using update credentials.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9000 UADP 8 Port Virtual Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9000 Series Virtual Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: evpn-app-vm26.autoagni1.com
+  management_ip_address: 172.27.248.222
+  serial_number: 9A6Y65YW3MA
+  mac_address: 00:0c:29:b4:2b:aa
+  platform_id: C9KV-UADP-8P
+  device_id: 41735c7b-474b-41fd-b5a0-b77f7e6fb3a8
+  instance_uuid: 41735c7b-474b-41fd-b5a0-b77f7e6fb3a8
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.13.20230531:131112
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.13.20230531:131112 [BLD_POLARIS_DEV_S2C_20230531_125400:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2023 by Cisco Systems, Inc. Compiled Wed 31-May-
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769118331656
+  last_updated: '2026-01-22 21:45:31'
+  last_managed_resync_reasons: Config Change Event
+  last_device_resync_start_time: '2026-01-22 21:45:19'
+  reasons_for_device_resync: Config Change Event
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 172.27.248.222
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 17 days, 2:23:45.00
+  uptime_seconds: 1494014
+  boot_date_time: '2026-01-05 19:22:31'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9300 Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9300 Series Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: TB3-BGL-EDGE2.autoagni1.com
+  management_ip_address: 205.1.2.68
+  serial_number: FOC2435L165
+  mac_address: e4:1f:7b:d7:bd:00
+  platform_id: C9300-24UX
+  device_id: 869294db-e0e8-486c-854c-6994ec10eaa8
+  instance_uuid: 869294db-e0e8-486c-854c-6994ec10eaa8
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.6
+  description: 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Version 17.12.6, RELEASE SOFTWARE (fc1) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2025 by Cisco Systems, Inc. Compiled Sun 31-Aug-25 06:06 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769134643135
+  last_updated: '2026-01-23 02:17:23'
+  last_managed_resync_reasons: Link Up/Down Event
+  last_device_resync_start_time: '2026-01-23 02:16:46'
+  reasons_for_device_resync: Link Up/Down Event
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 205.1.2.68
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 140 days, 15:00:41.49
+  uptime_seconds: 12150322
+  boot_date_time: '2025-09-04 11:17:23'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9300 Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9300 Series Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: TB3-BGL-EDGE2.autoagni1.com
+  management_ip_address: 205.1.2.67
+  serial_number: FJC2413E16S
+  mac_address: 5c:a6:2d:6b:a3:00
+  platform_id: C9300-48P
+  device_id: 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d
+  instance_uuid: 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.3
+  description: 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769077158824
+  last_updated: '2026-01-22 10:19:18'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 10:18:00'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 205.1.2.67
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 139 days, 23:22:50.76
+  uptime_seconds: 12151527
+  boot_date_time: '2025-09-04 10:57:18'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9300 Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9300 Series Switches
+  role: BORDER ROUTER
+  role_source: MANUAL
+  hostname: TB3-SJC-BORDER-01.autoagni1.com
+  management_ip_address: 205.1.1.10
+  serial_number: FCW2334D0W1
+  mac_address: 0c:75:bd:5a:ae:80
+  platform_id: C9300-48P
+  device_id: 98ab039a-9fa6-4cdc-934f-fb0159a0ebb6
+  instance_uuid: 98ab039a-9fa6-4cdc-934f-fb0159a0ebb6
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.3
+  description: 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Managed
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: <status><general code="SUCCESS"/></status>
+  last_update_time: 1769065355214
+  last_updated: '2026-01-22 07:02:35'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 07:01:07'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 205.1.1.10
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 139 days, 20:39:39.29
+  uptime_seconds: 12153550
+  boot_date_time: '2025-09-04 10:23:35'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: null
+  error_description: null
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst C9500-48Y4C Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9500 Series Switches
+  role: BORDER ROUTER
+  role_source: MANUAL
+  hostname: TB4-BORDER-1.autoagni1.com
+  management_ip_address: 206.1.2.1
+  serial_number: FDO243417YM
+  mac_address: 8c:94:1f:ab:fa:a0
+  platform_id: C9500-48Y4C
+  device_id: 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4
+  instance_uuid: 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.20240524:165410
+  description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws
+    101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55
+    by mcpre netconf enabled
+  device_support_level: Supported
+  reachability_status: Ping Reachable
+  reachability_failure_reason: Partial Collection Failure
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: '<status><general code="FAILED_FEAT"/><failed_features
+    names="90 features seem to have failed : Please check the credentials provided."
+    code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device
+    Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+
+    </status>'
+  last_update_time: 1769065759940
+  last_updated: '2026-01-22 07:09:19'
+  last_managed_resync_reasons: Periodic
+  last_device_resync_start_time: '2026-01-22 07:00:36'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 206.1.2.1
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 283 days, 1:14:44.91
+  uptime_seconds: 24524845
+  boot_date_time: '2025-04-14 05:55:19'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: CLI-AUTH-ERROR
+  error_description: 'NCIM12007: CLI credentials for this device do not match. Please
+    ensure correct credentials are provided in global credentials or in discovery
+    job. You can update the device credentials using update credentials option.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9300 Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9300 Series Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: TB4-EDGE-1.autoagni1.com
+  management_ip_address: 206.1.2.3
+  serial_number: FCW2238G07C
+  mac_address: 0c:d0:f8:c8:69:80
+  platform_id: C9300-48UXM
+  device_id: e1f83959-1635-46b2-ba1a-781d25683d90
+  instance_uuid: e1f83959-1635-46b2-ba1a-781d25683d90
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.3
+  description: 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: '<status><general code="FAILED_FEAT"/><failed_features
+    names="105 features seem to have failed : Please check the credentials provided."
+    code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device
+    Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+
+    </status>'
+  last_update_time: 1769065886980
+  last_updated: '2026-01-22 07:11:26'
+  last_managed_resync_reasons: Config Change Event
+  last_device_resync_start_time: '2026-01-22 07:01:01'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 206.1.2.3
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 123 days, 12:42:20.90
+  uptime_seconds: 10741998
+  boot_date_time: '2025-09-20 18:29:26'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: CLI-AUTH-ERROR
+  error_description: 'NCIM12007: CLI credentials for this device do not match. Please
+    ensure correct credentials are provided in global credentials or in discovery
+    job. You can update the device credentials using update credentials option.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null
+- device_type: Cisco Catalyst 9300 Switch
+  family: Switches and Hubs
+  series: Cisco Catalyst 9300 Series Switches
+  role: ACCESS
+  role_source: AUTO
+  hostname: TB4-EDGE-2.autoagni1.com
+  management_ip_address: 206.1.2.4
+  serial_number: FCW2238D095
+  mac_address: 0c:d0:f8:a7:8b:00
+  platform_id: C9300-48UXM
+  device_id: 82d6c335-11f4-40a5-a33f-c66dbd04aac1
+  instance_uuid: 82d6c335-11f4-40a5-a33f-c66dbd04aac1
+  instance_tenant_id: 67e6885ba7e51e7021a8a263
+  software_type: IOS-XE
+  software_version: 17.12.3
+  description: 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE),
+    Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by
+    mcpre netconf enabled'
+  device_support_level: Supported
+  reachability_status: Reachable
+  reachability_failure_reason: null
+  collection_status: Partial Collection Failure
+  collection_interval: Global Default
+  management_state: Managed
+  managed_atleast_once: true
+  inventory_status_detail: '<status><general code="FAILED_FEAT"/><failed_features
+    names="105 features seem to have failed : Please check the credentials provided."
+    code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device
+    Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+
+    </status>'
+  last_update_time: 1769065877059
+  last_updated: '2026-01-22 07:11:17'
+  last_managed_resync_reasons: Config Change Event
+  last_device_resync_start_time: '2026-01-22 07:00:52'
+  reasons_for_device_resync: Periodic
+  reasons_for_pending_sync_requests: null
+  pending_sync_requests_count: '0'
+  sync_requested_by_app: null
+  dns_resolved_management_address: 206.1.2.4
+  memory_size: NA
+  line_card_count: '0'
+  line_card_id: null
+  interface_count: '0'
+  up_time: 123 days, 15:37:22.16
+  uptime_seconds: 10752508
+  boot_date_time: '2025-09-20 15:34:17'
+  snmp_contact: null
+  snmp_location: null
+  location: null
+  location_name: null
+  vendor: Cisco
+  ap_manager_interface_ip: null
+  associated_wlc_ip: null
+  ap_ethernet_mac_address: null
+  error_code: CLI-AUTH-ERROR
+  error_description: 'NCIM12007: CLI credentials for this device do not match. Please
+    ensure correct credentials are provided in global credentials or in discovery
+    job. You can update the device credentials using update credentials option.'
+  tag_count: '0'
+  tunnel_udp_port: null
+  waas_device_mode: null

@@ -1,0 +1,617 @@
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: __init__: 111: Logging configured and initiated 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: __init__: 120: Cisco Catalyst Center parameters: {'dnac_host': '10.197.156.87', 'dnac_port': '443', 'dnac_username': 'msaurabh', 'dnac_password': '****', 'dnac_version': '2.3.7.9', 'dnac_verify': False, 'dnac_debug': False, 'dnac_log': True, 'dnac_log_level': 'DEBUG', 'dnac_log_file_path': 'dnac.log', 'dnac_log_append': True} 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_workflow_filters_schema: 424: Inside get_workflow_filters_schema function. 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: validate_input: 382: Starting validation of input configuration parameters. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: set_operation_result: 2041: Successfully validated playbook configuration parameters using 'validated_input': [{'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}}] 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 1580 status: success, msg: Successfully validated playbook configuration parameters using 'validated_input': [{'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}}] 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: get_want: 1183: Creating Parameters for API Calls with state: gathered 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_params: 463: Starting validation of the input parameters. 
+
+01-23-2026 08:17:58 WARNING  InventoryPlaybookGenerator: validate_params: 464: {'network_elements': {'inventory_workflow_manager': {'filters': ['ip_address', 'hostname', 'serial_number', 'role'], 'api_function': 'get_device_list', 'api_family': 'devices', 'reverse_mapping_function': <bound method InventoryPlaybookGenerator.inventory_get_device_reverse_mapping of <__main__.InventoryPlaybookGenerator object at 0x107be5280>>, 'get_function_name': <bound method InventoryPlaybookGenerator.get_inventory_workflow_manager_details of <__main__.InventoryPlaybookGenerator object at 0x107be5280>>}}, 'global_filters': {'ip_address_list': {'type': 'list', 'required': False, 'elements': 'str', 'validate_ip': True}, 'hostname_list': {'type': 'list', 'required': False, 'elements': 'str'}, 'serial_number_list': {'type': 'list', 'required': False, 'elements': 'str'}}, 'component_specific_filters': {'inventory_workflow_manager': {'type': {'type': 'str', 'required': False, 'choices': ['NETWORK_DEVICE', 'COMPUTE_DEVICE', 'MERAKI_DASHBOARD', 'THIRD_PARTY_DEVICE', 'FIREPOWER_MANAGEMENT_SYSTEM']}, 'role': {'type': 'str', 'required': False, 'choices': ['ACCESS', 'CORE', 'DISTRIBUTION', 'BORDER_ROUTER', 'UNKNOWN']}, 'snmp_version': {'type': 'str', 'required': False, 'choices': ['v2', 'v2c', 'v3']}, 'cli_transport': {'type': 'str', 'required': False, 'choices': ['ssh', 'telnet', 'SSH', 'TELNET']}}}} 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_params: 469: Validating 'global_filters' for module 'inventory_workflow_manager': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_global_filters: 53: Starting validation of global filters for module: inventory_workflow_manager 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: validate_global_filters: 86: Valid global filters for module 'inventory_workflow_manager': ['ip_address_list', 'hostname_list', 'serial_number_list'] 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_global_filters: 216: All global filters for module 'inventory_workflow_manager' are valid. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_params: 495: No 'component_specific_filters' provided for module 'inventory_workflow_manager'; skipping validation. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: validate_params: 502: Completed validation of all input parameters. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: get_want: 1193: yaml_config_generator added to want: {'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}} 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: get_want: 1201: Desired State (want): {'yaml_config_generator': {'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}}} 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 1598 status: success, msg: Successfully collected all parameters from the playbook for Wireless Design operations. 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_diff_gathered: 1215: Starting 'get_diff_gathered' operation. 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_diff_gathered: 1225: Beginning iteration over defined operations for processing. 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_diff_gathered: 1229: Iteration 1: Checking parameters for YAML Config Generator operation with param_key 'yaml_config_generator'. 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: get_diff_gathered: 1237: Iteration 1: Parameters found for YAML Config Generator. Starting processing. 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1038: Starting YAML config generation with parameters: {'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}} 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1051: Determining output file path for YAML configuration 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1057: Using user-provided file_path: inventory_specific_ips.yml 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1059: YAML configuration file path determined: inventory_specific_ips.yml 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1061: Initializing filter dictionaries 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1078: Global filters determined: {'ip_address_list': ['206.1.2.1', '205.1.2.67']} 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1082: Component-specific filters determined: {} 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1089: Retrieving module-supported network elements 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1094: Retrieved 1 supported network elements: ['inventory_workflow_manager'] 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1106: Components list determined: dict_keys(['inventory_workflow_manager']) 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1128: Processing component inventory_workflow_manager with filters: {'global_filters': {'ip_address_list': ['206.1.2.1', '205.1.2.67']}, 'component_specific_filters': {}, 'generate_all_configurations': False} 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 915: Starting get_inventory_workflow_manager_details 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 924: Filters received - Global: {'ip_address_list': ['206.1.2.1', '205.1.2.67']}, Component: {}, Generate All: False 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 959: Processing global filters 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: process_global_filters: 486: Starting process_global_filters with filters: {'ip_address_list': ['206.1.2.1', '205.1.2.67']} 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: process_global_filters: 496: Extracted filters - IPs: 2, Hostnames: 0, Serials: 0 
+
+01-23-2026 08:17:58 INFO  InventoryPlaybookGenerator: process_global_filters: 511: Processing 2 IP addresses 
+
+01-23-2026 08:17:58 DEBUG  InventoryPlaybookGenerator: process_global_filters: 514: Fetching device details for IP: 206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: process_global_filters: 526: Added device with IP: 206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: process_global_filters: 514: Fetching device details for IP: 205.1.2.67 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: process_global_filters: 526: Added device with IP: 205.1.2.67 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: process_global_filters: 583: Completed process_global_filters. Found 2 unique devices 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 964: Retrieved 2 devices from global filters 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 969: Sample filtered device fields: ['type', 'lastUpdateTime', 'macAddress', 'softwareType', 'softwareVersion', 'deviceSupportLevel', 'serialNumber', 'inventoryStatusDetail', 'collectionInterval', 'dnsResolvedManagementAddress', 'lastManagedResyncReasons', 'managementState', 'pendingSyncRequestsCount', 'reasonsForDeviceResync', 'reasonsForPendingSyncRequests', 'syncRequestedByApp', 'upTime', 'interfaceCount', 'lastUpdated', 'apManagerInterfaceIp', 'bootDateTime', 'collectionStatus', 'family', 'hostname', 'locationName', 'managementIpAddress', 'platformId', 'reachabilityFailureReason', 'reachabilityStatus', 'series', 'snmpContact', 'snmpLocation', 'associatedWlcIp', 'apEthernetMacAddress', 'errorCode', 'errorDescription', 'lastDeviceResyncStartTime', 'lineCardCount', 'lineCardId', 'managedAtleastOnce', 'memorySize', 'tagCount', 'tunnelUdpPort', 'uptimeSeconds', 'vendor', 'waasDeviceMode', 'description', 'roleSource', 'location', 'role', 'instanceUuid', 'instanceTenantId', 'id'] 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 970: Sample filtered device data: {'type': 'Cisco Catalyst C9500-48Y4C Switch', 'lastUpdateTime': 1769065759940, 'macAddress': '8c:94:1f:ab:fa:a0', 'softwareType': 'IOS-XE', 'softwareVersion': '17.12.20240524:165410', 'deviceSupportLevel': 'Supported', 'serialNumber': 'FDO243417YM', 'inventoryStatusDetail': '<status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>\n</status>', 'collectionInterval': 'Global Default', 'dnsResolvedManagementAddress': '206.1.2.1', 'lastManagedResyncReasons': 'Periodic', 'managementState': 'Managed', 'pendingSyncRequestsCount': '0', 'reasonsForDeviceResync': 'Periodic', 'reasonsForPendingSyncRequests': '', 'syncRequestedByApp': '', 'upTime': '283 days, 1:14:44.91', 'interfaceCount': '0', 'lastUpdated': '2026-01-22 07:09:19', 'apManagerInterfaceIp': '', 'bootDateTime': '2025-04-14 05:55:19', 'collectionStatus': 'Partial Collection Failure', 'family': 'Switches and Hubs', 'hostname': 'TB4-BORDER-1.autoagni1.com', 'locationName': None, 'managementIpAddress': '206.1.2.1', 'platformId': 'C9500-48Y4C', 'reachabilityFailureReason': 'Partial Collection Failure', 'reachabilityStatus': 'Ping Reachable', 'series': 'Cisco Catalyst 9500 Series Switches', 'snmpContact': '', 'snmpLocation': '', 'associatedWlcIp': '', 'apEthernetMacAddress': None, 'errorCode': 'CLI-AUTH-ERROR', 'errorDescription': 'NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option.', 'lastDeviceResyncStartTime': '2026-01-22 07:00:36', 'lineCardCount': '0', 'lineCardId': '', 'managedAtleastOnce': True, 'memorySize': 'NA', 'tagCount': '0', 'tunnelUdpPort': None, 'uptimeSeconds': 24526360, 'vendor': 'Cisco', 'waasDeviceMode': None, 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled', 'roleSource': 'MANUAL', 'location': None, 'role': 'BORDER ROUTER', 'instanceUuid': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instanceTenantId': '67e6885ba7e51e7021a8a263', 'id': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4'} 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 975: Retrieved 2 devices before component filtering 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 981: Available fields in device response: ['type', 'lastUpdateTime', 'macAddress', 'softwareType', 'softwareVersion', 'deviceSupportLevel', 'serialNumber', 'inventoryStatusDetail', 'collectionInterval', 'dnsResolvedManagementAddress', 'lastManagedResyncReasons', 'managementState', 'pendingSyncRequestsCount', 'reasonsForDeviceResync', 'reasonsForPendingSyncRequests', 'syncRequestedByApp', 'upTime', 'interfaceCount', 'lastUpdated', 'apManagerInterfaceIp', 'bootDateTime', 'collectionStatus', 'family', 'hostname', 'locationName', 'managementIpAddress', 'platformId', 'reachabilityFailureReason', 'reachabilityStatus', 'series', 'snmpContact', 'snmpLocation', 'associatedWlcIp', 'apEthernetMacAddress', 'errorCode', 'errorDescription', 'lastDeviceResyncStartTime', 'lineCardCount', 'lineCardId', 'managedAtleastOnce', 'memorySize', 'tagCount', 'tunnelUdpPort', 'uptimeSeconds', 'vendor', 'waasDeviceMode', 'description', 'roleSource', 'location', 'role', 'instanceUuid', 'instanceTenantId', 'id'] 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 982: Total fields available: 53 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 996: All fields from reverse_mapping_spec are present in API response 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 1004: No component-specific filters to apply 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 1011: Transforming 2 devices to playbook format 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1276: Starting transformation of 2 devices into INDIVIDUAL configurations 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1281: Processing device 1/2: TB4-BORDER-1.autoagni1.com 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1287: Available fields in device response: ['type', 'lastUpdateTime', 'macAddress', 'softwareType', 'softwareVersion', 'deviceSupportLevel', 'serialNumber', 'inventoryStatusDetail', 'collectionInterval', 'dnsResolvedManagementAddress', 'lastManagedResyncReasons', 'managementState', 'pendingSyncRequestsCount', 'reasonsForDeviceResync', 'reasonsForPendingSyncRequests', 'syncRequestedByApp', 'upTime', 'interfaceCount', 'lastUpdated', 'apManagerInterfaceIp', 'bootDateTime', 'collectionStatus', 'family', 'hostname', 'locationName', 'managementIpAddress', 'platformId', 'reachabilityFailureReason', 'reachabilityStatus', 'series', 'snmpContact', 'snmpLocation', 'associatedWlcIp', 'apEthernetMacAddress', 'errorCode', 'errorDescription', 'lastDeviceResyncStartTime', 'lineCardCount', 'lineCardId', 'managedAtleastOnce', 'memorySize', 'tagCount', 'tunnelUdpPort', 'uptimeSeconds', 'vendor', 'waasDeviceMode', 'description', 'roleSource', 'location', 'role', 'instanceUuid', 'instanceTenantId', 'id'] 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1288: Full device data: {'type': 'Cisco Catalyst C9500-48Y4C Switch', 'lastUpdateTime': 1769065759940, 'macAddress': '8c:94:1f:ab:fa:a0', 'softwareType': 'IOS-XE', 'softwareVersion': '17.12.20240524:165410', 'deviceSupportLevel': 'Supported', 'serialNumber': 'FDO243417YM', 'inventoryStatusDetail': '<status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>\n</status>', 'collectionInterval': 'Global Default', 'dnsResolvedManagementAddress': '206.1.2.1', 'lastManagedResyncReasons': 'Periodic', 'managementState': 'Managed', 'pendingSyncRequestsCount': '0', 'reasonsForDeviceResync': 'Periodic', 'reasonsForPendingSyncRequests': '', 'syncRequestedByApp': '', 'upTime': '283 days, 1:14:44.91', 'interfaceCount': '0', 'lastUpdated': '2026-01-22 07:09:19', 'apManagerInterfaceIp': '', 'bootDateTime': '2025-04-14 05:55:19', 'collectionStatus': 'Partial Collection Failure', 'family': 'Switches and Hubs', 'hostname': 'TB4-BORDER-1.autoagni1.com', 'locationName': None, 'managementIpAddress': '206.1.2.1', 'platformId': 'C9500-48Y4C', 'reachabilityFailureReason': 'Partial Collection Failure', 'reachabilityStatus': 'Ping Reachable', 'series': 'Cisco Catalyst 9500 Series Switches', 'snmpContact': '', 'snmpLocation': '', 'associatedWlcIp': '', 'apEthernetMacAddress': None, 'errorCode': 'CLI-AUTH-ERROR', 'errorDescription': 'NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option.', 'lastDeviceResyncStartTime': '2026-01-22 07:00:36', 'lineCardCount': '0', 'lineCardId': '', 'managedAtleastOnce': True, 'memorySize': 'NA', 'tagCount': '0', 'tunnelUdpPort': None, 'uptimeSeconds': 24526360, 'vendor': 'Cisco', 'waasDeviceMode': None, 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled', 'roleSource': 'MANUAL', 'location': None, 'role': 'BORDER ROUTER', 'instanceUuid': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instanceTenantId': '67e6885ba7e51e7021a8a263', 'id': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4'} 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_type from source_key 'type': value=Cisco Catalyst C9500-48Y4C Switch 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_type: Cisco Catalyst C9500-48Y4C Switch -> Cisco Catalyst C9500-48Y4C Switch 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping family from source_key 'family': value=Switches and Hubs 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed family: Switches and Hubs -> Switches and Hubs 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping series from source_key 'series': value=Cisco Catalyst 9500 Series Switches 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed series: Cisco Catalyst 9500 Series Switches -> Cisco Catalyst 9500 Series Switches 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping role from source_key 'role': value=BORDER ROUTER 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed role: BORDER ROUTER -> BORDER ROUTER 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping role_source from source_key 'roleSource': value=MANUAL 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed role_source: MANUAL -> MANUAL 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping hostname from source_key 'hostname': value=TB4-BORDER-1.autoagni1.com 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed hostname: TB4-BORDER-1.autoagni1.com -> TB4-BORDER-1.autoagni1.com 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping management_ip_address from source_key 'managementIpAddress': value=206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed management_ip_address: 206.1.2.1 -> 206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping serial_number from source_key 'serialNumber': value=FDO243417YM 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed serial_number: FDO243417YM -> FDO243417YM 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping mac_address from source_key 'macAddress': value=8c:94:1f:ab:fa:a0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed mac_address: 8c:94:1f:ab:fa:a0 -> 8c:94:1f:ab:fa:a0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping platform_id from source_key 'platformId': value=C9500-48Y4C 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed platform_id: C9500-48Y4C -> C9500-48Y4C 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_id from source_key 'id': value=8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_id: 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 -> 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping instance_uuid from source_key 'instanceUuid': value=8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed instance_uuid: 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 -> 8eca9f20-e8c7-4550-b2e0-8e92e3e843f4 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping instance_tenant_id from source_key 'instanceTenantId': value=67e6885ba7e51e7021a8a263 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed instance_tenant_id: 67e6885ba7e51e7021a8a263 -> 67e6885ba7e51e7021a8a263 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping software_type from source_key 'softwareType': value=IOS-XE 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed software_type: IOS-XE -> IOS-XE 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping software_version from source_key 'softwareVersion': value=17.12.20240524:165410 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed software_version: 17.12.20240524:165410 -> 17.12.20240524:165410 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping description from source_key 'description': value=Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled -> Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_support_level from source_key 'deviceSupportLevel': value=Supported 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_support_level: Supported -> Supported 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reachability_status from source_key 'reachabilityStatus': value=Ping Reachable 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reachability_status: Ping Reachable -> Ping Reachable 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reachability_failure_reason from source_key 'reachabilityFailureReason': value=Partial Collection Failure 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reachability_failure_reason: Partial Collection Failure -> Partial Collection Failure 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping collection_status from source_key 'collectionStatus': value=Partial Collection Failure 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed collection_status: Partial Collection Failure -> Partial Collection Failure 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping collection_interval from source_key 'collectionInterval': value=Global Default 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed collection_interval: Global Default -> Global Default 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping management_state from source_key 'managementState': value=Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed management_state: Managed -> Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping managed_atleast_once from source_key 'managedAtleastOnce': value=True 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed managed_atleast_once: True -> True 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping inventory_status_detail from source_key 'inventoryStatusDetail': value=<status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+</status> 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed inventory_status_detail: <status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+</status> -> <status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>
+</status> 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_update_time from source_key 'lastUpdateTime': value=1769065759940 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_update_time: 1769065759940 -> 1769065759940 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_updated from source_key 'lastUpdated': value=2026-01-22 07:09:19 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_updated: 2026-01-22 07:09:19 -> 2026-01-22 07:09:19 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_managed_resync_reasons from source_key 'lastManagedResyncReasons': value=Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_managed_resync_reasons: Periodic -> Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_device_resync_start_time from source_key 'lastDeviceResyncStartTime': value=2026-01-22 07:00:36 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_device_resync_start_time: 2026-01-22 07:00:36 -> 2026-01-22 07:00:36 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reasons_for_device_resync from source_key 'reasonsForDeviceResync': value=Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reasons_for_device_resync: Periodic -> Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reasons_for_pending_sync_requests from source_key 'reasonsForPendingSyncRequests': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reasons_for_pending_sync_requests:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping pending_sync_requests_count from source_key 'pendingSyncRequestsCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed pending_sync_requests_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping sync_requested_by_app from source_key 'syncRequestedByApp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed sync_requested_by_app:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping dns_resolved_management_address from source_key 'dnsResolvedManagementAddress': value=206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed dns_resolved_management_address: 206.1.2.1 -> 206.1.2.1 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping memory_size from source_key 'memorySize': value=NA 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed memory_size: NA -> NA 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping line_card_count from source_key 'lineCardCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed line_card_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping line_card_id from source_key 'lineCardId': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed line_card_id:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping interface_count from source_key 'interfaceCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed interface_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping up_time from source_key 'upTime': value=283 days, 1:14:44.91 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed up_time: 283 days, 1:14:44.91 -> 283 days, 1:14:44.91 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping uptime_seconds from source_key 'uptimeSeconds': value=24526360 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed uptime_seconds: 24526360 -> 24526360 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping boot_date_time from source_key 'bootDateTime': value=2025-04-14 05:55:19 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed boot_date_time: 2025-04-14 05:55:19 -> 2025-04-14 05:55:19 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping snmp_contact from source_key 'snmpContact': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed snmp_contact:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping snmp_location from source_key 'snmpLocation': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed snmp_location:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping location from source_key 'location': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed location: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping location_name from source_key 'locationName': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed location_name: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping vendor from source_key 'vendor': value=Cisco 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed vendor: Cisco -> Cisco 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping ap_manager_interface_ip from source_key 'apManagerInterfaceIp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed ap_manager_interface_ip:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping associated_wlc_ip from source_key 'associatedWlcIp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed associated_wlc_ip:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping ap_ethernet_mac_address from source_key 'apEthernetMacAddress': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed ap_ethernet_mac_address: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping error_code from source_key 'errorCode': value=CLI-AUTH-ERROR 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed error_code: CLI-AUTH-ERROR -> CLI-AUTH-ERROR 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping error_description from source_key 'errorDescription': value=NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option. 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed error_description: NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option. -> NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option. 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping tag_count from source_key 'tagCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed tag_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping tunnel_udp_port from source_key 'tunnelUdpPort': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed tunnel_udp_port: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping waas_device_mode from source_key 'waasDeviceMode': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed waas_device_mode: None -> None 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1339: Device 1 (TB4-BORDER-1.autoagni1.com) transformation complete and added to list 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1281: Processing device 2/2: TB3-BGL-EDGE2.autoagni1.com 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1287: Available fields in device response: ['type', 'lastUpdateTime', 'macAddress', 'softwareType', 'softwareVersion', 'deviceSupportLevel', 'serialNumber', 'inventoryStatusDetail', 'collectionInterval', 'dnsResolvedManagementAddress', 'lastManagedResyncReasons', 'managementState', 'pendingSyncRequestsCount', 'reasonsForDeviceResync', 'reasonsForPendingSyncRequests', 'syncRequestedByApp', 'upTime', 'interfaceCount', 'lastUpdated', 'apManagerInterfaceIp', 'bootDateTime', 'collectionStatus', 'family', 'hostname', 'locationName', 'managementIpAddress', 'platformId', 'reachabilityFailureReason', 'reachabilityStatus', 'series', 'snmpContact', 'snmpLocation', 'associatedWlcIp', 'apEthernetMacAddress', 'errorCode', 'errorDescription', 'lastDeviceResyncStartTime', 'lineCardCount', 'lineCardId', 'managedAtleastOnce', 'memorySize', 'tagCount', 'tunnelUdpPort', 'uptimeSeconds', 'vendor', 'waasDeviceMode', 'description', 'roleSource', 'location', 'role', 'instanceUuid', 'instanceTenantId', 'id'] 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1288: Full device data: {'type': 'Cisco Catalyst 9300 Switch', 'lastUpdateTime': 1769077158824, 'macAddress': '5c:a6:2d:6b:a3:00', 'softwareType': 'IOS-XE', 'softwareVersion': '17.12.3', 'deviceSupportLevel': 'Supported', 'serialNumber': 'FJC2413E16S', 'inventoryStatusDetail': '<status><general code="SUCCESS"/></status>', 'collectionInterval': 'Global Default', 'dnsResolvedManagementAddress': '205.1.2.67', 'lastManagedResyncReasons': 'Periodic', 'managementState': 'Managed', 'pendingSyncRequestsCount': '0', 'reasonsForDeviceResync': 'Periodic', 'reasonsForPendingSyncRequests': '', 'syncRequestedByApp': '', 'upTime': '139 days, 23:22:50.76', 'interfaceCount': '0', 'lastUpdated': '2026-01-22 10:19:18', 'apManagerInterfaceIp': '', 'bootDateTime': '2025-09-04 10:57:18', 'collectionStatus': 'Managed', 'family': 'Switches and Hubs', 'hostname': 'TB3-BGL-EDGE2.autoagni1.com', 'locationName': None, 'managementIpAddress': '205.1.2.67', 'platformId': 'C9300-48P', 'reachabilityFailureReason': '', 'reachabilityStatus': 'Reachable', 'series': 'Cisco Catalyst 9300 Series Switches', 'snmpContact': '', 'snmpLocation': '', 'associatedWlcIp': '', 'apEthernetMacAddress': None, 'errorCode': None, 'errorDescription': None, 'lastDeviceResyncStartTime': '2026-01-22 10:18:00', 'lineCardCount': '0', 'lineCardId': '', 'managedAtleastOnce': True, 'memorySize': 'NA', 'tagCount': '0', 'tunnelUdpPort': None, 'uptimeSeconds': 12153041, 'vendor': 'Cisco', 'waasDeviceMode': None, 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled', 'roleSource': 'AUTO', 'location': None, 'role': 'ACCESS', 'instanceUuid': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d', 'instanceTenantId': '67e6885ba7e51e7021a8a263', 'id': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d'} 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_type from source_key 'type': value=Cisco Catalyst 9300 Switch 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_type: Cisco Catalyst 9300 Switch -> Cisco Catalyst 9300 Switch 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping family from source_key 'family': value=Switches and Hubs 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed family: Switches and Hubs -> Switches and Hubs 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping series from source_key 'series': value=Cisco Catalyst 9300 Series Switches 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed series: Cisco Catalyst 9300 Series Switches -> Cisco Catalyst 9300 Series Switches 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping role from source_key 'role': value=ACCESS 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed role: ACCESS -> ACCESS 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping role_source from source_key 'roleSource': value=AUTO 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed role_source: AUTO -> AUTO 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping hostname from source_key 'hostname': value=TB3-BGL-EDGE2.autoagni1.com 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed hostname: TB3-BGL-EDGE2.autoagni1.com -> TB3-BGL-EDGE2.autoagni1.com 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping management_ip_address from source_key 'managementIpAddress': value=205.1.2.67 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed management_ip_address: 205.1.2.67 -> 205.1.2.67 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping serial_number from source_key 'serialNumber': value=FJC2413E16S 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed serial_number: FJC2413E16S -> FJC2413E16S 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping mac_address from source_key 'macAddress': value=5c:a6:2d:6b:a3:00 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed mac_address: 5c:a6:2d:6b:a3:00 -> 5c:a6:2d:6b:a3:00 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping platform_id from source_key 'platformId': value=C9300-48P 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed platform_id: C9300-48P -> C9300-48P 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_id from source_key 'id': value=82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_id: 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d -> 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping instance_uuid from source_key 'instanceUuid': value=82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed instance_uuid: 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d -> 82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping instance_tenant_id from source_key 'instanceTenantId': value=67e6885ba7e51e7021a8a263 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed instance_tenant_id: 67e6885ba7e51e7021a8a263 -> 67e6885ba7e51e7021a8a263 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping software_type from source_key 'softwareType': value=IOS-XE 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed software_type: IOS-XE -> IOS-XE 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping software_version from source_key 'softwareVersion': value=17.12.3 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed software_version: 17.12.3 -> 17.12.3 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping description from source_key 'description': value=Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed description: Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled -> Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping device_support_level from source_key 'deviceSupportLevel': value=Supported 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed device_support_level: Supported -> Supported 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reachability_status from source_key 'reachabilityStatus': value=Reachable 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reachability_status: Reachable -> Reachable 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reachability_failure_reason from source_key 'reachabilityFailureReason': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reachability_failure_reason:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping collection_status from source_key 'collectionStatus': value=Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed collection_status: Managed -> Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping collection_interval from source_key 'collectionInterval': value=Global Default 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed collection_interval: Global Default -> Global Default 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping management_state from source_key 'managementState': value=Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed management_state: Managed -> Managed 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping managed_atleast_once from source_key 'managedAtleastOnce': value=True 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed managed_atleast_once: True -> True 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping inventory_status_detail from source_key 'inventoryStatusDetail': value=<status><general code="SUCCESS"/></status> 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed inventory_status_detail: <status><general code="SUCCESS"/></status> -> <status><general code="SUCCESS"/></status> 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_update_time from source_key 'lastUpdateTime': value=1769077158824 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_update_time: 1769077158824 -> 1769077158824 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_updated from source_key 'lastUpdated': value=2026-01-22 10:19:18 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_updated: 2026-01-22 10:19:18 -> 2026-01-22 10:19:18 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_managed_resync_reasons from source_key 'lastManagedResyncReasons': value=Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_managed_resync_reasons: Periodic -> Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping last_device_resync_start_time from source_key 'lastDeviceResyncStartTime': value=2026-01-22 10:18:00 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed last_device_resync_start_time: 2026-01-22 10:18:00 -> 2026-01-22 10:18:00 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reasons_for_device_resync from source_key 'reasonsForDeviceResync': value=Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reasons_for_device_resync: Periodic -> Periodic 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping reasons_for_pending_sync_requests from source_key 'reasonsForPendingSyncRequests': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed reasons_for_pending_sync_requests:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping pending_sync_requests_count from source_key 'pendingSyncRequestsCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed pending_sync_requests_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping sync_requested_by_app from source_key 'syncRequestedByApp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed sync_requested_by_app:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping dns_resolved_management_address from source_key 'dnsResolvedManagementAddress': value=205.1.2.67 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed dns_resolved_management_address: 205.1.2.67 -> 205.1.2.67 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping memory_size from source_key 'memorySize': value=NA 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed memory_size: NA -> NA 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping line_card_count from source_key 'lineCardCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed line_card_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping line_card_id from source_key 'lineCardId': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed line_card_id:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping interface_count from source_key 'interfaceCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed interface_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping up_time from source_key 'upTime': value=139 days, 23:22:50.76 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed up_time: 139 days, 23:22:50.76 -> 139 days, 23:22:50.76 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping uptime_seconds from source_key 'uptimeSeconds': value=12153041 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed uptime_seconds: 12153041 -> 12153041 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping boot_date_time from source_key 'bootDateTime': value=2025-09-04 10:57:18 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed boot_date_time: 2025-09-04 10:57:18 -> 2025-09-04 10:57:18 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping snmp_contact from source_key 'snmpContact': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed snmp_contact:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping snmp_location from source_key 'snmpLocation': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed snmp_location:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping location from source_key 'location': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed location: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping location_name from source_key 'locationName': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed location_name: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping vendor from source_key 'vendor': value=Cisco 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed vendor: Cisco -> Cisco 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping ap_manager_interface_ip from source_key 'apManagerInterfaceIp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed ap_manager_interface_ip:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping associated_wlc_ip from source_key 'associatedWlcIp': value= 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed associated_wlc_ip:  -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping ap_ethernet_mac_address from source_key 'apEthernetMacAddress': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed ap_ethernet_mac_address: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping error_code from source_key 'errorCode': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed error_code: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping error_description from source_key 'errorDescription': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed error_description: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping tag_count from source_key 'tagCount': value=0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed tag_count: 0 -> 0 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping tunnel_udp_port from source_key 'tunnelUdpPort': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed tunnel_udp_port: None -> None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1301: Mapping waas_device_mode from source_key 'waasDeviceMode': value=None 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1323: Transformed waas_device_mode: None -> None 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1339: Device 2 (TB3-BGL-EDGE2.autoagni1.com) transformation complete and added to list 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: transform_device_to_playbook_format: 1344: Transformation complete. Created 2 individual device configurations 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: get_inventory_workflow_manager_details: 1016: Devices transformed successfully: 2 configurations 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1133: Details retrieved for inventory_workflow_manager: [{'device_type': 'Cisco Catalyst C9500-48Y4C Switch', 'family': 'Switches and Hubs', 'series': 'Cisco Catalyst 9500 Series Switches', 'role': 'BORDER ROUTER', 'role_source': 'MANUAL', 'hostname': 'TB4-BORDER-1.autoagni1.com', 'management_ip_address': '206.1.2.1', 'serial_number': 'FDO243417YM', 'mac_address': '8c:94:1f:ab:fa:a0', 'platform_id': 'C9500-48Y4C', 'device_id': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instance_uuid': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instance_tenant_id': '67e6885ba7e51e7021a8a263', 'software_type': 'IOS-XE', 'software_version': '17.12.20240524:165410', 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled', 'device_support_level': 'Supported', 'reachability_status': 'Ping Reachable', 'reachability_failure_reason': 'Partial Collection Failure', 'collection_status': 'Partial Collection Failure', 'collection_interval': 'Global Default', 'management_state': 'Managed', 'managed_atleast_once': True, 'inventory_status_detail': '<status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>\n</status>', 'last_update_time': 1769065759940, 'last_updated': '2026-01-22 07:09:19', 'last_managed_resync_reasons': 'Periodic', 'last_device_resync_start_time': '2026-01-22 07:00:36', 'reasons_for_device_resync': 'Periodic', 'reasons_for_pending_sync_requests': None, 'pending_sync_requests_count': '0', 'sync_requested_by_app': None, 'dns_resolved_management_address': '206.1.2.1', 'memory_size': 'NA', 'line_card_count': '0', 'line_card_id': None, 'interface_count': '0', 'up_time': '283 days, 1:14:44.91', 'uptime_seconds': 24526360, 'boot_date_time': '2025-04-14 05:55:19', 'snmp_contact': None, 'snmp_location': None, 'location': None, 'location_name': None, 'vendor': 'Cisco', 'ap_manager_interface_ip': None, 'associated_wlc_ip': None, 'ap_ethernet_mac_address': None, 'error_code': 'CLI-AUTH-ERROR', 'error_description': 'NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option.', 'tag_count': '0', 'tunnel_udp_port': None, 'waas_device_mode': None}, {'device_type': 'Cisco Catalyst 9300 Switch', 'family': 'Switches and Hubs', 'series': 'Cisco Catalyst 9300 Series Switches', 'role': 'ACCESS', 'role_source': 'AUTO', 'hostname': 'TB3-BGL-EDGE2.autoagni1.com', 'management_ip_address': '205.1.2.67', 'serial_number': 'FJC2413E16S', 'mac_address': '5c:a6:2d:6b:a3:00', 'platform_id': 'C9300-48P', 'device_id': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d', 'instance_uuid': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d', 'instance_tenant_id': '67e6885ba7e51e7021a8a263', 'software_type': 'IOS-XE', 'software_version': '17.12.3', 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled', 'device_support_level': 'Supported', 'reachability_status': 'Reachable', 'reachability_failure_reason': None, 'collection_status': 'Managed', 'collection_interval': 'Global Default', 'management_state': 'Managed', 'managed_atleast_once': True, 'inventory_status_detail': '<status><general code="SUCCESS"/></status>', 'last_update_time': 1769077158824, 'last_updated': '2026-01-22 10:19:18', 'last_managed_resync_reasons': 'Periodic', 'last_device_resync_start_time': '2026-01-22 10:18:00', 'reasons_for_device_resync': 'Periodic', 'reasons_for_pending_sync_requests': None, 'pending_sync_requests_count': '0', 'sync_requested_by_app': None, 'dns_resolved_management_address': '205.1.2.67', 'memory_size': 'NA', 'line_card_count': '0', 'line_card_id': None, 'interface_count': '0', 'up_time': '139 days, 23:22:50.76', 'uptime_seconds': 12153041, 'boot_date_time': '2025-09-04 10:57:18', 'snmp_contact': None, 'snmp_location': None, 'location': None, 'location_name': None, 'vendor': 'Cisco', 'ap_manager_interface_ip': None, 'associated_wlc_ip': None, 'ap_ethernet_mac_address': None, 'error_code': None, 'error_description': None, 'tag_count': '0', 'tunnel_udp_port': None, 'waas_device_mode': None}] 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: yaml_config_generator: 1141: Completed processing all components. Total configurations: 2 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: yaml_config_generator: 1150: Final dictionary created: {'config': [{'device_type': 'Cisco Catalyst C9500-48Y4C Switch', 'family': 'Switches and Hubs', 'series': 'Cisco Catalyst 9500 Series Switches', 'role': 'BORDER ROUTER', 'role_source': 'MANUAL', 'hostname': 'TB4-BORDER-1.autoagni1.com', 'management_ip_address': '206.1.2.1', 'serial_number': 'FDO243417YM', 'mac_address': '8c:94:1f:ab:fa:a0', 'platform_id': 'C9500-48Y4C', 'device_id': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instance_uuid': '8eca9f20-e8c7-4550-b2e0-8e92e3e843f4', 'instance_tenant_id': '67e6885ba7e51e7021a8a263', 'software_type': 'IOS-XE', 'software_version': '17.12.20240524:165410', 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.12.20240524:165410 [V1712_4PRD4_FC2:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 24-May-24 09:55 by mcpre netconf enabled', 'device_support_level': 'Supported', 'reachability_status': 'Ping Reachable', 'reachability_failure_reason': 'Partial Collection Failure', 'collection_status': 'Partial Collection Failure', 'collection_interval': 'Global Default', 'management_state': 'Managed', 'managed_atleast_once': True, 'inventory_status_detail': '<status><general code="FAILED_FEAT"/><failed_features names="90 features seem to have failed : Please check the credentials provided." code="CLI_AUTH_ERROR"/><failed_features names="com.cisco.enc.feature.Fetch Device Config IOS" code="UNKNOWN"/><topCause code="CLI_AUTH_ERROR"/>\n</status>', 'last_update_time': 1769065759940, 'last_updated': '2026-01-22 07:09:19', 'last_managed_resync_reasons': 'Periodic', 'last_device_resync_start_time': '2026-01-22 07:00:36', 'reasons_for_device_resync': 'Periodic', 'reasons_for_pending_sync_requests': None, 'pending_sync_requests_count': '0', 'sync_requested_by_app': None, 'dns_resolved_management_address': '206.1.2.1', 'memory_size': 'NA', 'line_card_count': '0', 'line_card_id': None, 'interface_count': '0', 'up_time': '283 days, 1:14:44.91', 'uptime_seconds': 24526360, 'boot_date_time': '2025-04-14 05:55:19', 'snmp_contact': None, 'snmp_location': None, 'location': None, 'location_name': None, 'vendor': 'Cisco', 'ap_manager_interface_ip': None, 'associated_wlc_ip': None, 'ap_ethernet_mac_address': None, 'error_code': 'CLI-AUTH-ERROR', 'error_description': 'NCIM12007: CLI credentials for this device do not match. Please ensure correct credentials are provided in global credentials or in discovery job. You can update the device credentials using update credentials option.', 'tag_count': '0', 'tunnel_udp_port': None, 'waas_device_mode': None}, {'device_type': 'Cisco Catalyst 9300 Switch', 'family': 'Switches and Hubs', 'series': 'Cisco Catalyst 9300 Series Switches', 'role': 'ACCESS', 'role_source': 'AUTO', 'hostname': 'TB3-BGL-EDGE2.autoagni1.com', 'management_ip_address': '205.1.2.67', 'serial_number': 'FJC2413E16S', 'mac_address': '5c:a6:2d:6b:a3:00', 'platform_id': 'C9300-48P', 'device_id': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d', 'instance_uuid': '82b5f085-aff5-4d9a-8b3e-e71a8fd2d48d', 'instance_tenant_id': '67e6885ba7e51e7021a8a263', 'software_type': 'IOS-XE', 'software_version': '17.12.3', 'description': 'Cisco IOS Software [Dublin], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.12.3, RELEASE SOFTWARE (fc7) Technical Support: http://www.cisco.com/techsupport Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Wed 20-Mar-24 15:40 by mcpre netconf enabled', 'device_support_level': 'Supported', 'reachability_status': 'Reachable', 'reachability_failure_reason': None, 'collection_status': 'Managed', 'collection_interval': 'Global Default', 'management_state': 'Managed', 'managed_atleast_once': True, 'inventory_status_detail': '<status><general code="SUCCESS"/></status>', 'last_update_time': 1769077158824, 'last_updated': '2026-01-22 10:19:18', 'last_managed_resync_reasons': 'Periodic', 'last_device_resync_start_time': '2026-01-22 10:18:00', 'reasons_for_device_resync': 'Periodic', 'reasons_for_pending_sync_requests': None, 'pending_sync_requests_count': '0', 'sync_requested_by_app': None, 'dns_resolved_management_address': '205.1.2.67', 'memory_size': 'NA', 'line_card_count': '0', 'line_card_id': None, 'interface_count': '0', 'up_time': '139 days, 23:22:50.76', 'uptime_seconds': 12153041, 'boot_date_time': '2025-09-04 10:57:18', 'snmp_contact': None, 'snmp_location': None, 'location': None, 'location_name': None, 'vendor': 'Cisco', 'ap_manager_interface_ip': None, 'associated_wlc_ip': None, 'ap_ethernet_mac_address': None, 'error_code': None, 'error_description': None, 'tag_count': '0', 'tunnel_udp_port': None, 'waas_device_mode': None}]} 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: yaml_config_generator: 1152: Writing final dictionary to file: inventory_specific_ips.yml 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: write_dict_to_yaml: 562: Starting to write dictionary to YAML file at: inventory_specific_ips.yml 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: write_dict_to_yaml: 567: Starting conversion of dictionary to YAML format. 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: write_dict_to_yaml: 580: Dictionary successfully converted to YAML format. 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: ensure_directory_exists: 530: Starting 'ensure_directory_exists' for file path: inventory_specific_ips.yml 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: ensure_directory_exists: 537: Extracted directory:  
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: ensure_directory_exists: 547: Directory '' already exists. No action needed. 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: write_dict_to_yaml: 585: Preparing to write YAML content to file: inventory_specific_ips.yml 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: write_dict_to_yaml: 591: Successfully written YAML content to inventory_specific_ips.yml. 
+
+01-23-2026 08:17:59 INFO  InventoryPlaybookGenerator: set_operation_result: 2041: {"YAML config generation Task succeeded for module 'inventory_workflow_manager'.": {'file_path': 'inventory_specific_ips.yml'}} 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 1243 status: success, msg: {"YAML config generation Task succeeded for module 'inventory_workflow_manager'.": {'file_path': 'inventory_specific_ips.yml'}} 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: get_diff_gathered: 1253: Completed 'get_diff_merged' operation in 1.02 seconds. 
+
+01-23-2026 08:17:59 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 1601 status: success, msg: {"YAML config generation Task succeeded for module 'inventory_workflow_manager'.": {'file_path': 'inventory_specific_ips.yml'}} 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: __init__: 111: Logging configured and initiated 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: __init__: 120: Cisco Catalyst Center parameters: {'dnac_host': '10.197.156.87', 'dnac_port': '443', 'dnac_username': 'msaurabh', 'dnac_password': '****', 'dnac_version': '2.3.7.9', 'dnac_verify': False, 'dnac_debug': False, 'dnac_log': True, 'dnac_log_level': 'DEBUG', 'dnac_log_file_path': 'dnac.log', 'dnac_log_append': True} 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: get_workflow_filters_schema: 411: Inside get_workflow_filters_schema function. 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: validate_input: 369: Starting validation of input configuration parameters. 
+
+01-27-2026 13:12:33 INFO  InventoryPlaybookGenerator: set_operation_result: 2041: Successfully validated playbook configuration parameters using 'validated_input': [{'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': None}}] 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 1567 status: success, msg: Successfully validated playbook configuration parameters using 'validated_input': [{'generate_all_configurations': False, 'file_path': 'inventory_specific_ips.yml', 'component_specific_filters': None, 'global_filters': {'ip_address_list': None}}] 
+
+01-27-2026 13:12:33 INFO  InventoryPlaybookGenerator: get_want: 1170: Creating Parameters for API Calls with state: gathered 
+
+01-27-2026 13:12:33 INFO  InventoryPlaybookGenerator: validate_params: 463: Starting validation of the input parameters. 
+
+01-27-2026 13:12:33 WARNING  InventoryPlaybookGenerator: validate_params: 464: {'network_elements': {'inventory_workflow_manager': {'filters': ['ip_address', 'hostname', 'serial_number', 'role'], 'api_function': 'get_device_list', 'api_family': 'devices', 'reverse_mapping_function': <bound method InventoryPlaybookGenerator.inventory_get_device_reverse_mapping of <__main__.InventoryPlaybookGenerator object at 0x109315f10>>, 'get_function_name': <bound method InventoryPlaybookGenerator.get_inventory_workflow_manager_details of <__main__.InventoryPlaybookGenerator object at 0x109315f10>>}}, 'global_filters': {'ip_address_list': {'type': 'list', 'required': False, 'elements': 'str', 'validate_ip': True}, 'hostname_list': {'type': 'list', 'required': False, 'elements': 'str'}, 'serial_number_list': {'type': 'list', 'required': False, 'elements': 'str'}}, 'component_specific_filters': {'inventory_workflow_manager': {'type': {'type': 'str', 'required': False, 'choices': ['NETWORK_DEVICE', 'COMPUTE_DEVICE', 'MERAKI_DASHBOARD', 'THIRD_PARTY_DEVICE', 'FIREPOWER_MANAGEMENT_SYSTEM']}, 'role': {'type': 'str', 'required': False, 'choices': ['ACCESS', 'CORE', 'DISTRIBUTION', 'BORDER_ROUTER', 'UNKNOWN']}, 'snmp_version': {'type': 'str', 'required': False, 'choices': ['v2', 'v2c', 'v3']}, 'cli_transport': {'type': 'str', 'required': False, 'choices': ['ssh', 'telnet', 'SSH', 'TELNET']}}}} 
+
+01-27-2026 13:12:33 INFO  InventoryPlaybookGenerator: validate_params: 469: Validating 'global_filters' for module 'inventory_workflow_manager': {'ip_address_list': None}. 
+
+01-27-2026 13:12:33 INFO  InventoryPlaybookGenerator: validate_global_filters: 53: Starting validation of global filters for module: inventory_workflow_manager 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: validate_global_filters: 86: Valid global filters for module 'inventory_workflow_manager': ['ip_address_list', 'hostname_list', 'serial_number_list'] 
+
+01-27-2026 13:12:33 ERROR  InventoryPlaybookGenerator: validate_global_filters: 213: Invalid 'global_filters' found for module 'inventory_workflow_manager': ["Filter 'ip_address_list' must be a list, got NoneType"] 
+
+01-27-2026 13:12:33 ERROR  InventoryPlaybookGenerator: set_operation_result: 2041: Invalid 'global_filters' found for module 'inventory_workflow_manager': ["Filter 'ip_address_list' must be a list, got NoneType"] 
+
+01-27-2026 13:12:33 DEBUG  InventoryPlaybookGenerator: check_return_status: 331: Line No: 2048 status: failed, msg: Invalid 'global_filters' found for module 'inventory_workflow_manager': ["Filter 'ip_address_list' must be a list, got NoneType"] 
+
