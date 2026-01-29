@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2021, Cisco Systems
+# Copyright (c) 2026, Cisco Systems
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -24,8 +24,26 @@ if HAS_YAML:
             return self.represent_mapping("tag:yaml.org,2002:map", data.items())
 
     OrderedDumper.add_representer(OrderedDict, OrderedDumper.represent_dict)
+
+    class SingleQuotedStr(str):
+        pass
+
+    def _represent_single_quoted_str(dumper, data):
+        return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="'")
+
+    OrderedDumper.add_representer(SingleQuotedStr, _represent_single_quoted_str)
+
+    class DoubleQuotedStr(str):
+        pass
+
+    def _represent_double_quoted_str(dumper, data):
+        return dumper.represent_scalar("tag:yaml.org,2002:str", data, style='"')
+
+    OrderedDumper.add_representer(DoubleQuotedStr, _represent_double_quoted_str)
 else:
     OrderedDumper = None
+    SingleQuotedStr = None
+    DoubleQuotedStr = None
 __metaclass__ = type
 from abc import ABCMeta
 
@@ -503,7 +521,7 @@ class BrownFieldHelper:
 
     def generate_filename(self):
         """
-        Generates a filename for the module with a timestamp and '.yml' extension in the format 'DD_Mon_YYYY_HH_MM_SS_MS'.
+        Generates a filename for the module with a timestamp and '.yml' extension in the format 'YYYY-MM-DD_HH-MM-SS'.
         Args:
             module_name (str): The name of the module for which the filename is generated.
         Returns:
@@ -512,7 +530,7 @@ class BrownFieldHelper:
         self.log("Starting the filename generation process.", "INFO")
 
         # Get the current timestamp in the desired format
-        timestamp = datetime.datetime.now().strftime("%d_%b_%Y_%H_%M_%S_%f")[:-3]
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.log("Timestamp successfully generated: {0}".format(timestamp), "DEBUG")
 
         # Construct the filename
