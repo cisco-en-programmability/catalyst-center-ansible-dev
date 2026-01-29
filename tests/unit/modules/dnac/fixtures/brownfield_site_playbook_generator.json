@@ -430,6 +430,6 @@
   },
 
   "get_invalid_testbed_release": {
-    "message": "The specified version '2.3.5.3' does not support the YAML Playbook generation for Site Workflow Manager Module. Supported versions start from '2.3.7.6' onwards."
+    "message": "The specified version does not support the YAML Playbook generation for Site Workflow Manager Module. Supported versions start from '2.3.7.9' onwards."
   }
 }

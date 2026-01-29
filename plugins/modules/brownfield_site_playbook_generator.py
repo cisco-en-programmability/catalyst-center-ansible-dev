@@ -19,11 +19,11 @@ description:
   enabling programmatic modifications.
 - The YAML configurations generated represent the site hierarchy (areas, buildings, floors)
   configured on the Cisco Catalyst Center.
-version_added: 6.17.0
+version_added: 6.44.0
 extends_documentation_fragment:
 - cisco.dnac.workflow_manager_params
 author:
-- Vidhya Rathinam (@virathin)
+- Vidhya Rathinam (@VidhyaGit)
 options:
   config_verify:
     description: Set to True to verify the Cisco Catalyst
@@ -59,8 +59,8 @@ options:
         description:
         - Path where the YAML configuration file will be saved.
         - If not provided, the file will be saved in the current working directory with
-          a default file name  "<module_name>_<DD_Mon_YYYY_HH_MM_SS_MS>.yml".
-        - For example, "brownfield_site_playbook_generator_22_Jan_2026_21_43_26_379.yml".
+          a default file name  "<module_name>_playbook_<YYYY-MM-DD_HH-MM-SS>.yml".
+        - For example, "site_workflow_manager_playbook_2026-01-24_12-33-20.yml".
         type: str
       component_specific_filters:
         description:
@@ -74,11 +74,11 @@ options:
             description:
             - List of components to include in the YAML configuration file.
             - Valid values are
-              - Areas "areas"
-              - Buildings "buildings"
-              - Floors "floors"
+              - Area "area"
+              - Building "building"
+              - Floor "floor"
             - If not specified, all components are included.
-            - For example, ["areas", "buildings", "floors"].
+            - For example, ["area", "building", "floor"].
             type: list
             elements: str
           areas:
@@ -89,7 +89,7 @@ options:
             suboptions:
               site_name:
                 description:
-                - Site name to filter areas by site name.
+                - Site name to filter areas by area name.
                 type: str
               parent_site_name:
                 description:
@@ -103,7 +103,7 @@ options:
             suboptions:
               site_name:
                 description:
-                - Site name to filter buildings by site name.
+                - Site name to filter buildings by building name.
                 type: str
               parent_site_name:
                 description:
@@ -117,7 +117,7 @@ options:
             suboptions:
               site_name:
                 description:
-                - Site name to filter floors by site name.
+                - Site name to filter floors by floor name.
                 type: str
               parent_site_name:
                 description:
@@ -128,15 +128,13 @@ options:
                 - RF model to filter floors by RF model type.
                 type: str
 requirements:
-- dnacentersdk >= 2.10.10
+- dnacentersdk >= 2.3.7.9
 - python >= 3.9
 notes:
 - SDK Methods used are
-    - sites.Sites.get_site
-    - sites.Sites.get_site_v2
+    - sites.Sites.get_sites
 - Paths used are
-    - GET /dna/intent/api/v1/site
-    - GET /dna/intent/api/v2/site
+    - GET /dna/intent/api/v1/sites
 """
 
 EXAMPLES = r"""
@@ -155,6 +153,7 @@ EXAMPLES = r"""
     state: gathered
     config:
       - generate_all_configurations: true
+
 - name: Generate YAML Configuration with File Path specified
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -169,6 +168,7 @@ EXAMPLES = r"""
     state: gathered
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
+
 - name: Generate YAML Configuration with specific area components only
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -184,7 +184,8 @@ EXAMPLES = r"""
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
         component_specific_filters:
-          components_list: ["areas"]
+          components_list: ["area"]
+
 - name: Generate YAML Configuration with specific building components only
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -200,7 +201,8 @@ EXAMPLES = r"""
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
         component_specific_filters:
-          components_list: ["buildings"]
+          components_list: ["building"]
+
 - name: Generate YAML Configuration with specific floor components only
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -216,7 +218,8 @@ EXAMPLES = r"""
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
         component_specific_filters:
-          components_list: ["floors"]
+          components_list: ["floor"]
+
 - name: Generate YAML Configuration for areas with site name filter
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -232,10 +235,11 @@ EXAMPLES = r"""
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
         component_specific_filters:
-          components_list: ["areas"]
+          components_list: ["area"]
           areas:
             - site_name: "Global/USA"
             - site_name: "Global/Europe"
+
 - name: Generate YAML Configuration for buildings and floors with multiple filters
   cisco.dnac.brownfield_site_playbook_generator:
     dnac_host: "{{dnac_host}}"
@@ -251,7 +255,7 @@ EXAMPLES = r"""
     config:
       - file_path: "/tmp/catc_site_components_config.yaml"
         component_specific_filters:
-          components_list: ["buildings", "floors"]
+          components_list: ["building", "floor"]
           buildings:
             - site_name: "Global/USA/San Jose/Building1"
             - site_name: "Global/USA/San Jose/Building2"
@@ -291,6 +295,8 @@ response_2:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.dnac.plugins.module_utils.brownfield_helper import (
     BrownFieldHelper,
+    SingleQuotedStr,
+    DoubleQuotedStr,
 )
 from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
     DnacBase,
@@ -339,7 +345,7 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         self.supported_states = ["gathered"]
         super().__init__(module)
         self.module_schema = self.get_workflow_elements_schema()
-        self.module_name = "brownfield_site_playbook_generator"
+        self.module_name = "site_workflow_manager"
 
     def validate_input(self):
         """
@@ -372,6 +378,7 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         }
 
         # Validate params
+        self.log("Validating configuration against schema.", "DEBUG")
         valid_temp, invalid_params = validate_list_of_dicts(self.config, temp_spec)
 
         if invalid_params:
@@ -407,27 +414,104 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                 "areas": {
                     "filters": ["site_name", "parent_site_name"],
                     "reverse_mapping_function": self.area_temp_spec,
-                    "api_function": "get_site_v2",
-                    "api_family": "sites",
+                    "api_function": "get_sites",
+                    "api_family": "site_design",
                     "get_function_name": self.get_areas_configuration,
                 },
                 "buildings": {
                     "filters": ["site_name", "parent_site_name"],
                     "reverse_mapping_function": self.building_temp_spec,
-                    "api_function": "get_site_v2",
-                    "api_family": "sites",
+                    "api_function": "get_sites",
+                    "api_family": "site_design",
                     "get_function_name": self.get_buildings_configuration,
                 },
                 "floors": {
                     "filters": ["site_name", "parent_site_name", "rf_model"],
                     "reverse_mapping_function": self.floor_temp_spec,
-                    "api_function": "get_site_v2",
-                    "api_family": "sites",
+                    "api_function": "get_sites",
+                    "api_family": "site_design",
                     "get_function_name": self.get_floors_configuration,
                 },
             },
             "global_filters": [],
         }
+
+    def get_parent_name(self, detail):
+        """
+        Derives parent_name from available fields in site detail.
+        """
+
+        if not isinstance(detail, dict):
+            return None
+
+        parent_name = detail.get("parentName") or detail.get("parent_name")
+        if parent_name:
+            return SingleQuotedStr(parent_name)
+
+        name = detail.get("name")
+        name_hierarchy = (
+            detail.get("nameHierarchy")
+            or detail.get("siteNameHierarchy")
+            or detail.get("parentNameHierarchy")
+        )
+
+        if name and name_hierarchy:
+            token = "/" + str(name)
+            if token in name_hierarchy:
+                return SingleQuotedStr(name_hierarchy.split(token)[0])
+
+        return None
+
+    def get_site_type_area(self, detail):
+        return "area"
+
+    def get_site_type_building(self, detail):
+        return "building"
+
+    def get_site_type_floor(self, detail):
+        return "floor"
+
+    def normalize_component_specific_filters(self, config):
+        """
+        Normalizes component names in component_specific_filters to match internal schema keys.
+        """
+
+        if not config:
+            return config
+
+        component_specific_filters = config.get("component_specific_filters")
+        if not component_specific_filters:
+            return config
+
+        component_map = {
+            "area": "areas",
+            "building": "buildings",
+            "floor": "floors",
+        }
+
+        normalized_filters = {}
+        for key, value in component_specific_filters.items():
+            if key == "components_list" and isinstance(value, list):
+                normalized_filters["components_list"] = [
+                    component_map.get(component, component) for component in value
+                ]
+                continue
+
+            normalized_key = component_map.get(key, key)
+            normalized_filters[normalized_key] = value
+
+        if normalized_filters == component_specific_filters:
+            return config
+
+        self.log(
+            "Normalized component_specific_filters to match internal schema keys: {0}".format(
+                normalized_filters
+            ),
+            "DEBUG",
+        )
+        updated_config = dict(config)
+        updated_config["component_specific_filters"] = normalized_filters
+        return updated_config
 
     def area_temp_spec(self):
         """
@@ -440,16 +524,31 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         self.log("Generating temporary specification for areas.", "DEBUG")
         area = OrderedDict(
             {
-                "area": {
+                "site": {
                     "type": "dict",
                     "options": OrderedDict(
                         {
-                            "name": {"type": "str", "source_key": "name"},
-                            "parent_name": {"type": "str", "source_key": "parentName"},
+                            "area": {
+                                "type": "dict",
+                                "options": OrderedDict(
+                                    {
+                                        "name": {"type": "str", "source_key": "name"},
+                                        "parent_name": {
+                                            "type": "str",
+                                            "special_handling": True,
+                                            "transform": self.get_parent_name,
+                                        },
+                                    }
+                                ),
+                            }
                         }
                     ),
                 },
-                "site_type": {"type": "str", "default": "area"},
+                "site_type": {
+                    "type": "str",
+                    "special_handling": True,
+                    "transform": self.get_site_type_area,
+                },
             }
         )
         return area
@@ -465,20 +564,48 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         self.log("Generating temporary specification for buildings.", "DEBUG")
         building = OrderedDict(
             {
-                "building": {
+                "site": {
                     "type": "dict",
                     "options": OrderedDict(
                         {
-                            "name": {"type": "str", "source_key": "name"},
-                            "parent_name": {"type": "str", "source_key": "parentName"},
-                            "address": {"type": "str", "source_key": "address"},
-                            "latitude": {"type": "float", "source_key": "latitude"},
-                            "longitude": {"type": "float", "source_key": "longitude"},
-                            "country": {"type": "str", "source_key": "country"},
+                            "building": {
+                                "type": "dict",
+                                "options": OrderedDict(
+                                    {
+                                        "name": {"type": "str", "source_key": "name"},
+                                        "parent_name": {
+                                            "type": "str",
+                                            "special_handling": True,
+                                            "transform": self.get_parent_name,
+                                        },
+                                        "address": {
+                                            "type": "str",
+                                            "source_key": "address",
+                                        },
+                                        "latitude": {
+                                            "type": "float",
+                                            "source_key": "latitude",
+                                        },
+                                        "longitude": {
+                                            "type": "float",
+                                            "source_key": "longitude",
+                                        },
+                                        "country": {
+                                            "type": "str",
+                                            "source_key": "country",
+                                            "transform": DoubleQuotedStr,
+                                        },
+                                    }
+                                ),
+                            }
                         }
                     ),
                 },
-                "site_type": {"type": "str", "default": "building"},
+                "site_type": {
+                    "type": "str",
+                    "special_handling": True,
+                    "transform": self.get_site_type_building,
+                },
             }
         )
         return building
@@ -494,28 +621,60 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         self.log("Generating temporary specification for floors.", "DEBUG")
         floor = OrderedDict(
             {
-                "floor": {
+                "site": {
                     "type": "dict",
                     "options": OrderedDict(
                         {
-                            "name": {"type": "str", "source_key": "name"},
-                            "parent_name": {"type": "str", "source_key": "parentName"},
-                            "rf_model": {"type": "str", "source_key": "rfModel"},
-                            "length": {"type": "float", "source_key": "length"},
-                            "width": {"type": "float", "source_key": "width"},
-                            "height": {"type": "float", "source_key": "height"},
-                            "floor_number": {
-                                "type": "int",
-                                "source_key": "floorNumber",
-                            },
-                            "units_of_measure": {
-                                "type": "str",
-                                "source_key": "unitsOfMeasure",
-                            },
+                            "floor": {
+                                "type": "dict",
+                                "options": OrderedDict(
+                                    {
+                                        "name": {
+                                            "type": "str",
+                                            "source_key": "name",
+                                        },
+                                        "parent_name": {
+                                            "type": "str",
+                                            "special_handling": True,
+                                            "transform": self.get_parent_name,
+                                        },
+                                        "rf_model": {
+                                            "type": "str",
+                                            "source_key": "rfModel",
+                                            "transform": SingleQuotedStr,
+                                        },
+                                        "length": {
+                                            "type": "float",
+                                            "source_key": "length",
+                                        },
+                                        "width": {
+                                            "type": "float",
+                                            "source_key": "width",
+                                        },
+                                        "height": {
+                                            "type": "float",
+                                            "source_key": "height",
+                                        },
+                                        "floor_number": {
+                                            "type": "int",
+                                            "source_key": "floorNumber",
+                                        },
+                                        "units_of_measure": {
+                                            "type": "str",
+                                            "source_key": "unitsOfMeasure",
+                                            "transform": DoubleQuotedStr,
+                                        },
+                                    }
+                                ),
+                            }
                         }
                     ),
                 },
-                "site_type": {"type": "str", "default": "floor"},
+                "site_type": {
+                    "type": "str",
+                    "special_handling": True,
+                    "transform": self.get_site_type_floor,
+                },
             }
         )
         return floor
@@ -557,11 +716,12 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                 self.log(
                     "Processing filter parameter: {0}".format(filter_param), "DEBUG"
                 )
+                desired_parent_name = None
                 for key, value in filter_param.items():
                     if key == "site_name":
                         params["name"] = value
                     elif key == "parent_site_name":
-                        params["name_hierarchy"] = value
+                        desired_parent_name = value
                     else:
                         self.log(
                             "Ignoring unsupported filter parameter: {0}".format(key),
@@ -569,14 +729,20 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                         )
 
                 area_details = self.execute_get_with_pagination(
-                    api_family, api_function, params, use_strings=True
+                    api_family, api_function, params
                 )
+                if desired_parent_name:
+                    area_details = [
+                        area
+                        for area in area_details
+                        if self.get_parent_name(area) == desired_parent_name
+                    ]
                 self.log("Retrieved area details: {0}".format(area_details), "INFO")
                 final_areas.extend(area_details)
                 params = {"type": "area"}
         else:
             area_details = self.execute_get_with_pagination(
-                api_family, api_function, params, use_strings=True
+                api_family, api_function, params
             )
             self.log("Retrieved area details: {0}".format(area_details), "INFO")
             final_areas.extend(area_details)
@@ -584,15 +750,13 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         # Modify area details using temp_spec
         area_temp_spec = self.area_temp_spec()
         areas_details = self.modify_parameters(area_temp_spec, final_areas)
-        modified_areas_details = {}
-        modified_areas_details["areas"] = areas_details
 
         self.log(
-            "Modified area details: {0}".format(modified_areas_details),
+            "Modified area details: {0}".format(areas_details),
             "INFO",
         )
 
-        return modified_areas_details
+        return areas_details
 
     def get_buildings_configuration(
         self, network_element, component_specific_filters=None
@@ -630,11 +794,12 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
 
         if component_specific_filters:
             for filter_param in component_specific_filters:
+                desired_parent_name = None
                 for key, value in filter_param.items():
                     if key == "site_name":
                         params["name"] = value
                     elif key == "parent_site_name":
-                        params["name_hierarchy"] = value
+                        desired_parent_name = value
                     else:
                         self.log(
                             "Ignoring unsupported filter parameter: {0}".format(key),
@@ -642,8 +807,14 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                         )
 
                 building_details = self.execute_get_with_pagination(
-                    api_family, api_function, params, use_strings=True
+                    api_family, api_function, params
                 )
+                if desired_parent_name:
+                    building_details = [
+                        building
+                        for building in building_details
+                        if self.get_parent_name(building) == desired_parent_name
+                    ]
                 self.log(
                     "Retrieved building details: {0}".format(building_details), "INFO"
                 )
@@ -651,7 +822,7 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                 params = {"type": "building"}
         else:
             building_details = self.execute_get_with_pagination(
-                api_family, api_function, params, use_strings=True
+                api_family, api_function, params
             )
             self.log("Retrieved building details: {0}".format(building_details), "INFO")
             final_buildings.extend(building_details)
@@ -659,15 +830,13 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         # Modify building details using temp_spec
         building_temp_spec = self.building_temp_spec()
         buildings_details = self.modify_parameters(building_temp_spec, final_buildings)
-        modified_buildings_details = {}
-        modified_buildings_details["buildings"] = buildings_details
 
         self.log(
-            "Modified building details: {0}".format(modified_buildings_details),
+            "Modified building details: {0}".format(buildings_details),
             "INFO",
         )
 
-        return modified_buildings_details
+        return buildings_details
 
     def get_floors_configuration(
         self, network_element, component_specific_filters=None
@@ -705,11 +874,12 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
 
         if component_specific_filters:
             for filter_param in component_specific_filters:
+                desired_parent_name = None
                 for key, value in filter_param.items():
                     if key == "site_name":
                         params["name"] = value
                     elif key == "parent_site_name":
-                        params["name_hierarchy"] = value
+                        desired_parent_name = value
                     elif key == "rf_model":
                         # RF model filtering will be done post-retrieval
                         pass
@@ -720,9 +890,16 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                         )
 
                 floor_details = self.execute_get_with_pagination(
-                    api_family, api_function, params, use_strings=True
+                    api_family, api_function, params
                 )
                 self.log("Retrieved floor details: {0}".format(floor_details), "INFO")
+
+                if desired_parent_name:
+                    floor_details = [
+                        floor
+                        for floor in floor_details
+                        if self.get_parent_name(floor) == desired_parent_name
+                    ]
 
                 # Filter by RF model if specified
                 if "rf_model" in filter_param:
@@ -739,7 +916,7 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                 params = {"type": "floor"}
         else:
             floor_details = self.execute_get_with_pagination(
-                api_family, api_function, params, use_strings=True
+                api_family, api_function, params
             )
             self.log("Retrieved floor details: {0}".format(floor_details), "INFO")
             final_floors.extend(floor_details)
@@ -747,15 +924,13 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
         # Modify floor details using temp_spec
         floor_temp_spec = self.floor_temp_spec()
         floors_details = self.modify_parameters(floor_temp_spec, final_floors)
-        modified_floors_details = {}
-        modified_floors_details["floors"] = floors_details
 
         self.log(
-            "Modified floor details: {0}".format(modified_floors_details),
+            "Modified floor details: {0}".format(floors_details),
             "INFO",
         )
 
-        return modified_floors_details
+        return floors_details
 
     def yaml_config_generator(self, yaml_config_generator):
         """
@@ -857,7 +1032,10 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
                 self.log(
                     "Details retrieved for {0}: {1}".format(component, details), "DEBUG"
                 )
-                final_list.append(details)
+                if isinstance(details, list):
+                    final_list.extend(details)
+                else:
+                    final_list.append(details)
 
         if not final_list:
             self.log(
@@ -905,6 +1083,7 @@ class SitePlaybookGenerator(DnacBase, BrownFieldHelper):
             "Creating Parameters for API Calls with state: {0}".format(state), "INFO"
         )
 
+        config = self.normalize_component_specific_filters(config)
         self.validate_params(config)
 
         # Set generate_all_configurations after validation
@@ -1019,14 +1198,14 @@ def main():
     ccc_site_playbook_generator = SitePlaybookGenerator(module)
     if (
         ccc_site_playbook_generator.compare_dnac_versions(
-            ccc_site_playbook_generator.get_ccc_version(), "2.3.7.6"
+            ccc_site_playbook_generator.get_ccc_version(), "2.3.7.9"
         )
         < 0
     ):
         ccc_site_playbook_generator.msg = (
             "The specified version '{0}' does not support the YAML Playbook generation "
-            "for Site Workflow Manager Module. Supported versions start from '2.3.7.6' onwards. "
-            "Version '2.3.7.6' introduces APIs for retrieving site hierarchy including "
+            "for Site Workflow Manager Module. Supported versions start from '2.3.7.9' onwards. "
+            "Version '2.3.7.9' introduces APIs for retrieving site hierarchy including "
             "areas, buildings, and floors from the Catalyst Center".format(
                 ccc_site_playbook_generator.get_ccc_version()
             )

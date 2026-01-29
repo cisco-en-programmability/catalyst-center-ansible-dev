@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Authors:
-#   Vidhya Rathinam <virathin@cisco.com>
+#   Vidhya Rathinam (VidhyaGit)
 #
 # Description:
 #   Unit tests for the Ansible module `brownfield_site_playbook_generator`.
