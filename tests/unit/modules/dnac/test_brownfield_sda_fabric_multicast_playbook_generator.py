@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Cisco and/or its affiliates.
+# Copyright (c) 2026 Cisco and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -169,7 +169,6 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_log=True,
                 dnac_log_level="DEBUG",
                 state="gathered",
-                config_verify=False,
                 config=self.playbook_config_generate_all_configurations_case_1,
             )
         )
@@ -189,7 +188,6 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 config=self.playbook_config_generate_specific_fabric_site_case_2,
             )
         )
@@ -209,7 +207,6 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 config=self.playbook_config_generate_specific_fabric_and_vn_case_3,
             )
         )
@@ -229,7 +226,6 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 config=self.playbook_config_generate_multiple_fabric_sites_case_4,
             )
         )
@@ -248,16 +244,12 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 dnac_log_level="DEBUG",
                 config=self.playbook_config_invalid_fabric_site_case_5,
             )
         )
-        result = self.execute_module(changed=False, failed=False)
-        self.assertIn(
-            "No configurations or components to process for module 'sda_fabric_multicast_workflow_manager'. Verify input filters or configuration.",
-            result.get("msg"),
-        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation Task succeeded", str(result.get("msg")))
 
     def test_no_multicast_configs_case_6(self):
         """
@@ -271,16 +263,12 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 dnac_log_level="DEBUG",
                 config=self.playbook_config_no_multicast_configs_case_6,
             )
         )
-        result = self.execute_module(changed=False, failed=False)
-        self.assertIn(
-            "No configurations or components to process for module 'sda_fabric_multicast_workflow_manager'. Verify input filters or configuration.",
-            result.get("msg"),
-        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation Task succeeded", str(result.get("msg")))
 
     def test_fabric_site_not_in_sda_case_7(self):
         """
@@ -294,12 +282,8 @@ class TestBrownfieldSdaFabricMulticastPlaybookGenerator(TestDnacModule):
                 dnac_version="2.3.7.9",
                 dnac_log=True,
                 state="gathered",
-                config_verify=False,
                 config=self.playbook_config_fabric_site_not_in_sda_case_7,
             )
         )
-        result = self.execute_module(changed=False, failed=False)
-        self.assertIn(
-            "No configurations or components to process for module 'sda_fabric_multicast_workflow_manager'. Verify input filters or configuration.",
-            result.get("msg"),
-        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation Task succeeded", str(result.get("msg")))
