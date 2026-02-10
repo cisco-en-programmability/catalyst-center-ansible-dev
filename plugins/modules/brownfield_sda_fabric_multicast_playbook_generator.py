@@ -1,9 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2024, Cisco Systems
+# Copyright (c) 2026, Cisco Systems
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-"""Ansible module to generate YAML configurations for Wired Campus Automation Module."""
+"""
+Ansible brownfield playbook generator for SDA fabric multicast configurations.
+
+Retrieves existing multicast configurations from Cisco Catalyst Center and generates
+YAML playbooks compatible with the sda_fabric_multicast_workflow_manager module.
+"""
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -14,11 +19,17 @@ DOCUMENTATION = r"""
 module: brownfield_sda_fabric_multicast_playbook_generator
 short_description: Generate YAML configurations playbook for 'sda_fabric_multicast_workflow_manager' module.
 description:
-- Automates the generation of YAML playbook configurations from existing SDA fabric multicast deployments in Cisco Catalyst Center.
-- Creates playbooks compatible with the C(sda_fabric_multicast_workflow_manager) module for brownfield infrastructure migration and documentation.
-- Reduces manual effort in creating Ansible playbooks by programmatically extracting current configurations.
-- Supports selective filtering to generate playbooks for specific fabric sites or virtual networks.
-- Enables complete infrastructure discovery and documentation with auto-discovery mode.
+- Automates YAML playbook generation from existing SDA fabric multicast
+  deployments in Cisco Catalyst Center.
+- Creates playbooks compatible with the C(sda_fabric_multicast_workflow_manager)
+  module for brownfield infrastructure migration and documentation.
+- Reduces manual effort by programmatically extracting current multicast
+  configurations including replication modes, SSM ranges, and ASM RPs.
+- Supports selective filtering to generate playbooks for specific fabric sites
+  or Layer 3 virtual networks.
+- Enables complete infrastructure discovery with auto-generation mode when
+  C(generate_all_configurations) is enabled.
+- Requires Cisco Catalyst Center version 2.3.7.9 or higher.
 version_added: 6.44.0
 extends_documentation_fragment:
 - cisco.dnac.workflow_manager_params
@@ -26,11 +37,6 @@ author:
 - Archit Soni (@koderchit)
 - Madhan Sankaranarayanan (@madhansansel)
 options:
-  config_verify:
-    description: Set to True to verify the Cisco Catalyst
-      Center after applying the playbook config.
-    type: bool
-    default: false
   state:
     description:
     - The desired state for the module operation.
@@ -40,20 +46,29 @@ options:
     default: gathered
   config:
     description:
-    - A list of filters for generating YAML playbook compatible with the `sda_fabric_multicast_workflow_manager`
-      module.
-    - Filters specify which components to include in the YAML configuration file.
-    - If "components_list" is specified, only those components are included, regardless of the filters.
+    - A list of configuration filters for generating YAML playbooks compatible
+      with the C(sda_fabric_multicast_workflow_manager) module.
+    - Each configuration entry can include file path specification, component
+      filters, and auto-discovery settings.
+    - Multiple configuration entries can be provided to generate separate
+      playbooks with different filter criteria.
     type: list
     elements: dict
     required: true
     suboptions:
       generate_all_configurations:
         description:
-        - Enables automatic discovery and generation of YAML configurations for all fabric multicast deployments.
-        - When C(true), retrieves all SDA fabric multicast configurations from Cisco Catalyst Center without requiring specific filters.
-        - Ideal for complete brownfield infrastructure migration and comprehensive documentation.
-        - If enabled, component-specific filters are optional and a default filename will be generated if not provided.
+        - Enables automatic discovery and generation of YAML configurations for
+          all fabric multicast deployments.
+        - When C(true), retrieves all SDA fabric multicast configurations from
+          Cisco Catalyst Center without requiring specific filters.
+        - Overrides any provided C(component_specific_filters) to ensure
+          complete configuration retrieval.
+        - Ideal for complete brownfield infrastructure migration and
+          comprehensive documentation.
+        - If enabled, a default filename will be auto-generated when
+          C(file_path) is not provided.
+        - "Default filename format: C(sda_fabric_multicast_workflow_manager_playbook_<DD_Mon_YYYY_HH_MM_SS_MS>.yml)"
         type: bool
         required: false
         default: false
@@ -67,9 +82,16 @@ options:
         required: false
       component_specific_filters:
         description:
-        - Component-level filters to selectively include specific configurations in the generated playbook.
-        - Allows fine-grained control over which fabric multicast configurations are extracted.
-        - If C(components_list) is specified, only those components are processed regardless of other filters.
+        - Component-level filters to selectively include specific configurations
+          in the generated playbook.
+        - Allows fine-grained control over which fabric multicast configurations
+          are extracted from Cisco Catalyst Center.
+        - If C(components_list) is specified, only those components are
+          processed regardless of other filters.
+        - If C(generate_all_configurations) is C(true), these filters are
+          ignored and all configurations are retrieved.
+        - Supports filtering by fabric site hierarchy and Layer 3 virtual
+      network names.
         type: dict
         required: false
         suboptions:
@@ -86,29 +108,71 @@ options:
             required: false
           fabric_multicast:
             description:
-            - Filters for retrieving SDA fabric multicast configurations from Cisco Catalyst Center.
-            - Narrows down which fabric multicast settings are included in the generated playbook.
-            - If no filters are provided, all fabric multicast configurations are retrieved.
-            - Multiple filter entries can be specified to target different fabric sites or virtual networks.
+            - Each filter entry can specify C(fabric_name) and/or
+              C(layer3_virtual_network) to narrow results.
+            - Retrieved configurations include replication mode, SSM ranges,
+              ASM RP details, and IP pool assignments.
             type: list
             elements: dict
             required: false
             suboptions:
               fabric_name:
                 description:
-                - The hierarchical name of the fabric site from which to retrieve multicast configurations.
-                - Must match the exact site hierarchy as configured in Cisco Catalyst Center.
-                - "Example: C(Global/USA/San Jose/Building1)"
-                - For detailed parameter usage, refer to the C(sda_fabric_multicast_workflow_manager) module documentation.
+                - The hierarchical name of the fabric site from which to
+                  retrieve multicast configurations.
+                - Must match the exact site hierarchy as configured in Cisco
+                  Catalyst Center.
+                - Site can be either a fabric site or fabric zone.
+                - If the specified site is not configured as a fabric site or
+                  fabric zone, the filter entry is skipped with a warning.
+                - "Example hierarchical path: C(Global/USA/San Jose/Building1)"
+                - Case-sensitive matching is performed against cached site
+                  mappings.
+                - For detailed parameter usage and configuration examples, refer
+                  to the C(sda_fabric_multicast_workflow_manager) module
+                  documentation.
                 type: str
                 required: false
               layer3_virtual_network:
                 description:
-                - The name of the Layer 3 virtual network (VN) associated with the fabric multicast configuration.
-                - Used to filter multicast configurations for a specific virtual network within the fabric.
-                - For detailed parameter usage, refer to the C(sda_fabric_multicast_workflow_manager) module documentation.
+                - The name of the Layer 3 virtual network (VN) associated with
+                  the fabric multicast configuration.
+                - Used to filter multicast configurations for a specific virtual
+                  network within the fabric site.
+                - Can be combined with C(fabric_name) to retrieve multicast
+                  settings for a specific VN in a specific fabric.
+                - If specified alone without C(fabric_name), retrieves
+                  configurations for the VN across all fabric sites.
+                - "Example VN names: C(GUEST_VN), C(EMPLOYEE_VN), C(IOT_VN)"
+                - For detailed parameter usage and configuration examples, refer
+                  to the C(sda_fabric_multicast_workflow_manager) module
+                  documentation.
                 type: str
                 required: false
+
+requirements:
+- dnacentersdk >= 2.9.2
+- python >= 3.9
+- Cisco Catalyst Center >= 2.3.7.9
+
+notes:
+- Requires minimum Cisco Catalyst Center version 2.3.7.9 for SDA fabric
+  multicast API support.
+- Module will fail with an error if connected to an unsupported version.
+- Generated playbooks are compatible with the
+  C(sda_fabric_multicast_workflow_manager) module for configuration deployment.
+- Device IDs in RP configurations are automatically converted to management IP
+  addresses in the generated playbook.
+- Replication modes are retrieved from cached fabric configurations to ensure
+  accurate playbook generation.
+- For FABRIC location RPs, external IP address fields are automatically
+  excluded from the generated playbook.
+- Site hierarchies must exist in Cisco Catalyst Center and be configured as
+  fabric sites or zones to be included in results.
+- Use C(dnac_log) and C(dnac_log_level) parameters for detailed operation
+  logging and troubleshooting.
+- The module operates in check mode but does not make any changes to Cisco
+  Catalyst Center.
 """
 
 EXAMPLES = r"""
@@ -123,7 +187,6 @@ EXAMPLES = r"""
     dnac_debug: "{{ dnac_debug }}"
     dnac_log: true
     dnac_log_level: INFO
-    config_verify: false
     state: gathered
     config:
       - generate_all_configurations: true
@@ -185,28 +248,84 @@ EXAMPLES = r"""
 
 RETURN = r"""
 response:
-  description: Details of the playbook generation operation.
+  description: Details of the YAML playbook generation operation.
   returned: always
   type: dict
-  sample: >
-    {
-      "response":
-        {
-          "response": String,
-          "version": String
-        },
-      "msg": String
-    }
-# Case_2: Error Scenario
-response_2:
-  description: A string with the response returned by the Cisco Catalyst Center Python SDK
+  contains:
+    response:
+      description:
+      - Success or failure message indicating the result of the playbook
+        generation operation.
+      - For successful operations, includes the file path where the YAML
+        playbook was saved.
+      - For failed operations, includes error details and failure reason.
+      type: dict
+      returned: always
+      sample:
+        "YAML config generation Task succeeded for module 'sda_fabric_multicast_workflow_manager'.":
+          file_path: "/path/to/output/playbook.yml"
+    version:
+      description: Cisco Catalyst Center version used during the operation.
+      type: str
+      returned: always
+      sample: "2.3.7.9"
+  sample:
+    response:
+      "YAML config generation Task succeeded for module 'sda_fabric_multicast_workflow_manager'.":
+        file_path: "/tmp/sda_fabric_multicast_workflow_manager_playbook_22_Apr_2025_21_43_26_379.yml"
+    version: "2.3.7.9"
+
+response_error:
+  description: Error response when playbook generation fails.
+  returned: on failure
+  type: dict
+  contains:
+    response:
+      description: Empty list or error details.
+      type: list
+      returned: always
+      sample: []
+    msg:
+      description:
+      - Detailed error message explaining the failure reason.
+      - May include validation errors, API call failures, or file write errors.
+      type: str
+      returned: always
+      sample: "Invalid parameters in playbook: ['unknown_parameter']"
+    version:
+      description: Cisco Catalyst Center version.
+      type: str
+      returned: always
+      sample: "2.3.7.9"
+  sample:
+    response: []
+    msg: "The specified version '2.3.5.3' does not support the YAML Playbook generation for SDA FABRIC MULTICAST Module. Supported versions start from '2.3.7.9' onwards."
+    version: "2.3.5.3"
+
+msg:
+  description:
+  - Status message providing additional context about the operation.
+  - Includes details about configurations processed, files generated, or errors
+    encountered.
   returned: always
-  type: list
-  sample: >
-    {
-      "response": [],
-      "msg": String
-    }
+  type: str
+  sample: "Successfully collected all parameters from the playbook for SDA Fabric Multicast playbook generation operations."
+
+status:
+  description:
+  - Current status of the operation (success, failed, invalid).
+  returned: always
+  type: str
+  sample: "success"
+
+changed:
+  description:
+  - Indicates whether any changes were made.
+  - Always C(false) for this module as it only reads configurations and
+    generates playbooks.
+  returned: always
+  type: bool
+  sample: false
 """
 
 from ansible.module_utils.basic import AnsibleModule
@@ -241,12 +360,32 @@ else:
 
 class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
     """
-    Generator for playbook files from deployed infrastructure in Cisco Catalyst Center.
+    Brownfield playbook generator for SDA fabric multicast configurations.
+
+    Attributes:
+        supported_states (list): List of supported Ansible states (currently only 'gathered').
+        module_schema (dict): Workflow filters schema defining network elements and API mappings.
+        site_id_name_dict (dict): Cached mapping of site IDs to hierarchical site names.
+        fabric_id_replication_mode_dict (dict): Cached mapping of fabric IDs to replication modes.
+        module_name (str): Target module name for generated playbooks ('sda_fabric_multicast_workflow_manager').
 
     Description:
-        This class generates YAML playbook files for SDA fabric multicast configurations
-        deployed in Cisco Catalyst Center using GET APIs. It retrieves existing configurations
-        and creates playbooks compatible with the sda_fabric_multicast_workflow_manager module.
+        Retrieves existing SDA fabric multicast configurations from Cisco Catalyst Center and
+        generates YAML playbooks compatible with the sda_fabric_multicast_workflow_manager module.
+        Supports selective filtering by fabric sites and Layer 3 virtual networks, or complete
+        auto-discovery mode to retrieve all configurations. Transforms API responses using reverse
+        parameter mapping to create playbook-ready YAML files with proper parameter names and structure.
+
+        Key capabilities include:
+        - Fabric site and zone identification and validation
+        - Replication mode transformation (NATIVE_MULTICAST/HEADEND_REPLICATION)
+        - Network device ID to management IP address conversion
+        - SSM (Source-Specific Multicast) range extraction
+        - ASM (Any-Source Multicast) RP configuration processing
+        - Component-specific and global filtering support
+        - Auto-generated or custom file path specification
+
+        Requires Cisco Catalyst Center version 2.3.7.9 or higher for SDA fabric multicast API support.
     """
 
     def __init__(self, module):
@@ -322,7 +461,10 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
         )
 
         # Validate params
-
+        self.log(
+            f"Validating configuration against specification schema: {temp_spec}",
+            "DEBUG",
+        )
         valid_temp, invalid_params = validate_list_of_dicts(self.config, temp_spec)
 
         if invalid_params:
@@ -350,13 +492,20 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             str: The fabric_site_id if the site is a fabric site, None otherwise.
 
         Description:
-            Calls the 'get_fabric_sites' API with the site_id parameter to check if the site
-            is configured as a fabric site and retrieve its fabric_id.
+            Queries Cisco Catalyst Center to verify if the specified site is configured as a fabric site.
+            If configured, retrieves and returns the fabric site ID. Returns None if the site is not
+            a fabric site or if an error occurs during retrieval.
         """
         self.log(
             f"Attempting to retrieve fabric_site_id for site '{fabric_name}' with site_id: {site_id}",
             "DEBUG",
         )
+        if not fabric_name or not site_id:
+            self.log(
+                "Invalid fabric_name or site_id provided for fabric zone lookup",
+                "WARNING",
+            )
+            return None
 
         try:
             response = self.dnac._exec(
@@ -418,6 +567,13 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             f"Attempting to retrieve fabric_zone_id for site '{fabric_name}' with site_id: {site_id}",
             "DEBUG",
         )
+
+        if not fabric_name or not site_id:
+            self.log(
+                "Invalid fabric_name or site_id provided for fabric zone lookup",
+                "WARNING",
+            )
+            return None
 
         try:
             response = self.dnac._exec(
@@ -549,7 +705,7 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             "DEBUG",
         )
 
-        final_multicast_configs = []
+        all_multicast_configs = []
 
         if component_specific_filters:
             self.log(
@@ -578,6 +734,10 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
                         cached_site_name,
                     ) in self.site_id_name_dict.items():
                         if cached_site_name == fabric_name:
+                            self.log(
+                                f"Found matching site: fabric_name '{fabric_name}' maps to site_id '{site_id}'",
+                                "DEBUG",
+                            )
                             site_id = cached_site_id
                             break
 
@@ -606,42 +766,48 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
                             fabric_name, site_id
                         )
 
-                    if fabric_id:
-                        params["fabric_id"] = fabric_id
-                        self.log(
-                            f"Successfully resolved fabric_name '{fabric_name}' to fabric_id: {fabric_id}",
-                            "INFO",
-                        )
-                    else:
+                    if not fabric_id:
                         self.log(
                             f"Site '{fabric_name}' exists but is not configured as a fabric site or fabric zone. Skipping.",
                             "WARNING",
                         )
                         continue
 
+                    params["fabric_id"] = fabric_id
+                    self.log(
+                        f"Successfully resolved fabric_name '{fabric_name}' to fabric_id: {fabric_id}",
+                        "INFO",
+                    )
+
                 if layer3_vn:
                     params["virtual_network_name"] = layer3_vn
-                    self.log(f"Added virtual_network_name filter: {layer3_vn}", "DEBUG")
+                    self.log(
+                        f"Added Layer 3 virtual network filter: '{layer3_vn}'", "DEBUG"
+                    )
 
                 # Call the API to get multicast virtual networks
                 try:
-                    self.log(f"Calling API with params: {params}", "DEBUG")
+                    self.log(
+                        f"Querying API with parameters: {params} for filter {filter_index}",
+                        "DEBUG",
+                    )
 
                     multicast_response = self.execute_get_with_pagination(
                         api_family, api_function, params
                     )
 
-                    if multicast_response:
-                        self.log(
-                            f"Retrieved {len(multicast_response)} multicast configuration(s) for filter: {filter_param}",
-                            "INFO",
-                        )
-                        final_multicast_configs.extend(multicast_response)
-                    else:
+                    if not multicast_response:
                         self.log(
                             f"No multicast configurations found for filter: {filter_param}",
                             "WARNING",
                         )
+                        continue
+
+                    self.log(
+                        f"Retrieved {len(multicast_response)} multicast configuration(s) for filter: {filter_param}",
+                        "INFO",
+                    )
+                    all_multicast_configs.extend(multicast_response)
 
                 except Exception as e:
                     self.log(
@@ -657,6 +823,10 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             )
 
             try:
+                self.log(
+                    "Querying all fabric multicast configurations from Cisco Catalyst Center",
+                    "DEBUG",
+                )
                 multicast_response = self.execute_get_with_pagination(
                     api_family, api_function, {}
                 )
@@ -666,7 +836,7 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
                         f"Retrieved {len(multicast_response)} total multicast configuration(s)",
                         "INFO",
                     )
-                    final_multicast_configs.extend(multicast_response)
+                    all_multicast_configs.extend(multicast_response)
                 else:
                     self.log(
                         "No multicast configurations found in Cisco Catalyst Center",
@@ -679,34 +849,41 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
                 )
 
         self.log(
-            f"Total multicast configurations collected for processing: {len(final_multicast_configs)}",
+            f"Total multicast configurations collected for processing: {len(all_multicast_configs)}",
             "INFO",
         )
 
+        if not all_multicast_configs:
+            self.log(
+                "No multicast configurations to process. Returning empty fabric_multicast list.",
+                "WARNING",
+            )
+            return {"fabric_multicast": []}
+
         # Modify multicast details using temp_spec
         self.log(
-            "Generating fabric multicast template specification for parameter modification.",
+            "Retrieving fabric multicast template specification for parameter transformation",
             "DEBUG",
         )
         fabric_multicast_temp_spec = self.fabric_multicast_temp_spec()
 
         self.log(
-            f"Modifying {len(final_multicast_configs)} multicast configuration(s) using fabric_multicast_temp_spec.",
+            f"Transforming {len(all_multicast_configs)} multicast configuration(s) using reverse mapping",
             "DEBUG",
         )
         multicast_details = self.modify_parameters(
-            fabric_multicast_temp_spec, final_multicast_configs
+            fabric_multicast_temp_spec, all_multicast_configs
         )
 
         self.log(
-            f"Successfully modified {len(multicast_details)} multicast configuration(s).",
+            f"Successfully transformed {len(multicast_details)} multicast configuration(s)",
             "INFO",
         )
 
         modified_multicast_details = {"fabric_multicast": multicast_details}
 
         self.log(
-            f"Modified fabric multicast details (count: {len(multicast_details)}): {self.pprint(modified_multicast_details)}",
+            f"Transformed fabric multicast details (count: {len(multicast_details)}): {self.pprint(modified_multicast_details)}",
             "INFO",
         )
 
@@ -766,16 +943,26 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             )
 
             # Build the mapping dictionary
-            for multicast_config in multicast_list:
+            for config_index, multicast_config in enumerate(multicast_list, start=1):
+                self.log(
+                    f"Processing multicast configuration {config_index}/{len(multicast_list)}",
+                    "DEBUG",
+                )
                 fabric_id = multicast_config.get("fabricId")
                 replication_mode = multicast_config.get("replicationMode")
 
-                if fabric_id and replication_mode:
-                    fabric_replication_map[fabric_id] = replication_mode
+                if not fabric_id or not replication_mode:
                     self.log(
-                        f"Mapped fabric ID '{fabric_id}' to replication mode '{replication_mode}'",
-                        "DEBUG",
+                        f"Configuration {config_index} missing fabricId or replicationMode. Skipping entry.",
+                        "WARNING",
                     )
+                    continue
+
+                fabric_replication_map[fabric_id] = replication_mode
+                self.log(
+                    f"Mapped fabric_id '{fabric_id}' to replication_mode '{replication_mode}'",
+                    "DEBUG",
+                )
 
             self.log(
                 f"Successfully cached {len(fabric_replication_map)} fabric replication mode mapping(s).",
@@ -888,6 +1075,12 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             }
         )
 
+        parameter_count = len(fabric_multicast)
+        self.log(
+            f"Successfully built fabric multicast specification with {parameter_count} top-level parameter(s)",
+            "DEBUG",
+        )
+
         return fabric_multicast
 
     def transform_fabric_name(self, fabric_id):
@@ -913,6 +1106,10 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             self.log("No fabric ID provided for transformation", "WARNING")
             return None
 
+        self.log(
+            f"Analyzing fabric_id '{fabric_id}' to extract site_id and fabric_type",
+            "DEBUG",
+        )
         site_id, fabric_type = self.analyse_fabric_site_or_zone_details(fabric_id)
         self.log(
             f"Analyzed fabric_id {fabric_id}: site_id={site_id}, fabric_type={fabric_type}",
@@ -920,10 +1117,16 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
         )
 
         site_name_hierarchy = self.site_id_name_dict.get(site_id, None)
+        if not site_name_hierarchy:
+            self.log(
+                f"Site name not found in cache for site_id '{site_id}' (fabric_id: '{fabric_id}')",
+                "WARNING",
+            )
+            return None
 
         self.log(
-            f"Transformed fabric name '{site_name_hierarchy}' from fabricId '{fabric_id}'",
-            "DEBUG",
+            f"Successfully transformed fabric_id '{fabric_id}' to site name '{site_name_hierarchy}'",
+            "INFO",
         )
         return site_name_hierarchy
 
@@ -1001,8 +1204,16 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             f"Retrieved device ID to management IP mapping with {len(device_id_to_ip_map)} entries",
             "DEBUG",
         )
+        self.log(
+            f"Processing {len(network_device_ids)} device ID(s) for IP transformation",
+            "DEBUG",
+        )
 
-        for device_id in network_device_ids:
+        for device_index, device_id in enumerate(network_device_ids, start=1):
+            self.log(
+                f"Processing device {device_index}/{len(network_device_ids)}: device_id '{device_id}'",
+                "DEBUG",
+            )
             device_ip = device_id_to_ip_map.get(device_id)
             if device_ip:
                 device_ips.append(device_ip)
@@ -1085,11 +1296,23 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
         )
 
         # Get the ASM options spec for reverse mapping
+        self.log(
+            "Retrieving ASM options specification for reverse parameter mapping",
+            "DEBUG",
+        )
         asm_spec = self.fabric_multicast_temp_spec().get("asm", {})
         asm_options = asm_spec.get("options", {})
 
         # Get device ID to management IP mapping once for all RPs
+        self.log(
+            "Retrieving device ID to management IP mapping for all RPs",
+            "DEBUG",
+        )
         device_id_to_ip_map = self.get_device_id_management_ip_mapping()
+        self.log(
+            f"Retrieved mapping dictionary with {len(device_id_to_ip_map)} device entry/entries",
+            "DEBUG",
+        )
 
         # Process each multicast RP with reverse mapping
         processed_rps = []
@@ -1106,53 +1329,74 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
                 "DEBUG",
             )
 
-            if processed_rp:
-                # Post-process to convert network device IDs to IPs
-                for rp in processed_rp:
-                    # Check rp_device_location to determine how to handle IP addresses
-                    rp_device_location = rp.get("rp_device_location")
-                    self.log(f"RP device location: {rp_device_location}", "DEBUG")
-
-                    if rp_device_location == "FABRIC":
-                        # For FABRIC location, ignore/remove ipv4Address and ipv6Address
-                        self.log(
-                            "RP device location is FABRIC - removing ex_rp_ipv4_address and ex_rp_ipv6_address fields",
-                            "DEBUG",
-                        )
-                        rp.pop("ex_rp_ipv4_address", None)
-                        rp.pop("ex_rp_ipv6_address", None)
-
-                    # Handle network device IDs to IPs conversion
-                    if "network_device_ips" in rp and rp["network_device_ips"]:
-                        device_ids = rp["network_device_ips"]
-                        self.log(
-                            f"Converting {len(device_ids)} device ID(s) to IPs", "DEBUG"
-                        )
-                        device_ips = []
-                        for device_id in device_ids:
-                            device_ip = device_id_to_ip_map.get(device_id)
-                            if device_ip:
-                                device_ips.append(device_ip)
-                                self.log(
-                                    f"Mapped device ID '{device_id}' to IP '{device_ip}'",
-                                    "DEBUG",
-                                )
-                            else:
-                                self.log(
-                                    f"Could not find IP for device ID '{device_id}'",
-                                    "WARNING",
-                                )
-                        rp["network_device_ips"] = device_ips if device_ips else None
-                        self.log(
-                            f"Final network_device_ips for RP: {rp['network_device_ips']}",
-                            "DEBUG",
-                        )
-
-                processed_rps.extend(processed_rp)
+            if not processed_rp:
                 self.log(
-                    f"Successfully processed RP {rp_index}: {processed_rp}",
+                    f"Reverse mapping returned empty result for RP {rp_index}. Skipping.",
+                    "WARNING",
+                )
+                continue
+
+            self.log(
+                f"Successfully applied reverse mapping to RP {rp_index}",
+                "DEBUG",
+            )
+            # Post-process to convert network device IDs to IPs
+            for inner_rp_index, rp in enumerate(processed_rp, start=1):
+                self.log(
+                    f"Post-processing transformed RP {inner_rp_index}/{len(processed_rp)} from source RP {rp_index}",
                     "DEBUG",
                 )
+                # Check rp_device_location to determine how to handle IP addresses
+                rp_device_location = rp.get("rp_device_location")
+                self.log(
+                    f"RP {rp_index}.{inner_rp_index} device location: {rp_device_location}",
+                    "DEBUG",
+                )
+
+                if rp_device_location == "FABRIC":
+                    # For FABRIC location, ignore/remove ipv4Address and ipv6Address
+                    self.log(
+                        "RP device location is FABRIC - removing ex_rp_ipv4_address and ex_rp_ipv6_address fields",
+                        "DEBUG",
+                    )
+                    rp.pop("ex_rp_ipv4_address", None)
+                    rp.pop("ex_rp_ipv6_address", None)
+
+                # Handle network device IDs to IPs conversion
+                if "network_device_ips" in rp and rp["network_device_ips"]:
+                    device_ids = rp["network_device_ips"]
+                    self.log(
+                        f"Converting {len(device_ids)} device ID(s) to IPs", "DEBUG"
+                    )
+                    device_ips = []
+                    for device_index, device_id in enumerate(device_ids, start=1):
+                        self.log(
+                            f"Processing device {device_index}/{len(device_ids)} for RP {rp_index}.{inner_rp_index}: device_id '{device_id}'",
+                            "DEBUG",
+                        )
+                        device_ip = device_id_to_ip_map.get(device_id)
+                        if device_ip:
+                            device_ips.append(device_ip)
+                            self.log(
+                                f"Mapped device ID '{device_id}' to IP '{device_ip}'",
+                                "DEBUG",
+                            )
+                        else:
+                            self.log(
+                                f"Could not find IP for device ID '{device_id}'",
+                                "WARNING",
+                            )
+                    rp["network_device_ips"] = device_ips if device_ips else None
+                    self.log(
+                        f"Final network_device_ips for RP: {rp['network_device_ips']}",
+                        "DEBUG",
+                    )
+
+            processed_rps.extend(processed_rp)
+            self.log(
+                f"Successfully processed RP {rp_index}: {processed_rp}",
+                "DEBUG",
+            )
 
         self.log(
             f"Completed transformation of {len(processed_rps)} multicast RP(s)",
@@ -1235,9 +1479,20 @@ class SdaFabricMulticastPlaybookGenerator(DnacBase, BrownFieldHelper):
             )
 
         # Retrieve the supported network elements for the module
+        self.log(
+            "Retrieving supported network elements from module schema",
+            "DEBUG",
+        )
         module_supported_network_elements = self.module_schema.get(
             "network_elements", {}
         )
+
+        self.log(
+            f"Module supports {len(module_supported_network_elements)} network element type(s): "
+            f"{list(module_supported_network_elements.keys())}",
+            "DEBUG",
+        )
+
         components_list = component_specific_filters.get(
             "components_list", module_supported_network_elements.keys()
         )
@@ -1425,7 +1680,6 @@ def main():
         "dnac_log_append": {"type": "bool", "default": True},
         "dnac_log": {"type": "bool", "default": False},
         "validate_response_schema": {"type": "bool", "default": True},
-        "config_verify": {"type": "bool", "default": False},
         "dnac_api_task_timeout": {"type": "int", "default": 1200},
         "dnac_task_poll_interval": {"type": "int", "default": 2},
         "config": {"required": True, "type": "list", "elements": "dict"},
@@ -1476,6 +1730,11 @@ def main():
         ccc_sda_multicast_playbook_generator.get_diff_state_apply[
             state
         ]().check_return_status()
+
+    ccc_sda_multicast_playbook_generator.log(
+        f"All {len(ccc_sda_multicast_playbook_generator.validated_config)} configuration(s) processed successfully. Exiting module.",
+        "INFO",
+    )
 
     module.exit_json(**ccc_sda_multicast_playbook_generator.result)
 
