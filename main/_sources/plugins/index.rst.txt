@@ -169,7 +169,6 @@ Modules
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_discovery_playbook_generator module <ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module>` -- Generate YAML configurations playbook for 'discovery\_workflow\_manager' module.
 * :ref:`brownfield_events_and_notifications_playbook_generator module <ansible_collections.cisco.dnac.brownfield_events_and_notifications_playbook_generator_module>` -- Generate YAML playbook for 'events\_and\_notifications\_workflow\_manager' module.
-* :ref:`brownfield_ise_radius_integration_playbook_generator module <ansible_collections.cisco.dnac.brownfield_ise_radius_integration_playbook_generator_module>` -- Generate YAML configurations playbook for 'ise\_radius\_integration\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_switching_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_wireless_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_wireless_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_wireless\_workflow\_manager' module.
 * :ref:`brownfield_network_settings_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module>` -- Generate YAML playbook for 'network\_settings\_workflow\_manager' module.
@@ -569,6 +568,7 @@ Modules
 * :ref:`ipam_site_ip_address_pools_count_info module <ansible_collections.cisco.dnac.ipam_site_ip_address_pools_count_info_module>` -- Information module for Ipam Site Ip Address Pools Count
 * :ref:`ipam_site_ip_address_pools_info module <ansible_collections.cisco.dnac.ipam_site_ip_address_pools_info_module>` -- Information module for Ipam Site Ip Address Pools
 * :ref:`ise_integration_status_info module <ansible_collections.cisco.dnac.ise_integration_status_info_module>` -- Information module for Ise Integration Status
+* :ref:`ise_radius_integration_playbook_config_generator module <ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'ise\_radius\_integration\_workflow\_manager' module.
 * :ref:`ise_radius_integration_workflow_manager module <ansible_collections.cisco.dnac.ise_radius_integration_workflow_manager_module>` -- Resource module for Authentication and Policy Servers
 * :ref:`issue_enrichment_details_info module <ansible_collections.cisco.dnac.issue_enrichment_details_info_module>` -- Information module for Issue Enrichment Details
 * :ref:`issues_enrichment_details_info module <ansible_collections.cisco.dnac.issues_enrichment_details_info_module>` -- Information module for Issues Enrichment Details
@@ -1305,7 +1305,6 @@ Modules
     brownfield_device_credential_playbook_generator_module
     brownfield_discovery_playbook_generator_module
     brownfield_events_and_notifications_playbook_generator_module
-    brownfield_ise_radius_integration_playbook_generator_module
     brownfield_network_profile_switching_playbook_generator_module
     brownfield_network_profile_wireless_playbook_generator_module
     brownfield_network_settings_playbook_generator_module
@@ -1704,6 +1703,7 @@ Modules
     ipam_site_ip_address_pools_count_info_module
     ipam_site_ip_address_pools_info_module
     ise_integration_status_info_module
+    ise_radius_integration_playbook_config_generator_module
     ise_radius_integration_workflow_manager_module
     issue_enrichment_details_info_module
     issues_enrichment_details_info_module
