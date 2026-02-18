@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_network_profile_switching_playbook_generator module -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.network_profile_switching_playbook_config_generator module -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_network_profile_switching_playbook_generator module -- Gen
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_network_profile_switching_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.network_profile_switching_playbook_config_generator`.
 
 .. version_added
 
@@ -69,7 +69,7 @@ Synopsis
 .. Description
 
 - Generates YAML configurations compatible with the 'network\_profile\_switching\_workflow\_manager' module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
-- Supports complete brownfield infrastructure discovery by collecting all switch profiles from Cisco Catalyst Center.
+- Supports complete infrastructure discovery by collecting all switch profiles from Cisco Catalyst Center.
 - Enables targeted extraction using filters (profile names, Day-N templates, or site hierarchies).
 - Auto-generates timestamped YAML filenames when file path not specified.
 
@@ -79,7 +79,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -113,7 +113,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -135,7 +135,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'brownfield\_network\_profile\_switching\_playbook\_generator' module.
+      A list of filters for generating YAML playbook compatible with the 'network\_profile\_switching\_playbook\_config\_generator' module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -151,7 +151,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -175,9 +175,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name 'network\_profile\_switching\_workflow\_manager\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml'.
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, 'network\_profile\_switching\_workflow\_manager\_playbook\_2025-11-12\_21-43-26.yml'.
+      For example, 'network\_profile\_switching\_playbook\_config\_2025-11-12\_21-43-26.yml'.
 
       Supports both absolute and relative file paths.
 
@@ -191,7 +191,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -221,7 +221,7 @@ Parameters
 
       A default filename will be generated automatically if file\_path is not specified.
 
-      This is useful for complete brownfield infrastructure discovery and documentation.
+      This is useful for complete network profile switching and documentation.
 
       Any provided global\_filters will be IGNORED in this mode.
 
@@ -243,7 +243,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/global_filters:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/global_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -285,7 +285,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters/day_n_template_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/global_filters/day_n_template_list:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/global_filters/day_n_template_list:
 
       .. rst-class:: ansible-option-title
 
@@ -309,8 +309,6 @@ Parameters
 
       List of Day-N templates to filter switch profiles.
 
-      MEDIUM PRIORITY - Only used if profile\_name\_list is not provided.
-
       Retrieves all switch profiles containing any of the specified templates.
 
       Case-sensitive and must be exact matches.
@@ -329,7 +327,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters/profile_name_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/global_filters/profile_name_list:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/global_filters/profile_name_list:
 
       .. rst-class:: ansible-option-title
 
@@ -353,8 +351,6 @@ Parameters
 
       List of switch profile names to extract configurations from.
 
-      HIGHEST PRIORITY - Used first if provided with valid data.
-
       Switch Profile names must match those registered in Catalyst Center.
 
       Case-sensitive and must be exact matches.
@@ -373,7 +369,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters/site_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-config/global_filters/site_list:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-config/global_filters/site_list:
 
       .. rst-class:: ansible-option-title
 
@@ -397,8 +393,6 @@ Parameters
 
       List of site hierarchies to filter switch profiles.
 
-      LOWEST PRIORITY - Only used if neither profile\_name\_list nor day\_n\_template\_list are provided.
-
       Retrieves all switch profiles assigned to any of the specified sites.
 
       Case-sensitive and must be exact matches.
@@ -419,7 +413,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -457,7 +451,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -499,7 +493,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -533,7 +527,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -585,7 +579,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -627,7 +621,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -669,7 +663,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -717,7 +711,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -751,7 +745,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -789,7 +783,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -828,8 +822,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -871,7 +865,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -913,7 +907,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -951,7 +945,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -992,7 +986,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1061,7 +1055,7 @@ Examples
     
     ---
     - name: Auto-generate YAML Configuration for all Switch Profiles
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1076,7 +1070,7 @@ Examples
           - generate_all_configurations: true
 
     - name: Auto-generate YAML Configuration with custom file path
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1092,7 +1086,7 @@ Examples
             generate_all_configurations: true
 
     - name: Generate YAML Configuration with default file path for given switch profiles
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1108,7 +1102,7 @@ Examples
               profile_name_list: ["Campus_Switch_Profile", "Enterprise_Switch_Profile"]
 
     - name: Generate YAML Configuration with default file path based on Day-N templates filters
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1124,7 +1118,7 @@ Examples
               day_n_template_list: ["Periodic_Config_Audit", "Security_Compliance_Check"]
 
     - name: Generate YAML Configuration with default file path based on site list filters
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1140,7 +1134,7 @@ Examples
               site_list: ["Global/India/Chennai/Main_Office", "Global/USA/San_Francisco/Regional_HQ"]
 
     - name: Generate YAML Configuration with default file path based on site and Day-N templates list filters
-      cisco.dnac.brownfield_network_profile_switching_playbook_generator:
+      cisco.dnac.network_profile_switching_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1183,7 +1177,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1215,7 +1209,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'network\_profile\_switching\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/brownfield\_network\_profile\_switching\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    },\\n  \\"msg\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'network\_profile\_switching\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/brownfield\_network\_profile\_switching\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    }\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'network\_profile\_switching\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/network\_profile\_switching\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    },\\n  \\"msg\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'network\_profile\_switching\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/network\_profile\_switching\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    }\\n}\\n"`
 
 
       .. raw:: html
@@ -1228,7 +1222,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
