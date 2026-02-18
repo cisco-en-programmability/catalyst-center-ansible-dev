@@ -167,7 +167,6 @@ Modules
 * :ref:`brownfield_accesspoint_location_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_location_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_location\_workflow\_manager' module.
 * :ref:`brownfield_accesspoint_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
-* :ref:`brownfield_network_profile_wireless_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_wireless_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_wireless\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
 * :ref:`brownfield_sda_fabric_transits_config_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_transits_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_transits\_workflow\_manager' module.
@@ -735,6 +734,7 @@ Modules
 * :ref:`network_info module <ansible_collections.cisco.dnac.network_info_module>` -- Information module for Network
 * :ref:`network_profile_switching_playbook_config_generator module <ansible_collections.cisco.dnac.network_profile_switching_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
 * :ref:`network_profile_switching_workflow_manager module <ansible_collections.cisco.dnac.network_profile_switching_workflow_manager_module>` -- Resource module for managing network switch profiles with template and site assignments in Cisco Catalyst Center
+* :ref:`network_profile_wireless_playbook_config_generator module <ansible_collections.cisco.dnac.network_profile_wireless_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_wireless\_workflow\_manager' module.
 * :ref:`network_profile_wireless_workflow_manager module <ansible_collections.cisco.dnac.network_profile_wireless_workflow_manager_module>` -- Resource module for managing network wireless profile in Cisco Catalyst Center
 * :ref:`network_profiles_for_sites_profile_id_templates_count_info module <ansible_collections.cisco.dnac.network_profiles_for_sites_profile_id_templates_count_info_module>` -- Information module for Network Profiles For Sites Profile Id Templates Count
 * :ref:`network_profiles_for_sites_profile_id_templates_info module <ansible_collections.cisco.dnac.network_profiles_for_sites_profile_id_templates_info_module>` -- Information module for Network Profiles For Sites Profile Id Templates
@@ -1305,7 +1305,6 @@ Modules
     brownfield_accesspoint_location_playbook_generator_module
     brownfield_accesspoint_playbook_generator_module
     brownfield_device_credential_playbook_generator_module
-    brownfield_network_profile_wireless_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
     brownfield_sda_fabric_transits_config_generator_module
@@ -1872,6 +1871,7 @@ Modules
     network_info_module
     network_profile_switching_playbook_config_generator_module
     network_profile_switching_workflow_manager_module
+    network_profile_wireless_playbook_config_generator_module
     network_profile_wireless_workflow_manager_module
     network_profiles_for_sites_profile_id_templates_count_info_module
     network_profiles_for_sites_profile_id_templates_info_module
