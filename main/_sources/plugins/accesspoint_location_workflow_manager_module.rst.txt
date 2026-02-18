@@ -272,7 +272,7 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      The action to be performed on the access point. Determines how the access point will be managed within the specified position. This field is only required when assigning or deleting real access point to/from an existing planned position. It is not required when creating, updating, or deleting a planned access point position itself. Use \ :literal:`assign\_planned\_ap`\  to assign a planned access point to an actual access point. Use \ :literal:`manage\_real\_ap`\  to udpate or delete the real access point from the position.
+      The action to be performed on the access point. Determines how the access point will be managed within the specified position. This field is only required when assigning or deleting real access point to/from an existing planned position. It is not required when creating, updating, or deleting a planned access point position itself. Use \ :literal:`assign\_planned\_ap`\  to assign a planned access point to an actual access point. Use \ :literal:`manage\_real\_ap`\  to update or delete the real access point from the position.
           
 
 

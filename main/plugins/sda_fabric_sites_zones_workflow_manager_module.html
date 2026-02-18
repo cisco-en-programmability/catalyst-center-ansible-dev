@@ -1628,7 +1628,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>To ensure the module operates correctly for scaled sets, which involve creating or updating fabric sites/zones and handling the updation of authentication profile template, please provide valid input in the playbook. If any failure is encountered, the module will and halt execution without proceeding to further operations.</p></li>
+<li><p>To ensure the module operates correctly for scaled sets, which involve creating or updating fabric sites/zones and handling the update of authentication profile template, please provide valid input in the playbook. If any failure is encountered, the module will and halt execution without proceeding to further operations.</p></li>
 <li><p>When deleting fabric sites, make sure to provide the input to remove the fabric zones associated with them in the playbook. Fabric sites cannot be deleted until all underlying fabric zones have been removed and it can be any order as per the module design fabric zones will be deleted first followed by fabric sites.</p></li>
 <li><p>Reconfiguration of fabric pending events is supported starting from version 2.3.7.9 onwards. Additionally, the authentication profile for the 'Low Impact' profile now allows more customization of its parameters</p></li>
 <li><p>Parameter 'site_name' is updated to 'site_name_hierarchy'.</p></li>

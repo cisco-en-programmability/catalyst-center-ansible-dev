@@ -10286,7 +10286,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "project Wireless\_Controller created succesfully", "response": "project Wireless\_Controller created succesfully", "status": "success"}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "project Wireless\_Controller created successfully", "response": "project Wireless\_Controller created successfully", "status": "success"}`
 
 
       .. raw:: html

@@ -4385,7 +4385,7 @@ Examples
                 subscription"
               sites: ["Global/India", "Global/USA"]
               events: ["AP Flap", "AP Reboot Crash", "Device
-                  Updation"]
+                  Update"]
               destination: "Webhook Demo"
     - name: Updating Webhook Notification with the list
         of names of subscribed events in the system.
@@ -4448,12 +4448,12 @@ Examples
           - email_event_notification:
               name: "Email Notification"
               description: "Notification description for
-                email subscription updation"
+                email subscription update"
               sites: ["Global/India", "Global/USA"]
               events: ["AP Flap", "AP Reboot Crash"]
               sender_email: "catalyst@cisco.com"
               recipient_emails: ["test@cisco.com", "demo@cisco.com", "update@cisco.com"]
-              subject: "Mail test for updation"
+              subject: "Mail test for update"
               instance: Email Instance test
     - name: Creating Syslog Notification with the list of
         names of subscribed events in the system.
