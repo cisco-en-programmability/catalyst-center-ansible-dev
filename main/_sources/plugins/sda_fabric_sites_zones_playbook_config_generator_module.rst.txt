@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_discovery_playbook_generator module -- Generate YAML configurations playbook for 'discovery\_workflow\_manager' module.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.sda_fabric_sites_zones_playbook_config_generator module -- Generate YAML playbook for \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_discovery_playbook_generator module -- Generate YAML confi
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_discovery_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.sda_fabric_sites_zones_playbook_config_generator`.
 
 .. version_added
 
@@ -68,12 +68,8 @@ Synopsis
 
 .. Description
 
-- Generates YAML playbooks compatible with the \ :literal:`discovery\_workflow\_manager`\  module by extracting existing discovery configurations from Cisco Catalyst Center.
-- Reduces manual effort by programmatically retrieving discovery tasks including IP ranges, credential mappings, discovery types, protocol orders, and task-specific settings.
-- Supports selective filtering by discovery name, discovery type, or discovery status to generate targeted playbooks.
-- Enables complete infrastructure discovery with auto-generation mode when \ :literal:`generate\_all\_configurations`\  is enabled.
-- Resolves credential IDs to human-readable descriptions and usernames for generated playbooks.
-- Requires Cisco Catalyst Center version 2.3.7.9 or higher for discovery API support.
+- Generates YAML configurations compatible with the \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
+- The YAML configurations generated represent the fabric sites and zones configured on the Cisco Catalyst Center.
 
 
 .. Aliases
@@ -81,15 +77,14 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- dnacentersdk \>= 2.4.5
+- dnacentersdk \>= 2.3.7.9
 - python \>= 3.9
-- Cisco Catalyst Center \>= 2.3.7.9
 
 
 
@@ -116,7 +111,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -138,13 +133,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'discovery\_workflow\_manager' module.
+      A list of filters for generating YAML playbook compatible with the \`sda\_fabric\_sites\_zones\_workflow\_manager\` module.
 
-      Filters specify which discovery tasks and configurations to include in the YAML configuration file.
+      Filters specify which components to include in the YAML configuration file.
 
-      Global filters identify target discoveries by name or discovery type.
-
-      Component-specific filters allow selection of specific discovery features and detailed filtering.
+      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of the filters.
 
 
       .. raw:: html
@@ -156,7 +149,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -178,11 +171,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Filters to specify which discovery components and features to include in the YAML configuration file.
+      Filters to specify which components to include in the YAML configuration file.
 
-      Allows granular selection of specific features and their parameters.
-
-      If not specified, all supported discovery features will be extracted.
+      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
 
 
       .. raw:: html
@@ -194,7 +185,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -218,16 +209,19 @@ Parameters
 
       List of components to include in the YAML configuration file.
 
-      Currently supports only \ :literal:`discovery\_details`\  for discovery task configurations.
+      Valid values are - Fabric Sites \ :literal:`fabric\_sites`\  - Fabric Zones \ :literal:`fabric\_zones`\ 
 
-      If not specified, all supported components are included.
+      For example, ["fabric\_sites", "fabric\_zones"].
+
+      If not specified, all components are included.
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"discovery\_details"`
+      - :ansible-option-choices-entry:`"fabric\_sites"`
+      - :ansible-option-choices-entry:`"fabric\_zones"`
 
 
       .. raw:: html
@@ -237,21 +231,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/include_global_credentials"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_sites"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/component_specific_filters/include_global_credentials:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_sites:
 
       .. rst-class:: ansible-option-title
 
-      **include_global_credentials**
+      **fabric_sites**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/include_global_credentials" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_sites" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`boolean`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
 
       .. raw:: html
 
@@ -261,19 +255,41 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Whether to include global credential mappings in the generated playbook.
-
-      Only applies when include\_credentials is \ :literal:`true`\ .
-
-      Discovery-specific credentials are always excluded for security.
+      Fabric Sites filters to apply when retrieving fabric sites.
 
 
-      .. rst-class:: ansible-option-line
+      .. raw:: html
 
-      :ansible-option-choices:`Choices:`
+        </div>
+    
+  * - .. raw:: html
 
-      - :ansible-option-choices-entry:`false`
-      - :ansible-option-choices-entry-default:`true` :ansible-option-choices-default-mark:`← (default)`
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy:
+
+      .. rst-class:: ansible-option-title
+
+      **site_name_hierarchy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Site Name Hierarchy filter to apply when retrieving fabric sites.
 
 
       .. raw:: html
@@ -283,10 +299,80 @@ Parameters
 
   * - .. raw:: html
 
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_zones"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_zones:
+
+      .. rst-class:: ansible-option-title
+
+      **fabric_zones**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_zones" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Fabric Zones filters to apply when retrieving fabric zones.
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy:
+
+      .. rst-class:: ansible-option-title
+
+      **site_name_hierarchy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Site Name Hierarchy filter to apply when retrieving fabric zones.
+
+
+      .. raw:: html
+
+        </div>
+
+
+
+  * - .. raw:: html
+
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -310,9 +396,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, \ :literal:`discovery\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      For example, \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
 
 
       .. raw:: html
@@ -324,7 +410,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -346,19 +432,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      When set to True, automatically generates YAML configurations for all discovery tasks.
-
-      This mode discovers all existing discovery configurations in Cisco Catalyst Center.
+      When set to \ :literal:`true`\ , the module generates all the configurations which includes fabric sites, fabric zones present in the Cisco Catalyst Center, ignoring any provided filters. It will first print all the fabric sites, followed by the fabric zones
 
       When enabled, the config parameter becomes optional and will use default values if not provided.
 
       A default filename will be generated automatically if file\_path is not specified.
 
-      This is useful for complete brownfield discovery infrastructure documentation.
-
-      Note - This will include all discovery tasks regardless of their current status.
-
-      When set to False, at least one of 'global\_filters' or 'component\_specific\_filters' must be provided.
+      When set to false, the module uses provided filters to generate a targeted YAML configuration.
 
 
       .. rst-class:: ansible-option-line
@@ -373,148 +453,13 @@ Parameters
 
         </div>
 
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/global_filters:
-
-      .. rst-class:: ansible-option-title
-
-      **global_filters**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Global filters to apply when generating the YAML configuration file.
-
-      These filters identify which discovery tasks to extract configurations from.
-
-      If not specified, all discovery tasks will be included.
-
-
-      .. raw:: html
-
-        </div>
-    
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/discovery_name_list"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/global_filters/discovery_name_list:
-
-      .. rst-class:: ansible-option-title
-
-      **discovery_name_list**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters/discovery_name_list" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      List of discovery task names to extract configurations from.
-
-      HIGHEST PRIORITY - If provided, discovery types will be ignored.
-
-      Discovery names must match those configured in Catalyst Center.
-
-      Case-sensitive and must be exact matches.
-
-      Example ["Multi\_global", "Single IP Discovery", "CDP\_Test\_1"]
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/discovery_type_list"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-config/global_filters/discovery_type_list:
-
-      .. rst-class:: ansible-option-title
-
-      **discovery_type_list**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters/discovery_type_list" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      List of discovery types to filter by.
-
-      LOWER PRIORITY - Only used if discovery\_name\_list is not provided.
-
-      Valid values are SINGLE, RANGE, MULTI RANGE, CDP, LLDP, CIDR.
-
-      Will include all discoveries matching any of the specified types.
-
-      Example ["MULTI RANGE", "CDP", "LLDP"]
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry:`"SINGLE"`
-      - :ansible-option-choices-entry:`"RANGE"`
-      - :ansible-option-choices-entry:`"MULTI RANGE"`
-      - :ansible-option-choices-entry:`"CDP"`
-      - :ansible-option-choices-entry:`"LLDP"`
-      - :ansible-option-choices-entry:`"CIDR"`
-
-
-      .. raw:: html
-
-        </div>
-
-
 
   * - .. raw:: html
 
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -552,7 +497,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -594,7 +539,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -628,7 +573,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -680,7 +625,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -722,7 +667,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -764,7 +709,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -812,7 +757,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -846,7 +791,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -884,7 +829,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -923,8 +868,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -966,7 +911,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -1008,7 +953,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -1046,7 +991,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1068,9 +1013,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The desired state for the module operation.
-
-      Only \ :literal:`gathered`\  state is supported to generate YAML playbooks from existing configurations.
+      The desired state of Cisco Catalyst Center after module execution.
 
 
       .. rst-class:: ansible-option-line
@@ -1089,7 +1032,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1136,15 +1079,8 @@ Notes
 -----
 
 .. note::
-   - Requires minimum Cisco Catalyst Center version 2.3.7.9 for discovery API support.
-   - Module will fail with an error if connected to an unsupported version.
-   - Generated playbooks are compatible with the \ :literal:`discovery\_workflow\_manager`\  module for discovery task operations.
-   - Credential IDs are automatically resolved to descriptions and usernames using global credentials API.
-   - Discovery-specific credentials are excluded from generated playbooks for security reasons.
-   - The module operates in check mode but does not make any changes to Cisco Catalyst Center.
-   - Use \ :literal:`dnac\_log`\  and \ :literal:`dnac\_log\_level`\  parameters for detailed operation logging and troubleshooting.
-   - SDK Methods used are - discovery.Discovery.get\_discoveries\_by\_range - discovery.Discovery.get\_discovery\_by\_id - discovery.Discovery.get\_all\_global\_credentials - discovery.Discovery.get\_all\_global\_credentials\_v2 - discovery.Discovery.get\_discovered\_network\_devices\_by\_discovery\_id
-   - Paths used are - GET /dna/intent/api/v1/discovery/{startIndex}/{recordsToReturn} - GET /dna/intent/api/v1/discovery/{id} - GET /dna/intent/api/v1/global-credential - GET /dna/intent/api/v2/global-credential - GET /dna/intent/api/v1/discovery/{id}/network-device
+   - SDK Methods used are - sites.Sites.get\_site - site\_design.SiteDesigns.get\_sites - sda.Sda.get\_fabric\_sites - sda.Sda.get\_fabric\_zones - sda.Sda.get\_fabric\_sites\_by\_id - sda.Sda.get\_fabric\_zones\_by\_id
+   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/sda/fabric-sites - GET /dna/intent/api/v1/sda/fabric-zones - GET /dna/intent/api/v1/sda/fabric-sites/{id} - GET /dna/intent/api/v1/sda/fabric-zones/{id}
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1156,8 +1092,8 @@ See Also
 
 .. seealso::
 
-   \ :ref:`cisco.dnac.discovery\_workflow\_manager <ansible_collections.cisco.dnac.discovery_workflow_manager_module>`\ 
-       Manage discovery workflows in Cisco Catalyst Center.
+   \ :ref:`cisco.dnac.sda\_fabric\_sites\_zones\_workflow\_manager <ansible_collections.cisco.dnac.sda_fabric_sites_zones_workflow_manager_module>`\ 
+       Module to manage SD-Access Fabric Sites and Zones in Cisco Catalyst Center.
 
 .. Examples
 
@@ -1167,59 +1103,9 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    # Generate YAML configurations for all discovery tasks
-    - name: Generate all discovery configurations
-      cisco.dnac.brownfield_discovery_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        state: gathered
-        config:
-          - generate_all_configurations: true
-
-    # Generate configurations for specific discovery tasks by name
-    - name: Generate specific discovery configurations by name
-      cisco.dnac.brownfield_discovery_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/specific_discoveries.yml"
-            global_filters:
-              discovery_name_list:
-                - "Multi_global"
-                - "Single IP Discovery"
-                - "CDP_Test_1"
-
-    # Generate configurations for specific discovery types
-    - name: Generate configurations by discovery type
-      cisco.dnac.brownfield_discovery_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/cdp_lldp_discoveries.yml"
-            global_filters:
-              discovery_type_list:
-                - "CDP"
-                - "LLDP"
-
-    - name: Generate configurations excluding credentials
-      cisco.dnac.brownfield_discovery_playbook_generator:
+    - name: Auto-generate YAML Configuration for all components which
+         includes fabric sites and fabric zones.
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1228,11 +1114,117 @@ Examples
         dnac_version: "{{ dnac_version }}"
         dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - component_specific_filters:
-              components_list: ["discovery_details"]
-              include_global_credentials: true
+          - generate_all_configurations: true
+
+    - name: Generate YAML Configuration with File Path specified
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - generate_all_configurations: true
+            file_path: "tmp/catc_sda_fabric_sites_zones_config.yml"
+
+    - name: Generate YAML Configuration with specific fabric sites components only
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+            component_specific_filters:
+              components_list: ["fabric_sites"]
+
+    - name: Generate YAML Configuration with specific fabric sites components only
+         using site_name_hierarchy filter
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+            component_specific_filters:
+              components_list: ["fabric_sites"]
+              fabric_sites:
+                - site_name_hierarchy: "Global/USA/California/San Jose"
+
+    - name: Generate YAML Configuration with specific fabric zones components only
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
+            component_specific_filters:
+              components_list: ["fabric_zones"]
+
+    - name: Generate YAML Configuration with specific fabric zones components only
+         using site_name_hierarchy filter
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
+            component_specific_filters:
+              components_list: ["fabric_zones"]
+              fabric_zones:
+                - site_name_hierarchy: "Global/USA/California/San Jose"
+
+    - name: Generate YAML Configuration for all components
+      cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: "{{ dnac_log_level }}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_sda_fabric_sites_zones_config.yml"
+            component_specific_filters:
+              components_list: ["fabric_sites", "fabric_zones"]
 
 
 
@@ -1261,7 +1253,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1283,7 +1275,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      A dictionary with the details of the generated YAML configuration
+      A dictionary with  with the response returned by the Cisco Catalyst Center Python SDK
 
 
       .. rst-class:: ansible-option-line
@@ -1293,7 +1285,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Discovery YAML configuration generated successfully", "response": {"component\_summary": {"discovery\_details": {"total\_failed": 0, "total\_processed": 5, "total\_successful": 5}}, "discoveries\_found": [{"discovery\_name": "Multi\_global", "discovery\_type": "MULTI RANGE", "status": "Complete"}, {"discovery\_name": "Single IP Discovery", "discovery\_type": "SINGLE", "status": "Complete"}], "discoveries\_skipped": [], "file\_path": "/path/to/discovery\_workflow\_manager\_playbook\_22\_Dec\_2024\_21\_43\_26\_379.yml", "status": "success", "total\_discoveries\_processed": 5}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 2, "components\_skipped": 0, "configurations\_count": 2, "file\_path": "sda\_fabric\_sites\_zones\_playbook\_config\_2026-02-18\_15-27-16.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_sites\_zones\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 2, "components\_skipped": 0, "configurations\_count": 2, "file\_path": "sda\_fabric\_sites\_zones\_playbook\_config\_2026-02-18\_15-27-16.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_sites\_zones\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html
@@ -1306,7 +1298,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
@@ -1328,62 +1320,17 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      A dictionary indicating no discoveries were found
+      A string with the response returned by the Cisco Catalyst Center Python SDK
 
 
       .. rst-class:: ansible-option-line
 
-      :ansible-option-returned-bold:`Returned:` when no discoveries match the filtering criteria
-
-      .. rst-class:: ansible-option-line
-      .. rst-class:: ansible-option-sample
-
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "No discoveries found to generate configuration", "response": {"message": "No discoveries found matching the specified criteria", "status": "no\_data"}}`
-
-
-      .. raw:: html
-
-        </div>
-
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="return-response_3"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module__return-response_3:
-
-      .. rst-class:: ansible-option-title
-
-      **response_3**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#return-response_3" title="Permalink to this return value"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      A dictionary with error details
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-returned-bold:`Returned:` when an error occurs during generation
+      :ansible-option-returned-bold:`Returned:` always
 
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Error occurred during YAML generation", "response": {"error": "Failed to retrieve discovery data from Catalyst Center", "status": "failed"}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
 
 
       .. raw:: html
@@ -1400,7 +1347,8 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 Authors
 ~~~~~~~
 
-- Megha Kandari (@mekandar)
+- Abhishek Maheshwari (@abmahesh)
+- Sunil Shatagopa (@sunilshatagopa)
 - Madhan Sankaranarayanan (@madhansansel)
 
 

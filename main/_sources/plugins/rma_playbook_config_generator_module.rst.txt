@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator module -- Generate YAML playbook for \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.rma_playbook_config_generator module -- Generate YAML playbooks for RMA device replacement workflows from existing configurations.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator module -- Genera
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.rma_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.rma_playbook_config_generator`.
 
 .. version_added
 
@@ -68,8 +68,12 @@ Synopsis
 
 .. Description
 
-- Generates YAML configurations compatible with the \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
-- The YAML configurations generated represent the fabric sites and zones configured on the Cisco Catalyst Center.
+- Generates YAML playbooks compatible with the \ :literal:`rma\_workflow\_manager`\  module by extracting existing RMA device replacement configurations from Cisco Catalyst Center.
+- Reduces manual effort by programmatically retrieving faulty and replacement device details, serial numbers, hostnames, and IP addresses from active device replacement workflows.
+- Supports filtering by faulty device serial number, replacement device serial number, and replacement status to generate targeted playbooks.
+- Enables complete infrastructure discovery with auto-generation mode when \ :literal:`generate\_all\_configurations`\  is enabled.
+- Resolves device serial numbers to hostnames and management IP addresses using both device inventory and PnP (Plug and Play) APIs for replacement devices that have not been fully onboarded.
+- Requires Cisco Catalyst Center version 2.3.5.3 or higher for RMA device replacement API support.
 
 
 .. Aliases
@@ -77,14 +81,15 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- dnacentersdk \>= 2.3.7.9
+- dnacentersdk \>= 2.9.3
 - python \>= 3.9
+- Cisco Catalyst Center \>= 2.3.5.3
 
 
 
@@ -111,7 +116,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -133,11 +138,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`sda\_fabric\_sites\_zones\_workflow\_manager\` module.
+      A list of configuration filters for generating YAML playbooks compatible with the \ :literal:`rma\_workflow\_manager`\  module.
 
-      Filters specify which components to include in the YAML configuration file.
+      Each configuration entry can include file path specification, component filters, and auto-discovery settings.
 
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of the filters.
+      Multiple configuration entries can be provided to generate separate playbooks with different filter criteria.
 
 
       .. raw:: html
@@ -149,7 +154,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -171,9 +176,11 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Filters to specify which components to include in the YAML configuration file.
+      Component-level filters to selectively include specific RMA configurations in the generated playbook.
 
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
+      Allows fine-grained control over which device replacement workflows are extracted from Cisco Catalyst Center.
+
+      If \ :literal:`generate\_all\_configurations`\  is \ :literal:`true`\ , these filters are ignored and all configurations are retrieved.
 
 
       .. raw:: html
@@ -185,7 +192,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -207,21 +214,18 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      List of components to include in the YAML configuration file.
+      List of RMA component types to include in the generated YAML playbook.
 
-      Valid values are - Fabric Sites \ :literal:`fabric\_sites`\  - Fabric Zones \ :literal:`fabric\_zones`\ 
+      Currently supports only \ :literal:`device\_replacement\_workflows`\  for RMA device replacement configurations.
 
-      For example, ["fabric\_sites", "fabric\_zones"].
-
-      If not specified, all components are included.
+      If omitted, all supported components are included by default.
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"fabric\_sites"`
-      - :ansible-option-choices-entry:`"fabric\_zones"`
+      - :ansible-option-choices-entry:`"device\_replacement\_workflows"`
 
 
       .. raw:: html
@@ -231,17 +235,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_sites"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_replacement_workflows"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters/fabric_sites:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters/device_replacement_workflows:
 
       .. rst-class:: ansible-option-title
 
-      **fabric_sites**
+      **device_replacement_workflows**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_sites" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_replacement_workflows" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
@@ -255,7 +259,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Fabric Sites filters to apply when retrieving fabric sites.
+      Filters for retrieving specific device replacement workflow configurations from Cisco Catalyst Center.
+
+      Multiple filter entries can be specified to target different devices or statuses.
+
+      When multiple filter entries are provided, they are combined into a single filter (AND logic).
+
+      If no filters are provided, all device replacement workflows are retrieved.
 
 
       .. raw:: html
@@ -265,17 +275,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_replacement_workflows/faulty_device_serial_number"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters/device_replacement_workflows/faulty_device_serial_number:
 
       .. rst-class:: ansible-option-title
 
-      **site_name_hierarchy**
+      **faulty_device_serial_number**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_sites/site_name_hierarchy" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_replacement_workflows/faulty_device_serial_number" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
@@ -289,62 +299,31 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Site Name Hierarchy filter to apply when retrieving fabric sites.
+      Serial number of the faulty device to filter device replacement workflows.
+
+      Must be an 11-character alphanumeric string matching the device serial number in Cisco Catalyst Center.
+
+      Example: \ :literal:`FJC2327U0S2`\ 
 
 
       .. raw:: html
 
         </div>
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_zones"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters/fabric_zones:
-
-      .. rst-class:: ansible-option-title
-
-      **fabric_zones**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_zones" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Fabric Zones filters to apply when retrieving fabric zones.
-
-
-      .. raw:: html
-
-        </div>
-    
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_replacement_workflows/replacement_device_serial_number"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters/device_replacement_workflows/replacement_device_serial_number:
 
       .. rst-class:: ansible-option-title
 
-      **site_name_hierarchy**
+      **replacement_device_serial_number**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_zones/site_name_hierarchy" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_replacement_workflows/replacement_device_serial_number" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
@@ -358,7 +337,47 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Site Name Hierarchy filter to apply when retrieving fabric zones.
+      Serial number of the replacement device to filter device replacement workflows.
+
+      Must be an 11-character alphanumeric string matching the device serial number in Cisco Catalyst Center.
+
+      Example: \ :literal:`FCW2225C020`\ 
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_replacement_workflows/replacement_status"></div>
+
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/component_specific_filters/device_replacement_workflows/replacement_status:
+
+      .. rst-class:: ansible-option-title
+
+      **replacement_status**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_replacement_workflows/replacement_status" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Status to filter device replacement workflows by their current replacement state.
+
+      Valid values: \ :literal:`READY-FOR-REPLACEMENT`\ , \ :literal:`REPLACEMENT-IN-PROGRESS`\ , \ :literal:`REPLACEMENT-SCHEDULED`\ , \ :literal:`REPLACED`\ , \ :literal:`ERROR`\ , \ :literal:`MARKED-FOR-REPLACEMENT`\ 
 
 
       .. raw:: html
@@ -372,7 +391,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -396,9 +415,11 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name  "\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
 
-      For example, \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      For example, "rma\_workflow\_manager\_playbook\_2025-04-22\_21-43-26.yml".
+
+      Ensure the directory path exists and has write permissions.
 
 
       .. raw:: html
@@ -410,7 +431,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -432,13 +453,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      When set to \ :literal:`true`\ , the module generates all the configurations which includes fabric sites, fabric zones present in the Cisco Catalyst Center, ignoring any provided filters.
+      Enables automatic discovery and generation of YAML configurations for all RMA device replacement workflows.
 
-      When enabled, the config parameter becomes optional and will use default values if not provided.
+      When \ :literal:`true`\ , retrieves all device replacement workflows from Cisco Catalyst Center without requiring specific filters.
 
-      A default filename will be generated automatically if file\_path is not specified.
+      Overrides any provided \ :literal:`component\_specific\_filters`\  to ensure complete configuration retrieval.
 
-      When set to false, the module uses provided filters to generate a targeted YAML configuration.
+      Ideal for complete brownfield infrastructure migration and comprehensive documentation of all RMA workflows.
 
 
       .. rst-class:: ansible-option-line
@@ -453,13 +474,49 @@ Parameters
 
         </div>
 
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
+
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-config/global_filters:
+
+      .. rst-class:: ansible-option-title
+
+      **global_filters**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Global-level filters that apply across all components.
+
+      Currently not used by this module but reserved for future extensibility.
+
+
+      .. raw:: html
+
+        </div>
+
 
   * - .. raw:: html
 
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -497,7 +554,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -539,7 +596,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -573,7 +630,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -625,7 +682,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -667,7 +724,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -709,7 +766,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -757,7 +814,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -791,7 +848,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -829,7 +886,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -868,8 +925,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -911,7 +968,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -953,7 +1010,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -991,7 +1048,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1013,7 +1070,9 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      The desired state of Cisco Catalyst Center after module execution.
+      The desired state for the module operation.
+
+      Only \ :literal:`gathered`\  state is supported to generate YAML playbooks from existing RMA configurations.
 
 
       .. rst-class:: ansible-option-line
@@ -1032,7 +1091,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1079,8 +1138,17 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - sites.Sites.get\_site - site\_design.SiteDesigns.get\_sites - sda.Sda.get\_fabric\_sites - sda.Sda.get\_fabric\_zones - sda.Sda.get\_fabric\_sites\_by\_id - sda.Sda.get\_fabric\_zones\_by\_id
-   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/sda/fabric-sites - GET /dna/intent/api/v1/sda/fabric-zones - GET /dna/intent/api/v1/sda/fabric-sites/{id} - GET /dna/intent/api/v1/sda/fabric-zones/{id}
+   - Requires minimum Cisco Catalyst Center version 2.3.5.3 for RMA device replacement API support.
+   - Module will fail with an error if connected to an unsupported version.
+   - Generated playbooks are compatible with the \ :literal:`rma\_workflow\_manager`\  module for device replacement operations.
+   - Device serial numbers are resolved to hostnames and management IP addresses via the device inventory API.
+   - For replacement devices not yet in inventory, the module falls back to the PnP (Plug and Play) API for device resolution.
+   - PnP devices may not have management IP addresses assigned, resulting in \ :literal:`None`\  for the IP address field.
+   - The module operates in check mode but does not make any changes to Cisco Catalyst Center.
+   - Use \ :literal:`dnac\_log`\  and \ :literal:`dnac\_log\_level`\  parameters for detailed operation logging and troubleshooting.
+   - SDK Methods used are - device\_replacement.return\_replacement\_devices\_with\_details - devices.get\_device\_list
+   - Paths used are - GET /dna/intent/api/v1/device-replacement - GET /dna/intent/api/v1/network-device
+   - Cisco Catalyst Center version 2.3.5.3 or higher is required for RMA functionality
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1092,8 +1160,8 @@ See Also
 
 .. seealso::
 
-   \ :ref:`cisco.dnac.sda\_fabric\_sites\_zones\_workflow\_manager <ansible_collections.cisco.dnac.sda_fabric_sites_zones_workflow_manager_module>`\ 
-       Module to manage SD-Access Fabric Sites and Zones in Cisco Catalyst Center.
+   \ :ref:`cisco.dnac.rma\_workflow\_manager <ansible_collections.cisco.dnac.rma_workflow_manager_module>`\ 
+       Manage RMA (Return Material Authorization) workflows in Cisco Catalyst Center.
 
 .. Examples
 
@@ -1103,128 +1171,60 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Auto-generate YAML Configuration for all components which
-         includes fabric sites and fabric zones.
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
+    - name: Generate YAML Configuration for all RMA device replacement workflows
+      cisco.dnac.rma_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
         dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
+        dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          - file_path: "/tmp/rma_workflows_config.yaml"
+            generate_all_configurations: true
 
-    - name: Generate YAML Configuration with File Path specified
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
+    - name: Generate YAML Configuration for specific device replacement workflows
+      cisco.dnac.rma_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
         dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
+        dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
-            file_path: "tmp/catc_sda_fabric_sites_zones_config.yml"
-
-    - name: Generate YAML Configuration with specific fabric sites components only
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+          - file_path: "/tmp/rma_specific_workflows.yaml"
             component_specific_filters:
-              components_list: ["fabric_sites"]
+              components_list: ["device_replacement_workflows"]
+              device_replacement_workflows:
+                - faulty_device_serial_number: "FJC2327U0S2"
+                - replacement_status: "READY-FOR-REPLACEMENT"
 
-    - name: Generate YAML Configuration with specific fabric sites components only
-         using site_name_hierarchy filter
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
+    - name: Generate YAML Configuration for device replacement workflows by replacement device
+      cisco.dnac.rma_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
         dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
+        dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+          - file_path: "/tmp/rma_replacement_device_workflows.yaml"
             component_specific_filters:
-              components_list: ["fabric_sites"]
-              fabric_sites:
-                - site_name_hierarchy: "Global/USA/California/San Jose"
-
-    - name: Generate YAML Configuration with specific fabric zones components only
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_zones"]
-
-    - name: Generate YAML Configuration with specific fabric zones components only
-         using site_name_hierarchy filter
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_zones"]
-              fabric_zones:
-                - site_name_hierarchy: "Global/USA/California/San Jose"
-
-    - name: Generate YAML Configuration for all components
-      cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log: true
-        dnac_log_level: "{{ dnac_log_level }}"
-        state: gathered
-        config:
-          - file_path: "/tmp/catc_sda_fabric_sites_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_sites", "fabric_zones"]
+              components_list: ["device_replacement_workflows"]
+              device_replacement_workflows:
+                - replacement_device_serial_number: "FCW2225C020"
 
 
 
@@ -1253,7 +1253,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1275,7 +1275,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      A dictionary with  with the response returned by the Cisco Catalyst Center Python SDK
+      A dictionary with the response returned by the Cisco Catalyst Center
 
 
       .. rst-class:: ansible-option-line
@@ -1285,7 +1285,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 2, "components\_skipped": 0, "configurations\_count": 2, "file\_path": "tmp/fb\_sites.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_sites\_zones\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 2, "components\_skipped": 0, "configurations\_count": 2, "file\_path": "tmp/fb\_sites.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_sites\_zones\_workflow\_manager'", "status": "success"}, "status": "success"}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML configuration file generated successfully for module 'rma\_workflow\_manager'", "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "/Users/priyadharshini/Downloads/rma\_info", "message": "YAML configuration file generated successfully for module 'rma\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html
@@ -1298,7 +1298,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.rma_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
@@ -1320,7 +1320,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      A string with the response returned by the Cisco Catalyst Center Python SDK
+      A dict with the response returned by the Cisco Catalyst Center
 
 
       .. rst-class:: ansible-option-line
@@ -1330,7 +1330,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  msg = (\\n    \\"No device replacement workflows found to process for module \\"\\n    \\"'rma\_workflow\_manager'. Verify that RMA workflows are configured in \\"\\n    \\"Catalyst Center or check user permissions.\\"\\n  ),\\n  \\"response\\": {\\n    \\"components\_processed\\": 0,\\n    \\"components\_skipped\\": 1,\\n    \\"configurations\_count\\": 0,\\n    \\"message\\": (\\n      \\"No device replacement workflows found to process for module \\"\\n      \\"'rma\_workflow\_manager'. Verify that RMA workflows are configured in \\"\\n      \\"Catalyst Center or check user permissions.\\"\\n    ),\\n    \\"status\\": \\"success\\"\\n  },\\n  \\"status\\": \\"success\\"\\n}\\n"`
 
 
       .. raw:: html
@@ -1347,8 +1347,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 Authors
 ~~~~~~~
 
-- Abhishek Maheshwari (@abmahesh)
-- Sunil Shatagopa (@sunilshatagopa)
+- Priyadharshini B (@pbalaku2)
 - Madhan Sankaranarayanan (@madhansansel)
 
 
