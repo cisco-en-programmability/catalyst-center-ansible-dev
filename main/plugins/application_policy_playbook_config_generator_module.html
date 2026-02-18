@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator module -- Generate YAML configurations playbook for &#39;assurance_device_health_score_settings_workflow_manager&#39; module. &mdash; DNACenterAnsibleActions  documentation</title>
+  <title>cisco.dnac.application_policy_playbook_config_generator module -- Generate YAML configurations playbook for &#39;application_policy_workflow_manager&#39; module. &mdash; DNACenterAnsibleActions  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for &#39;backup_and_restore_workflow_manager&#39; module." href="brownfield_backup_and_restore_playbook_generator_module.html" />
-    <link rel="prev" title="cisco.dnac.brownfield_application_policy_playbook_generator module -- Generate YAML configurations playbook for &#39;application_policy_workflow_manager&#39; module." href="brownfield_application_policy_playbook_generator_module.html" /> 
+    <link rel="next" title="Synopsis" href="application_policy_workflow_manager_module.html" />
+    <link rel="prev" title="cisco.dnac.application_policy_application_set_info module -- Information module for Application Policy Application Set" href="application_policy_application_set_info_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -77,6 +77,7 @@
 <li class="toctree-l4"><a class="reference internal" href="application_policy_application_set_module.html">cisco.dnac.application_policy_application_set module -- Resource module for Application Policy Application Set</a></li>
 <li class="toctree-l4"><a class="reference internal" href="application_policy_application_set_count_info_module.html">cisco.dnac.application_policy_application_set_count_info module -- Information module for Application Policy Application Set Count</a></li>
 <li class="toctree-l4"><a class="reference internal" href="application_policy_application_set_info_module.html">cisco.dnac.application_policy_application_set_info module -- Information module for Application Policy Application Set</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.application_policy_playbook_config_generator module -- Generate YAML configurations playbook for 'application_policy_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="application_policy_workflow_manager_module.html">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="application_policy_workflow_manager_module.html#requirements">Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="application_policy_workflow_manager_module.html#parameters">Parameters</a></li>
@@ -104,6 +105,7 @@
 <li class="toctree-l4"><a class="reference internal" href="assign_device_to_site_module.html">cisco.dnac.assign_device_to_site module -- Resource module for Assign Device To Site</a></li>
 <li class="toctree-l4"><a class="reference internal" href="assign_to_site_apply_module.html">cisco.dnac.assign_to_site_apply module -- Resource module for Assign To Site Apply</a></li>
 <li class="toctree-l4"><a class="reference internal" href="associate_site_to_network_profile_module.html">cisco.dnac.associate_site_to_network_profile module -- Resource module for Associate Site To Network Profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="assurance_device_health_score_settings_playbook_config_generator_module.html">cisco.dnac.assurance_device_health_score_settings_playbook_config_generator module -- Generate YAML configurations playbook for 'assurance_device_health_score_settings_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="assurance_device_health_score_settings_workflow_manager_module.html">cisco.dnac.assurance_device_health_score_settings_workflow_manager module -- Resource module for managing assurance Health score settings in Cisco Catalyst Center.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="assurance_events_child_events_info_module.html">cisco.dnac.assurance_events_child_events_info module -- Information module for Assurance Events Child Events</a></li>
 <li class="toctree-l4"><a class="reference internal" href="assurance_events_count_info_module.html">cisco.dnac.assurance_events_count_info module -- Information module for Assurance Events Count</a></li>
@@ -147,17 +149,13 @@
 <li class="toctree-l4"><a class="reference internal" href="backups_info_module.html">cisco.dnac.backups_info module -- Information module for Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_accesspoint_location_playbook_generator_module.html">cisco.dnac.brownfield_accesspoint_location_playbook_generator module -- Generate YAML configurations playbook for 'accesspoint_location_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_accesspoint_playbook_generator_module.html">cisco.dnac.brownfield_accesspoint_playbook_generator module -- Generate YAML configurations playbook for 'accesspoint_workflow_manager' module.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_application_policy_playbook_generator_module.html">cisco.dnac.brownfield_application_policy_playbook_generator module -- Generate YAML configurations playbook for 'application_policy_workflow_manager' module.</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator module -- Generate YAML configurations playbook for 'assurance_device_health_score_settings_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_backup_and_restore_playbook_generator_module.html">cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for 'backup_and_restore_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_device_credential_playbook_generator_module.html">cisco.dnac.brownfield_device_credential_playbook_generator module -- Generate YAML configurations playbook for 'device_credential_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_discovery_playbook_generator_module.html">cisco.dnac.brownfield_discovery_playbook_generator module -- Generate YAML configurations playbook for 'discovery_workflow_manager' module.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_events_and_notifications_playbook_generator_module.html">cisco.dnac.brownfield_events_and_notifications_playbook_generator module -- Generate YAML playbook for 'events_and_notifications_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_profile_switching_playbook_generator_module.html">cisco.dnac.brownfield_network_profile_switching_playbook_generator module -- Generate YAML configurations playbook for 'network_profile_switching_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_profile_wireless_playbook_generator_module.html">cisco.dnac.brownfield_network_profile_wireless_playbook_generator module -- Generate YAML configurations playbook for 'network_profile_wireless_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_settings_playbook_generator_module.html">cisco.dnac.brownfield_network_settings_playbook_generator module -- Generate YAML playbook for 'network_settings_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_pnp_playbook_generator_module.html">cisco.dnac.brownfield_pnp_playbook_generator module -- Generate YAML playbook for PnP workflow with device information</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_provision_playbook_generator_module.html">cisco.dnac.brownfield_provision_playbook_generator module -- Generate YAML playbook for 'provision_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_rma_playbook_generator_module.html">cisco.dnac.brownfield_rma_playbook_generator module -- Generate YAML playbooks for RMA device replacement workflows from existing configurations.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_multicast_playbook_generator_module.html">cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator module -- Generate YAML configurations playbook for 'sda_fabric_multicast_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_sites_zones_playbook_generator_module.html">cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_sites_zones_workflow_manager</span></code> module.</a></li>
@@ -377,6 +375,7 @@
 <li class="toctree-l4"><a class="reference internal" href="event_syslog_config_info_module.html">cisco.dnac.event_syslog_config_info module -- Information module for Event Syslog Config</a></li>
 <li class="toctree-l4"><a class="reference internal" href="event_webhook_module.html">cisco.dnac.event_webhook module -- Resource module for Event Webhook</a></li>
 <li class="toctree-l4"><a class="reference internal" href="event_webhook_info_module.html">cisco.dnac.event_webhook_info module -- Information module for Event Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="events_and_notifications_playbook_config_generator_module.html">cisco.dnac.events_and_notifications_playbook_config_generator module -- Generate YAML playbook for 'events_and_notifications_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="events_and_notifications_workflow_manager_module.html">cisco.dnac.events_and_notifications_workflow_manager module -- Configure various types of destinations to deliver event notifications from Cisco Catalyst Center Platform.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="execute_suggested_actions_commands_module.html">cisco.dnac.execute_suggested_actions_commands module -- Resource module for Execute Suggested Actions Commands</a></li>
 <li class="toctree-l4"><a class="reference internal" href="fabric_devices_info_workflow_manager_module.html">Synopsis</a></li>
@@ -784,6 +783,7 @@
 <li class="toctree-l4"><a class="reference internal" href="projects_details_info_module.html">cisco.dnac.projects_details_info module -- Information module for Projects Details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="projects_info_module.html">cisco.dnac.projects_info module -- Information module for Projects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="provision_intent_module.html">cisco.dnac.provision_intent module -- Resource module for provision functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="provision_playbook_config_generator_module.html">cisco.dnac.provision_playbook_config_generator module -- Generate YAML playbook for 'provision_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="provision_workflow_manager_module.html">cisco.dnac.provision_workflow_manager module -- Resource module for provision related functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="provisioning_settings_module.html">cisco.dnac.provisioning_settings module -- Resource module for Provisioning Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="provisioning_settings_info_module.html">cisco.dnac.provisioning_settings_info module -- Information module for Provisioning Settings</a></li>
@@ -1217,9 +1217,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Cisco.Dnac</a></li>
-      <li class="breadcrumb-item active">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator module -- Generate YAML configurations playbook for 'assurance_device_health_score_settings_workflow_manager' module.</li>
+      <li class="breadcrumb-item active">cisco.dnac.application_policy_playbook_config_generator module -- Generate YAML configurations playbook for 'application_policy_workflow_manager' module.</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/plugins/brownfield_assurance_device_health_score_settings_playbook_generator_module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/plugins/application_policy_playbook_config_generator_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -1227,55 +1227,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module"></span><section id="cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-generate-yaml-configurations-playbook-for-assurance-device-health-score-settings-workflow-manager-module">
-<h1>cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator module -- Generate YAML configurations playbook for 'assurance_device_health_score_settings_workflow_manager' module.<a class="headerlink" href="#cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-generate-yaml-configurations-playbook-for-assurance-device-health-score-settings-workflow-manager-module" title="Permalink to this heading"></a></h1>
+  <span class="target" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module"></span><section id="cisco-dnac-application-policy-playbook-config-generator-module-generate-yaml-configurations-playbook-for-application-policy-workflow-manager-module">
+<h1>cisco.dnac.application_policy_playbook_config_generator module -- Generate YAML configurations playbook for 'application_policy_workflow_manager' module.<a class="headerlink" href="#cisco-dnac-application-policy-playbook-config-generator-module-generate-yaml-configurations-playbook-for-application-policy-workflow-manager-module" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/cisco/dnac">cisco.dnac collection</a> (version 6.48.0).</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">cisco.dnac</span></code>.
 You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span></code>.</p>
+see <a class="reference internal" href="#ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.application_policy_playbook_config_generator</span></code>.</p>
 </div>
 <p class="ansible-version-added">New in cisco.dnac 6.44.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id55">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id56">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id57">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#notes" id="id58">Notes</a></p></li>
-<li><p><a class="reference internal" href="#see-also" id="id59">See Also</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id60">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id61">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#synopsis" id="id47">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id48">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id49">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#notes" id="id50">Notes</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id51">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id52">Return Values</a></p></li>
 </ul>
 </nav>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id55" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id47" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Generates YAML configuration playbooks compatible with the <code class="docutils literal notranslate"><span class="pre">assurance_device_health_score_settings_workflow_manager</span></code> module from existing Cisco Catalyst Center configurations.</p></li>
-<li><p>Extracts device health score settings including device family KPI thresholds, overall health inclusion flags, and issue threshold synchronization settings from Catalyst Center.</p></li>
-<li><p>Reduces manual effort in creating Ansible playbooks for brownfield infrastructure by automatically discovering and documenting existing configurations.</p></li>
-<li><p>Supports auto-discovery mode to extract all configured device health score settings across all device families.</p></li>
-<li><p>Supports targeted extraction using device family filters for specific infrastructure components.</p></li>
-<li><p>Uses multiple API calls with <code class="docutils literal notranslate"><span class="pre">includeForOverallHealth</span></code> parameter variations (both true and false) to ensure complete data extraction from Catalyst Center.</p></li>
-<li><p>When device families are specified in filters, executes separate API calls for each device family for optimal data retrieval and filtering.</p></li>
-<li><p>When no device families are specified, retrieves all available device health score settings from the system for complete brownfield discovery.</p></li>
-<li><p>Generated YAML files include comprehensive header comments with metadata, generation timestamp, source system details, configuration summary statistics, and usage instructions.</p></li>
-<li><p>Supports modern nested filter structures (<code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code>) for backward compatibility.</p></li>
-<li><p>Provides detailed operation summaries including success and failure statistics, device family categorization (complete success, partial success, complete failure), and comprehensive error reporting for troubleshooting.</p></li>
+<li><p>Generates YAML configurations compatible with the 'application_policy_workflow_manager' module, reducing the effort required to manually create Ansible playbooks.</p></li>
+<li><p>The YAML configurations generated represent the application policies and queuing profiles deployed in the Cisco Catalyst Center.</p></li>
+<li><p>Supports extraction of Queuing Profiles and Application Policies.</p></li>
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-requirements"></span><h2><a class="toc-backref" href="#id56" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<span id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-requirements"></span><h2><a class="toc-backref" href="#id48" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>The below requirements are needed on the host that executes this module.</p>
 <ul class="simple">
-<li><p>dnacentersdk &gt;= 2.7.2</p></li>
+<li><p>dnacentersdk &gt;= 2.9.3</p></li>
 <li><p>python &gt;= 3.9</p></li>
-<li><p>PyYAML &gt;= 5.1</p></li>
 </ul>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id57" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id49" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -1284,121 +1274,121 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config"><strong>config</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config"><strong>config</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>List of configuration parameters for generating YAML playbooks compatible with the <code class="docutils literal notranslate"><span class="pre">assurance_device_health_score_settings_workflow_manager</span></code> module.</p>
-<p>Defines filters to specify which device families and KPI settings to include in the generated YAML configuration file.</p>
-<p>Supports auto-discovery mode to automatically extract all configured device health score settings without manual filter specification.</p>
-<p>When <code class="docutils literal notranslate"><span class="pre">generate_all_configurations</span></code> is enabled, filter parameters become optional and defaults are applied automatically.</p>
+<td><div class="ansible-option-cell"><p>A list of filters for generating YAML playbook compatible with the 'application_policy_workflow_manager' module.</p>
+<p>Filters specify which components to include in the YAML configuration file.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Dictionary of filters to specify which device families and KPI settings to include in the generated YAML configuration file.</p>
-<p>Allows granular selection of specific device families and their associated KPI configurations.</p>
-<p>If not specified and <code class="docutils literal notranslate"><span class="pre">generate_all_configurations</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code>, all configured device health score settings will be extracted.</p>
-<p>Supports both modern nested structure (<code class="docutils literal notranslate"><span class="pre">device_health_score_settings</span></code>) and legacy flat structure (<code class="docutils literal notranslate"><span class="pre">device_families</span></code>) for backward compatibility.</p>
-<p>Can contain <code class="docutils literal notranslate"><span class="pre">components_list</span></code> to specify which components to process, <code class="docutils literal notranslate"><span class="pre">device_families</span></code> for direct device family filtering, or nested <code class="docutils literal notranslate"><span class="pre">device_health_score_settings</span></code> for component-specific filtering.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters to specify which application policy components to include in the YAML configuration file.</p>
+<p>Allows granular selection of specific components and their parameters.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/application_policy"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters-application-policy"><strong>application_policy</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/application_policy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Specific application policy filtering options.</p>
+<p>Allows extraction of only specific policies by name.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/application_policy/policy_names_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters-application-policy-policy-names-list"><strong>policy_names_list</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/application_policy/policy_names_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of specific application policy names to extract.</p>
+<p>Only policies in this list will be included in the generated configuration.</p>
+<p>Example [&quot;wired_traffic_policy&quot;, &quot;wireless_traffic_policy&quot;]</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/components_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of component types to extract from Catalyst Center.</p>
-<p>Currently supports only <code class="docutils literal notranslate"><span class="pre">device_health_score_settings</span></code> component.</p>
-<p>When specified without nested <code class="docutils literal notranslate"><span class="pre">device_health_score_settings</span></code> filters, extracts all device families for the specified component.</p>
-<p>Determines which component processing workflows to execute during YAML generation.</p>
-<p>Future versions may support additional component types for expanded brownfield extraction capabilities.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of components to include in the YAML configuration file.</p>
+<p>Valid values are [&quot;queuing_profile&quot;, &quot;application_policy&quot;]</p>
+<p>If not specified, all supported components are included.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id1"><span class="problematic" id="id2">:ansible-option-choices-entry:`&quot;device\_health\_score\_settings&quot;`</span></a></p></li>
+<li><p><a href="#id1"><span class="problematic" id="id2">:ansible-option-choices-entry:`&quot;queuing\_profile&quot;`</span></a></p></li>
+<li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry:`&quot;application\_policy&quot;`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_health_score_settings"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-component-specific-filters-device-health-score-settings"><strong>device_health_score_settings</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_health_score_settings" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/queuing_profile"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters-queuing-profile"><strong>queuing_profile</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/queuing_profile" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Nested dictionary for device health score settings specific filters.</p>
-<p>Provides fine-grained control over device families and KPI settings to extract from Catalyst Center.</p>
-<p>Allows targeting specific device families without extracting all configured settings.</p>
-<p>Modern recommended approach for filter specification in new playbooks.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Specific queuing profile filtering options.</p>
+<p>Allows extraction of only specific queuing profiles by name.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_health_score_settings/device_families"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-component-specific-filters-device-health-score-settings-device-families"><strong>device_families</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_health_score_settings/device_families" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/queuing_profile/profile_names_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-component-specific-filters-queuing-profile-profile-names-list"><strong>profile_names_list</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/queuing_profile/profile_names_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of specific device family names to extract KPI threshold settings for using modern nested filter format.</p>
-<p>Valid device family names include <code class="docutils literal notranslate"><span class="pre">UNIFIED_AP</span></code> for wireless access points, <code class="docutils literal notranslate"><span class="pre">ROUTER</span></code> for routing devices, <code class="docutils literal notranslate"><span class="pre">SWITCH</span></code> or <code class="docutils literal notranslate"><span class="pre">SWITCH_AND_HUB</span></code> for switching infrastructure, <code class="docutils literal notranslate"><span class="pre">WIRELESS_CONTROLLER</span></code> for wireless LAN controllers, <code class="docutils literal notranslate"><span class="pre">WIRELESS_SENSOR</span></code> for wireless sensors, <code class="docutils literal notranslate"><span class="pre">MERAKI_DASHBOARD</span></code> for Meraki devices, <code class="docutils literal notranslate"><span class="pre">FIREWALL</span></code> for firewall appliances, and other Catalyst Center supported device types.</p>
-<p>If not specified, all device families with configured KPI threshold settings will be extracted for comprehensive brownfield documentation.</p>
-<p>Each device family may have different KPI metrics and thresholds based on device capabilities and health monitoring requirements.</p>
-<p>Example filter <code class="docutils literal notranslate"><span class="pre">[&quot;UNIFIED_AP&quot;,</span> <span class="pre">&quot;ROUTER&quot;,</span> <span class="pre">&quot;SWITCH_AND_HUB&quot;,</span> <span class="pre">&quot;WIRELESS_CONTROLLER&quot;]</span></code> extracts settings for wireless and wired infrastructure.</p>
-<p>Device family names are case-sensitive and must match exact names used in Catalyst Center.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of specific queuing profile names to extract.</p>
+<p>Only profiles in this list will be included in the generated configuration.</p>
+<p>Example [&quot;Enterprise-QoS-Profile&quot;, &quot;Wireless-QoS-Profile&quot;]</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the generated YAML configuration file will be saved.</p>
-<p>If not provided, the module generates a default filename in the current working directory with the format <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;_playbook_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
-<p>Example default filename <code class="docutils literal notranslate"><span class="pre">assurance_device_health_score_settings_workflow_manager_playbook_2026-01-24_12-33-20.yml</span></code>.</p>
-<p>The directory path will be created automatically if it does not exist.</p>
-<p>Supports both absolute paths (<code class="docutils literal notranslate"><span class="pre">/tmp/config.yml</span></code>) and relative paths (<code class="docutils literal notranslate"><span class="pre">./configs/health_score.yml</span></code>).</p>
-<p>File will be overwritten if it already exists at the specified path.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Path where the YAML configuration file will be saved.</p>
+<p>If not provided, the file will be saved in the current working directory with a default file name &quot;application_policy_workflow_manager_playbook_&lt;DD_Mon_YYYY_HH_MM_SS_MS&gt;.yml&quot;.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Enables auto-discovery mode to automatically generate YAML configurations for all device families and all available KPI settings configured in Cisco Catalyst Center.</p>
-<p>When enabled (<code class="docutils literal notranslate"><span class="pre">true</span></code>), the module discovers all device health score settings without requiring manual filter specification.</p>
-<p>Overrides any provided <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> to ensure complete infrastructure discovery.</p>
-<p>Useful for brownfield documentation, infrastructure audits, and comprehensive configuration backups.</p>
-<p>When enabled with no <code class="docutils literal notranslate"><span class="pre">file_path</span></code> specified, generates a default timestamped filename in the current working directory.</p>
-<p>Setting to <code class="docutils literal notranslate"><span class="pre">false</span></code> requires explicit filter specification via <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> for targeted extraction.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>When set to True, automatically generates YAML configurations for all application policies and queuing profiles.</p>
+<p>This mode discovers all configured policies and profiles in Cisco Catalyst Center.</p>
+<p>When enabled, the config parameter becomes optional and will use default values if not specified.</p>
+<p>A default filename will be generated automatically if file_path is not specified.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id5"><span class="problematic" id="id6">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id5"><span class="problematic" id="id6">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id7"><span class="problematic" id="id8">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_api_task_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Defines the timeout in seconds for API calls to retrieve task details. If the task details are not received within this period, the process will end, and a timeout notification will be logged.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id7"><span class="problematic" id="id8">:ansible-option-default:`1200`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id9"><span class="problematic" id="id10">:ansible-option-default:`1200`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_debug" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Indicates whether debugging is enabled in the Cisco Catalyst Center SDK.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id9"><span class="problematic" id="id10">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id11"><span class="problematic" id="id12">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id11"><span class="problematic" id="id12">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id13"><span class="problematic" id="id14">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The hostname of the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable/disable playbook execution logging.</p>
@@ -1409,35 +1399,35 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <p>If the log file exists, - It is overwritten or appended based on the &quot;dnac_log_append&quot; flag.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id13"><span class="problematic" id="id14">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_append" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines the mode of the file. Set to True for 'append' mode. Set to False for 'write' mode.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Governs logging. Logs are recorded if dnac_log is True.</p>
 <p>If path is not specified, - When 'dnac_log_append' is True, 'dnac.log' is generated in the current Ansible directory; logs are appended. - When 'dnac_log_append' is False, 'dnac.log' is generated; logs are overwritten.</p>
 <p>If path is specified, - When 'dnac_log_append' is True, the file opens in append mode. - When 'dnac_log_append' is False, the file opens in write (w) mode. - In shared file scenarios, without append mode, content is overwritten after each module execution. - For a shared log file, set append to False for the 1st module (to overwrite); for subsequent modules, set append to True.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id21"><span class="problematic" id="id22">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id23"><span class="problematic" id="id24">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_level" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Sets the threshold for log level. Messages with a level equal to or higher than this will be logged. Levels are listed in order of severity [CRITICAL, ERROR, WARNING, INFO, DEBUG].</p>
@@ -1446,84 +1436,82 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <p>WARNING indicates potential future issues. Displays WARNING, ERROR, CRITICAL messages.</p>
 <p>INFO tracks normal operation. Displays INFO, WARNING, ERROR, CRITICAL messages.</p>
 <p>DEBUG provides detailed diagnostic info. Displays all log messages.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id23"><span class="problematic" id="id24">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id25"><span class="problematic" id="id26">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for authentication at the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_port" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the port number associated with the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id25"><span class="problematic" id="id26">:ansible-option-default:`&quot;443&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`&quot;443&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_task_poll_interval" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the interval in seconds between successive calls to the API to retrieve task details.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`2`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`2`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
-<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: user</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The username for authentication at the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id31"><span class="problematic" id="id32">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_verify" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable or disable SSL certificate verification.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id31"><span class="problematic" id="id32">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id33"><span class="problematic" id="id34">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id33"><span class="problematic" id="id34">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id35"><span class="problematic" id="id36">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the version of the Cisco Catalyst Center that the SDK should use.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id35"><span class="problematic" id="id36">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id37"><span class="problematic" id="id38">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-state"><strong>state</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The desired state of Cisco Catalyst Center after module completion.</p>
-<p>Only <code class="docutils literal notranslate"><span class="pre">gathered</span></code> state is supported for brownfield configuration extraction.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">gathered</span></code> state, the module extracts existing device health score settings from Catalyst Center and generates a YAML playbook file.</p>
+<td><div class="ansible-option-cell"><p>The desired state of Cisco Catalyst Center after module execution.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id37"><span class="problematic" id="id38">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id39"><span class="problematic" id="id40">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
 <a class="ansibleOptionLink" href="#parameter-validate_response_schema" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag for Cisco Catalyst Center SDK to enable the validation of request bodies against a JSON schema.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id39"><span class="problematic" id="id40">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id41"><span class="problematic" id="id42">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id41"><span class="problematic" id="id42">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id43"><span class="problematic" id="id44">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -1531,46 +1519,22 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </table>
 </section>
 <section id="notes">
-<h2><a class="toc-backref" href="#id58" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id50" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>SDK Method used is devices.Devices.get_all_health_score_definitions_for_given_filters</p></li>
-<li><p>Path used is GET /dna/intent/api/v1/device-health/health-score/definitions</p></li>
-<li><p>Module requires Catalyst Center version 2.3.7.9 or higher for device health score settings support.</p></li>
-<li><p>Generated YAML files include comprehensive header comments with generation metadata, configuration summary statistics, and usage instructions.</p></li>
-<li><p>The module executes multiple API calls with <code class="docutils literal notranslate"><span class="pre">includeForOverallHealth</span></code> parameter variations (true and false) to ensure complete KPI data extraction.</p></li>
-<li><p>When device families are specified, separate API calls are made for each device family for optimal performance and data filtering.</p></li>
-<li><p>Operation summaries include detailed success/failure statistics with device family categorization for troubleshooting and validation.</p></li>
-<li><p>Supports both auto-discovery mode (<code class="docutils literal notranslate"><span class="pre">generate_all_configurations=true</span></code>) for complete infrastructure extraction and targeted mode with filters for specific components.</p></li>
-<li><p>Check mode is supported but does not perform actual YAML file generation; it validates parameters and returns expected operation results.</p></li>
-<li><p>The module is idempotent; running multiple times with the same parameters generates identical YAML content (except generation timestamp in header).</p></li>
-<li><p>Generated YAML files can be used directly with <code class="docutils literal notranslate"><span class="pre">assurance_device_health_score_settings_workflow_manager</span></code> module to apply configurations to other Catalyst Center instances.</p></li>
-<li><p>Device family names are case-sensitive and must match exact names used in Catalyst Center (e.g., <code class="docutils literal notranslate"><span class="pre">UNIFIED_AP</span></code> not <code class="docutils literal notranslate"><span class="pre">unified_ap</span></code>).</p></li>
-<li><p>KPI names in generated YAML use user-friendly format (e.g., <code class="docutils literal notranslate"><span class="pre">CPU</span> <span class="pre">Utilization</span></code>) rather than internal API format (e.g., <code class="docutils literal notranslate"><span class="pre">cpuUtilizationThreshold</span></code>) for improved readability.</p></li>
-<li><p>The module handles connection timeouts, API errors, and invalid responses with comprehensive error messages and operation summaries.</p></li>
-<li><p>Large-scale deployments with many device families and KPIs may require increased <code class="docutils literal notranslate"><span class="pre">dnac_api_task_timeout</span></code> values for complete data extraction.</p></li>
-<li><p>Generated YAML structure follows ordered dictionary format to maintain consistent key ordering across multiple generations.</p></li>
+<li><p>SDK Methods used are - application_policy.ApplicationPolicy.get_application_policy - application_policy.ApplicationPolicy.get_application_policy_queuing_profile</p></li>
+<li><p>Paths used are - GET /dna/intent/api/v1/app-policy - GET /dna/intent/api/v1/app-policy-queuing-profile</p></li>
 <li><p>Does not support <code class="docutils literal notranslate"><span class="pre">check_mode</span></code></p></li>
 <li><p>The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK</p></li>
 <li><p>The parameters starting with dnac_ are used by the Cisco Catalyst Center Python SDK to establish the connection</p></li>
 </ul>
 </div>
 </section>
-<section id="see-also">
-<h2><a class="toc-backref" href="#id59" role="doc-backlink">See Also</a><a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="assurance_device_health_score_settings_workflow_manager_module.html#ansible-collections-cisco-dnac-assurance-device-health-score-settings-workflow-manager-module"><span class="std std-ref">cisco.dnac.assurance_device_health_score_settings_workflow_manager</span></a></dt><dd><p>Workflow manager module for applying device health score settings to Catalyst Center.</p>
-</dd>
-</dl>
-</div>
-</section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id60" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for all device health score settings</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span><span class="p">:</span>
+<h2><a class="toc-backref" href="#id51" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate all application policy configurations</span>
+<span class="w">  </span><span class="nt">cisco.dnac.application_policy_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1584,8 +1548,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">generate_all_configurations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with custom file path</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate configurations with custom file path</span>
+<span class="w">  </span><span class="nt">cisco.dnac.application_policy_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1597,10 +1561,10 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/assurance_health_score_settings.yml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/app_policy_config.yml&quot;</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for all device health score components</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate specific queuing profiles</span>
+<span class="w">  </span><span class="nt">cisco.dnac.application_policy_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1612,12 +1576,14 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/assurance_health_score_settings.yml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/queuing_profiles.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;device_health_score_settings&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;queuing_profile&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">queuing_profile</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">profile_names_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Enterprise-QoS-Profile&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Wireless-QoS&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for specific device families</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate specific application policies</span>
+<span class="w">  </span><span class="nt">cisco.dnac.application_policy_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1629,14 +1595,14 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/specific_device_health_score_settings.yml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/app_policies.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;device_health_score_settings&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">device_health_score_settings</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">device_families</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;UNIFIED_AP&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ROUTER&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SWITCH_AND_HUB&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;WIRELESS_CONTROLLER&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;application_policy&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">application_policy</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">policy_names_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;wired_traffic_policy&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration using legacy filter format</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate both queuing profiles and policies with filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.application_policy_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1648,14 +1614,18 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/legacy_device_health_score_settings.yml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/complete_app_policy_config.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">device_families</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;UNIFIED_AP&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ROUTER&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;queuing_profile&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;application_policy&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">queuing_profile</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">profile_names_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Enterprise-QoS-Profile&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">application_policy</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">policy_names_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;wired_traffic_policy&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;wireless_traffic_policy&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
 <section id="return-values">
-<h2><a class="toc-backref" href="#id61" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id52" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v13)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
@@ -1665,74 +1635,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-msg"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-msg"><strong>msg</strong></p>
-<a class="ansibleOptionLink" href="#return-msg" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Human-readable message describing the operation result.</p>
-<p>Indicates success, failure, or informational status of YAML generation.</p>
-<p>Matches the <code class="docutils literal notranslate"><span class="pre">message</span></code> field in response dictionary for consistency.</p>
-<p>Provides high-level summary without detailed operation_summary metrics.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id43"><span class="problematic" id="id44">:ansible-rv-sample-value:`&quot;YAML config generation succeeded for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'.\\n&quot;`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-response-1"><strong>response_1</strong></p>
+<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-application-policy-playbook-config-generator-module-return-response-1"><strong>response_1</strong></p>
 <a class="ansibleOptionLink" href="#return-response_1" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Response returned when YAML configuration generation completes successfully with all requested device health score settings extracted and written to file.</p>
-<p>Includes comprehensive operation summary with success statistics, device family categorization, and detailed configuration metrics.</p>
-<p>Generated YAML file contains formatted playbook compatible with <code class="docutils literal notranslate"><span class="pre">assurance_device_health_score_settings_workflow_manager</span></code> module.</p>
+<td><div class="ansible-option-cell"><p>Successful YAML configuration generation</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id45"><span class="problematic" id="id46">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation succeeded for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;configurations\_generated&quot;: 15, &quot;file\_path&quot;: &quot;/tmp/assurance\_health\_score\_settings.yml&quot;, &quot;message&quot;: &quot;YAML config generation succeeded for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'.&quot;, &quot;operation\_summary&quot;: {&quot;device\_families\_with\_complete\_failure&quot;: [], &quot;device\_families\_with\_complete\_success&quot;: [&quot;UNIFIED\_AP&quot;, &quot;ROUTER&quot;, &quot;SWITCH&quot;], &quot;device\_families\_with\_partial\_success&quot;: [], &quot;failure\_details&quot;: [], &quot;success\_details&quot;: [{&quot;device\_family&quot;: &quot;UNIFIED\_AP&quot;, &quot;include\_for\_overall\_health&quot;: true, &quot;kpi\_name&quot;: &quot;Interference 6 GHz&quot;, &quot;status&quot;: &quot;success&quot;, &quot;threshold\_value&quot;: 80.0}, {&quot;device\_family&quot;: &quot;UNIFIED\_AP&quot;, &quot;include\_for\_overall\_health&quot;: true, &quot;kpi\_name&quot;: &quot;CPU Utilization&quot;, &quot;status&quot;: &quot;success&quot;, &quot;threshold\_value&quot;: 85.0}, {&quot;device\_family&quot;: &quot;ROUTER&quot;, &quot;include\_for\_overall\_health&quot;: true, &quot;kpi\_name&quot;: &quot;Memory Utilization&quot;, &quot;status&quot;: &quot;success&quot;, &quot;threshold\_value&quot;: 90.0}], &quot;total\_device\_families\_processed&quot;: 3, &quot;total\_failed\_operations&quot;: 0, &quot;total\_kpis\_processed&quot;: 15, &quot;total\_successful\_operations&quot;: 15}}}`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_2"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-response-2"><strong>response_2</strong></p>
-<a class="ansibleOptionLink" href="#return-response_2" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Response returned when YAML generation completes but some device families or KPI configurations encountered errors during extraction.</p>
-<p>Operation status is <code class="docutils literal notranslate"><span class="pre">failed</span></code> but file is still generated with successfully retrieved configurations.</p>
-<p><code class="docutils literal notranslate"><span class="pre">operation_summary.failure_details</span></code> contains specific error information for troubleshooting failed extractions.</p>
-<p><code class="docutils literal notranslate"><span class="pre">device_families_with_partial_success</span></code> lists families with both successful and failed KPI retrievals.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id47"><span class="problematic" id="id48">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation completed with failures for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Check operation\_summary for details.&quot;, &quot;response&quot;: {&quot;configurations\_generated&quot;: 12, &quot;file\_path&quot;: &quot;/tmp/assurance\_health\_score\_settings.yml&quot;, &quot;message&quot;: &quot;YAML config generation completed with failures for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Check operation\_summary for details.&quot;, &quot;operation\_summary&quot;: {&quot;device\_families\_with\_complete\_failure&quot;: [], &quot;device\_families\_with\_complete\_success&quot;: [&quot;UNIFIED\_AP&quot;], &quot;device\_families\_with\_partial\_success&quot;: [&quot;ROUTER&quot;, &quot;SWITCH&quot;], &quot;failure\_details&quot;: [{&quot;device\_family&quot;: &quot;ROUTER&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;KPI\_NOT\_FOUND&quot;, &quot;error\_message&quot;: &quot;KPI configuration not available in Catalyst Center&quot;, &quot;error\_type&quot;: &quot;kpi\_retrieval\_error&quot;}, &quot;kpi\_name&quot;: &quot;Unknown KPI&quot;, &quot;status&quot;: &quot;failed&quot;}, {&quot;device\_family&quot;: &quot;SWITCH&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;API\_TIMEOUT\_ERROR&quot;, &quot;error\_message&quot;: &quot;API timeout while retrieving KPI settings&quot;, &quot;error\_type&quot;: &quot;api\_error&quot;}, &quot;kpi\_name&quot;: &quot;Invalid Metric&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;success\_details&quot;: [{&quot;device\_family&quot;: &quot;UNIFIED\_AP&quot;, &quot;include\_for\_overall\_health&quot;: true, &quot;kpi\_name&quot;: &quot;Air Quality 5 GHz&quot;, &quot;status&quot;: &quot;success&quot;, &quot;threshold\_value&quot;: 75.0}, {&quot;device\_family&quot;: &quot;ROUTER&quot;, &quot;include\_for\_overall\_health&quot;: true, &quot;kpi\_name&quot;: &quot;CPU Utilization&quot;, &quot;status&quot;: &quot;success&quot;, &quot;threshold\_value&quot;: 85.0}], &quot;total\_device\_families\_processed&quot;: 3, &quot;total\_failed\_operations&quot;: 3, &quot;total\_kpis\_processed&quot;: 12, &quot;total\_successful\_operations&quot;: 12}}}`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_3"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-response-3"><strong>response_3</strong></p>
-<a class="ansibleOptionLink" href="#return-response_3" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Response returned when no device health score settings configurations are found matching the specified filters or in the Catalyst Center system.</p>
-<p>Operation status is <code class="docutils literal notranslate"><span class="pre">ok</span></code> indicating successful execution but no data available to generate.</p>
-<p>Empty YAML file may be created with header comments but no configuration content.</p>
-<p><code class="docutils literal notranslate"><span class="pre">operation_summary</span></code> shows zero counts for all metrics.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id49"><span class="problematic" id="id50">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;response&quot;: {&quot;file\_path&quot;: &quot;assurance\_device\_health\_score\_settings\_workflow\_manager\_playbook\_2026-02-04\_14-30-15.yml&quot;, &quot;message&quot;: &quot;No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;operation\_summary&quot;: {&quot;device\_families\_with\_complete\_failure&quot;: [], &quot;device\_families\_with\_complete\_success&quot;: [], &quot;device\_families\_with\_partial\_success&quot;: [], &quot;failure\_details&quot;: [], &quot;success\_details&quot;: [], &quot;total\_device\_families\_processed&quot;: 0, &quot;total\_failed\_operations&quot;: 0, &quot;total\_kpis\_processed&quot;: 0, &quot;total\_successful\_operations&quot;: 0}}}`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_4"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-response-4"><strong>response_4</strong></p>
-<a class="ansibleOptionLink" href="#return-response_4" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Response returned when YAML generation fails completely due to system errors, API failures, or file write issues.</p>
-<p>No configurations successfully retrieved or file could not be written to specified path.</p>
-<p><code class="docutils literal notranslate"><span class="pre">device_families_with_complete_failure</span></code> lists all families that failed entirely without any successful KPI retrievals.</p>
-<p>Check <code class="docutils literal notranslate"><span class="pre">failure_details</span></code> for specific error information and error codes.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id51"><span class="problematic" id="id52">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation failed for module 'assurance\_device\_health\_score\_settings\_workflow\_manager' - unable to write to file.&quot;, &quot;response&quot;: {&quot;file\_path&quot;: &quot;/tmp/assurance\_health\_score\_settings.yml&quot;, &quot;message&quot;: &quot;YAML config generation failed for module 'assurance\_device\_health\_score\_settings\_workflow\_manager' - unable to write to file.&quot;, &quot;operation\_summary&quot;: {&quot;device\_families\_with\_complete\_failure&quot;: [&quot;UNIFIED\_AP&quot;, &quot;ROUTER&quot;], &quot;device\_families\_with\_complete\_success&quot;: [], &quot;device\_families\_with\_partial\_success&quot;: [], &quot;failure\_details&quot;: [{&quot;device\_family&quot;: &quot;UNIFIED\_AP&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;CONNECTION\_TIMEOUT&quot;, &quot;error\_message&quot;: &quot;Connection timeout to Catalyst Center API&quot;, &quot;error\_type&quot;: &quot;api\_error&quot;}, &quot;kpi\_name&quot;: &quot;UNKNOWN&quot;, &quot;status&quot;: &quot;failed&quot;}, {&quot;device\_family&quot;: &quot;ROUTER&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;AUTH\_FAILED&quot;, &quot;error\_message&quot;: &quot;Invalid credentials or insufficient permissions&quot;, &quot;error\_type&quot;: &quot;authentication\_error&quot;}, &quot;kpi\_name&quot;: &quot;UNKNOWN&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;success\_details&quot;: [], &quot;total\_device\_families\_processed&quot;: 2, &quot;total\_failed\_operations&quot;: 8, &quot;total\_kpis\_processed&quot;: 0, &quot;total\_successful\_operations&quot;: 0}}}`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_5"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-assurance-device-health-score-settings-playbook-generator-module-return-response-5"><strong>response_5</strong></p>
-<a class="ansibleOptionLink" href="#return-response_5" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Response returned when playbook configuration parameters fail validation before YAML generation begins.</p>
-<p>Occurs when invalid filter parameters, incorrect data types, or unsupported component names are provided.</p>
-<p>No API calls executed and no file generation attempted.</p>
-<p>Error message provides specific validation failure details and allowed parameter values.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id53"><span class="problematic" id="id54">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_families, device\_health\_score\_settings.&quot;, &quot;response&quot;: {&quot;message&quot;: &quot;Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_families, device\_health\_score\_settings.&quot;}}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id45"><span class="problematic" id="id46">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation succeeded for module 'application\_policy\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;components\_processed&quot;: 2, &quot;components\_skipped&quot;: 0, &quot;configurations\_count&quot;: 15, &quot;file\_path&quot;: &quot;application\_policy\_workflow\_manager\_playbook\_2026-02-03\_03-00-59.yml&quot;, &quot;message&quot;: &quot;YAML config generation succeeded for module 'application\_policy\_workflow\_manager'.&quot;, &quot;status&quot;: &quot;success&quot;}}`</span></a></p>
 </div></td>
 </tr>
 </tbody>
@@ -1740,7 +1648,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Megha Kandari (&#64;mekandar)</p></li>
+<li><p>Syed Khadeer Ahmed (&#64;syed-khadeerahmed)</p></li>
 <li><p>Madhan Sankaranarayanan (&#64;madhansansel)</p></li>
 </ul>
 </section>
@@ -1757,8 +1665,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="brownfield_application_policy_playbook_generator_module.html" class="btn btn-neutral float-left" title="cisco.dnac.brownfield_application_policy_playbook_generator module -- Generate YAML configurations playbook for &#39;application_policy_workflow_manager&#39; module." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="brownfield_backup_and_restore_playbook_generator_module.html" class="btn btn-neutral float-right" title="cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for &#39;backup_and_restore_workflow_manager&#39; module." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="application_policy_application_set_info_module.html" class="btn btn-neutral float-left" title="cisco.dnac.application_policy_application_set_info module -- Information module for Application Policy Application Set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="application_policy_workflow_manager_module.html" class="btn btn-neutral float-right" title="Synopsis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

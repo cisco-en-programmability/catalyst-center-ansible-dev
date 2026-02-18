@@ -101,6 +101,7 @@ Modules
 * :ref:`application_policy_application_set module <ansible_collections.cisco.dnac.application_policy_application_set_module>` -- Resource module for Application Policy Application Set
 * :ref:`application_policy_application_set_count_info module <ansible_collections.cisco.dnac.application_policy_application_set_count_info_module>` -- Information module for Application Policy Application Set Count
 * :ref:`application_policy_application_set_info module <ansible_collections.cisco.dnac.application_policy_application_set_info_module>` -- Information module for Application Policy Application Set
+* :ref:`application_policy_playbook_config_generator module <ansible_collections.cisco.dnac.application_policy_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'application\_policy\_workflow\_manager' module.
 * :ref:`application_policy_workflow_manager module <ansible_collections.cisco.dnac.application_policy_workflow_manager_module>` -- Resource module for managing queuing profiles, applications, application sets and application policies for wired and wireless in Cisco Catalyst Center.
 
 * :ref:`application_sets module <ansible_collections.cisco.dnac.application_sets_module>` -- Resource module for Application Sets
@@ -124,6 +125,7 @@ Modules
 * :ref:`assign_device_to_site module <ansible_collections.cisco.dnac.assign_device_to_site_module>` -- Resource module for Assign Device To Site
 * :ref:`assign_to_site_apply module <ansible_collections.cisco.dnac.assign_to_site_apply_module>` -- Resource module for Assign To Site Apply
 * :ref:`associate_site_to_network_profile module <ansible_collections.cisco.dnac.associate_site_to_network_profile_module>` -- Resource module for Associate Site To Network Profile
+* :ref:`assurance_device_health_score_settings_playbook_config_generator module <ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'assurance\_device\_health\_score\_settings\_workflow\_manager' module.
 * :ref:`assurance_device_health_score_settings_workflow_manager module <ansible_collections.cisco.dnac.assurance_device_health_score_settings_workflow_manager_module>` -- Resource module for managing assurance Health score settings in Cisco Catalyst Center.
 * :ref:`assurance_events_child_events_info module <ansible_collections.cisco.dnac.assurance_events_child_events_info_module>` -- Information module for Assurance Events Child Events
 * :ref:`assurance_events_count_info module <ansible_collections.cisco.dnac.assurance_events_count_info_module>` -- Information module for Assurance Events Count
@@ -163,17 +165,13 @@ Modules
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
 * :ref:`brownfield_accesspoint_location_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_location_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_location\_workflow\_manager' module.
 * :ref:`brownfield_accesspoint_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
-* :ref:`brownfield_application_policy_playbook_generator module <ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module>` -- Generate YAML configurations playbook for 'application\_policy\_workflow\_manager' module.
-* :ref:`brownfield_assurance_device_health_score_settings_playbook_generator module <ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module>` -- Generate YAML configurations playbook for 'assurance\_device\_health\_score\_settings\_workflow\_manager' module.
 * :ref:`brownfield_backup_and_restore_playbook_generator module <ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module>` -- Generate YAML playbook for 'backup\_and\_restore\_workflow\_manager' module.
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_discovery_playbook_generator module <ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module>` -- Generate YAML configurations playbook for 'discovery\_workflow\_manager' module.
-* :ref:`brownfield_events_and_notifications_playbook_generator module <ansible_collections.cisco.dnac.brownfield_events_and_notifications_playbook_generator_module>` -- Generate YAML playbook for 'events\_and\_notifications\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_switching_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_wireless_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_wireless_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_wireless\_workflow\_manager' module.
 * :ref:`brownfield_network_settings_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module>` -- Generate YAML playbook for 'network\_settings\_workflow\_manager' module.
 * :ref:`brownfield_pnp_playbook_generator module <ansible_collections.cisco.dnac.brownfield_pnp_playbook_generator_module>` -- Generate YAML playbook for PnP workflow with device information
-* :ref:`brownfield_provision_playbook_generator module <ansible_collections.cisco.dnac.brownfield_provision_playbook_generator_module>` -- Generate YAML playbook for 'provision\_workflow\_manager' module.
 * :ref:`brownfield_rma_playbook_generator module <ansible_collections.cisco.dnac.brownfield_rma_playbook_generator_module>` -- Generate YAML playbooks for RMA device replacement workflows from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
 * :ref:`brownfield_sda_fabric_sites_zones_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_sites_zones_playbook_generator_module>` -- Generate YAML playbook for \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module.
@@ -393,6 +391,7 @@ Modules
 * :ref:`event_syslog_config_info module <ansible_collections.cisco.dnac.event_syslog_config_info_module>` -- Information module for Event Syslog Config
 * :ref:`event_webhook module <ansible_collections.cisco.dnac.event_webhook_module>` -- Resource module for Event Webhook
 * :ref:`event_webhook_info module <ansible_collections.cisco.dnac.event_webhook_info_module>` -- Information module for Event Webhook
+* :ref:`events_and_notifications_playbook_config_generator module <ansible_collections.cisco.dnac.events_and_notifications_playbook_config_generator_module>` -- Generate YAML playbook for 'events\_and\_notifications\_workflow\_manager' module.
 * :ref:`events_and_notifications_workflow_manager module <ansible_collections.cisco.dnac.events_and_notifications_workflow_manager_module>` -- Configure various types of destinations to deliver event notifications from Cisco Catalyst Center Platform.
 * :ref:`execute_suggested_actions_commands module <ansible_collections.cisco.dnac.execute_suggested_actions_commands_module>` -- Resource module for Execute Suggested Actions Commands
 * :ref:`fabric_devices_info_workflow_manager module <ansible_collections.cisco.dnac.fabric_devices_info_workflow_manager_module>` -- Comprehensive fabric device information gathering module for Cisco Catalyst Center with advanced filtering and output capabilities.
@@ -796,6 +795,7 @@ Modules
 * :ref:`projects_details_info module <ansible_collections.cisco.dnac.projects_details_info_module>` -- Information module for Projects Details
 * :ref:`projects_info module <ansible_collections.cisco.dnac.projects_info_module>` -- Information module for Projects
 * :ref:`provision_intent module <ansible_collections.cisco.dnac.provision_intent_module>` -- Resource module for provision functions
+* :ref:`provision_playbook_config_generator module <ansible_collections.cisco.dnac.provision_playbook_config_generator_module>` -- Generate YAML playbook for 'provision\_workflow\_manager' module.
 * :ref:`provision_workflow_manager module <ansible_collections.cisco.dnac.provision_workflow_manager_module>` -- Resource module for provision related functions
 * :ref:`provisioning_settings module <ansible_collections.cisco.dnac.provisioning_settings_module>` -- Resource module for Provisioning Settings
 * :ref:`provisioning_settings_info module <ansible_collections.cisco.dnac.provisioning_settings_info_module>` -- Information module for Provisioning Settings
@@ -1239,6 +1239,7 @@ Modules
     application_policy_application_set_module
     application_policy_application_set_count_info_module
     application_policy_application_set_info_module
+    application_policy_playbook_config_generator_module
     application_policy_workflow_manager_module
     application_sets_module
     application_sets_count_info_module
@@ -1261,6 +1262,7 @@ Modules
     assign_device_to_site_module
     assign_to_site_apply_module
     associate_site_to_network_profile_module
+    assurance_device_health_score_settings_playbook_config_generator_module
     assurance_device_health_score_settings_workflow_manager_module
     assurance_events_child_events_info_module
     assurance_events_count_info_module
@@ -1299,17 +1301,13 @@ Modules
     backups_info_module
     brownfield_accesspoint_location_playbook_generator_module
     brownfield_accesspoint_playbook_generator_module
-    brownfield_application_policy_playbook_generator_module
-    brownfield_assurance_device_health_score_settings_playbook_generator_module
     brownfield_backup_and_restore_playbook_generator_module
     brownfield_device_credential_playbook_generator_module
     brownfield_discovery_playbook_generator_module
-    brownfield_events_and_notifications_playbook_generator_module
     brownfield_network_profile_switching_playbook_generator_module
     brownfield_network_profile_wireless_playbook_generator_module
     brownfield_network_settings_playbook_generator_module
     brownfield_pnp_playbook_generator_module
-    brownfield_provision_playbook_generator_module
     brownfield_rma_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
     brownfield_sda_fabric_sites_zones_playbook_generator_module
@@ -1529,6 +1527,7 @@ Modules
     event_syslog_config_info_module
     event_webhook_module
     event_webhook_info_module
+    events_and_notifications_playbook_config_generator_module
     events_and_notifications_workflow_manager_module
     execute_suggested_actions_commands_module
     fabric_devices_info_workflow_manager_module
@@ -1931,6 +1930,7 @@ Modules
     projects_details_info_module
     projects_info_module
     provision_intent_module
+    provision_playbook_config_generator_module
     provision_workflow_manager_module
     provisioning_settings_module
     provisioning_settings_info_module

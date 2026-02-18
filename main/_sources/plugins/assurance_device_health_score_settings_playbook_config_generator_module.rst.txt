@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator module -- Generate YAML configurations playbook for 'assurance\_device\_health\_score\_settings\_workflow\_manager' module.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.assurance_device_health_score_settings_playbook_config_generator module -- Generate YAML configurations playbook for 'assurance\_device\_health\_score\_settings\_workflow\_manager' module.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator 
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.assurance_device_health_score_settings_playbook_config_generator`.
 
 .. version_added
 
@@ -86,7 +86,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -121,7 +121,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -161,7 +161,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -203,7 +203,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -252,7 +252,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_health_score_settings"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/component_specific_filters/device_health_score_settings:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/component_specific_filters/device_health_score_settings:
 
       .. rst-class:: ansible-option-title
 
@@ -292,7 +292,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_health_score_settings/device_families"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/component_specific_filters/device_health_score_settings/device_families:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/component_specific_filters/device_health_score_settings/device_families:
 
       .. rst-class:: ansible-option-title
 
@@ -338,7 +338,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -362,9 +362,9 @@ Parameters
 
       Absolute or relative path where the generated YAML configuration file will be saved.
 
-      If not provided, the module generates a default filename in the current working directory with the format \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the module generates a default filename in the current working directory with the format \ :literal:`\<module\_name\>\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      Example default filename \ :literal:`assurance\_device\_health\_score\_settings\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      Example default filename \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_generator\_2026-01-24\_12-33-20.yml`\ .
 
       The directory path will be created automatically if it does not exist.
 
@@ -382,7 +382,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -435,7 +435,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -473,7 +473,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -515,7 +515,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -549,7 +549,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -601,7 +601,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -643,7 +643,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -685,7 +685,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -733,7 +733,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -767,7 +767,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -805,7 +805,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -844,8 +844,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -887,7 +887,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -929,7 +929,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -967,7 +967,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1012,7 +1012,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1099,7 +1099,7 @@ Examples
     
 
     - name: Generate YAML Configuration for all device health score settings
-      cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator:
+      cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1114,7 +1114,7 @@ Examples
           - generate_all_configurations: true
 
     - name: Generate YAML Configuration with custom file path
-      cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator:
+      cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1129,7 +1129,7 @@ Examples
           - file_path: "/tmp/assurance_health_score_settings.yml"
 
     - name: Generate YAML Configuration for all device health score components
-      cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator:
+      cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1146,7 +1146,7 @@ Examples
               components_list: ["device_health_score_settings"]
 
     - name: Generate YAML Configuration for specific device families
-      cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator:
+      cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1165,7 +1165,7 @@ Examples
                 device_families: ["UNIFIED_AP", "ROUTER", "SWITCH_AND_HUB", "WIRELESS_CONTROLLER"]
 
     - name: Generate YAML Configuration using legacy filter format
-      cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator:
+      cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1208,7 +1208,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-msg"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-msg:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-msg:
 
       .. rst-class:: ansible-option-title
 
@@ -1259,7 +1259,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1308,7 +1308,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
@@ -1359,7 +1359,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_3"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-response_3:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-response_3:
 
       .. rst-class:: ansible-option-title
 
@@ -1410,7 +1410,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_4"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-response_4:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-response_4:
 
       .. rst-class:: ansible-option-title
 
@@ -1461,7 +1461,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_5"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module__return-response_5:
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__return-response_5:
 
       .. rst-class:: ansible-option-title
 

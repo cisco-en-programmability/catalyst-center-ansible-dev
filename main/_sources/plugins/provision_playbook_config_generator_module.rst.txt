@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_application_policy_playbook_generator module -- Generate YAML configurations playbook for 'application\_policy\_workflow\_manager' module.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.provision_playbook_config_generator module -- Generate YAML playbook for 'provision\_workflow\_manager' module.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_application_policy_playbook_generator module -- Generate Y
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.provision_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_application_policy_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.provision_playbook_config_generator`.
 
 .. version_added
 
@@ -68,9 +68,8 @@ Synopsis
 
 .. Description
 
-- Generates YAML configurations compatible with the 'application\_policy\_workflow\_manager' module, reducing the effort required to manually create Ansible playbooks.
-- The YAML configurations generated represent the application policies and queuing profiles deployed in the Cisco Catalyst Center.
-- Supports extraction of Queuing Profiles and Application Policies.
+- Generates YAML configurations compatible with the \`provision\_workflow\_manager\` module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
+- The YAML configurations generated represent the provisioned devices configured on the Cisco Catalyst Center.
 
 
 .. Aliases
@@ -78,13 +77,13 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- dnacentersdk \>= 2.9.3
+- dnacentersdk \>= 2.7.2
 - python \>= 3.9
 
 
@@ -112,7 +111,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -134,9 +133,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'application\_policy\_workflow\_manager' module.
+      A list of filters for generating YAML playbook compatible with the \`provision\_workflow\_manager\` module.
 
       Filters specify which components to include in the YAML configuration file.
+
+      If "components\_list" is specified, only those components are included, regardless of the filters.
 
 
       .. raw:: html
@@ -148,7 +149,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -170,96 +171,21 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Filters to specify which application policy components to include in the YAML configuration file.
+      Filters to specify which components to include in the YAML configuration file.
 
-      Allows granular selection of specific components and their parameters.
-
-
-      .. raw:: html
-
-        </div>
-    
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/application_policy"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters/application_policy:
-
-      .. rst-class:: ansible-option-title
-
-      **application_policy**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/application_policy" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Specific application policy filtering options.
-
-      Allows extraction of only specific policies by name.
+      If "components\_list" is specified, only those components are included, regardless of other filters.
 
 
       .. raw:: html
 
         </div>
     
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/application_policy/policy_names_list"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters/application_policy/policy_names_list:
-
-      .. rst-class:: ansible-option-title
-
-      **policy_names_list**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/application_policy/policy_names_list" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      List of specific application policy names to extract.
-
-      Only policies in this list will be included in the generated configuration.
-
-      Example ["wired\_traffic\_policy", "wireless\_traffic\_policy"]
-
-
-      .. raw:: html
-
-        </div>
-
-
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -283,17 +209,19 @@ Parameters
 
       List of components to include in the YAML configuration file.
 
-      Valid values are ["queuing\_profile", "application\_policy"]
+      Valid values are - Wired Devices "wired" - Wireless Devices "wireless"
 
-      If not specified, all supported components are included.
+      If not specified, all components are included.
+
+      For example, ["wired", "wireless"].
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"queuing\_profile"`
-      - :ansible-option-choices-entry:`"application\_policy"`
+      - :ansible-option-choices-entry:`"wired"`
+      - :ansible-option-choices-entry:`"wireless"`
 
 
       .. raw:: html
@@ -303,21 +231,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/queuing_profile"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wired"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters/queuing_profile:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wired:
 
       .. rst-class:: ansible-option-title
 
-      **queuing_profile**
+      **wired**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/queuing_profile" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wired" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
 
       .. raw:: html
 
@@ -327,9 +255,7 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Specific queuing profile filtering options.
-
-      Allows extraction of only specific queuing profiles by name.
+      Wired devices to filter devices by management IP, site name, or device family.
 
 
       .. raw:: html
@@ -339,17 +265,85 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/queuing_profile/profile_names_list"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wired/device_family"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/component_specific_filters/queuing_profile/profile_names_list:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wired/device_family:
 
       .. rst-class:: ansible-option-title
 
-      **profile_names_list**
+      **device_family**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/queuing_profile/profile_names_list" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wired/device_family" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Device family to filter devices by type (e.g., 'Switches and Hubs', 'Routers').
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wired/management_ip_address"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wired/management_ip_address:
+
+      .. rst-class:: ansible-option-title
+
+      **management_ip_address**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wired/management_ip_address" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Management IP address to filter devices by IP address.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wired/site_name_hierarchy"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wired/site_name_hierarchy:
+
+      .. rst-class:: ansible-option-title
+
+      **site_name_hierarchy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wired/site_name_hierarchy" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
@@ -363,11 +357,148 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      List of specific queuing profile names to extract.
+      Site name hierarchy to filter devices by site.
 
-      Only profiles in this list will be included in the generated configuration.
+      Can specify single site or list of sites.
 
-      Example ["Enterprise-QoS-Profile", "Wireless-QoS-Profile"]
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wireless"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wireless:
+
+      .. rst-class:: ansible-option-title
+
+      **wireless**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wireless" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Wireless devices to filter devices by management IP, site name, or device family.
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wireless/device_family"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wireless/device_family:
+
+      .. rst-class:: ansible-option-title
+
+      **device_family**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wireless/device_family" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Device family to filter devices by type (e.g., 'Wireless Controller').
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wireless/management_ip_address"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wireless/management_ip_address:
+
+      .. rst-class:: ansible-option-title
+
+      **management_ip_address**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wireless/management_ip_address" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Management IP address to filter devices by IP address.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/wireless/site_name_hierarchy"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/component_specific_filters/wireless/site_name_hierarchy:
+
+      .. rst-class:: ansible-option-title
+
+      **site_name_hierarchy**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/wireless/site_name_hierarchy" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Site name hierarchy to filter devices by site.
+
+      Can specify single site or list of sites.
 
 
       .. raw:: html
@@ -381,7 +512,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -405,7 +536,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name "application\_policy\_workflow\_manager\_playbook\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml".
+      If not provided, the file will be saved in the current working directory with a default file name \<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml.
+
+      For example, provision\_playbook\_config\_2026-01-24\_12-33-20.yml.
 
 
       .. raw:: html
@@ -417,7 +550,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -439,13 +572,11 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      When set to True, automatically generates YAML configurations for all application policies and queuing profiles.
+      When set to \ :literal:`true`\ , generates a comprehensive YAML playbook containing all provisioned devices from Cisco Catalyst Center, including both wired and wireless devices.
 
-      This mode discovers all configured policies and profiles in Cisco Catalyst Center.
+      This option ignores all filter parameters (\ :literal:`global\_filters`\  and \ :literal:`component\_specific\_filters`\ ) and retrieves complete configuration for all devices across all sites.
 
-      When enabled, the config parameter becomes optional and will use default values if not specified.
-
-      A default filename will be generated automatically if file\_path is not specified.
+      If not provided or set to \ :literal:`false`\ , filters will be applied to retrieve specific devices.
 
 
       .. rst-class:: ansible-option-line
@@ -460,13 +591,84 @@ Parameters
 
         </div>
 
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/global_filters:
+
+      .. rst-class:: ansible-option-title
+
+      **global_filters**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`dictionary`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Global filters to apply across all components.
+
+
+      .. raw:: html
+
+        </div>
+    
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/management_ip_address"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/global_filters/management_ip_address:
+
+      .. rst-class:: ansible-option-title
+
+      **management_ip_address**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/global_filters/management_ip_address" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Management IP address to filter devices globally.
+
+      Can specify single IP or list of IPs.
+
+
+      .. raw:: html
+
+        </div>
+
+
 
   * - .. raw:: html
 
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -504,7 +706,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -546,7 +748,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -580,7 +782,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -632,7 +834,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -674,7 +876,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -716,7 +918,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -764,7 +966,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -798,7 +1000,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -836,7 +1038,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -875,8 +1077,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -918,7 +1120,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -960,7 +1162,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -998,7 +1200,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1039,7 +1241,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1086,8 +1288,8 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - application\_policy.ApplicationPolicy.get\_application\_policy - application\_policy.ApplicationPolicy.get\_application\_policy\_queuing\_profile
-   - Paths used are - GET /dna/intent/api/v1/app-policy - GET /dna/intent/api/v1/app-policy-queuing-profile
+   - SDK Methods used are - sda.Sda.get\_provisioned\_devices - devices.Devices.get\_network\_device\_by\_ip - devices.Devices.get\_device\_detail - sites.Sites.get\_site - wireless.Wireless.get\_access\_point\_configuration - wireless.Wireless.get\_primary\_managed\_ap\_locations\_for\_specific\_wireless\_controller - wireless.Wireless.get\_secondary\_managed\_ap\_locations\_for\_specific\_wireless\_controller
+   - Paths used are - GET /dna/intent/api/v1/sda/provisioned-devices - GET /dna/intent/api/v1/network-device/ip-address/{ipAddress} - GET /dna/intent/api/v1/network-device/{id}/detail - GET /dna/intent/api/v1/site - GET /dna/intent/api/v1/wireless/accesspoint-configuration/summary - GET /dna/intent/api/v1/wireless/primary-managed-ap-locations/{networkDeviceId} - GET /dna/intent/api/v1/wireless/secondary-managed-ap-locations/{networkDeviceId}
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1103,8 +1305,8 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Generate all application policy configurations
-      cisco.dnac.brownfield_application_policy_playbook_generator:
+    - name: Generate YAML Configuration with File Path specified
+      cisco.dnac.provision_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1116,10 +1318,10 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          - file_path: "/tmp/catc_provision_config.yaml"
 
-    - name: Generate configurations with custom file path
-      cisco.dnac.brownfield_application_policy_playbook_generator:
+    - name: Generate YAML Configuration for ALL provisioned devices (ignores all filters)
+      cisco.dnac.provision_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1131,10 +1333,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/app_policy_config.yml"
+          - file_path: "/tmp/catc_all_provisioned_devices.yaml"
+            generate_all_configurations: true
 
-    - name: Generate specific queuing profiles
-      cisco.dnac.brownfield_application_policy_playbook_generator:
+    - name: Generate YAML Configuration with specific wired devices filter
+      cisco.dnac.provision_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1146,14 +1349,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/queuing_profiles.yml"
+          - file_path: "/tmp/catc_provision_config.yaml"
             component_specific_filters:
-              components_list: ["queuing_profile"]
-              queuing_profile:
-                profile_names_list: ["Enterprise-QoS-Profile", "Wireless-QoS"]
+              components_list: ["wired"]
 
-    - name: Generate specific application policies
-      cisco.dnac.brownfield_application_policy_playbook_generator:
+    - name: Generate YAML Configuration for devices with IP address filter (global)
+      cisco.dnac.provision_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1165,14 +1366,14 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/app_policies.yml"
-            component_specific_filters:
-              components_list: ["application_policy"]
-              application_policy:
-                policy_names_list: ["wired_traffic_policy"]
+          - file_path: "/tmp/catc_provision_config.yaml"
+            global_filters:
+              management_ip_address:
+                - "204.192.3.40"
+                - "204.192.12.201"
 
-    - name: Generate both queuing profiles and policies with filters
-      cisco.dnac.brownfield_application_policy_playbook_generator:
+    - name: Generate YAML Configuration for wired devices with multiple site filters
+      cisco.dnac.provision_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1184,13 +1385,84 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/complete_app_policy_config.yml"
+          - file_path: "/tmp/catc_provision_config.yaml"
             component_specific_filters:
-              components_list: ["queuing_profile", "application_policy"]
-              queuing_profile:
-                profile_names_list: ["Enterprise-QoS-Profile"]
-              application_policy:
-                policy_names_list: ["wired_traffic_policy", "wireless_traffic_policy"]
+              components_list: ["wired"]
+              wired:
+                - site_name_hierarchy:
+                    - "Global/USA/San Francisco/BGL_18"
+                    - "Global/USA/San Jose/SJ_BLD20"
+
+    - name: Generate YAML Configuration for all wired devices
+      cisco.dnac.provision_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_provision_config.yaml"
+            component_specific_filters:
+              components_list: ["wired"]
+
+    - name: Generate YAML Configuration for wireless devices only
+      cisco.dnac.provision_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_wireless_config.yaml"
+            component_specific_filters:
+              components_list: ["wireless"]
+
+    - name: Generate YAML Configuration for both wired and wireless devices
+      cisco.dnac.provision_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_all_devices_config.yaml"
+            component_specific_filters:
+              components_list: ["wired", "wireless"]
+
+    - name: Generate YAML Configuration for wireless devices with specific site filter
+      cisco.dnac.provision_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          - file_path: "/tmp/catc_site_wireless_config.yaml"
+            component_specific_filters:
+              components_list: ["wireless"]
+              wireless:
+                - site_name_hierarchy:
+                    - "Global/USA/San Francisco/BGL_18"
 
 
 
@@ -1219,7 +1491,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1241,7 +1513,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      Successful YAML configuration generation
+      A dictionary with the response returned by the Cisco Catalyst Center Python SDK
 
 
       .. rst-class:: ansible-option-line
@@ -1251,7 +1523,52 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML config generation succeeded for module 'application\_policy\_workflow\_manager'.", "response": {"components\_processed": 2, "components\_skipped": 0, "configurations\_count": 15, "file\_path": "application\_policy\_workflow\_manager\_playbook\_2026-02-03\_03-00-59.yml", "message": "YAML config generation succeeded for module 'application\_policy\_workflow\_manager'.", "status": "success"}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\":\\n    {\\n      \\"response\\": String,\\n      \\"version\\": String\\n    },\\n  \\"msg\\": String\\n}\\n"`
+
+
+      .. raw:: html
+
+        </div>
+
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="return-response_2"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__return-response_2:
+
+      .. rst-class:: ansible-option-title
+
+      **response_2**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#return-response_2" title="Permalink to this return value"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      A string with the response returned by the Cisco Catalyst Center Python SDK
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-returned-bold:`Returned:` always
+
+      .. rst-class:: ansible-option-line
+      .. rst-class:: ansible-option-sample
+
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`["{\\n  \\"response\\": []", "\\n  \\"msg\\": String\\n}\\n"]`
 
 
       .. raw:: html
