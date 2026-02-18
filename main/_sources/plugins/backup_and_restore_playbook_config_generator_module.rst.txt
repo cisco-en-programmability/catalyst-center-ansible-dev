@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for 'backup\_and\_restore\_workflow\_manager' module.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.backup_and_restore_playbook_config_generator module -- Generate YAML playbook for 'backup\_and\_restore\_workflow\_manager' module.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate Y
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_backup_and_restore_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.backup_and_restore_playbook_config_generator`.
 
 .. version_added
 
@@ -79,7 +79,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -113,7 +113,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -151,7 +151,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -189,7 +189,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/backup_storage_configuration"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/backup_storage_configuration:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/backup_storage_configuration:
 
       .. rst-class:: ansible-option-title
 
@@ -229,7 +229,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/backup_storage_configuration/server_type"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/backup_storage_configuration/server_type:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/backup_storage_configuration/server_type:
 
       .. rst-class:: ansible-option-title
 
@@ -276,7 +276,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -324,7 +324,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/nfs_configuration:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/nfs_configuration:
 
       .. rst-class:: ansible-option-title
 
@@ -362,7 +362,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration/server_ip"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/nfs_configuration/server_ip:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/nfs_configuration/server_ip:
 
       .. rst-class:: ansible-option-title
 
@@ -400,7 +400,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration/source_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/component_specific_filters/nfs_configuration/source_path:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/component_specific_filters/nfs_configuration/source_path:
 
       .. rst-class:: ansible-option-title
 
@@ -440,7 +440,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -480,7 +480,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -529,7 +529,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -567,7 +567,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -609,7 +609,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -643,7 +643,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -695,7 +695,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -737,7 +737,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -779,7 +779,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -827,7 +827,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -861,7 +861,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -899,7 +899,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -938,8 +938,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -981,7 +981,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -1023,7 +1023,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -1061,7 +1061,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1104,7 +1104,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1186,7 +1186,7 @@ Examples
 
     
     - name: Generate YAML Configuration with both NFS and backup storage configurations
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1205,7 +1205,7 @@ Examples
                 - "backup_storage_configuration"
 
     - name: Generate YAML for NFS-type backup storage only filtering by server_type
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1224,7 +1224,7 @@ Examples
                 - server_type: "NFS"
 
     - name: Generate YAML for specific NFS server using exact match on server_ip and source_path
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1244,7 +1244,7 @@ Examples
                   source_path: "/home/nfsshare/backups/TB30"
 
     - name: Generate YAML for all configurations without filtering useful for complete system documentation
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1260,7 +1260,7 @@ Examples
             generate_all_configurations: true
 
     - name: Generate YAML Configuration for multiple NFS servers (each must have both server_ip and source_path)
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1282,7 +1282,7 @@ Examples
                   source_path: "/home/nfsshare/backups/TB31"
 
     - name: Generate YAML Configuration for Physical Disk backup storage only
-      cisco.dnac.brownfield_backup_and_restore_playbook_generator:
+      cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1327,7 +1327,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1369,7 +1369,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/msg"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/msg:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/msg:
 
       .. rst-class:: ansible-option-title
 
@@ -1414,7 +1414,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response:
 
       .. rst-class:: ansible-option-title
 
@@ -1454,7 +1454,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/components_processed"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/components_processed:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/components_processed:
 
       .. rst-class:: ansible-option-title
 
@@ -1499,7 +1499,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/components_skipped"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/components_skipped:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/components_skipped:
 
       .. rst-class:: ansible-option-title
 
@@ -1546,7 +1546,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/configurations_count"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/configurations_count:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/configurations_count:
 
       .. rst-class:: ansible-option-title
 
@@ -1591,7 +1591,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/file_path:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -1636,7 +1636,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/message"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/message:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/message:
 
       .. rst-class:: ansible-option-title
 
@@ -1681,7 +1681,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/response/status"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/response/status:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/response/status:
 
       .. rst-class:: ansible-option-title
 
@@ -1730,7 +1730,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1/status"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_1/status:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_1/status:
 
       .. rst-class:: ansible-option-title
 
@@ -1779,7 +1779,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
@@ -1826,7 +1826,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_3"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module__return-response_3:
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__return-response_3:
 
       .. rst-class:: ansible-option-title
 

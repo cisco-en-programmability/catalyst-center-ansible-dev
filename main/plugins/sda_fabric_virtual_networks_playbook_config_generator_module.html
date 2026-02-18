@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for &#39;backup_and_restore_workflow_manager&#39; module. &mdash; DNACenterAnsibleActions  documentation</title>
+  <title>cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for sda_fabric_virtual_networks_workflow_manager module. &mdash; DNACenterAnsibleActions  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cisco.dnac.brownfield_device_credential_playbook_generator module -- Generate YAML configurations playbook for &#39;device_credential_workflow_manager&#39; module." href="brownfield_device_credential_playbook_generator_module.html" />
-    <link rel="prev" title="cisco.dnac.brownfield_accesspoint_playbook_generator module -- Generate YAML configurations playbook for &#39;accesspoint_workflow_manager&#39; module." href="brownfield_accesspoint_playbook_generator_module.html" /> 
+    <link rel="next" title="cisco.dnac.sda_fabric_virtual_networks_workflow_manager module -- Configure fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center." href="sda_fabric_virtual_networks_workflow_manager_module.html" />
+    <link rel="prev" title="cisco.dnac.sda_fabric_transits_workflow_manager module -- Resource module for SDA fabric transits" href="sda_fabric_transits_workflow_manager_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="authentication_import_certificate_p12_module.html">cisco.dnac.authentication_import_certificate_p12 module -- Resource module for Authentication Import Certificate P12</a></li>
 <li class="toctree-l4"><a class="reference internal" href="authentication_policy_servers_module.html">cisco.dnac.authentication_policy_servers module -- Resource module for Authentication Policy Servers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="authentication_policy_servers_info_module.html">cisco.dnac.authentication_policy_servers_info module -- Information module for Authentication Policy Servers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="backup_and_restore_playbook_config_generator_module.html">cisco.dnac.backup_and_restore_playbook_config_generator module -- Generate YAML playbook for 'backup_and_restore_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backup_and_restore_workflow_manager_module.html">Synopsis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backup_and_restore_workflow_manager_module.html#requirements">Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backup_and_restore_workflow_manager_module.html#parameters">Parameters</a></li>
@@ -149,14 +150,13 @@
 <li class="toctree-l4"><a class="reference internal" href="backups_info_module.html">cisco.dnac.backups_info module -- Information module for Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_accesspoint_location_playbook_generator_module.html">cisco.dnac.brownfield_accesspoint_location_playbook_generator module -- Generate YAML configurations playbook for 'accesspoint_location_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_accesspoint_playbook_generator_module.html">cisco.dnac.brownfield_accesspoint_playbook_generator module -- Generate YAML configurations playbook for 'accesspoint_workflow_manager' module.</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for 'backup_and_restore_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_device_credential_playbook_generator_module.html">cisco.dnac.brownfield_device_credential_playbook_generator module -- Generate YAML configurations playbook for 'device_credential_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_profile_switching_playbook_generator_module.html">cisco.dnac.brownfield_network_profile_switching_playbook_generator module -- Generate YAML configurations playbook for 'network_profile_switching_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_profile_wireless_playbook_generator_module.html">cisco.dnac.brownfield_network_profile_wireless_playbook_generator module -- Generate YAML configurations playbook for 'network_profile_wireless_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_network_settings_playbook_generator_module.html">cisco.dnac.brownfield_network_settings_playbook_generator module -- Generate YAML playbook for 'network_settings_workflow_manager' module.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="brownfield_sda_extranet_policies_playbook_generator_module.html">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_multicast_playbook_generator_module.html">cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator module -- Generate YAML configurations playbook for 'sda_fabric_multicast_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_transits_config_generator_module.html">cisco.dnac.brownfield_sda_fabric_transits_config_generator module -- Generate YAML configurations playbook for 'sda_fabric_transits_workflow_manager' module.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_virtual_networks_playbook_generator_module.html">cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_template_playbook_generator_module.html">cisco.dnac.brownfield_template_playbook_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">template_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_wired_campus_automation_playbook_generator_module.html">cisco.dnac.brownfield_wired_campus_automation_playbook_generator module -- Generate YAML configurations playbook for 'wired_campus_automation_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_module.html">cisco.dnac.buildings module -- Resource module for Buildings</a></li>
@@ -848,6 +848,7 @@
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_sites_zones_playbook_config_generator_module.html">cisco.dnac.sda_fabric_sites_zones_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_sites_zones_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_sites_zones_workflow_manager_module.html">cisco.dnac.sda_fabric_sites_zones_workflow_manager module -- Manage fabric site(s)/zone(s) and update the authentication profile template in Cisco Catalyst Center.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_transits_workflow_manager_module.html">cisco.dnac.sda_fabric_transits_workflow_manager module -- Resource module for SDA fabric transits</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_virtual_networks_workflow_manager_module.html">cisco.dnac.sda_fabric_virtual_networks_workflow_manager module -- Configure fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_zones_module.html">cisco.dnac.sda_fabric_zones module -- Resource module for Sda Fabric Zones</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_zones_count_info_module.html">cisco.dnac.sda_fabric_zones_count_info module -- Information module for Sda Fabric Zones Count</a></li>
@@ -1217,9 +1218,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Cisco.Dnac</a></li>
-      <li class="breadcrumb-item active">cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for 'backup_and_restore_workflow_manager' module.</li>
+      <li class="breadcrumb-item active">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module.</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/plugins/brownfield_backup_and_restore_playbook_generator_module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/plugins/sda_fabric_virtual_networks_playbook_config_generator_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -1227,47 +1228,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module"></span><section id="cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-generate-yaml-playbook-for-backup-and-restore-workflow-manager-module">
-<h1>cisco.dnac.brownfield_backup_and_restore_playbook_generator module -- Generate YAML playbook for 'backup_and_restore_workflow_manager' module.<a class="headerlink" href="#cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-generate-yaml-playbook-for-backup-and-restore-workflow-manager-module" title="Permalink to this heading"></a></h1>
+  <span class="target" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module"></span><section id="cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-generate-yaml-playbook-for-sda-fabric-virtual-networks-workflow-manager-module">
+<h1>cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module.<a class="headerlink" href="#cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-generate-yaml-playbook-for-sda-fabric-virtual-networks-workflow-manager-module" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/cisco/dnac">cisco.dnac collection</a> (version 6.48.0).</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">cisco.dnac</span></code>.
 You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span></code>.</p>
+see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span></code>.</p>
 </div>
 <p class="ansible-version-added">New in cisco.dnac 6.44.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id73">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id74">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id75">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#notes" id="id76">Notes</a></p></li>
-<li><p><a class="reference internal" href="#see-also" id="id77">See Also</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id78">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id79">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#synopsis" id="id51">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id52">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id53">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#notes" id="id54">Notes</a></p></li>
+<li><p><a class="reference internal" href="#see-also" id="id55">See Also</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id56">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id57">Return Values</a></p></li>
 </ul>
 </nav>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id73" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id51" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Generates YAML configurations compatible with the backup_and_restore_workflow_manager module, reducing manual playbook creation effort and enabling programmatic modifications.</p></li>
-<li><p>Represents NFS server configurations and backup storage configurations for backup and restore operations on Cisco Catalyst Center.</p></li>
-<li><p>Supports extraction of NFS configurations, backup storage configurations with encryption and retention policies.</p></li>
-<li><p>Generated YAML format is directly usable with backup_and_restore_workflow_manager module for infrastructure as code.</p></li>
+<li><p>Generates YAML configurations compatible with the <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.</p></li>
+<li><p>The YAML configurations generated represent the fabric vlans, virtual networks and anycast gateways configured on the Cisco Catalyst Center.</p></li>
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-requirements"></span><h2><a class="toc-backref" href="#id74" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<span id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-requirements"></span><h2><a class="toc-backref" href="#id52" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>The below requirements are needed on the host that executes this module.</p>
 <ul class="simple">
-<li><p>dnacentersdk &gt;= 2.9.3</p></li>
+<li><p>dnacentersdk &gt;= 2.3.7.9</p></li>
 <li><p>python &gt;= 3.9</p></li>
 </ul>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id75" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id53" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -1276,143 +1275,162 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config"><strong>config</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config"><strong>config</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>A list of filters for generating YAML playbook compatible with the `backup_and_restore_workflow_manager` module.</p>
+<td><div class="ansible-option-cell"><p>A list of filters for generating YAML playbook compatible with the `sda_fabric_virtual_networks_workflow_manager` module.</p>
 <p>Filters specify which components to include in the YAML configuration file.</p>
-<p>If &quot;components_list&quot; is specified, only those components are included, regardless of the filters.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">components_list</span></code> is specified, only those components are included, regardless of the filters.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters to specify which components to include in the YAML configuration file.</p>
-<p>If &quot;components_list&quot; is specified, only those components are included, regardless of other filters.</p>
-<p>Ignored when generate_all_configurations is set to true.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">components_list</span></code> is specified, only those components are included, regardless of other filters.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/backup_storage_configuration"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-backup-storage-configuration"><strong>backup_storage_configuration</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/backup_storage_configuration" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-anycast-gateways"><strong>anycast_gateways</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/anycast_gateways" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Backup storage configuration filtering options by server type only.</p>
-<p>If not specified, all backup storage configurations are included.</p>
-<p>Only server_type filtering is supported for backup storage.</p>
-<p>Other filter parameters like mount_path or retention_period are not supported.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Anycast Gateways to filter anycast gateways by VN name, VLAN name, VLAN ID, or IP Pool name.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/backup_storage_configuration/server_type"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-backup-storage-configuration-server-type"><strong>server_type</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/backup_storage_configuration/server_type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/ip_pool_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-anycast-gateways-ip-pool-name"><strong>ip_pool_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/anycast_gateways/ip_pool_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Server type for filtering backup configurations.</p>
-<p>NFS type represents network-based backup storage.</p>
-<p>PHYSICAL_DISK type represents local disk backup storage.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><a href="#id1"><span class="problematic" id="id2">:ansible-option-choices-entry:`&quot;NFS&quot;`</span></a></p></li>
-<li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry:`&quot;PHYSICAL\_DISK&quot;`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/components_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of components to include in the YAML configuration file.</p>
-<p>Valid values are - NFS Configuration &quot;nfs_configuration&quot; - Backup Storage Configuration &quot;backup_storage_configuration&quot;</p>
-<p>If not specified, all components are included.</p>
-<p>Supports multiple filter entries for filtering multiple NFS servers.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><a href="#id5"><span class="problematic" id="id6">:ansible-option-choices-entry:`&quot;nfs\_configuration&quot;`</span></a></p></li>
-<li><p><a href="#id7"><span class="problematic" id="id8">:ansible-option-choices-entry:`&quot;backup\_storage\_configuration&quot;`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-nfs-configuration"><strong>nfs_configuration</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/nfs_configuration" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>NFS configuration details to filter NFS servers.</p>
-<p>Both server_ip and source_path must be provided together for filtering.</p>
-<p>If not specified, all NFS configurations are included.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>IP Pool name to filter anycast gateways by IP Pool name.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration/server_ip"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-nfs-configuration-server-ip"><strong>server_ip</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/nfs_configuration/server_ip" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vlan_id"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-anycast-gateways-vlan-id"><strong>vlan_id</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/anycast_gateways/vlan_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Server IP address of the NFS server.</p>
-<p>Must be provided along with source_path for filtering.</p>
-<p>Used for exact match filtering of NFS configurations.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>VLAN ID to filter anycast gateways by VLAN ID.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/nfs_configuration/source_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-component-specific-filters-nfs-configuration-source-path"><strong>source_path</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/nfs_configuration/source_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vlan_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-anycast-gateways-vlan-name"><strong>vlan_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/anycast_gateways/vlan_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Source path on the NFS server.</p>
-<p>Must be provided along with server_ip for filtering.</p>
-<p>Used for exact match filtering of NFS configurations.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>VLAN name to filter anycast gateways by VLAN name.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vn_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-anycast-gateways-vn-name"><strong>vn_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/anycast_gateways/vn_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Path where the YAML configuration file will be saved.</p>
-<p>If not provided, the file will be saved in the current working directory with a default file name  &quot;&lt;module_name&gt;_playbook_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml&quot;.</p>
-<p>For example, &quot;backup_and_restore_workflow_manager_playbook_2026-01-27_14-21-41.yml&quot;.</p>
-<p>Supports both absolute and relative paths.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Virtual Network name to filter anycast gateways by VN name.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/components_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Generate YAML configuration for all available backup and restore components.</p>
-<p>When set to true, generates configuration for both NFS configurations and backup storage configurations.</p>
-<p>Takes precedence over component_specific_filters if both are specified.</p>
-<p>If set to true and no component_specific_filters are provided, defaults to including all components.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of components to include in the YAML configuration file.</p>
+<p>Valid values are - Fabric VLANs <code class="docutils literal notranslate"><span class="pre">fabric_vlan</span></code> - Virtual Networks <code class="docutils literal notranslate"><span class="pre">virtual_networks</span></code> - Anycast Gateways <code class="docutils literal notranslate"><span class="pre">anycast_gateways</span></code></p>
+<p>For example, [&quot;fabric_vlan&quot;, &quot;virtual_networks&quot;, &quot;anycast_gateways&quot;].</p>
+<p>If not specified, all components are included.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id9"><span class="problematic" id="id10">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id11"><span class="problematic" id="id12">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id1"><span class="problematic" id="id2">:ansible-option-choices-entry:`&quot;fabric\_vlan&quot;`</span></a></p></li>
+<li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry:`&quot;virtual\_networks&quot;`</span></a></p></li>
+<li><p><a href="#id5"><span class="problematic" id="id6">:ansible-option-choices-entry:`&quot;anycast\_gateways&quot;`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
-<a class="ansibleOptionLink" href="#parameter-dnac_api_task_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-fabric-vlan"><strong>fabric_vlan</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_vlan" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Defines the timeout in seconds for API calls to retrieve task details. If the task details are not received within this period, the process will end, and a timeout notification will be logged.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id13"><span class="problematic" id="id14">:ansible-option-default:`1200`</span></a></p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Fabric VLANs to filter fabric vlans by vlan name or vlan id.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan/vlan_id"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-fabric-vlan-vlan-id"><strong>vlan_id</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_vlan/vlan_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>VLAN ID to filter fabric vlans by vlan id.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan/vlan_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-fabric-vlan-vlan-name"><strong>vlan_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_vlan/vlan_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>VLAN name to filter fabric vlans by vlan name.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/virtual_networks"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-virtual-networks"><strong>virtual_networks</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/virtual_networks" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Virtual Networks to filter virtual networks by VN name.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/virtual_networks/vn_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-component-specific-filters-virtual-networks-vn-name"><strong>vn_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/virtual_networks/vn_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Virtual Network name to filter virtual networks by VN name.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Path where the YAML configuration file will be saved.</p>
+<p>If not provided, the file will be saved in the current working directory with a default file name  <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;_playbook_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager_playbook_2026-01-24_12-33-20.yml</span></code>.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>When set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, automatically generates YAML configurations for all the fabric vlans, virtual networks and anycast gateways present in the Cisco Catalyst Center, ignoring any provided filters.</p>
+<p>When enabled, the config parameter becomes optional and will use default values if not provided.</p>
+<p>A default filename will be generated automatically if file_path is not specified.</p>
+<p>This is useful for complete playbook configuration infrastructure discovery and documentation.</p>
+<p>When set to false, the module uses provided filters to generate a targeted YAML configuration.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><a href="#id7"><span class="problematic" id="id8">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id9"><span class="problematic" id="id10">:ansible-option-choices-entry:`true`</span></a></p></li>
+</ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
+<a class="ansibleOptionLink" href="#parameter-dnac_api_task_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Defines the timeout in seconds for API calls to retrieve task details. If the task details are not received within this period, the process will end, and a timeout notification will be logged.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id11"><span class="problematic" id="id12">:ansible-option-default:`1200`</span></a></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_debug" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Indicates whether debugging is enabled in the Cisco Catalyst Center SDK.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id13"><span class="problematic" id="id14">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The hostname of the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable/disable playbook execution logging.</p>
@@ -1423,35 +1441,35 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <p>If the log file exists, - It is overwritten or appended based on the &quot;dnac_log_append&quot; flag.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_append" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines the mode of the file. Set to True for 'append' mode. Set to False for 'write' mode.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id23"><span class="problematic" id="id24">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id25"><span class="problematic" id="id26">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id23"><span class="problematic" id="id24">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Governs logging. Logs are recorded if dnac_log is True.</p>
 <p>If path is not specified, - When 'dnac_log_append' is True, 'dnac.log' is generated in the current Ansible directory; logs are appended. - When 'dnac_log_append' is False, 'dnac.log' is generated; logs are overwritten.</p>
 <p>If path is specified, - When 'dnac_log_append' is True, the file opens in append mode. - When 'dnac_log_append' is False, the file opens in write (w) mode. - In shared file scenarios, without append mode, content is overwritten after each module execution. - For a shared log file, set append to False for the 1st module (to overwrite); for subsequent modules, set append to True.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id25"><span class="problematic" id="id26">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_level" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Sets the threshold for log level. Messages with a level equal to or higher than this will be logged. Levels are listed in order of severity [CRITICAL, ERROR, WARNING, INFO, DEBUG].</p>
@@ -1460,83 +1478,82 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <p>WARNING indicates potential future issues. Displays WARNING, ERROR, CRITICAL messages.</p>
 <p>INFO tracks normal operation. Displays INFO, WARNING, ERROR, CRITICAL messages.</p>
 <p>DEBUG provides detailed diagnostic info. Displays all log messages.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for authentication at the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_port" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the port number associated with the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id31"><span class="problematic" id="id32">:ansible-option-default:`&quot;443&quot;`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
-<a class="ansibleOptionLink" href="#parameter-dnac_task_poll_interval" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Specifies the interval in seconds between successive calls to the API to retrieve task details.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id33"><span class="problematic" id="id34">:ansible-option-default:`2`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`&quot;443&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
+<a class="ansibleOptionLink" href="#parameter-dnac_task_poll_interval" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Specifies the interval in seconds between successive calls to the API to retrieve task details.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id31"><span class="problematic" id="id32">:ansible-option-default:`2`</span></a></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
-<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: user</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The username for authentication at the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id35"><span class="problematic" id="id36">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id33"><span class="problematic" id="id34">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_verify" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable or disable SSL certificate verification.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id37"><span class="problematic" id="id38">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id39"><span class="problematic" id="id40">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id35"><span class="problematic" id="id36">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id37"><span class="problematic" id="id38">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
-<a class="ansibleOptionLink" href="#parameter-dnac_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Specifies the version of the Cisco Catalyst Center that the SDK should use.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id41"><span class="problematic" id="id42">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-state"><strong>state</strong></p>
-<a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
+<a class="ansibleOptionLink" href="#parameter-dnac_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Desired state of Cisco Catalyst Center after module execution.</p>
-<p>Only gathered state is supported for extracting configurations.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><a href="#id43"><span class="problematic" id="id44">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-</ul>
+<td><div class="ansible-option-cell"><p>Specifies the version of the Cisco Catalyst Center that the SDK should use.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id39"><span class="problematic" id="id40">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-state"><strong>state</strong></p>
+<a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The desired state of Cisco Catalyst Center after module execution.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><a href="#id41"><span class="problematic" id="id42">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
 <a class="ansibleOptionLink" href="#parameter-validate_response_schema" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag for Cisco Catalyst Center SDK to enable the validation of request bodies against a JSON schema.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id45"><span class="problematic" id="id46">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id47"><span class="problematic" id="id48">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id43"><span class="problematic" id="id44">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id45"><span class="problematic" id="id46">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -1544,22 +1561,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </table>
 </section>
 <section id="notes">
-<h2><a class="toc-backref" href="#id76" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id54" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>SDK Methods used are - backup.Backup.get_all_n_f_s_configurations - backup.Backup.get_backup_configuration</p></li>
-<li><p>Paths used are - GET /dna/system/api/v1/backupNfsConfigurations - GET /dna/system/api/v1/backupConfiguration</p></li>
-<li><p>Requires Cisco Catalyst Center version 3.1.3.0 or higher</p></li>
-<li><p>Only supports gathered state for extracting existing configurations</p></li>
-<li><p>NFS filtering requires both server_ip and source_path together</p></li>
-<li><p>Backup storage filtering only supports server_type parameter</p></li>
-<li><p>Generated YAML file format is compatible with backup_and_restore_workflow_manager module</p></li>
-<li><p>File path supports both absolute and relative paths</p></li>
-<li><p>Default filename includes timestamp for uniqueness</p></li>
-<li><p>NFS details correlation matches backup mount paths with NFS destination paths automatically</p></li>
-<li><p>Empty configurations return success with idempotent behavior</p></li>
-<li><p>Module does not modify Catalyst Center configuration</p></li>
+<li><p>SDK Methods used are - sites.Sites.get_site - site_design.SiteDesigns.get_sites - sda.Sda.get_layer2_virtual_networks - sda.Sda.get_layer3_virtual_networks - sda.Sda.get_anycast_gateways - sda.Sda.get_fabric_sites - sda.Sda.get_fabric_zones - sda.Sda.get_fabric_sites_by_id - sda.Sda.get_fabric_zones_by_id</p></li>
+<li><p>Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/sda/layer2-virtual-networks - GET /dna/intent/api/v1/sda/layer3-virtual-networks - GET /dna/intent/api/v1/sda/anycast-gateways - GET /dna/intent/api/v1/sda/fabric-sites - GET /dna/intent/api/v1/sda/fabric-zones - GET /dna/intent/api/v1/sda/fabric-sites/{id} - GET /dna/intent/api/v1/sda/fabric-zones/{id}</p></li>
 <li><p>Does not support <code class="docutils literal notranslate"><span class="pre">check_mode</span></code></p></li>
 <li><p>The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK</p></li>
 <li><p>The parameters starting with dnac_ are used by the Cisco Catalyst Center Python SDK to establish the connection</p></li>
@@ -1567,19 +1574,20 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div>
 </section>
 <section id="see-also">
-<h2><a class="toc-backref" href="#id77" role="doc-backlink">See Also</a><a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id55" role="doc-backlink">See Also</a><a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="backup_and_restore_workflow_manager_module.html#ansible-collections-cisco-dnac-backup-and-restore-workflow-manager-module"><span class="std std-ref">cisco.dnac.backup_and_restore_workflow_manager</span></a></dt><dd><p>Module to manage backup and restore NFS configurations in Cisco Catalyst Center.</p>
+<dt><a class="reference internal" href="sda_fabric_virtual_networks_workflow_manager_module.html#ansible-collections-cisco-dnac-sda-fabric-virtual-networks-workflow-manager-module"><span class="std std-ref">cisco.dnac.sda_fabric_virtual_networks_workflow_manager</span></a></dt><dd><p>Module for managing fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center.</p>
 </dd>
 </dl>
 </div>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id78" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with both NFS and backup storage configurations</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
+<h2><a class="toc-backref" href="#id56" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auto-generate YAML Configuration for all components which</span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">includes fabric vlans, virtual networks and anycast gateways.</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1591,14 +1599,10 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_backup_restore_config.yaml&quot;</span>
-<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;nfs_configuration&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;backup_storage_configuration&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">generate_all_configurations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML for NFS-type backup storage only filtering by server_type</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with File Path specified</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1610,14 +1614,11 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_backup_storage_config.yaml&quot;</span>
-<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;backup_storage_configuration&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">backup_storage_configuration</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">server_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NFS&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">generate_all_configurations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/all_config.yml&quot;</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML for specific NFS server using exact match on server_ip and source_path</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific fabric vlan components only</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1629,15 +1630,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_specific_nfs_config.yaml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_fabric_vlan_components_config.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;nfs_configuration&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">nfs_configuration</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">server_ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;172.27.17.90&quot;</span>
-<span class="w">              </span><span class="nt">source_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/nfsshare/backups/TB30&quot;</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML for all configurations without filtering useful for complete system documentation</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific virtual networks components only</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1649,33 +1647,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_backup_restore_config.yaml&quot;</span>
-<span class="w">        </span><span class="nt">generate_all_configurations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for multiple NFS servers (each must have both server_ip and source_path)</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_multiple_nfs_config.yaml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_virtual_networks_components_config.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;nfs_configuration&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">nfs_configuration</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">server_ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;172.27.17.90&quot;</span>
-<span class="w">              </span><span class="nt">source_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/nfsshare/backups/TB30&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">server_ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;172.27.17.91&quot;</span>
-<span class="w">              </span><span class="nt">source_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/nfsshare/backups/TB31&quot;</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;virtual_networks&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for Physical Disk backup storage only</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_backup_and_restore_playbook_generator</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific anycast gateways components only</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1687,16 +1664,265 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_physical_disk_backup.yaml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
 <span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;backup_storage_configuration&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">backup_storage_configuration</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">server_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NFS&quot;</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for fabric vlans with vlan name filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_fabric_vlans_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">fabric_vlan</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vlan_1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vlan_2&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for fabric vlans and virtual networks with multiple filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_multiple_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;virtual_networks&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">fabric_vlan</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vlan_1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vlan_2&quot;</span>
+<span class="w">          </span><span class="nt">virtual_networks</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vn_1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vn_2&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for all components with no filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_all_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;virtual_networks&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for fabric vlans with VLAN IDs filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_fabric_vlan_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">fabric_vlan</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1031</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1038</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for fabric vlans with both VLAN name and ID filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_fabric_vlan_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;fabric_vlan&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">fabric_vlan</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN6-Pool1&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1031</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN9-Pool2&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1038</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for virtual networks with specific VN names</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_virtual_networks_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;virtual_networks&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">virtual_networks</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;VN1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;VN3&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with VN name filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai_VN1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai_VN3&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with IP pool name filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ip_pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN3-Pool1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ip_pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with VLAN ID and IP pool filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1032</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1033</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ip_pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with VLAN name filter</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN7-Pool1&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with VLAN name and ID combination</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1022</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN7-Pool1&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1033</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for anycast gateways with comprehensive filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/catc_anycast_gateways_components_config.yml&quot;</span>
+<span class="w">        </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;anycast_gateways&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">anycast_gateways</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1022</span>
+<span class="w">              </span><span class="nt">ip_pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN1-Pool2&quot;</span>
+<span class="w">              </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai_VN1&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN7-Pool1&quot;</span>
+<span class="w">              </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1033</span>
+<span class="w">              </span><span class="nt">ip_pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai-VN7-Pool1&quot;</span>
+<span class="w">              </span><span class="nt">vn_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chennai_VN7&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="return-values">
-<h2><a class="toc-backref" href="#id79" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id57" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v13)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
@@ -1706,121 +1932,21 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1"><strong>response_1</strong></p>
+<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-return-response-1"><strong>response_1</strong></p>
 <a class="ansibleOptionLink" href="#return-response_1" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Response from YAML configuration generation operation with execution
-statistics and status information.</p>
+<td><div class="ansible-option-cell"><p>A dictionary with  with the response returned by the Cisco Catalyst Center Python SDK</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/msg"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-msg"><strong>msg</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/msg" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Status message describing operation outcome</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id49"><span class="problematic" id="id50">:ansible-rv-sample-value:`&quot;YAML configuration file generated successfully for module\\nbackup\_and\_restore\_workflow\_manager\\n&quot;`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response"><strong>response</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Detailed operation results and statistics</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/components_processed"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-components-processed"><strong>components_processed</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/components_processed" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of components successfully retrieved</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id51"><span class="problematic" id="id52">:ansible-rv-sample-value:`2`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/components_skipped"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-components-skipped"><strong>components_skipped</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/components_skipped" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of components skipped due to errors or no data
-available</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id53"><span class="problematic" id="id54">:ansible-rv-sample-value:`0`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/configurations_count"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-configurations-count"><strong>configurations_count</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/configurations_count" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Total configuration items across all components</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id55"><span class="problematic" id="id56">:ansible-rv-sample-value:`5`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-file-path"><strong>file_path</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/file_path" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute path to generated YAML file</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on_success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id57"><span class="problematic" id="id58">:ansible-rv-sample-value:`&quot;/tmp/backup\_restore\_config.yaml&quot;`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/message"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-message"><strong>message</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/message" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Detailed status message with operation summary</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id59"><span class="problematic" id="id60">:ansible-rv-sample-value:`&quot;YAML configuration file generated successfully for module\\nbackup\_and\_restore\_workflow\_manager\\n&quot;`</span></a></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/response/status"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-response-status"><strong>status</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/response/status" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Operation status indicating success or failure</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Can only return:</span></p>
-<ul class="simple">
-<li><p><a href="#id61"><span class="problematic" id="id62">:ansible-option-choices-entry:`&quot;success&quot;`</span></a></p></li>
-<li><p><a href="#id63"><span class="problematic" id="id64">:ansible-option-choices-entry:`&quot;failed&quot;`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1/status"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-1-status"><strong>status</strong></p>
-<a class="ansibleOptionLink" href="#return-response_1/status" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Overall operation status</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Can only return:</span></p>
-<ul class="simple">
-<li><p><a href="#id65"><span class="problematic" id="id66">:ansible-option-choices-entry:`&quot;success&quot;`</span></a></p></li>
-<li><p><a href="#id67"><span class="problematic" id="id68">:ansible-option-choices-entry:`&quot;failed&quot;`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_2"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-2"><strong>response_2</strong></p>
-<a class="ansibleOptionLink" href="#return-response_2" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>No configurations found scenario treated as successful idempotent
-operation</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> when_no_configs_found</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id69"><span class="problematic" id="id70">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;No backup and restore configurations found to process for module\\nbackup\_and\_restore\_workflow\_manager. Verify that NFS servers or\\nbackup configurations are set up in Catalyst Center.\\n&quot;, &quot;response&quot;: {&quot;components\_processed&quot;: 0, &quot;components\_skipped&quot;: 1, &quot;configurations\_count&quot;: 0, &quot;message&quot;: &quot;No backup and restore configurations found to process for module\\nbackup\_and\_restore\_workflow\_manager. Verify that NFS servers or\\nbackup configurations are set up in Catalyst Center.\\n&quot;, &quot;status&quot;: &quot;success&quot;}, &quot;status&quot;: &quot;success&quot;}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id47"><span class="problematic" id="id48">:ansible-rv-sample-value:`{&quot;msg&quot;: {&quot;components\_processed&quot;: 3, &quot;components\_skipped&quot;: 0, &quot;configurations\_count&quot;: 3, &quot;file\_path&quot;: &quot;sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-18\_15-56-19.yml&quot;, &quot;message&quot;: &quot;YAML configuration file generated successfully for module 'sda\_fabric\_virtual\_networks\_workflow\_manager'&quot;, &quot;status&quot;: &quot;success&quot;}, &quot;response&quot;: {&quot;components\_processed&quot;: 3, &quot;components\_skipped&quot;: 0, &quot;configurations\_count&quot;: 3, &quot;file\_path&quot;: &quot;sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-18\_15-56-19.yml&quot;, &quot;message&quot;: &quot;YAML configuration file generated successfully for module 'sda\_fabric\_virtual\_networks\_workflow\_manager'&quot;, &quot;status&quot;: &quot;success&quot;}, &quot;status&quot;: &quot;success&quot;}`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_3"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-backup-and-restore-playbook-generator-module-return-response-3"><strong>response_3</strong></p>
-<a class="ansibleOptionLink" href="#return-response_3" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<div class="ansibleOptionAnchor" id="return-response_2"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-playbook-config-generator-module-return-response-2"><strong>response_2</strong></p>
+<a class="ansibleOptionLink" href="#return-response_2" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Operation failed due to invalid parameters, API errors, or file
-write issues</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on_failure</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id71"><span class="problematic" id="id72">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;Failed to write YAML configuration to file: /invalid/path&quot;, &quot;response&quot;: {&quot;message&quot;: &quot;Failed to write YAML configuration to file: /invalid/path&quot;, &quot;status&quot;: &quot;failed&quot;}, &quot;status&quot;: &quot;failed&quot;}`</span></a></p>
+<td><div class="ansible-option-cell"><p>A string with the response returned by the Cisco Catalyst Center Python SDK</p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id49"><span class="problematic" id="id50">:ansible-rv-sample-value:`&quot;{\\n    \\&quot;msg\\&quot;:\\n        \\&quot;Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\&quot;,\\n    \\&quot;response\\&quot;:\\n        \\&quot;Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\&quot;\\n}\\n&quot;`</span></a></p>
 </div></td>
 </tr>
 </tbody>
@@ -1828,7 +1954,8 @@ write issues</p>
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Priyadharshini B (&#64;pbalaku2)</p></li>
+<li><p>Abhishek Maheshwari (&#64;abmahesh)</p></li>
+<li><p>Sunil Shatagopa (&#64;shatagopasunil)</p></li>
 <li><p>Madhan Sankaranarayanan (&#64;madhansansel)</p></li>
 </ul>
 </section>
@@ -1845,8 +1972,8 @@ write issues</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="brownfield_accesspoint_playbook_generator_module.html" class="btn btn-neutral float-left" title="cisco.dnac.brownfield_accesspoint_playbook_generator module -- Generate YAML configurations playbook for &#39;accesspoint_workflow_manager&#39; module." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="brownfield_device_credential_playbook_generator_module.html" class="btn btn-neutral float-right" title="cisco.dnac.brownfield_device_credential_playbook_generator module -- Generate YAML configurations playbook for &#39;device_credential_workflow_manager&#39; module." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sda_fabric_transits_workflow_manager_module.html" class="btn btn-neutral float-left" title="cisco.dnac.sda_fabric_transits_workflow_manager module -- Resource module for SDA fabric transits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sda_fabric_virtual_networks_workflow_manager_module.html" class="btn btn-neutral float-right" title="cisco.dnac.sda_fabric_virtual_networks_workflow_manager module -- Configure fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

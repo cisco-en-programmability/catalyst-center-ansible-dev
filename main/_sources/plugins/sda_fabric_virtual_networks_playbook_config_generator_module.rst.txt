@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator module -- Generate YAML playbook for \ :literal:`sda\_fabric\_virtual\_networks\_workflow\_manager`\  module.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for \ :literal:`sda\_fabric\_virtual\_networks\_workflow\_manager`\  module.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator module -- G
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator`.
 
 .. version_added
 
@@ -77,7 +77,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -111,7 +111,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -149,7 +149,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -185,7 +185,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/anycast_gateways:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/anycast_gateways:
 
       .. rst-class:: ansible-option-title
 
@@ -219,7 +219,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/ip_pool_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/anycast_gateways/ip_pool_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/anycast_gateways/ip_pool_name:
 
       .. rst-class:: ansible-option-title
 
@@ -253,7 +253,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vlan_id"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/anycast_gateways/vlan_id:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/anycast_gateways/vlan_id:
 
       .. rst-class:: ansible-option-title
 
@@ -287,7 +287,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vlan_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/anycast_gateways/vlan_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/anycast_gateways/vlan_name:
 
       .. rst-class:: ansible-option-title
 
@@ -321,7 +321,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/anycast_gateways/vn_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/anycast_gateways/vn_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/anycast_gateways/vn_name:
 
       .. rst-class:: ansible-option-title
 
@@ -356,7 +356,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -405,7 +405,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/fabric_vlan:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_vlan:
 
       .. rst-class:: ansible-option-title
 
@@ -439,7 +439,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan/vlan_id"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/fabric_vlan/vlan_id:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_vlan/vlan_id:
 
       .. rst-class:: ansible-option-title
 
@@ -473,7 +473,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_vlan/vlan_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/fabric_vlan/vlan_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_vlan/vlan_name:
 
       .. rst-class:: ansible-option-title
 
@@ -508,7 +508,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/virtual_networks"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/virtual_networks:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/virtual_networks:
 
       .. rst-class:: ansible-option-title
 
@@ -542,7 +542,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/virtual_networks/vn_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/component_specific_filters/virtual_networks/vn_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/component_specific_filters/virtual_networks/vn_name:
 
       .. rst-class:: ansible-option-title
 
@@ -578,7 +578,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -616,7 +616,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -644,7 +644,7 @@ Parameters
 
       A default filename will be generated automatically if file\_path is not specified.
 
-      This is useful for complete brownfield infrastructure discovery and documentation.
+      This is useful for complete playbook configuration infrastructure discovery and documentation.
 
       When set to false, the module uses provided filters to generate a targeted YAML configuration.
 
@@ -667,7 +667,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -705,7 +705,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -747,7 +747,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -781,7 +781,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -833,7 +833,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -875,7 +875,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -917,7 +917,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -965,7 +965,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -999,7 +999,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -1037,7 +1037,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -1076,8 +1076,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -1119,7 +1119,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -1161,7 +1161,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -1199,7 +1199,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1240,7 +1240,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1313,7 +1313,7 @@ Examples
     
     - name: Auto-generate YAML Configuration for all components which
          includes fabric vlans, virtual networks and anycast gateways.
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1328,7 +1328,7 @@ Examples
           - generate_all_configurations: true
 
     - name: Generate YAML Configuration with File Path specified
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1344,7 +1344,7 @@ Examples
             file_path: "/tmp/all_config.yml"
 
     - name: Generate YAML Configuration with specific fabric vlan components only
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1361,7 +1361,7 @@ Examples
               components_list: ["fabric_vlan"]
 
     - name: Generate YAML Configuration with specific virtual networks components only
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1378,7 +1378,7 @@ Examples
               components_list: ["virtual_networks"]
 
     - name: Generate YAML Configuration with specific anycast gateways components only
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1395,7 +1395,7 @@ Examples
               components_list: ["anycast_gateways"]
 
     - name: Generate YAML Configuration for fabric vlans with vlan name filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1415,7 +1415,7 @@ Examples
                 - vlan_name: "vlan_2"
 
     - name: Generate YAML Configuration for fabric vlans and virtual networks with multiple filters
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1438,7 +1438,7 @@ Examples
                 - vn_name: "vn_2"
 
     - name: Generate YAML Configuration for all components with no filters
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1455,7 +1455,7 @@ Examples
               components_list: ["fabric_vlan", "virtual_networks", "anycast_gateways"]
 
     - name: Generate YAML Configuration for fabric vlans with VLAN IDs filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1475,7 +1475,7 @@ Examples
                 - vlan_id: 1038
 
     - name: Generate YAML Configuration for fabric vlans with both VLAN name and ID filters
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1497,7 +1497,7 @@ Examples
                   vlan_id: 1038
 
     - name: Generate YAML Configuration for virtual networks with specific VN names
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1517,7 +1517,7 @@ Examples
                 - vn_name: "VN3"
 
     - name: Generate YAML Configuration for anycast gateways with VN name filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1537,7 +1537,7 @@ Examples
                 - vn_name: "Chennai_VN3"
 
     - name: Generate YAML Configuration for anycast gateways with IP pool name filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1557,7 +1557,7 @@ Examples
                 - ip_pool_name: "Chennai-VN1-Pool2"
 
     - name: Generate YAML Configuration for anycast gateways with VLAN ID and IP pool filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1578,7 +1578,7 @@ Examples
                 - ip_pool_name: "Chennai-VN1-Pool2"
 
     - name: Generate YAML Configuration for anycast gateways with VLAN name filter
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1598,7 +1598,7 @@ Examples
                 - vlan_name: "Chennai-VN7-Pool1"
 
     - name: Generate YAML Configuration for anycast gateways with VLAN name and ID combination
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1620,7 +1620,7 @@ Examples
                   vlan_id: 1033
 
     - name: Generate YAML Configuration for anycast gateways with comprehensive filters
-      cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator:
+      cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1672,7 +1672,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1704,7 +1704,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\":\\n    {\\n      \\"response\\": String,\\n      \\"version\\": String\\n    },\\n  \\"msg\\": String\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 3, "components\_skipped": 0, "configurations\_count": 3, "file\_path": "sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-18\_15-56-19.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_virtual\_networks\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 3, "components\_skipped": 0, "configurations\_count": 3, "file\_path": "sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-18\_15-56-19.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_virtual\_networks\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html
@@ -1717,7 +1717,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_virtual_networks_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
