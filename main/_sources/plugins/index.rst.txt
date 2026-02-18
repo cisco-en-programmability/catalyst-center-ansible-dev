@@ -169,11 +169,9 @@ Modules
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_switching_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_switching_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_switching\_workflow\_manager' module.
 * :ref:`brownfield_network_profile_wireless_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_profile_wireless_playbook_generator_module>` -- Generate YAML configurations playbook for 'network\_profile\_wireless\_workflow\_manager' module.
-* :ref:`brownfield_network_settings_playbook_generator module <ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module>` -- Generate YAML playbook for 'network\_settings\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
 * :ref:`brownfield_sda_fabric_transits_config_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_transits_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_transits\_workflow\_manager' module.
-* :ref:`brownfield_template_playbook_generator module <ansible_collections.cisco.dnac.brownfield_template_playbook_generator_module>` -- Generate YAML playbook for \ :literal:`template\_workflow\_manager`\  module.
 * :ref:`brownfield_wired_campus_automation_playbook_generator module <ansible_collections.cisco.dnac.brownfield_wired_campus_automation_playbook_generator_module>` -- Generate YAML configurations playbook for 'wired\_campus\_automation\_workflow\_manager' module.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
@@ -746,6 +744,7 @@ Modules
 * :ref:`network_profiles_for_sites_site_assignments_count_info module <ansible_collections.cisco.dnac.network_profiles_for_sites_site_assignments_count_info_module>` -- Information module for Network Profiles For Sites Site Assignments Count
 * :ref:`network_profiles_for_sites_site_assignments_info module <ansible_collections.cisco.dnac.network_profiles_for_sites_site_assignments_info_module>` -- Information module for Network Profiles For Sites Site Assignments
 * :ref:`network_settings_intent module <ansible_collections.cisco.dnac.network_settings_intent_module>` -- Resource module for IP Address pools and network functions
+* :ref:`network_settings_playbook_config_generator module <ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module>` -- Generate YAML playbook for 'network\_settings\_workflow\_manager' module.
 * :ref:`network_settings_workflow_manager module <ansible_collections.cisco.dnac.network_settings_workflow_manager_module>` -- Resource module for IP Address pools and network functions
 * :ref:`network_update module <ansible_collections.cisco.dnac.network_update_module>` -- Resource module for Network Update
 * :ref:`network_v2 module <ansible_collections.cisco.dnac.network_v2_module>` -- Resource module for Network V2
@@ -848,6 +847,7 @@ Modules
 * :ref:`sda_fabric_devices_layer2_handoffs_sda_transits module <ansible_collections.cisco.dnac.sda_fabric_devices_layer2_handoffs_sda_transits_module>` -- Resource module for Sda Fabric Devices Layer2 Handoffs Sda Transits
 * :ref:`sda_fabric_devices_layer2_handoffs_sda_transits_count_info module <ansible_collections.cisco.dnac.sda_fabric_devices_layer2_handoffs_sda_transits_count_info_module>` -- Information module for Sda Fabric Devices Layer2 Handoffs Sda Transits Count
 * :ref:`sda_fabric_devices_layer2_handoffs_sda_transits_info module <ansible_collections.cisco.dnac.sda_fabric_devices_layer2_handoffs_sda_transits_info_module>` -- Information module for Sda Fabric Devices Layer2 Handoffs Sda Transits
+* :ref:`sda_fabric_devices_playbook_config_generator module <ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_devices\_workflow\_manager' module.
 * :ref:`sda_fabric_devices_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_devices_workflow_manager_module>` -- Manage SDA fabric devices in Cisco Catalyst Center.
 * :ref:`sda_fabric_edge_device module <ansible_collections.cisco.dnac.sda_fabric_edge_device_module>` -- Resource module for Sda Fabric Edge Device
 * :ref:`sda_fabric_edge_device_info module <ansible_collections.cisco.dnac.sda_fabric_edge_device_info_module>` -- Information module for Sda Fabric Edge Device
@@ -1068,6 +1068,7 @@ Modules
 * :ref:`tasks_info module <ansible_collections.cisco.dnac.tasks_info_module>` -- Information module for Tasks
 * :ref:`telemetry_settings_apply module <ansible_collections.cisco.dnac.telemetry_settings_apply_module>` -- Resource module for Telemetry Settings Apply
 * :ref:`template_intent module <ansible_collections.cisco.dnac.template_intent_module>` -- Resource module for Template functions
+* :ref:`template_playbook_config_generator module <ansible_collections.cisco.dnac.template_playbook_config_generator_module>` -- Generate YAML playbook for \ :literal:`template\_workflow\_manager`\  module.
 * :ref:`template_preview module <ansible_collections.cisco.dnac.template_preview_module>` -- Resource module for Template Preview
 * :ref:`template_workflow_manager module <ansible_collections.cisco.dnac.template_workflow_manager_module>` -- Resource module for Template functions
 * :ref:`templates_details_info module <ansible_collections.cisco.dnac.templates_details_info_module>` -- Information module for Templates Details
@@ -1306,11 +1307,9 @@ Modules
     brownfield_device_credential_playbook_generator_module
     brownfield_network_profile_switching_playbook_generator_module
     brownfield_network_profile_wireless_playbook_generator_module
-    brownfield_network_settings_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
     brownfield_sda_fabric_transits_config_generator_module
-    brownfield_template_playbook_generator_module
     brownfield_wired_campus_automation_playbook_generator_module
     buildings_module
     buildings_info_module
@@ -1882,6 +1881,7 @@ Modules
     network_profiles_for_sites_site_assignments_count_info_module
     network_profiles_for_sites_site_assignments_info_module
     network_settings_intent_module
+    network_settings_playbook_config_generator_module
     network_settings_workflow_manager_module
     network_update_module
     network_v2_module
@@ -1984,6 +1984,7 @@ Modules
     sda_fabric_devices_layer2_handoffs_sda_transits_module
     sda_fabric_devices_layer2_handoffs_sda_transits_count_info_module
     sda_fabric_devices_layer2_handoffs_sda_transits_info_module
+    sda_fabric_devices_playbook_config_generator_module
     sda_fabric_devices_workflow_manager_module
     sda_fabric_edge_device_module
     sda_fabric_edge_device_info_module
@@ -2204,6 +2205,7 @@ Modules
     tasks_info_module
     telemetry_settings_apply_module
     template_intent_module
+    template_playbook_config_generator_module
     template_preview_module
     template_workflow_manager_module
     templates_details_info_module

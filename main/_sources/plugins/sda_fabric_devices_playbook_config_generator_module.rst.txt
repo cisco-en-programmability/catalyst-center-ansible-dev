@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_network_settings_playbook_generator module -- Generate YAML playbook for 'network\_settings\_workflow\_manager' module.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.sda_fabric_devices_playbook_config_generator module -- Generate YAML configurations playbook for 'sda\_fabric\_devices\_workflow\_manager' module.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,15 +46,15 @@ cisco.dnac.brownfield_network_settings_playbook_generator module -- Generate YAM
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_network_settings_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.sda_fabric_devices_playbook_config_generator`.
 
 .. version_added
 
 .. rst-class:: ansible-version-added
 
-New in cisco.dnac 6.44.0
+New in cisco.dnac 6.49.0
 
 .. contents::
    :local:
@@ -68,9 +68,8 @@ Synopsis
 
 .. Description
 
-- Generates YAML configurations compatible with the \`network\_settings\_workflow\_manager\` module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
-- The YAML configurations generated represent the global pools, reserve pools, network management settings, device controllability settings, and AAA settings configured on the Cisco Catalyst Center.
-- Supports extraction of Global IP Pools, Reserve IP Pools, Network Management, Device Controllability, and AAA Settings configurations.
+- Generates YAML configurations compatible with the 'sda\_fabric\_devices\_workflow\_manager' module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
+- Captures SDA fabric device configurations including fabric roles, border settings, L2/L3 handoffs, and wireless controller settings from existing deployments.
 
 
 .. Aliases
@@ -78,13 +77,13 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- dnacentersdk \>= 2.10.10
+- dnacentersdk \>= 2.4.5
 - python \>= 3.9
 
 
@@ -112,7 +111,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -134,13 +133,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`network\_settings\_workflow\_manager\` module.
+      A list of filters for generating YAML playbook compatible with the \`sda\_fabric\_devices\_workflow\_manager\` module.
 
       Filters specify which components to include in the YAML configuration file.
 
-      Global filters identify target settings by site name, pool name, or pool type.
-
-      Component-specific filters allow selection of specific network setting features and detailed filtering.
+      If "components\_list" is specified, only those components are included, regardless of the filters.
 
 
       .. raw:: html
@@ -152,7 +149,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -174,11 +171,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Filters to specify which network settings components and features to include in the YAML configuration file.
+      Filters to specify which components to include in the YAML configuration file.
 
-      Allows granular selection of specific components and their parameters.
-
-      If not specified, all supported network settings components will be extracted.
+      If "components\_list" is specified, only those components are included, regardless of other filters.
 
 
       .. raw:: html
@@ -190,7 +185,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -214,21 +209,18 @@ Parameters
 
       List of components to include in the YAML configuration file.
 
-      Valid values are ["global\_pool\_details", "reserve\_pool\_details", "network\_management\_details", "device\_controllability\_details"]
+      Valid values are - "fabric\_devices".
 
-      If not specified, all supported components are included.
+      If specified, only the listed components will be included in the generated YAML file.
 
-      Example ["global\_pool\_details", "reserve\_pool\_details", "network\_management\_details"]
+      If not specified, all supported components will be included by default.
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"global\_pool\_details"`
-      - :ansible-option-choices-entry:`"reserve\_pool\_details"`
-      - :ansible-option-choices-entry:`"network\_management\_details"`
-      - :ansible-option-choices-entry:`"device\_controllability\_details"`
+      - :ansible-option-choices-entry:`"fabric\_devices"`
 
 
       .. raw:: html
@@ -238,21 +230,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/device_controllability_details"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_devices"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/device_controllability_details:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_devices:
 
       .. rst-class:: ansible-option-title
 
-      **device_controllability_details**
+      **fabric_devices**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/device_controllability_details" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_devices" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -262,41 +254,11 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Device controllability settings to filter by site.
+      Filters specific to fabric device configuration retrieval.
 
+      Used to narrow down which fabric sites and devices should be included in the generated YAML file.
 
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/global_pool_details"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/global_pool_details:
-
-      .. rst-class:: ansible-option-title
-
-      **global_pool_details**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/global_pool_details" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Global IP Pools to filter by pool name or pool type.
+      If no filters are provided, all fabric devices from all fabric sites in Cisco Catalyst Center will be retrieved.
 
 
       .. raw:: html
@@ -306,17 +268,17 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/global_pool_details/pool_name"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_devices/device_ip"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/global_pool_details/pool_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_devices/device_ip:
 
       .. rst-class:: ansible-option-title
 
-      **pool_name**
+      **device_ip**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/global_pool_details/pool_name" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_devices/device_ip" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
@@ -330,7 +292,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      IP Pool name to filter global pools by name.
+      IPv4 address of a specific device to filter by.
+
+      Retrieves configuration for the specific device within the fabric site.
+
+      The fabric\_name parameter must be provided when using this filter.
+
+      Example 10.0.0.1, 192.168.1.100.
 
 
       .. raw:: html
@@ -340,21 +308,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/global_pool_details/pool_type"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_devices/device_roles"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/global_pool_details/pool_type:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_devices/device_roles:
 
       .. rst-class:: ansible-option-title
 
-      **pool_type**
+      **device_roles**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/global_pool_details/pool_type" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_devices/device_roles" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -364,158 +332,24 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Pool type to filter global pools by type (Generic, LAN, WAN).
+      List of device roles to filter by.
+
+      Retrieves only devices with the specified fabric roles.
+
+      The fabric\_name parameter must be provided when using this filter.
+
+      Can be combined with device\_ip filter for more specific results.
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"Generic"`
-      - :ansible-option-choices-entry:`"LAN"`
-      - :ansible-option-choices-entry:`"WAN"`
-
-
-      .. raw:: html
-
-        </div>
-
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/network_management_details"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/network_management_details:
-
-      .. rst-class:: ansible-option-title
-
-      **network_management_details**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/network_management_details" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Network management settings to filter by site.
-
-
-      .. raw:: html
-
-        </div>
-    
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/network_management_details/site_name_list"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/network_management_details/site_name_list:
-
-      .. rst-class:: ansible-option-title
-
-      **site_name_list**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/network_management_details/site_name_list" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Site name to filter network management settings by site.
-
-
-      .. raw:: html
-
-        </div>
-
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/reserve_pool_details"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/reserve_pool_details:
-
-      .. rst-class:: ansible-option-title
-
-      **reserve_pool_details**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/reserve_pool_details" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Reserve IP Pools to filter by pool name, site, site hierarchy, or pool type.
-
-
-      .. raw:: html
-
-        </div>
-    
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/reserve_pool_details/site_hierarchy"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/reserve_pool_details/site_hierarchy:
-
-      .. rst-class:: ansible-option-title
-
-      **site_hierarchy**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/reserve_pool_details/site_hierarchy" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Site hierarchy path to filter reserve pools by all child sites under the hierarchy.
-
-      For example, "Global/USA" will include all sites under USA like "Global/USA/California", "Global/USA/New York", etc.
-
-      This allows bulk extraction of reserve pools from multiple sites under a hierarchy.
+      - :ansible-option-choices-entry:`"CONTROL\_PLANE\_NODE"`
+      - :ansible-option-choices-entry:`"EDGE\_NODE"`
+      - :ansible-option-choices-entry:`"BORDER\_NODE"`
+      - :ansible-option-choices-entry:`"WIRELESS\_CONTROLLER\_NODE"`
+      - :ansible-option-choices-entry:`"EXTENDED\_NODE"`
 
 
       .. raw:: html
@@ -525,21 +359,21 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/reserve_pool_details/site_name"></div>
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_devices/fabric_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/component_specific_filters/reserve_pool_details/site_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_devices/fabric_name:
 
       .. rst-class:: ansible-option-title
 
-      **site_name**
+      **fabric_name**
 
       .. raw:: html
 
-        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/reserve_pool_details/site_name" title="Permalink to this option"></a>
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/fabric_devices/fabric_name" title="Permalink to this option"></a>
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`string` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -549,7 +383,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Site name to filter reserve pools by specific site.
+      Name of the fabric site to filter by.
+
+      Retrieves all fabric devices configured in this fabric site.
+
+      This parameter is required when using fabric\_devices filters.
+
+      Example Global/USA/SAN-JOSE, Global/India/Bangalore.
 
 
       .. raw:: html
@@ -563,7 +403,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -587,9 +427,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name "sda\_fabric\_devices\_workflow\_manager\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
 
-      For example, \ :literal:`discovery\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      For example, "sda\_fabric\_devices\_workflow\_manager\_playbook\_2026-01-30\_19-16-01.yml".
 
 
       .. raw:: html
@@ -601,7 +441,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -623,17 +463,15 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      When set to True, automatically generates YAML configurations for all network settings components.
+      When set to True, automatically generates YAML configurations for all fabric sites and all supported features.
 
-      This mode discovers all configured network settings in Cisco Catalyst Center and extracts all supported configurations.
+      This mode discovers all SDA fabric sites in Cisco Catalyst Center and extracts all fabric device configurations.
 
       When enabled, the config parameter becomes optional and will use default values if not provided.
 
       A default filename will be generated automatically if file\_path is not specified.
 
-      This is useful for complete brownfield network settings discovery and documentation.
-
-      Includes Global IP Pools, Reserve IP Pools, Network Management, Device Controllability, and AAA Settings.
+      Useful for complete infrastructure discovery and documentation.
 
 
       .. rst-class:: ansible-option-line
@@ -654,7 +492,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -692,7 +530,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -734,7 +572,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -768,7 +606,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -820,7 +658,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -862,7 +700,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -904,7 +742,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -952,7 +790,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -986,7 +824,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -1024,7 +862,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -1063,8 +901,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -1106,7 +944,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -1148,7 +986,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -1186,7 +1024,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1227,7 +1065,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1274,14 +1112,44 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - sites.Sites.get\_site - network\_settings.NetworkSettings.retrieves\_global\_ip\_address\_pools - network\_settings.NetworkSettings.retrieves\_ip\_address\_subpools - network\_settings.NetworkSettings.retrieve\_d\_h\_c\_p\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_d\_n\_s\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_telemetry\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_n\_t\_p\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_time\_zone\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_aaa\_settings\_for\_a\_site - network\_settings.NetworkSettings.get\_device\_controllability\_settings,
-   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/global-pool - GET /dna/intent/api/v1/reserve-pool - GET /dna/intent/api/v1/network - GET /dna/intent/api/v1/device-credential - GET /dna/intent/api/v1/network-aaa
+   - Cisco Catalyst Center \>= 2.3.7.6
+   - SDK Methods used are
+     site\_design.Sites.get\_sites
+     sda.SDA.get\_fabric\_sites
+     sda.SDA.get\_transit\_networks
+     sda.SDA.get\_fabric\_devices
+     sda.SDA.get\_fabric\_devices\_layer2\_handoffs
+     sda.SDA.get\_fabric\_devices\_layer3\_handoffs\_with\_ip\_transit
+     sda.SDA.get\_fabric\_devices\_layer3\_handoffs\_with\_sda\_transit
+     fabric\_wireless.FabricWireless.get\_sda\_wireless\_details\_from\_switches
+     wireless.Wireless.get\_primary\_managed\_ap\_locations\_for\_specific\_wireless\_controller
+     wireless.Wireless.get\_secondary\_managed\_ap\_locations\_for\_specific\_wireless\_controller
+     devices.Devices.get\_device\_list
+   - SDK Paths used are
+     GET /dna/intent/api/v1/sites
+     GET /dna/intent/api/v1/sda/fabricSites
+     GET /dna/intent/api/v1/sda/transitNetworks
+     GET /dna/intent/api/v1/sda/fabricDevices
+     GET /dna/intent/api/v1/sda/fabricDevices/layer2Handoffs
+     GET /dna/intent/api/v1/sda/fabricDevices/layer3Handoffs/ipTransits
+     GET /dna/intent/api/v1/sda/fabricDevices/layer3Handoffs/sdaTransits
+     GET /dna/intent/api/v1/sda/fabricSites/{id}/wirelessSettings
+     GET /dna/intent/api/v1/wirelessControllers/{networkDeviceId}/managedApLocations/primary
+     GET /dna/intent/api/v1/wirelessControllers/{networkDeviceId}/managedApLocations/secondary
+     GET /dna/intent/api/v1/network-device
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
 
 .. Seealso
 
+See Also
+--------
+
+.. seealso::
+
+   \ :ref:`cisco.dnac.sda\_fabric\_devices\_workflow\_manager <ansible_collections.cisco.dnac.sda_fabric_devices_workflow_manager_module>`\ 
+       Module for managing SDA fabric devices and their configurations.
 
 .. Examples
 
@@ -1291,92 +1159,182 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    # Generate YAML Configuration with default file path
-    - name: Generate YAML Configuration with default file path
-      cisco.dnac.brownfield_network_settings_playbook_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - component_specific_filters:
-              components_list: ["global_pool_details"]
+    # Example 1: Generate all fabric device configurations for all fabric sites
+    - name: Generate complete SDA fabric devices configuration
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Generate all SDA fabric device configurations from Cisco Catalyst Center
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - generate_all_configurations: true
 
-    - name: Generate YAML Configuration for specific sites
-      cisco.dnac.brownfield_network_settings_playbook_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/network_settings_config.yml"
-            component_specific_filters:
-              components_list: ["reserve_pool_details"]
+    # Example 2: Generate all configurations with custom file path
+    - name: Generate complete SDA fabric devices configuration with custom filename
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Generate all SDA fabric device configurations to a specific file
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - file_path: "/tmp/complete_sda_fabric_devices_config.yaml"
+                generate_all_configurations: true
 
-    - name: Generate YAML Configuration using explicit components list
-      cisco.dnac.brownfield_network_settings_playbook_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/network_settings_config.yml"
-            component_specific_filters:
-              components_list: ["network_management_details"]
+    # Example 3: Generate fabric device configurations for a specific fabric site
+    - name: Generate fabric device configurations for one fabric site
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Export fabric devices from San Jose fabric
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - file_path: "/tmp/san_jose_fabric_devices.yaml"
+                component_specific_filters:
+                  components_list: ["fabric_devices"]
+                  fabric_devices:
+                    fabric_name: "Global/USA/SAN-JOSE"
 
-    - name: Generate YAML Configuration for global pools with no filters
-      cisco.dnac.brownfield_network_settings_playbook_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/network_settings_config.yml"
-            component_specific_filters:
-              components_list: ["device_controllability_details"]
+    # Example 4: Generate configuration for devices with specific roles in a fabric site
+    - name: Generate configuration for border and control plane devices
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Export border and control plane fabric devices from San Jose fabric
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - file_path: "/tmp/border_and_cp_devices.yaml"
+                component_specific_filters:
+                  components_list: ["fabric_devices"]
+                  fabric_devices:
+                    fabric_name: "Global/USA/SAN-JOSE"
+                    device_roles: ["BORDER_NODE", "CONTROL_PLANE_NODE"]
 
-    - name: Generate YAML Configuration for reserve pools using site hierarchy
-      cisco.dnac.brownfield_network_settings_playbook_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/reserve_pools_usa.yml"
-            component_specific_filters:
-              components_list: ["reserve_pool_details"]
-              reserve_pool_details:
-                - site_hierarchy: "Global/USA"
+    # Example 5: Generate configuration for a specific device in a fabric site
+    - name: Generate configuration for a specific fabric device
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Export specific fabric device configuration
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - file_path: "/tmp/specific_fabric_device.yaml"
+                component_specific_filters:
+                  components_list: ["fabric_devices"]
+                  fabric_devices:
+                    fabric_name: "Global/USA/SAN-JOSE"
+                    device_ip: "10.0.0.1"
+
+    # Example 6: Generate multiple configuration files in a single playbook run
+    - name: Generate multiple SDA fabric device configuration files
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Generate multiple SDA fabric device configurations
+          cisco.dnac.sda_fabric_devices_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            config:
+              - file_path: "/tmp/all_fabric_devices.yaml"
+                generate_all_configurations: true
+              - file_path: "/tmp/san_jose_only.yaml"
+                component_specific_filters:
+                  components_list: ["fabric_devices"]
+                  fabric_devices:
+                    fabric_name: "Global/USA/SAN-JOSE"
+              - file_path: "/tmp/bangalore_border_devices.yaml"
+                component_specific_filters:
+                  components_list: ["fabric_devices"]
+                  fabric_devices:
+                    fabric_name: "Global/India/Bangalore"
+                    device_roles: ["BORDER_NODE"]
 
 
 
@@ -1405,7 +1363,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1437,7 +1395,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.", "response": {"configurations\_generated": 15, "file\_path": "/tmp/network\_settings\_config.yml", "message": "YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.", "operation\_summary": {"failure\_details": [{"component": "network\_management\_details", "error\_info": {"error\_code": "NETWORK\_MGMT\_NOT\_CONFIGURED", "error\_message": "Network management not configured for this site", "error\_type": "api\_error"}, "site\_name": "Global/USA/NewYork", "status": "failed"}], "sites\_with\_complete\_failure": [], "sites\_with\_complete\_success": ["Global/India/Mumbai", "Global/India/Delhi"], "sites\_with\_partial\_success": ["Global/USA/NewYork"], "success\_details": [{"component": "global\_pool\_details", "pools\_processed": 5, "site\_name": "Global/India/Mumbai", "status": "success"}], "total\_components\_processed": 25, "total\_failed\_operations": 3, "total\_sites\_processed": 3, "total\_successful\_operations": 22}}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_devices\_workflow\_manager\_playbook\_2026-02-18\_11-01-59.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_devices\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_devices\_workflow\_manager\_playbook\_2026-02-18\_11-01-59.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_devices\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html
@@ -1450,7 +1408,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.sda_fabric_devices_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 
@@ -1472,62 +1430,17 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 
         <div class="ansible-option-cell">
 
-      A dictionary with the response when no configurations are found
+      A dictionary with the error response returned by the Cisco Catalyst Center Python SDK
 
 
       .. rst-class:: ansible-option-line
 
-      :ansible-option-returned-bold:`Returned:` always
-
-      .. rst-class:: ansible-option-line
-      .. rst-class:: ansible-option-sample
-
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.", "response": {"message": "No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.", "operation\_summary": {"failure\_details": [], "sites\_with\_complete\_failure": [], "sites\_with\_complete\_success": [], "sites\_with\_partial\_success": [], "success\_details": [], "total\_components\_processed": 0, "total\_failed\_operations": 0, "total\_sites\_processed": 0, "total\_successful\_operations": 0}}}`
-
-
-      .. raw:: html
-
-        </div>
-
-
-  * - .. raw:: html
-
-        <div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="return-response_3"></div>
-
-      .. _ansible_collections.cisco.dnac.brownfield_network_settings_playbook_generator_module__return-response_3:
-
-      .. rst-class:: ansible-option-title
-
-      **response_3**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#return-response_3" title="Permalink to this return value"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-cell">
-
-      A dictionary with error details when YAML generation fails
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-returned-bold:`Returned:` always
+      :ansible-option-returned-bold:`Returned:` on failure
 
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML config generation failed for module 'network\_settings\_workflow\_manager'.", "response": {"file\_path": "/tmp/network\_settings\_config.yml", "message": "YAML config generation failed for module 'network\_settings\_workflow\_manager'.", "operation\_summary": {"failure\_details": [{"component": "global\_pool\_details", "error\_info": {"error\_code": "SITE\_NOT\_FOUND", "error\_message": "Site not found or not accessible", "error\_type": "site\_not\_found"}, "site\_name": "Global/USA/NewYork", "status": "failed"}], "sites\_with\_complete\_failure": ["Global/USA/NewYork"], "sites\_with\_complete\_success": [], "sites\_with\_partial\_success": ["Global/India/Mumbai"], "success\_details": [], "total\_components\_processed": 10, "total\_failed\_operations": 5, "total\_sites\_processed": 2, "total\_successful\_operations": 5}}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\": \\"Invalid filters provided for module 'sda\_fabric\_devices\_workflow\_manager':\\n    [\\\\\\"Filter 'fabric\_roles' not valid for component 'fabric\_devices'\\\\\\"]\\",\\n  \\"msg\\": \\"Invalid filters provided for module 'sda\_fabric\_devices\_workflow\_manager':\\n    [\\\\\\"Filter 'fabric\_roles' not valid for component 'fabric\_devices'\\\\\\"]\\"\\n}\\n"`
 
 
       .. raw:: html
@@ -1544,7 +1457,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 Authors
 ~~~~~~~
 
-- Megha Kandari (@kandarimegha)
+- Archit Soni (@koderchit)
 - Madhan Sankaranarayanan (@madhansansel)
 
 
