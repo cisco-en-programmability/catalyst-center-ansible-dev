@@ -131,6 +131,7 @@ Modules
 * :ref:`assurance_events_query module <ansible_collections.cisco.dnac.assurance_events_query_module>` -- Resource module for Assurance Events Query
 * :ref:`assurance_events_query_count module <ansible_collections.cisco.dnac.assurance_events_query_count_module>` -- Resource module for Assurance Events Query Count
 * :ref:`assurance_icap_settings_workflow_manager module <ansible_collections.cisco.dnac.assurance_icap_settings_workflow_manager_module>` -- Configure and manage ICAP (Intelligent Capture) settings in Cisco Catalyst Center for network assurance.
+* :ref:`assurance_issue_playbook_config_generator module <ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module>` -- Generate YAML playbook for 'assurance\_issue\_workflow\_manager' module.
 * :ref:`assurance_issue_workflow_manager module <ansible_collections.cisco.dnac.assurance_issue_workflow_manager_module>` -- Resource module for managing assurance global profile settings and issue resolution in Cisco Catalyst Center
 * :ref:`assurance_issues_count_info module <ansible_collections.cisco.dnac.assurance_issues_count_info_module>` -- Information module for Assurance Issues Count
 * :ref:`assurance_issues_ignore module <ansible_collections.cisco.dnac.assurance_issues_ignore_module>` -- Resource module for Assurance Issues Ignore
@@ -164,7 +165,6 @@ Modules
 * :ref:`brownfield_accesspoint_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
 * :ref:`brownfield_application_policy_playbook_generator module <ansible_collections.cisco.dnac.brownfield_application_policy_playbook_generator_module>` -- Generate YAML configurations playbook for 'application\_policy\_workflow\_manager' module.
 * :ref:`brownfield_assurance_device_health_score_settings_playbook_generator module <ansible_collections.cisco.dnac.brownfield_assurance_device_health_score_settings_playbook_generator_module>` -- Generate YAML configurations playbook for 'assurance\_device\_health\_score\_settings\_workflow\_manager' module.
-* :ref:`brownfield_assurance_issue_playbook_generator module <ansible_collections.cisco.dnac.brownfield_assurance_issue_playbook_generator_module>` -- Generate YAML playbook for 'assurance\_issue\_workflow\_manager' module.
 * :ref:`brownfield_backup_and_restore_playbook_generator module <ansible_collections.cisco.dnac.brownfield_backup_and_restore_playbook_generator_module>` -- Generate YAML playbook for 'backup\_and\_restore\_workflow\_manager' module.
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_discovery_playbook_generator module <ansible_collections.cisco.dnac.brownfield_discovery_playbook_generator_module>` -- Generate YAML configurations playbook for 'discovery\_workflow\_manager' module.
@@ -1268,6 +1268,7 @@ Modules
     assurance_events_query_module
     assurance_events_query_count_module
     assurance_icap_settings_workflow_manager_module
+    assurance_issue_playbook_config_generator_module
     assurance_issue_workflow_manager_module
     assurance_issues_count_info_module
     assurance_issues_ignore_module
@@ -1300,7 +1301,6 @@ Modules
     brownfield_accesspoint_playbook_generator_module
     brownfield_application_policy_playbook_generator_module
     brownfield_assurance_device_health_score_settings_playbook_generator_module
-    brownfield_assurance_issue_playbook_generator_module
     brownfield_backup_and_restore_playbook_generator_module
     brownfield_device_credential_playbook_generator_module
     brownfield_discovery_playbook_generator_module
