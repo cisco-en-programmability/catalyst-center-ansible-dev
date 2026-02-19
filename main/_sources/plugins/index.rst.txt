@@ -86,6 +86,7 @@ Modules
 * :ref:`access_groups_info module <ansible_collections.cisco.dnac.access_groups_info_module>` -- Information module for Access Groups
 * :ref:`accesspoint_configuration_details_by_task_id_info module <ansible_collections.cisco.dnac.accesspoint_configuration_details_by_task_id_info_module>` -- Information module for Accesspoint Configuration Details By Task Id
 * :ref:`accesspoint_location_workflow_manager module <ansible_collections.cisco.dnac.accesspoint_location_workflow_manager_module>` -- Resource module for managing Access Point planned positions and real positions in Cisco Catalyst Center
+* :ref:`accesspoint_playbook_config_generator module <ansible_collections.cisco.dnac.accesspoint_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
 * :ref:`accesspoint_workflow_manager module <ansible_collections.cisco.dnac.accesspoint_workflow_manager_module>` -- Manage Cisco Catalyst Center access points
 * :ref:`activities_activity_id_triggered_jobs_count_info module <ansible_collections.cisco.dnac.activities_activity_id_triggered_jobs_count_info_module>` -- Information module for Activities Activity Id Triggered Jobs Count
 * :ref:`activities_activity_id_triggered_jobs_info module <ansible_collections.cisco.dnac.activities_activity_id_triggered_jobs_info_module>` -- Information module for Activities Activity Id Triggered Jobs
@@ -165,7 +166,6 @@ Modules
 * :ref:`backups_id_restore module <ansible_collections.cisco.dnac.backups_id_restore_module>` -- Resource module for Backups Id Restore
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
 * :ref:`brownfield_accesspoint_location_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_location_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_location\_workflow\_manager' module.
-* :ref:`brownfield_accesspoint_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
@@ -1226,6 +1226,7 @@ Modules
     access_groups_info_module
     accesspoint_configuration_details_by_task_id_info_module
     accesspoint_location_workflow_manager_module
+    accesspoint_playbook_config_generator_module
     accesspoint_workflow_manager_module
     activities_activity_id_triggered_jobs_count_info_module
     activities_activity_id_triggered_jobs_info_module
@@ -1303,7 +1304,6 @@ Modules
     backups_id_restore_module
     backups_info_module
     brownfield_accesspoint_location_playbook_generator_module
-    brownfield_accesspoint_playbook_generator_module
     brownfield_device_credential_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
