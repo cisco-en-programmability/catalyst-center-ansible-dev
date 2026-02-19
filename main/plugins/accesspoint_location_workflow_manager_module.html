@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="cisco.dnac.accesspoint_playbook_config_generator module -- Generate YAML configurations playbook for &#39;accesspoint_workflow_manager&#39; module." href="accesspoint_playbook_config_generator_module.html" />
-    <link rel="prev" title="cisco.dnac.accesspoint_configuration_details_by_task_id_info module -- Information module for Accesspoint Configuration Details By Task Id" href="accesspoint_configuration_details_by_task_id_info_module.html" /> 
+    <link rel="prev" title="cisco.dnac.accesspoint_location_playbook_config_generator module -- Generate YAML configurations playbook for &#39;accesspoint_location_workflow_manager&#39; module." href="accesspoint_location_playbook_config_generator_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -61,6 +61,7 @@
 <li class="toctree-l4"><a class="reference internal" href="access_groups_count_info_module.html">cisco.dnac.access_groups_count_info module -- Information module for Access Groups Count</a></li>
 <li class="toctree-l4"><a class="reference internal" href="access_groups_info_module.html">cisco.dnac.access_groups_info module -- Information module for Access Groups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="accesspoint_configuration_details_by_task_id_info_module.html">cisco.dnac.accesspoint_configuration_details_by_task_id_info module -- Information module for Accesspoint Configuration Details By Task Id</a></li>
+<li class="toctree-l4"><a class="reference internal" href="accesspoint_location_playbook_config_generator_module.html">cisco.dnac.accesspoint_location_playbook_config_generator module -- Generate YAML configurations playbook for 'accesspoint_location_workflow_manager' module.</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.accesspoint_location_workflow_manager module -- Resource module for managing Access Point planned positions and real positions in Cisco Catalyst Center</a></li>
 <li class="toctree-l4"><a class="reference internal" href="accesspoint_playbook_config_generator_module.html">cisco.dnac.accesspoint_playbook_config_generator module -- Generate YAML configurations playbook for 'accesspoint_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="accesspoint_workflow_manager_module.html">cisco.dnac.accesspoint_workflow_manager module -- Manage Cisco Catalyst Center access points</a></li>
@@ -149,11 +150,9 @@
 <li class="toctree-l4"><a class="reference internal" href="backups_module.html">cisco.dnac.backups module -- Resource module for Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backups_id_restore_module.html">cisco.dnac.backups_id_restore module -- Resource module for Backups Id Restore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backups_info_module.html">cisco.dnac.backups_info module -- Information module for Backups</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_accesspoint_location_playbook_generator_module.html">cisco.dnac.brownfield_accesspoint_location_playbook_generator module -- Generate YAML configurations playbook for 'accesspoint_location_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_device_credential_playbook_generator_module.html">cisco.dnac.brownfield_device_credential_playbook_generator module -- Generate YAML configurations playbook for 'device_credential_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_extranet_policies_playbook_generator_module.html">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_multicast_playbook_generator_module.html">cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator module -- Generate YAML configurations playbook for 'sda_fabric_multicast_workflow_manager' module.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="brownfield_sda_fabric_transits_config_generator_module.html">cisco.dnac.brownfield_sda_fabric_transits_config_generator module -- Generate YAML configurations playbook for 'sda_fabric_transits_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="brownfield_wired_campus_automation_playbook_generator_module.html">cisco.dnac.brownfield_wired_campus_automation_playbook_generator module -- Generate YAML configurations playbook for 'wired_campus_automation_workflow_manager' module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_module.html">cisco.dnac.buildings module -- Resource module for Buildings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_info_module.html">cisco.dnac.buildings_info module -- Information module for Buildings</a></li>
@@ -847,6 +846,7 @@
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_sites_info_module.html">cisco.dnac.sda_fabric_sites_info module -- Information module for Sda Fabric Sites</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_sites_zones_playbook_config_generator_module.html">cisco.dnac.sda_fabric_sites_zones_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_sites_zones_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_sites_zones_workflow_manager_module.html">cisco.dnac.sda_fabric_sites_zones_workflow_manager module -- Manage fabric site(s)/zone(s) and update the authentication profile template in Cisco Catalyst Center.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sda_fabric_transits_playbook_config_generator_module.html">cisco.dnac.sda_fabric_transits_playbook_config_generator module -- Generate YAML configurations playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_transits_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_transits_workflow_manager_module.html">cisco.dnac.sda_fabric_transits_workflow_manager module -- Resource module for SDA fabric transits</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_virtual_networks_playbook_config_generator_module.html">cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator module -- Generate YAML playbook for <code class="docutils literal notranslate"><span class="pre">sda_fabric_virtual_networks_workflow_manager</span></code> module.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_virtual_networks_workflow_manager_module.html">cisco.dnac.sda_fabric_virtual_networks_workflow_manager module -- Configure fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center.</a></li>
@@ -2011,7 +2011,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-accesspo
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="accesspoint_configuration_details_by_task_id_info_module.html" class="btn btn-neutral float-left" title="cisco.dnac.accesspoint_configuration_details_by_task_id_info module -- Information module for Accesspoint Configuration Details By Task Id" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="accesspoint_location_playbook_config_generator_module.html" class="btn btn-neutral float-left" title="cisco.dnac.accesspoint_location_playbook_config_generator module -- Generate YAML configurations playbook for &#39;accesspoint_location_workflow_manager&#39; module." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="accesspoint_playbook_config_generator_module.html" class="btn btn-neutral float-right" title="cisco.dnac.accesspoint_playbook_config_generator module -- Generate YAML configurations playbook for &#39;accesspoint_workflow_manager&#39; module." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -85,6 +85,7 @@ Modules
 * :ref:`access_groups_count_info module <ansible_collections.cisco.dnac.access_groups_count_info_module>` -- Information module for Access Groups Count
 * :ref:`access_groups_info module <ansible_collections.cisco.dnac.access_groups_info_module>` -- Information module for Access Groups
 * :ref:`accesspoint_configuration_details_by_task_id_info module <ansible_collections.cisco.dnac.accesspoint_configuration_details_by_task_id_info_module>` -- Information module for Accesspoint Configuration Details By Task Id
+* :ref:`accesspoint_location_playbook_config_generator module <ansible_collections.cisco.dnac.accesspoint_location_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_location\_workflow\_manager' module.
 * :ref:`accesspoint_location_workflow_manager module <ansible_collections.cisco.dnac.accesspoint_location_workflow_manager_module>` -- Resource module for managing Access Point planned positions and real positions in Cisco Catalyst Center
 * :ref:`accesspoint_playbook_config_generator module <ansible_collections.cisco.dnac.accesspoint_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_workflow\_manager' module.
 * :ref:`accesspoint_workflow_manager module <ansible_collections.cisco.dnac.accesspoint_workflow_manager_module>` -- Manage Cisco Catalyst Center access points
@@ -165,11 +166,9 @@ Modules
 * :ref:`backups module <ansible_collections.cisco.dnac.backups_module>` -- Resource module for Backups
 * :ref:`backups_id_restore module <ansible_collections.cisco.dnac.backups_id_restore_module>` -- Resource module for Backups Id Restore
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
-* :ref:`brownfield_accesspoint_location_playbook_generator module <ansible_collections.cisco.dnac.brownfield_accesspoint_location_playbook_generator_module>` -- Generate YAML configurations playbook for 'accesspoint\_location\_workflow\_manager' module.
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
-* :ref:`brownfield_sda_fabric_transits_config_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_transits_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_transits\_workflow\_manager' module.
 * :ref:`brownfield_wired_campus_automation_playbook_generator module <ansible_collections.cisco.dnac.brownfield_wired_campus_automation_playbook_generator_module>` -- Generate YAML configurations playbook for 'wired\_campus\_automation\_workflow\_manager' module.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
@@ -859,6 +858,7 @@ Modules
 * :ref:`sda_fabric_sites_info module <ansible_collections.cisco.dnac.sda_fabric_sites_info_module>` -- Information module for Sda Fabric Sites
 * :ref:`sda_fabric_sites_zones_playbook_config_generator module <ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module>` -- Generate YAML playbook for \ :literal:`sda\_fabric\_sites\_zones\_workflow\_manager`\  module.
 * :ref:`sda_fabric_sites_zones_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_sites_zones_workflow_manager_module>` -- Manage fabric site(s)/zone(s) and update the authentication profile template in Cisco Catalyst Center.
+* :ref:`sda_fabric_transits_playbook_config_generator module <ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module>` -- Generate YAML configurations playbook for \ :literal:`sda\_fabric\_transits\_workflow\_manager`\  module.
 * :ref:`sda_fabric_transits_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_transits_workflow_manager_module>` -- Resource module for SDA fabric transits
 * :ref:`sda_fabric_virtual_networks_playbook_config_generator module <ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module>` -- Generate YAML playbook for \ :literal:`sda\_fabric\_virtual\_networks\_workflow\_manager`\  module.
 * :ref:`sda_fabric_virtual_networks_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_virtual_networks_workflow_manager_module>` -- Configure fabric VLANs, Virtual Networks, and Anycast Gateways in Cisco Catalyst Center.
@@ -1225,6 +1225,7 @@ Modules
     access_groups_count_info_module
     access_groups_info_module
     accesspoint_configuration_details_by_task_id_info_module
+    accesspoint_location_playbook_config_generator_module
     accesspoint_location_workflow_manager_module
     accesspoint_playbook_config_generator_module
     accesspoint_workflow_manager_module
@@ -1303,11 +1304,9 @@ Modules
     backups_module
     backups_id_restore_module
     backups_info_module
-    brownfield_accesspoint_location_playbook_generator_module
     brownfield_device_credential_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
-    brownfield_sda_fabric_transits_config_generator_module
     brownfield_wired_campus_automation_playbook_generator_module
     buildings_module
     buildings_info_module
@@ -1996,6 +1995,7 @@ Modules
     sda_fabric_sites_info_module
     sda_fabric_sites_zones_playbook_config_generator_module
     sda_fabric_sites_zones_workflow_manager_module
+    sda_fabric_transits_playbook_config_generator_module
     sda_fabric_transits_workflow_manager_module
     sda_fabric_virtual_networks_playbook_config_generator_module
     sda_fabric_virtual_networks_workflow_manager_module
