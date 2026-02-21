@@ -361,9 +361,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`sda\_fabric\_transits\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, \ :literal:`sda\_fabric\_transits\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      For example, \ :literal:`sda\_fabric\_transits\_playbook\_config\_2026-02-20\_13-48-23.yml`\ .
 
 
       .. raw:: html
@@ -1239,7 +1239,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_transits\_playbook\_config\_2026-02-19\_15-00-13.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_transits\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_transits\_playbook\_config\_2026-02-19\_15-00-13.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_transits\_workflow\_manager'", "status": "success"}, "status": "success"}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_transits\_playbook\_config\_2026-02-20\_13-48-23.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_transits\_workflow\_manager'", "status": "success"}, "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 1, "file\_path": "sda\_fabric\_transits\_playbook\_config\_2026-02-20\_13-48-23.yml", "message": "YAML configuration file generated successfully for module 'sda\_fabric\_transits\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html

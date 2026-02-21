@@ -169,7 +169,6 @@ Modules
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
-* :ref:`brownfield_wired_campus_automation_playbook_generator module <ansible_collections.cisco.dnac.brownfield_wired_campus_automation_playbook_generator_module>` -- Generate YAML configurations playbook for 'wired\_campus\_automation\_workflow\_manager' module.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
 * :ref:`buildings_planned_access_points_info module <ansible_collections.cisco.dnac.buildings_planned_access_points_info_module>` -- Information module for Buildings Planned Access Points
@@ -1112,6 +1111,7 @@ Modules
 * :ref:`virtual_network_health_summaries_count_info module <ansible_collections.cisco.dnac.virtual_network_health_summaries_count_info_module>` -- Information module for Virtual Network Health Summaries Count
 * :ref:`virtual_network_health_summaries_id_trend_analytics_info module <ansible_collections.cisco.dnac.virtual_network_health_summaries_id_trend_analytics_info_module>` -- Information module for Virtual Network Health Summaries Id Trend Analytics
 * :ref:`virtual_network_health_summaries_info module <ansible_collections.cisco.dnac.virtual_network_health_summaries_info_module>` -- Information module for Virtual Network Health Summaries
+* :ref:`wired_campus_automation_playbook_config_generator module <ansible_collections.cisco.dnac.wired_campus_automation_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'wired\_campus\_automation\_workflow\_manager' module.
 * :ref:`wired_campus_automation_workflow_manager module <ansible_collections.cisco.dnac.wired_campus_automation_workflow_manager_module>` -- Manage wired campus automation operations in Cisco Catalyst Center
 * :ref:`wired_network_devices_id_config_features_deployed_layer2_feature_count_info module <ansible_collections.cisco.dnac.wired_network_devices_id_config_features_deployed_layer2_feature_count_info_module>` -- Information module for Wired Network Devices Id Config Features Deployed Layer2 Feature Count
 * :ref:`wired_network_devices_id_config_features_deployed_layer2_feature_info module <ansible_collections.cisco.dnac.wired_network_devices_id_config_features_deployed_layer2_feature_info_module>` -- Information module for Wired Network Devices Id Config Features Deployed Layer2 Feature
@@ -1307,7 +1307,6 @@ Modules
     brownfield_device_credential_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     brownfield_sda_fabric_multicast_playbook_generator_module
-    brownfield_wired_campus_automation_playbook_generator_module
     buildings_module
     buildings_info_module
     buildings_planned_access_points_info_module
@@ -2249,6 +2248,7 @@ Modules
     virtual_network_health_summaries_count_info_module
     virtual_network_health_summaries_id_trend_analytics_info_module
     virtual_network_health_summaries_info_module
+    wired_campus_automation_playbook_config_generator_module
     wired_campus_automation_workflow_manager_module
     wired_network_devices_id_config_features_deployed_layer2_feature_count_info_module
     wired_network_devices_id_config_features_deployed_layer2_feature_info_module
