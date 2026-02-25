@@ -271,9 +271,9 @@ Parameters
 
       At least one filter type must be specified to identify target devices.
 
-      Filter priority (highest to lowest) is profile\_name\_list, day\_n\_template\_list, site\_list.
+      If multiple filter types are provided, the module will filter them in the following order of profile\_name\_list, day\_n\_template\_list, site\_list
 
-      Only the highest priority filter with valid data will be processed.
+      All profiles matching any of the provided filters will be retrieved.
 
 
       .. raw:: html

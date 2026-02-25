@@ -1319,8 +1319,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Global filters to apply when generating the YAML configuration file.</p>
 <p>These filters apply to all components unless overridden by component-specific filters.</p>
 <p>At least one filter type must be specified to identify target devices.</p>
-<p>Filter priority (highest to lowest) is profile_name_list, day_n_template_list, site_list.</p>
-<p>Only the highest priority filter with valid data will be processed.</p>
+<p>If multiple filter types are provided, the module will filter them in the following order of profile_name_list, day_n_template_list, site_list</p>
+<p>All profiles matching any of the provided filters will be retrieved.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
