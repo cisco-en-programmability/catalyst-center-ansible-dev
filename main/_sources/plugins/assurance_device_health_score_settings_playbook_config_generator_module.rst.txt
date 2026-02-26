@@ -1179,7 +1179,9 @@ Examples
         config:
           - file_path: "/tmp/legacy_device_health_score_settings.yml"
             component_specific_filters:
-              device_families: ["UNIFIED_AP", "ROUTER"]
+              components_list: ["device_health_score_settings"]
+              device_health_score_settings:
+                device_families: ["UNIFIED_AP", "ROUTER"]
 
 
 
