@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator module -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.sda_fabric_multicast_playbook_config_generator module -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator module -- Generate
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.sda_fabric_multicast_playbook_config_generator`.
 
 .. version_added
 
@@ -69,7 +69,7 @@ Synopsis
 .. Description
 
 - Automates YAML playbook generation from existing SDA fabric multicast deployments in Cisco Catalyst Center.
-- Creates playbooks compatible with the \ :literal:`sda\_fabric\_multicast\_workflow\_manager`\  module for brownfield infrastructure migration and documentation.
+- Creates playbooks compatible with the \ :literal:`sda\_fabric\_multicast\_workflow\_manager`\  module for infrastructure configuration management and documentation.
 - Reduces manual effort by programmatically extracting current multicast configurations including replication modes, SSM ranges, and ASM RPs.
 - Supports selective filtering to generate playbooks for specific fabric sites or Layer 3 virtual networks.
 - Enables complete infrastructure discovery with auto-generation mode when \ :literal:`generate\_all\_configurations`\  is enabled.
@@ -81,7 +81,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -116,7 +116,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -154,7 +154,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -196,7 +196,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -243,7 +243,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_multicast"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/component_specific_filters/fabric_multicast:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_multicast:
 
       .. rst-class:: ansible-option-title
 
@@ -279,7 +279,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_multicast/fabric_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/component_specific_filters/fabric_multicast/fabric_name:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_multicast/fabric_name:
 
       .. rst-class:: ansible-option-title
 
@@ -325,7 +325,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/fabric_multicast/layer3_virtual_network"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/component_specific_filters/fabric_multicast/layer3_virtual_network:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/component_specific_filters/fabric_multicast/layer3_virtual_network:
 
       .. rst-class:: ansible-option-title
 
@@ -371,7 +371,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -397,9 +397,9 @@ Parameters
 
       If not specified, the file is saved in the current working directory with an auto-generated filename.
 
-      Default filename format is \ :literal:`sda\_fabric\_multicast\_workflow\_manager\_playbook\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml`\ .
+      Default filename format is \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml`\ .
 
-      Example: \ :literal:`sda\_fabric\_multicast\_workflow\_manager\_playbook\_22\_Apr\_2025\_21\_43\_26\_379.yml`\ 
+      Example: \ :literal:`sda\_fabric\_multicast\_playbook\_config\_22\_Apr\_2025\_21\_43\_26\_379.yml`\ 
 
 
       .. raw:: html
@@ -411,7 +411,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -439,7 +439,7 @@ Parameters
 
       Overrides any provided \ :literal:`component\_specific\_filters`\  to ensure complete configuration retrieval.
 
-      Ideal for complete brownfield infrastructure migration and comprehensive documentation.
+      Ideal for complete infrastructure configuration export and comprehensive documentation.
 
       If enabled, a default filename will be auto-generated when \ :literal:`file\_path`\  is not provided.
 
@@ -464,7 +464,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -502,7 +502,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -544,7 +544,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -578,7 +578,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -630,7 +630,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -672,7 +672,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -714,7 +714,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -762,7 +762,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -796,7 +796,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -834,7 +834,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -873,8 +873,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -916,7 +916,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -958,7 +958,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -996,7 +996,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1039,7 +1039,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1111,7 +1111,7 @@ Examples
 
     
     - name: Generate YAML playbook for all SDA fabric multicast configurations
-      cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1127,7 +1127,7 @@ Examples
             file_path: "/path/to/output/all_fabric_multicast_configs.yml"
 
     - name: Generate YAML playbook for specific fabric site
-      cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1146,7 +1146,7 @@ Examples
                 - fabric_name: "Global/USA/San Jose/Building1"
 
     - name: Generate YAML playbook for specific fabric and virtual network
-      cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1162,7 +1162,7 @@ Examples
                   layer3_virtual_network: "GUEST_VN"
 
     - name: Generate playbook for multiple fabric sites with auto-generated filename
-      cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator:
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1205,7 +1205,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-changed"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-changed:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-changed:
 
       .. rst-class:: ansible-option-title
 
@@ -1252,7 +1252,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-msg"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-msg:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-msg:
 
       .. rst-class:: ansible-option-title
 
@@ -1299,7 +1299,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response:
 
       .. rst-class:: ansible-option-title
 
@@ -1344,7 +1344,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response/response"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response/response:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response/response:
 
       .. rst-class:: ansible-option-title
 
@@ -1393,7 +1393,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response/version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response/version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response/version:
 
       .. rst-class:: ansible-option-title
 
@@ -1439,7 +1439,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_error"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response_error:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response_error:
 
       .. rst-class:: ansible-option-title
 
@@ -1484,7 +1484,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_error/msg"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response_error/msg:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response_error/msg:
 
       .. rst-class:: ansible-option-title
 
@@ -1531,7 +1531,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_error/response"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response_error/response:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response_error/response:
 
       .. rst-class:: ansible-option-title
 
@@ -1576,7 +1576,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_error/version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-response_error/version:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-response_error/version:
 
       .. rst-class:: ansible-option-title
 
@@ -1622,7 +1622,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-status"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module__return-status:
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__return-status:
 
       .. rst-class:: ansible-option-title
 

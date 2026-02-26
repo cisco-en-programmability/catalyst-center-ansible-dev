@@ -168,7 +168,6 @@ Modules
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
 * :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
-* :ref:`brownfield_sda_fabric_multicast_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_fabric_multicast_playbook_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
 * :ref:`buildings_planned_access_points_info module <ansible_collections.cisco.dnac.buildings_planned_access_points_info_module>` -- Information module for Buildings Planned Access Points
@@ -849,6 +848,7 @@ Modules
 * :ref:`sda_fabric_devices_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_devices_workflow_manager_module>` -- Manage SDA fabric devices in Cisco Catalyst Center.
 * :ref:`sda_fabric_edge_device module <ansible_collections.cisco.dnac.sda_fabric_edge_device_module>` -- Resource module for Sda Fabric Edge Device
 * :ref:`sda_fabric_edge_device_info module <ansible_collections.cisco.dnac.sda_fabric_edge_device_info_module>` -- Information module for Sda Fabric Edge Device
+* :ref:`sda_fabric_multicast_playbook_config_generator module <ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_fabric\_multicast\_workflow\_manager' module.
 * :ref:`sda_fabric_multicast_workflow_manager module <ansible_collections.cisco.dnac.sda_fabric_multicast_workflow_manager_module>` -- Manage SDA fabric multicast in Cisco Catalyst Center.
 * :ref:`sda_fabric_site module <ansible_collections.cisco.dnac.sda_fabric_site_module>` -- Resource module for Sda Fabric Site
 * :ref:`sda_fabric_site_info module <ansible_collections.cisco.dnac.sda_fabric_site_info_module>` -- Information module for Sda Fabric Site
@@ -1306,7 +1306,6 @@ Modules
     backups_info_module
     brownfield_device_credential_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
-    brownfield_sda_fabric_multicast_playbook_generator_module
     buildings_module
     buildings_info_module
     buildings_planned_access_points_info_module
@@ -1986,6 +1985,7 @@ Modules
     sda_fabric_devices_workflow_manager_module
     sda_fabric_edge_device_module
     sda_fabric_edge_device_info_module
+    sda_fabric_multicast_playbook_config_generator_module
     sda_fabric_multicast_workflow_manager_module
     sda_fabric_site_module
     sda_fabric_site_info_module
