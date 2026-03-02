@@ -26,7 +26,7 @@
 
 .. Anchors
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module:
+.. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module:
 
 .. Anchors: short name for ansible.builtin
 
@@ -36,8 +36,8 @@
 
 .. Title
 
-cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cisco.dnac.sda_extranet_policies_playbook_config_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Collection note
 
@@ -46,9 +46,9 @@ cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generat
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
-    see :ref:`Requirements <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module_requirements>` for details.
+    see :ref:`Requirements <ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module_requirements>` for details.
 
-    To use it in a playbook, specify: :code:`cisco.dnac.brownfield_sda_extranet_policies_playbook_generator`.
+    To use it in a playbook, specify: :code:`cisco.dnac.sda_extranet_policies_playbook_config_generator`.
 
 .. version_added
 
@@ -81,7 +81,7 @@ Synopsis
 
 .. Requirements
 
-.. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module_requirements:
+.. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module_requirements:
 
 Requirements
 ------------
@@ -122,7 +122,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config:
 
       .. rst-class:: ansible-option-title
 
@@ -160,7 +160,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/component_specific_filters:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/component_specific_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -200,7 +200,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/component_specific_filters/components_list:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/component_specific_filters/components_list:
 
       .. rst-class:: ansible-option-title
 
@@ -245,7 +245,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/component_specific_filters/extranet_policies:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/component_specific_filters/extranet_policies:
 
       .. rst-class:: ansible-option-title
 
@@ -283,7 +283,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies/extranet_policy_name"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/component_specific_filters/extranet_policies/extranet_policy_name:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/component_specific_filters/extranet_policies/extranet_policy_name:
 
       .. rst-class:: ansible-option-title
 
@@ -323,7 +323,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/file_path:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -363,7 +363,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/generate_all_configurations:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/generate_all_configurations:
 
       .. rst-class:: ansible-option-title
 
@@ -413,7 +413,7 @@ Parameters
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-config/global_filters:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/global_filters:
 
       .. rst-class:: ansible-option-title
 
@@ -450,7 +450,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_api_task_timeout:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_api_task_timeout:
 
       .. rst-class:: ansible-option-title
 
@@ -488,7 +488,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_debug:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_debug:
 
       .. rst-class:: ansible-option-title
 
@@ -530,7 +530,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_host:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_host:
 
       .. rst-class:: ansible-option-title
 
@@ -564,7 +564,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_log:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_log:
 
       .. rst-class:: ansible-option-title
 
@@ -616,7 +616,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_log_append:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_log_append:
 
       .. rst-class:: ansible-option-title
 
@@ -658,7 +658,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_log_file_path:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_log_file_path:
 
       .. rst-class:: ansible-option-title
 
@@ -700,7 +700,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_log_level:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_log_level:
 
       .. rst-class:: ansible-option-title
 
@@ -748,7 +748,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_password:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_password:
 
       .. rst-class:: ansible-option-title
 
@@ -782,7 +782,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_port:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_port:
 
       .. rst-class:: ansible-option-title
 
@@ -820,7 +820,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_task_poll_interval:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_task_poll_interval:
 
       .. rst-class:: ansible-option-title
 
@@ -859,8 +859,8 @@ Parameters
         <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
         <div class="ansibleOptionAnchor" id="parameter-user"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_username:
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-user:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_username:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-user:
 
       .. rst-class:: ansible-option-title
 
@@ -902,7 +902,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_verify:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_verify:
 
       .. rst-class:: ansible-option-title
 
@@ -944,7 +944,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-dnac_version:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-dnac_version:
 
       .. rst-class:: ansible-option-title
 
@@ -982,7 +982,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-state:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-state:
 
       .. rst-class:: ansible-option-title
 
@@ -1025,7 +1025,7 @@ Parameters
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__parameter-validate_response_schema:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-validate_response_schema:
 
       .. rst-class:: ansible-option-title
 
@@ -1097,7 +1097,7 @@ Examples
 
     
     - name: Generate YAML playbook for all SDA extranet policies
-      cisco.dnac.brownfield_sda_extranet_policies_playbook_generator:
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1112,7 +1112,7 @@ Examples
           - generate_all_configurations: true
 
     - name: Generate YAML playbook for all SDA extranet policies with custom file path
-      cisco.dnac.brownfield_sda_extranet_policies_playbook_generator:
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1128,7 +1128,7 @@ Examples
             file_path: "/tmp/all_extranet_policies.yml"
 
     - name: Generate YAML playbook for specific extranet policy by name
-      cisco.dnac.brownfield_sda_extranet_policies_playbook_generator:
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1147,7 +1147,7 @@ Examples
                 - extranet_policy_name: "Test_1"
 
     - name: Generate YAML playbook for multiple specific extranet policies
-      cisco.dnac.brownfield_sda_extranet_policies_playbook_generator:
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -1169,7 +1169,7 @@ Examples
                 - extranet_policy_name: "Test_3"
 
     - name: Generate multiple playbooks with different filters
-      cisco.dnac.brownfield_sda_extranet_policies_playbook_generator:
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
         dnac_password: "{{ dnac_password }}"
@@ -1215,7 +1215,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_1"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__return-response_1:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__return-response_1:
 
       .. rst-class:: ansible-option-title
 
@@ -1260,7 +1260,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
         <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="return-response_2"></div>
 
-      .. _ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module__return-response_2:
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__return-response_2:
 
       .. rst-class:: ansible-option-title
 

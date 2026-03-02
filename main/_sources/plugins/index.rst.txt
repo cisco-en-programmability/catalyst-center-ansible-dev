@@ -166,7 +166,6 @@ Modules
 * :ref:`backups module <ansible_collections.cisco.dnac.backups_module>` -- Resource module for Backups
 * :ref:`backups_id_restore module <ansible_collections.cisco.dnac.backups_id_restore_module>` -- Resource module for Backups Id Restore
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
-* :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
 * :ref:`buildings_planned_access_points_info module <ansible_collections.cisco.dnac.buildings_planned_access_points_info_module>` -- Information module for Buildings Planned Access Points
@@ -825,6 +824,7 @@ Modules
 * :ref:`sda_extranet_policies module <ansible_collections.cisco.dnac.sda_extranet_policies_module>` -- Resource module for Sda Extranet Policies
 * :ref:`sda_extranet_policies_count_info module <ansible_collections.cisco.dnac.sda_extranet_policies_count_info_module>` -- Information module for Sda Extranet Policies Count
 * :ref:`sda_extranet_policies_info module <ansible_collections.cisco.dnac.sda_extranet_policies_info_module>` -- Information module for Sda Extranet Policies
+* :ref:`sda_extranet_policies_playbook_config_generator module <ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`sda_extranet_policies_workflow_manager module <ansible_collections.cisco.dnac.sda_extranet_policies_workflow_manager_module>` -- SDA Extranet Policies Module provides functionality for managing SD-Access Extranet Policies in Cisco Catalyst Center.
 * :ref:`sda_fabric_authentication_profile module <ansible_collections.cisco.dnac.sda_fabric_authentication_profile_module>` -- Resource module for Sda Fabric Authentication Profile
 * :ref:`sda_fabric_authentication_profile_info module <ansible_collections.cisco.dnac.sda_fabric_authentication_profile_info_module>` -- Information module for Sda Fabric Authentication Profile
@@ -1304,7 +1304,6 @@ Modules
     backups_module
     backups_id_restore_module
     backups_info_module
-    brownfield_sda_extranet_policies_playbook_generator_module
     buildings_module
     buildings_info_module
     buildings_planned_access_points_info_module
@@ -1962,6 +1961,7 @@ Modules
     sda_extranet_policies_module
     sda_extranet_policies_count_info_module
     sda_extranet_policies_info_module
+    sda_extranet_policies_playbook_config_generator_module
     sda_extranet_policies_workflow_manager_module
     sda_fabric_authentication_profile_module
     sda_fabric_authentication_profile_info_module

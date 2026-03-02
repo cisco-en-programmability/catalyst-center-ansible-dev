@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations. &mdash; DNACenterAnsibleActions  documentation</title>
+  <title>cisco.dnac.sda_extranet_policies_playbook_config_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations. &mdash; DNACenterAnsibleActions  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/ansible-basic-sphinx-ext.css" />
@@ -20,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cisco.dnac.buildings module -- Resource module for Buildings" href="buildings_module.html" />
-    <link rel="prev" title="cisco.dnac.backups_info module -- Information module for Backups" href="backups_info_module.html" /> 
+    <link rel="next" title="cisco.dnac.sda_extranet_policies_workflow_manager module -- SDA Extranet Policies Module provides functionality for managing SD-Access Extranet Policies in Cisco Catalyst Center." href="sda_extranet_policies_workflow_manager_module.html" />
+    <link rel="prev" title="cisco.dnac.sda_extranet_policies_info module -- Information module for Sda Extranet Policies" href="sda_extranet_policies_info_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -150,7 +150,6 @@
 <li class="toctree-l4"><a class="reference internal" href="backups_module.html">cisco.dnac.backups module -- Resource module for Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backups_id_restore_module.html">cisco.dnac.backups_id_restore module -- Resource module for Backups Id Restore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="backups_info_module.html">cisco.dnac.backups_info module -- Information module for Backups</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_module.html">cisco.dnac.buildings module -- Resource module for Buildings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_info_module.html">cisco.dnac.buildings_info module -- Information module for Buildings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="buildings_planned_access_points_info_module.html">cisco.dnac.buildings_planned_access_points_info module -- Information module for Buildings Planned Access Points</a></li>
@@ -813,6 +812,7 @@
 <li class="toctree-l4"><a class="reference internal" href="sda_extranet_policies_module.html">cisco.dnac.sda_extranet_policies module -- Resource module for Sda Extranet Policies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_extranet_policies_count_info_module.html">cisco.dnac.sda_extranet_policies_count_info module -- Information module for Sda Extranet Policies Count</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_extranet_policies_info_module.html">cisco.dnac.sda_extranet_policies_info module -- Information module for Sda Extranet Policies</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cisco.dnac.sda_extranet_policies_playbook_config_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_extranet_policies_workflow_manager_module.html">cisco.dnac.sda_extranet_policies_workflow_manager module -- SDA Extranet Policies Module provides functionality for managing SD-Access Extranet Policies in Cisco Catalyst Center.</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_authentication_profile_module.html">cisco.dnac.sda_fabric_authentication_profile module -- Resource module for Sda Fabric Authentication Profile</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sda_fabric_authentication_profile_info_module.html">cisco.dnac.sda_fabric_authentication_profile_info module -- Information module for Sda Fabric Authentication Profile</a></li>
@@ -1219,9 +1219,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Cisco.Dnac</a></li>
-      <li class="breadcrumb-item active">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</li>
+      <li class="breadcrumb-item active">cisco.dnac.sda_extranet_policies_playbook_config_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/plugins/brownfield_sda_extranet_policies_playbook_generator_module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/plugins/sda_extranet_policies_playbook_config_generator_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -1229,15 +1229,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module"></span><section id="cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-generate-yaml-playbooks-for-sda-extranet-policies-from-existing-configurations">
-<h1>cisco.dnac.brownfield_sda_extranet_policies_playbook_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.<a class="headerlink" href="#cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-generate-yaml-playbooks-for-sda-extranet-policies-from-existing-configurations" title="Permalink to this heading"></a></h1>
+  <span class="target" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module"></span><section id="cisco-dnac-sda-extranet-policies-playbook-config-generator-module-generate-yaml-playbooks-for-sda-extranet-policies-from-existing-configurations">
+<h1>cisco.dnac.sda_extranet_policies_playbook_config_generator module -- Generate YAML playbooks for SDA extranet policies from existing configurations.<a class="headerlink" href="#cisco-dnac-sda-extranet-policies-playbook-config-generator-module-generate-yaml-playbooks-for-sda-extranet-policies-from-existing-configurations" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/cisco/dnac">cisco.dnac collection</a> (version 6.48.0).</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">cisco.dnac</span></code>.
 You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span></code>.</p>
+see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">cisco.dnac.sda_extranet_policies_playbook_config_generator</span></code>.</p>
 </div>
 <p class="ansible-version-added">New in cisco.dnac 6.45.0</p>
 <nav class="contents local" id="contents">
@@ -1263,7 +1263,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-requirements"></span><h2><a class="toc-backref" href="#id48" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<span id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-requirements"></span><h2><a class="toc-backref" href="#id48" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>The below requirements are needed on the host that executes this module.</p>
 <ul class="simple">
 <li><p>dnacentersdk &gt;= 2.10.10</p></li>
@@ -1287,7 +1287,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config"><strong>config</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config"><strong>config</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A list of configuration filters for generating YAML playbooks compatible with the <code class="docutils literal notranslate"><span class="pre">sda_extranet_policies_workflow_manager</span></code> module.</p>
@@ -1296,7 +1296,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the generated YAML playbook file will be saved.</p>
@@ -1306,7 +1306,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/components_list"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-component-specific-filters-components-list"><strong>components_list</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/components_list" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of component types to include in the generated YAML playbook.</p>
@@ -1319,7 +1319,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-component-specific-filters-extranet-policies"><strong>extranet_policies</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-component-specific-filters-extranet-policies"><strong>extranet_policies</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/extranet_policies" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters for retrieving specific extranet policy configurations from Cisco Catalyst Center.</p>
@@ -1328,7 +1328,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies/extranet_policy_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-component-specific-filters-extranet-policies-extranet-policy-name"><strong>extranet_policy_name</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/extranet_policies/extranet_policy_name"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-component-specific-filters-extranet-policies-extranet-policy-name"><strong>extranet_policy_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/extranet_policies/extranet_policy_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Name of the extranet policy to filter.</p>
@@ -1337,7 +1337,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the generated YAML playbook file will be saved.</p>
@@ -1347,7 +1347,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Enables automatic discovery and generation of YAML configurations for all SDA extranet policies.</p>
@@ -1363,7 +1363,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-config-global-filters"><strong>global_filters</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-config-global-filters"><strong>global_filters</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Global-level filters that apply across all components.</p>
@@ -1371,7 +1371,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_api_task_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Defines the timeout in seconds for API calls to retrieve task details. If the task details are not received within this period, the process will end, and a timeout notification will be logged.</p>
@@ -1379,7 +1379,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_debug" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Indicates whether debugging is enabled in the Cisco Catalyst Center SDK.</p>
@@ -1391,14 +1391,14 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The hostname of the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable/disable playbook execution logging.</p>
@@ -1415,7 +1415,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_append" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines the mode of the file. Set to True for 'append' mode. Set to False for 'write' mode.</p>
@@ -1427,7 +1427,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Governs logging. Logs are recorded if dnac_log is True.</p>
@@ -1437,7 +1437,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_level" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Sets the threshold for log level. Messages with a level equal to or higher than this will be logged. Levels are listed in order of severity [CRITICAL, ERROR, WARNING, INFO, DEBUG].</p>
@@ -1450,14 +1450,14 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for authentication at the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_port" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the port number associated with the Cisco Catalyst Center.</p>
@@ -1465,7 +1465,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_task_poll_interval" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the interval in seconds between successive calls to the API to retrieve task details.</p>
@@ -1474,7 +1474,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
-<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: user</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -1483,7 +1483,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_verify" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable or disable SSL certificate verification.</p>
@@ -1495,7 +1495,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the version of the Cisco Catalyst Center that the SDK should use.</p>
@@ -1503,7 +1503,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-state"><strong>state</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The desired state for the module operation.</p>
@@ -1515,7 +1515,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
 <a class="ansibleOptionLink" href="#parameter-validate_response_schema" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag for Cisco Catalyst Center SDK to enable the validation of request bodies against a JSON schema.</p>
@@ -1555,7 +1555,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <section id="examples">
 <h2><a class="toc-backref" href="#id52" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML playbook for all SDA extranet policies</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_extranet_policies_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1570,7 +1570,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">generate_all_configurations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML playbook for all SDA extranet policies with custom file path</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_extranet_policies_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1586,7 +1586,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">        </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/all_extranet_policies.yml&quot;</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML playbook for specific extranet policy by name</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_extranet_policies_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1605,7 +1605,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extranet_policy_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Test_1&quot;</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML playbook for multiple specific extranet policies</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_extranet_policies_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1627,7 +1627,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">extranet_policy_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Test_3&quot;</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate multiple playbooks with different filters</span>
-<span class="w">  </span><span class="nt">cisco.dnac.brownfield_sda_extranet_policies_playbook_generator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_extranet_policies_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
@@ -1659,7 +1659,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-return-response-1"><strong>response_1</strong></p>
+<div class="ansibleOptionAnchor" id="return-response_1"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-return-response-1"><strong>response_1</strong></p>
 <a class="ansibleOptionLink" href="#return-response_1" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary with the response returned by the Cisco Catalyst Center Python SDK</p>
@@ -1668,7 +1668,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-response_2"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-brownfield-sda-extranet-policies-playbook-generator-module-return-response-2"><strong>response_2</strong></p>
+<div class="ansibleOptionAnchor" id="return-response_2"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-extranet-policies-playbook-config-generator-module-return-response-2"><strong>response_2</strong></p>
 <a class="ansibleOptionLink" href="#return-response_2" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A string with the response returned by the Cisco Catalyst Center Python SDK</p>
@@ -1698,8 +1698,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-brownfie
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="backups_info_module.html" class="btn btn-neutral float-left" title="cisco.dnac.backups_info module -- Information module for Backups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="buildings_module.html" class="btn btn-neutral float-right" title="cisco.dnac.buildings module -- Resource module for Buildings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sda_extranet_policies_info_module.html" class="btn btn-neutral float-left" title="cisco.dnac.sda_extranet_policies_info module -- Information module for Sda Extranet Policies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sda_extranet_policies_workflow_manager_module.html" class="btn btn-neutral float-right" title="cisco.dnac.sda_extranet_policies_workflow_manager module -- SDA Extranet Policies Module provides functionality for managing SD-Access Extranet Policies in Cisco Catalyst Center." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
