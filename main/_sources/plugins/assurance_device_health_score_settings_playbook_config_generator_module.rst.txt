@@ -316,15 +316,29 @@ Parameters
 
       List of specific device family names to extract KPI threshold settings for using modern nested filter format.
 
-      Valid device family names include \ :literal:`UNIFIED\_AP`\  for wireless access points, \ :literal:`ROUTER`\  for routing devices, \ :literal:`SWITCH`\  or \ :literal:`SWITCH\_AND\_HUB`\  for switching infrastructure, \ :literal:`WIRELESS\_CONTROLLER`\  for wireless LAN controllers, \ :literal:`WIRELESS\_SENSOR`\  for wireless sensors, \ :literal:`MERAKI\_DASHBOARD`\  for Meraki devices, \ :literal:`FIREWALL`\  for firewall appliances, and other Catalyst Center supported device types.
+      Valid device family names include \ :literal:`ROUTER`\  for routing devices, \ :literal:`SWITCH\_AND\_HUB`\  for switching infrastructure, \ :literal:`WIRELESS\_CONTROLLER`\  for wireless LAN controllers, \ :literal:`UNIFIED\_AP`\  for wireless access points, \ :literal:`WIRELESS\_CLIENT`\  for wireless client devices, and \ :literal:`WIRED\_CLIENT`\  for wired client devices.
 
       If not specified, all device families with configured KPI threshold settings will be extracted for comprehensive brownfield documentation.
+
+      Duplicate device family values are automatically removed while preserving the original order of unique entries.
 
       Each device family may have different KPI metrics and thresholds based on device capabilities and health monitoring requirements.
 
       Example filter \ :literal:`["UNIFIED\_AP", "ROUTER", "SWITCH\_AND\_HUB", "WIRELESS\_CONTROLLER"]`\  extracts settings for wireless and wired infrastructure.
 
       Device family names are case-sensitive and must match exact names used in Catalyst Center.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"ROUTER"`
+      - :ansible-option-choices-entry:`"SWITCH\_AND\_HUB"`
+      - :ansible-option-choices-entry:`"WIRELESS\_CONTROLLER"`
+      - :ansible-option-choices-entry:`"UNIFIED\_AP"`
+      - :ansible-option-choices-entry:`"WIRELESS\_CLIENT"`
+      - :ansible-option-choices-entry:`"WIRED\_CLIENT"`
 
 
       .. raw:: html
@@ -1126,7 +1140,8 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/assurance_health_score_settings.yml"
+          - file_path: "tmp/assurance_health_score_settings.yml"
+            generate_all_configurations: true
 
     - name: Generate YAML Configuration for all device health score components
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:

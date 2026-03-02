@@ -166,7 +166,6 @@ Modules
 * :ref:`backups module <ansible_collections.cisco.dnac.backups_module>` -- Resource module for Backups
 * :ref:`backups_id_restore module <ansible_collections.cisco.dnac.backups_id_restore_module>` -- Resource module for Backups Id Restore
 * :ref:`backups_info module <ansible_collections.cisco.dnac.backups_info_module>` -- Information module for Backups
-* :ref:`brownfield_device_credential_playbook_generator module <ansible_collections.cisco.dnac.brownfield_device_credential_playbook_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`brownfield_sda_extranet_policies_playbook_generator module <ansible_collections.cisco.dnac.brownfield_sda_extranet_policies_playbook_generator_module>` -- Generate YAML playbooks for SDA extranet policies from existing configurations.
 * :ref:`buildings module <ansible_collections.cisco.dnac.buildings_module>` -- Resource module for Buildings
 * :ref:`buildings_info module <ansible_collections.cisco.dnac.buildings_info_module>` -- Information module for Buildings
@@ -245,6 +244,7 @@ Modules
 * :ref:`device_credential module <ansible_collections.cisco.dnac.device_credential_module>` -- Resource module for Device Credential
 * :ref:`device_credential_info module <ansible_collections.cisco.dnac.device_credential_info_module>` -- Information module for Device Credential
 * :ref:`device_credential_intent module <ansible_collections.cisco.dnac.device_credential_intent_module>` -- Resource module for Global Device Credentials and Assigning Credentials to sites.
+* :ref:`device_credential_playbook_config_generator module <ansible_collections.cisco.dnac.device_credential_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'device\_credential\_workflow\_manager' module.
 * :ref:`device_credential_workflow_manager module <ansible_collections.cisco.dnac.device_credential_workflow_manager_module>` -- Resource module for Global Device Credentials and Assigning Credentials to sites.
 * :ref:`device_details_info module <ansible_collections.cisco.dnac.device_details_info_module>` -- Information module for Device Details
 * :ref:`device_enrichment_details_info module <ansible_collections.cisco.dnac.device_enrichment_details_info_module>` -- Information module for Device Enrichment Details
@@ -1304,7 +1304,6 @@ Modules
     backups_module
     backups_id_restore_module
     backups_info_module
-    brownfield_device_credential_playbook_generator_module
     brownfield_sda_extranet_policies_playbook_generator_module
     buildings_module
     buildings_info_module
@@ -1383,6 +1382,7 @@ Modules
     device_credential_module
     device_credential_info_module
     device_credential_intent_module
+    device_credential_playbook_config_generator_module
     device_credential_workflow_manager_module
     device_details_info_module
     device_enrichment_details_info_module
