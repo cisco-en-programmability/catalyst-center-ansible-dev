@@ -869,6 +869,7 @@ Modules
 * :ref:`sda_fabrics_vlan_to_ssids_fabric_id_count_info module <ansible_collections.cisco.dnac.sda_fabrics_vlan_to_ssids_fabric_id_count_info_module>` -- Information module for Sda Fabrics Vlan To Ssids Fabric Id Count
 * :ref:`sda_fabrics_vlan_to_ssids_fabric_id_info module <ansible_collections.cisco.dnac.sda_fabrics_vlan_to_ssids_fabric_id_info_module>` -- Information module for Sda Fabrics Vlan To Ssids Fabric Id
 * :ref:`sda_fabrics_vlan_to_ssids_info module <ansible_collections.cisco.dnac.sda_fabrics_vlan_to_ssids_info_module>` -- Information module for Sda Fabrics Vlan To Ssids
+* :ref:`sda_host_port_onboarding_playbook_config_generator module <ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module>` -- Generate YAML configurations playbook for 'sda\_host\_port\_onboarding\_workflow\_manager' module.
 * :ref:`sda_host_port_onboarding_workflow_manager module <ansible_collections.cisco.dnac.sda_host_port_onboarding_workflow_manager_module>` -- Manage host port onboarding in SD-Access Fabric in Cisco Catalyst Center.
 * :ref:`sda_layer2_virtual_networks module <ansible_collections.cisco.dnac.sda_layer2_virtual_networks_module>` -- Resource module for Sda Layer2 Virtual Networks
 * :ref:`sda_layer2_virtual_networks_count_info module <ansible_collections.cisco.dnac.sda_layer2_virtual_networks_count_info_module>` -- Information module for Sda Layer2 Virtual Networks Count
@@ -978,6 +979,7 @@ Modules
 * :ref:`site_kpi_summaries_trend_analytics module <ansible_collections.cisco.dnac.site_kpi_summaries_trend_analytics_module>` -- Resource module for Site Kpi Summaries Trend Analytics
 * :ref:`site_kpi_summaries_trend_analytics_info module <ansible_collections.cisco.dnac.site_kpi_summaries_trend_analytics_info_module>` -- Information module for Site Kpi Summaries Trend Analytics
 * :ref:`site_membership_info module <ansible_collections.cisco.dnac.site_membership_info_module>` -- Information module for Site Membership
+* :ref:`site_playbook_config_generator module <ansible_collections.cisco.dnac.site_playbook_config_generator_module>` -- Generate YAML playbook for 'site\_workflow\_manager' module.
 * :ref:`site_update module <ansible_collections.cisco.dnac.site_update_module>` -- Resource module for Site Update
 * :ref:`site_v2_info module <ansible_collections.cisco.dnac.site_v2_info_module>` -- Information module for Site V2
 * :ref:`site_wise_images_summary_info module <ansible_collections.cisco.dnac.site_wise_images_summary_info_module>` -- Information module for Site Wise Images Summary
@@ -2006,6 +2008,7 @@ Modules
     sda_fabrics_vlan_to_ssids_fabric_id_count_info_module
     sda_fabrics_vlan_to_ssids_fabric_id_info_module
     sda_fabrics_vlan_to_ssids_info_module
+    sda_host_port_onboarding_playbook_config_generator_module
     sda_host_port_onboarding_workflow_manager_module
     sda_layer2_virtual_networks_module
     sda_layer2_virtual_networks_count_info_module
@@ -2115,6 +2118,7 @@ Modules
     site_kpi_summaries_trend_analytics_module
     site_kpi_summaries_trend_analytics_info_module
     site_membership_info_module
+    site_playbook_config_generator_module
     site_update_module
     site_v2_info_module
     site_wise_images_summary_info_module
