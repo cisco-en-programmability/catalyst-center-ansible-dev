@@ -354,20 +354,19 @@ Parameters
 
       LOWER PRIORITY - Only used if discovery\_name\_list is not provided.
 
-      Valid values are SINGLE, RANGE, MULTI RANGE, CDP, LLDP, CIDR.
+      Valid values are Single, Range, CDP, LLDP, CIDR.
 
       Will include all discoveries matching any of the specified types.
 
-      Example ["MULTI RANGE", "CDP", "LLDP"]
+      Example ["CDP", "LLDP"]
 
 
       .. rst-class:: ansible-option-line
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry:`"SINGLE"`
-      - :ansible-option-choices-entry:`"RANGE"`
-      - :ansible-option-choices-entry:`"MULTI RANGE"`
+      - :ansible-option-choices-entry:`"Single"`
+      - :ansible-option-choices-entry:`"Range"`
       - :ansible-option-choices-entry:`"CDP"`
       - :ansible-option-choices-entry:`"LLDP"`
       - :ansible-option-choices-entry:`"CIDR"`
@@ -1147,7 +1146,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Discovery YAML configuration generated successfully", "response": {"component\_summary": {"discovery\_details": {"total\_failed": 0, "total\_processed": 5, "total\_successful": 5}}, "discoveries\_found": [{"discovery\_name": "Multi\_global", "discovery\_type": "MULTI RANGE", "status": "Complete"}, {"discovery\_name": "Single IP Discovery", "discovery\_type": "SINGLE", "status": "Complete"}], "discoveries\_skipped": [], "file\_path": "/path/to/discovery\_workflow\_manager\_playbook\_22\_Dec\_2024\_21\_43\_26\_379.yml", "status": "success", "total\_discoveries\_processed": 5}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Discovery YAML configuration generated successfully", "response": {"component\_summary": {"discovery\_details": {"total\_failed": 0, "total\_processed": 5, "total\_successful": 5}}, "discoveries\_found": [{"discovery\_name": "Multi\_global", "discovery\_type": "Range", "status": "Complete"}, {"discovery\_name": "Single IP Discovery", "discovery\_type": "Single", "status": "Complete"}], "discoveries\_skipped": [], "file\_path": "/path/to/discovery\_workflow\_manager\_playbook\_22\_Dec\_2024\_21\_43\_26\_379.yml", "status": "success", "total\_discoveries\_processed": 5}}`
 
 
       .. raw:: html
