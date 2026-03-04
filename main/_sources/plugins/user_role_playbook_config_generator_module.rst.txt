@@ -517,9 +517,9 @@ Parameters
 
       If not provided, the file is saved in the current working directory with auto-generated filename.
 
-      Default filename pattern is \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      Default filename pattern is \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, \ :literal:`user\_role\_workflow\_manager\_playbook\_2025-04-22\_21-43-26.yml`\ .
+      For example, \ :literal:`user\_role\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
       The directory path must exist and be writable.
 
@@ -565,7 +565,7 @@ Parameters
 
       If enabled, the \ :literal:`component\_specific\_filters`\  parameter becomes optional and defaults to all components.
 
-      A default filename is generated automatically if \ :literal:`file\_path`\  is not specified using pattern \ :literal:`\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      A default filename is generated automatically if \ :literal:`file\_path`\  is not specified using pattern \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
       Useful for complete brownfield discovery, documentation, and disaster recovery planning.
 

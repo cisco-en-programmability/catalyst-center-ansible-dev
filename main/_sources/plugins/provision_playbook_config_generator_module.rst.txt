@@ -536,9 +536,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml.
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`provision\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, provision\_playbook\_config\_2026-01-24\_12-33-20.yml.
+      For example, \ :literal:`provision\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
 
 
       .. raw:: html

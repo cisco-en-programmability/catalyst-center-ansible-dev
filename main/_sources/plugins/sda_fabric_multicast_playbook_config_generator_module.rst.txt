@@ -397,9 +397,9 @@ Parameters
 
       If not specified, the file is saved in the current working directory with an auto-generated filename.
 
-      Default filename format is \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml`\ .
+      Default filename format is \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      Example: \ :literal:`sda\_fabric\_multicast\_playbook\_config\_22\_Apr\_2025\_21\_43\_26\_379.yml`\ 
+      For example, \ :literal:`sda\_fabric\_multicast\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
 
       .. raw:: html
@@ -443,7 +443,7 @@ Parameters
 
       If enabled, a default filename will be auto-generated when \ :literal:`file\_path`\  is not provided.
 
-      Default filename format: \ :literal:`sda\_fabric\_multicast\_workflow\_manager\_playbook\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml`\ 
+      Default filename format: \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
 
 
       .. rst-class:: ansible-option-line
@@ -1331,7 +1331,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"response": {"YAML config generation Task succeeded for module 'sda\_fabric\_multicast\_workflow\_manager'.": {"file\_path": "/tmp/sda\_fabric\_multicast\_workflow\_manager\_playbook\_22\_Apr\_2025\_21\_43\_26\_379.yml"}}, "version": "2.3.7.9"}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"response": {"YAML config generation Task succeeded for module 'sda\_fabric\_multicast\_workflow\_manager'.": {"file\_path": "/tmp/sda\_fabric\_multicast\_playbook\_config\_2025-04-22\_21-43-26.yml"}}, "version": "2.3.7.9"}`
 
 
       .. raw:: html

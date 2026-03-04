@@ -278,9 +278,9 @@ Parameters
 
       If not provided, file is saved in current working directory with auto-generated filename.
 
-      Filename format when auto-generated is "pnp\_workflow\_manager\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
+      Filename format when auto-generated is \ :literal:`pnp\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      Example auto-generated filename "pnp\_workflow\_manager\_playbook\_2026-02-06\_14-30-45.yml".
+      Example auto-generated filename \ :literal:`pnp\_playbook\_config\_2026-02-06\_14-30-45.yml`\ .
 
       Parent directories are created automatically if they do not exist.
 
@@ -1356,7 +1356,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML config generation succeeded for module 'pnp\_workflow\_manager'.", "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 8, "file\_path": "pnp\_workflow\_manager\_playbook\_2026-02-06\_14-19-07.yml", "message": "YAML config generation succeeded for module 'pnp\_workflow\_manager'.", "status": "success"}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "YAML config generation succeeded for module 'pnp\_workflow\_manager'.", "response": {"components\_processed": 1, "components\_skipped": 0, "configurations\_count": 8, "file\_path": "pnp\_playbook\_config\_2026-02-06\_14-19-07.yml", "message": "YAML config generation succeeded for module 'pnp\_workflow\_manager'.", "status": "success"}}`
 
 
       .. raw:: html

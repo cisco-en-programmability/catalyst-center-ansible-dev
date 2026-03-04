@@ -349,7 +349,9 @@ Parameters
 
       If not provided, the file is saved in the current working directory with an auto-generated filename.
 
-      Default filename format: \ :literal:`\<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      Default filename format: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`sda\_extranet\_policies\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
       Ensure the directory path exists and has write permissions.
 
@@ -393,7 +395,7 @@ Parameters
 
       Ideal for complete brownfield infrastructure migration and documentation.
 
-      Default filename format when file\_path not provided: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<timestamp\>.yml`\ 
+      Default filename format when file\_path not provided: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
 
 
       .. rst-class:: ansible-option-line

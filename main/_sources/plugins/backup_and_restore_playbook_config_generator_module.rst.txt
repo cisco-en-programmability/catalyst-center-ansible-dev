@@ -464,9 +464,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name  "\<module\_name\>\_playbook\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`backup\_and\_restore\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, "backup\_and\_restore\_workflow\_manager\_playbook\_2026-01-27\_14-21-41.yml".
+      For example, \ :literal:`backup\_and\_restore\_playbook\_config\_2026-01-27\_14-21-41.yml`\ .
 
       Supports both absolute and relative paths.
 

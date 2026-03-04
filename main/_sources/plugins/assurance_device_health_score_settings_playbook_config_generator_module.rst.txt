@@ -133,7 +133,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -143,7 +143,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      List of configuration parameters for generating YAML playbooks compatible with the \ :literal:`assurance\_device\_health\_score\_settings\_workflow\_manager`\  module.
+      A dictionary of configuration parameters for generating YAML playbooks compatible with the \ :literal:`assurance\_device\_health\_score\_settings\_workflow\_manager`\  module.
 
       Defines filters to specify which device families and KPI settings to include in the generated YAML configuration file.
 
@@ -350,6 +350,52 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
       .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/file_path:
@@ -376,9 +422,9 @@ Parameters
 
       Absolute or relative path where the generated YAML configuration file will be saved.
 
-      If not provided, the module generates a default filename in the current working directory with the format \ :literal:`\<module\_name\>\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the module generates a default filename in the current working directory with the format \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      Example default filename \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_generator\_2026-01-24\_12-33-20.yml`\ .
+      Example default filename \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
 
       The directory path will be created automatically if it does not exist.
 
@@ -1125,7 +1171,8 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
+          file_mode: "overwrite"
 
     - name: Generate YAML Configuration with custom file path
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1140,8 +1187,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "tmp/assurance_health_score_settings.yml"
-            generate_all_configurations: true
+          file_path: "tmp/assurance_health_score_settings.yml"
+          generate_all_configurations: true
+          file_mode: "overwrite"
 
     - name: Generate YAML Configuration for all device health score components
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1156,9 +1204,10 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/assurance_health_score_settings.yml"
-            component_specific_filters:
-              components_list: ["device_health_score_settings"]
+          file_path: "/tmp/assurance_health_score_settings.yml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["device_health_score_settings"]
 
     - name: Generate YAML Configuration for specific device families
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1173,11 +1222,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/specific_device_health_score_settings.yml"
-            component_specific_filters:
-              components_list: ["device_health_score_settings"]
-              device_health_score_settings:
-                device_families: ["UNIFIED_AP", "ROUTER", "SWITCH_AND_HUB", "WIRELESS_CONTROLLER"]
+          file_path: "/tmp/specific_device_health_score_settings.yml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["device_health_score_settings"]
+            device_health_score_settings:
+              device_families: ["UNIFIED_AP", "ROUTER", "SWITCH_AND_HUB", "WIRELESS_CONTROLLER"]
 
     - name: Generate YAML Configuration using legacy filter format
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1192,11 +1242,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/legacy_device_health_score_settings.yml"
-            component_specific_filters:
-              components_list: ["device_health_score_settings"]
-              device_health_score_settings:
-                device_families: ["UNIFIED_AP", "ROUTER"]
+          file_path: "/tmp/legacy_device_health_score_settings.yml"
+          file_mode: "append"
+          component_specific_filters:
+            components_list: ["device_health_score_settings"]
+            device_health_score_settings:
+              device_families: ["UNIFIED_AP", "ROUTER"]
 
 
 
@@ -1414,7 +1465,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.", "response": {"file\_path": "assurance\_device\_health\_score\_settings\_workflow\_manager\_playbook\_2026-02-04\_14-30-15.yml", "message": "No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.", "operation\_summary": {"device\_families\_with\_complete\_failure": [], "device\_families\_with\_complete\_success": [], "device\_families\_with\_partial\_success": [], "failure\_details": [], "success\_details": [], "total\_device\_families\_processed": 0, "total\_failed\_operations": 0, "total\_kpis\_processed": 0, "total\_successful\_operations": 0}}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.", "response": {"file\_path": "assurance\_device\_health\_score\_settings\_playbook\_config\_2026-02-04\_14-30-15.yml", "message": "No configurations or components to process for module 'assurance\_device\_health\_score\_settings\_workflow\_manager'. Verify input filters or configuration.", "operation\_summary": {"device\_families\_with\_complete\_failure": [], "device\_families\_with\_complete\_success": [], "device\_families\_with\_partial\_success": [], "failure\_details": [], "success\_details": [], "total\_device\_families\_processed": 0, "total\_failed\_operations": 0, "total\_kpis\_processed": 0, "total\_successful\_operations": 0}}}`
 
 
       .. raw:: html

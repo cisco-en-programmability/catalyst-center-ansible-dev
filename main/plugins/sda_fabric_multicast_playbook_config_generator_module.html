@@ -1354,8 +1354,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the generated YAML playbook file will be saved.</p>
 <p>If not specified, the file is saved in the current working directory with an auto-generated filename.</p>
-<p>Default filename format is <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_playbook_config_&lt;DD_Mon_YYYY_HH_MM_SS_MS&gt;.yml</span></code>.</p>
-<p>Example: <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_playbook_config_22_Apr_2025_21_43_26_379.yml</span></code></p>
+<p>Default filename format is <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_playbook_config_2025-04-22_21-43-26.yml</span></code>.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1367,7 +1367,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <p>Overrides any provided <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> to ensure complete configuration retrieval.</p>
 <p>Ideal for complete infrastructure configuration export and comprehensive documentation.</p>
 <p>If enabled, a default filename will be auto-generated when <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not provided.</p>
-<p>Default filename format: <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_workflow_manager_playbook_&lt;DD_Mon_YYYY_HH_MM_SS_MS&gt;.yml</span></code></p>
+<p>Default filename format: <code class="docutils literal notranslate"><span class="pre">sda_fabric_multicast_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -1662,7 +1662,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 </div></td>
 <td><div class="ansible-option-cell"><p>Details of the YAML playbook generation operation.</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id47"><span class="problematic" id="id48">:ansible-rv-sample-value:`{&quot;response&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_fabric\_multicast\_workflow\_manager'.&quot;: {&quot;file\_path&quot;: &quot;/tmp/sda\_fabric\_multicast\_workflow\_manager\_playbook\_22\_Apr\_2025\_21\_43\_26\_379.yml&quot;}}, &quot;version&quot;: &quot;2.3.7.9&quot;}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id47"><span class="problematic" id="id48">:ansible-rv-sample-value:`{&quot;response&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_fabric\_multicast\_workflow\_manager'.&quot;: {&quot;file\_path&quot;: &quot;/tmp/sda\_fabric\_multicast\_playbook\_config\_2025-04-22\_21-43-26.yml&quot;}}, &quot;version&quot;: &quot;2.3.7.9&quot;}`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">

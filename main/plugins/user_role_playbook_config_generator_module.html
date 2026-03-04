@@ -1384,8 +1384,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-user-rol
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the YAML configuration file will be saved.</p>
 <p>If not provided, the file is saved in the current working directory with auto-generated filename.</p>
-<p>Default filename pattern is <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;_playbook_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
-<p>For example, <code class="docutils literal notranslate"><span class="pre">user_role_workflow_manager_playbook_2025-04-22_21-43-26.yml</span></code>.</p>
+<p>Default filename pattern is <code class="docutils literal notranslate"><span class="pre">user_role_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">user_role_playbook_config_2025-04-22_21-43-26.yml</span></code>.</p>
 <p>The directory path must exist and be writable.</p>
 <p>Supports absolute paths (e.g., <code class="docutils literal notranslate"><span class="pre">/tmp/config.yml</span></code>) and relative paths (e.g., <code class="docutils literal notranslate"><span class="pre">./configs/users.yml</span></code>).</p>
 </div></td>
@@ -1398,7 +1398,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-user-rol
 <p>Discovers all users and custom roles in Catalyst Center and extracts complete configurations.</p>
 <p>System roles (SUPER-ADMIN, NETWORK-ADMIN, OBSERVER) and default roles are automatically excluded.</p>
 <p>If enabled, the <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> parameter becomes optional and defaults to all components.</p>
-<p>A default filename is generated automatically if <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not specified using pattern <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;_playbook_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
+<p>A default filename is generated automatically if <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is not specified using pattern <code class="docutils literal notranslate"><span class="pre">user_role_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
 <p>Useful for complete brownfield discovery, documentation, and disaster recovery planning.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">

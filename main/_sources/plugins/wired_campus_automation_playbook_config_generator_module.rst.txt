@@ -470,9 +470,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name  "wired\_campus\_automation\_workflow\_manager\_playbook\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml".
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`wired\_campus\_automation\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, "wired\_campus\_automation\_workflow\_manager\_playbook\_22\_Apr\_2025\_21\_43\_26\_379.yml".
+      For example, \ :literal:`wired\_campus\_automation\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
 
       .. raw:: html

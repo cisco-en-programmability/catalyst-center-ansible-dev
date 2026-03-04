@@ -180,9 +180,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`discovery\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, \ :literal:`discovery\_workflow\_manager\_playbook\_2026-01-24\_12-33-20.yml`\ .
+      For example, \ :literal:`discovery\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
 
 
       .. raw:: html
@@ -1146,7 +1146,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Discovery YAML configuration generated successfully", "response": {"component\_summary": {"discovery\_details": {"total\_failed": 0, "total\_processed": 5, "total\_successful": 5}}, "discoveries\_found": [{"discovery\_name": "Multi\_global", "discovery\_type": "Range", "status": "Complete"}, {"discovery\_name": "Single IP Discovery", "discovery\_type": "Single", "status": "Complete"}], "discoveries\_skipped": [], "file\_path": "/path/to/discovery\_workflow\_manager\_playbook\_22\_Dec\_2024\_21\_43\_26\_379.yml", "status": "success", "total\_discoveries\_processed": 5}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Discovery YAML configuration generated successfully", "response": {"component\_summary": {"discovery\_details": {"total\_failed": 0, "total\_processed": 5, "total\_successful": 5}}, "discoveries\_found": [{"discovery\_name": "Multi\_global", "discovery\_type": "Range", "status": "Complete"}, {"discovery\_name": "Single IP Discovery", "discovery\_type": "Single", "status": "Complete"}], "discoveries\_skipped": [], "file\_path": "/path/to/discovery\_playbook\_config\_2026-01-24\_12-33-20.yml", "status": "success", "total\_discoveries\_processed": 5}}`
 
 
       .. raw:: html

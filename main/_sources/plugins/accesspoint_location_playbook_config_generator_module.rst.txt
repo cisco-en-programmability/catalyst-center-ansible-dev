@@ -175,9 +175,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`accesspoint\_location\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, 'accesspoint\_location\_playbook\_config\_2025-04-22\_21-43-26.yml'.
+      For example, \ :literal:`accesspoint\_location\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
       Supports both absolute and relative file paths.
 

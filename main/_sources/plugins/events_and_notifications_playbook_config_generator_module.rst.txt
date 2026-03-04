@@ -625,7 +625,7 @@ Parameters
 
       If not provided, file is saved in current working directory with auto-generated filename.
 
-      Filename format when auto-generated is "\<module\_name\>\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
+      Filename format when auto-generated is \ :literal:`events\_and\_notifications\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
       Example auto-generated filename "events\_and\_notifications\_playbook\_config\_2025-04-22\_21-43-26.yml".
 

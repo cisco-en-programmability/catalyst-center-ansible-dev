@@ -373,7 +373,9 @@ Parameters
 
       Absolute or relative path for the output YAML configuration file.
 
-      If not specified, a timestamped filename is auto-generated in the format \ :literal:`assurance\_issue\_playbook\_config\_YYYYMMDD\_HHMMSS.yml`\ .
+      If not specified, a timestamped filename is auto-generated in the format \ :literal:`assurance\_issue\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`assurance\_issue\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
 
       Parent directories are created automatically if they do not exist.
 
