@@ -1303,7 +1303,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-extr
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Absolute or relative path where the generated YAML playbook file will be saved.</p>
 <p>If not provided, the file is saved in the current working directory with an auto-generated filename.</p>
-<p>Default filename format: <code class="docutils literal notranslate"><span class="pre">sda_extranet_policies_workflow_manager_playbook_&lt;DD_Mon_YYYY_HH_MM_SS_MS&gt;.yml</span></code></p>
+<p>Default filename format: <code class="docutils literal notranslate"><span class="pre">sda_extranet_policies_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code></p>
 <p>Ensure the directory path exists and has write permissions.</p>
 </div></td>
 </tr>
@@ -1356,7 +1356,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-extr
 <p>When <code class="docutils literal notranslate"><span class="pre">true</span></code>, retrieves all extranet policies from Cisco Catalyst Center without requiring specific filters.</p>
 <p>Overrides any provided <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> to ensure complete configuration retrieval.</p>
 <p>Ideal for complete brownfield infrastructure migration and documentation.</p>
-<p>Default filename format when file_path not provided: <code class="docutils literal notranslate"><span class="pre">sda_extranet_policies_workflow_manager_playbook_&lt;timestamp&gt;.yml</span></code></p>
+<p>Default filename format when file_path not provided: <code class="docutils literal notranslate"><span class="pre">sda_extranet_policies_playbook_config_&lt;timestamp&gt;.yml</span></code></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><a href="#id3"><span class="problematic" id="id4">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -1666,7 +1666,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-extr
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary with the response returned by the Cisco Catalyst Center Python SDK</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id43"><span class="problematic" id="id44">:ansible-rv-sample-value:`{&quot;msg&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'&quot;: {&quot;file\_path&quot;: &quot;sda\_extranet\_policies\_workflow\_manager\_playbook\_2026-02-03\_15-22-02.yml&quot;}}, &quot;response&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'&quot;: {&quot;file\_path&quot;: &quot;sda\_extranet\_policies\_workflow\_manager\_playbook\_2026-02-03\_15-22-02.yml&quot;}}}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id43"><span class="problematic" id="id44">:ansible-rv-sample-value:`{&quot;msg&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'&quot;: {&quot;file\_path&quot;: &quot;sda\_extranet\_policies\_playbook\_config\_2026-02-03\_15-22-02.yml&quot;}}, &quot;response&quot;: {&quot;YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'&quot;: {&quot;file\_path&quot;: &quot;sda\_extranet\_policies\_playbook\_config\_2026-02-03\_15-22-02.yml&quot;}}}`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">

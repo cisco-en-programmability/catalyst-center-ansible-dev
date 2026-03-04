@@ -186,7 +186,7 @@ Parameters
 
       If not provided, the file is saved in the current working directory with an auto-generated filename.
 
-      Default filename format: \ :literal:`sda\_extranet\_policies\_workflow\_manager\_playbook\_\<DD\_Mon\_YYYY\_HH\_MM\_SS\_MS\>.yml`\ 
+      Default filename format: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
 
       Ensure the directory path exists and has write permissions.
 
@@ -393,7 +393,7 @@ Parameters
 
       Ideal for complete brownfield infrastructure migration and documentation.
 
-      Default filename format when file\_path not provided: \ :literal:`sda\_extranet\_policies\_workflow\_manager\_playbook\_\<timestamp\>.yml`\ 
+      Default filename format when file\_path not provided: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<timestamp\>.yml`\ 
 
 
       .. rst-class:: ansible-option-line
@@ -1247,7 +1247,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'": {"file\_path": "sda\_extranet\_policies\_workflow\_manager\_playbook\_2026-02-03\_15-22-02.yml"}}, "response": {"YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'": {"file\_path": "sda\_extranet\_policies\_workflow\_manager\_playbook\_2026-02-03\_15-22-02.yml"}}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'": {"file\_path": "sda\_extranet\_policies\_playbook\_config\_2026-02-03\_15-22-02.yml"}}, "response": {"YAML config generation Task succeeded for module 'sda\_extranet\_policies\_workflow\_manager'": {"file\_path": "sda\_extranet\_policies\_playbook\_config\_2026-02-03\_15-22-02.yml"}}}`
 
 
       .. raw:: html
