@@ -71,9 +71,8 @@ Synopsis
 - Generates YAML configurations compatible with the pnp\_workflow\_manager module for brownfield infrastructure discovery and documentation.
 - Retrieves existing PnP device information from Cisco Catalyst Center PnP inventory including serial numbers, hostnames, device states, product IDs, and SUDI requirements.
 - Transforms API responses to playbook-compatible YAML format with parameter name mapping and structure optimization for Ansible execution.
-- Supports comprehensive filtering capabilities including device state filters, device family filters, and site-based filtering for targeted device discovery.
+- Supports device state filtering for targeted device discovery.
 - Enables automated brownfield discovery by retrieving all registered PnP devices when generate\_all\_configurations is enabled.
-- Resolves site IDs to hierarchical site names for human-readable playbook generation.
 - Creates structured playbook files ready for modification and redeployment through pnp\_workflow\_manager module.
 - Extracts essential device attributes without site assignments, templates, projects, or advanced configuration parameters.
 - Supports extraction of both claimed and unclaimed devices across all PnP workflow states.
@@ -130,7 +129,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -140,11 +139,9 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      List of configuration filters controlling YAML playbook generation behavior.
+      Configuration dictionary controlling YAML playbook generation behavior.
 
-      Each configuration item defines output file path, component selection, and filtering criteria.
-
-      Supports multiple configuration items for generating separate playbook files with different filter combinations.
+      Defines output file path, component selection, file write mode, and filtering criteria for PnP device extraction.
 
       When generate\_all\_configurations is True, automatically includes all PnP devices unless filters are explicitly specified.
 
@@ -250,6 +247,54 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Controls how the generated YAML content is written to the output file.
+
+      When set to 'overwrite', the file is created or replaced with new content.
+
+      When set to 'append', the generated content is appended to the existing file.
+
+      Append mode is useful for combining multiple device configurations into a single playbook file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
       .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/file_path:
@@ -284,7 +329,7 @@ Parameters
 
       Parent directories are created automatically if they do not exist.
 
-      File is overwritten if it already exists at the specified path.
+      File behavior depends on file\_mode setting.
 
 
       .. raw:: html
@@ -386,50 +431,6 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/device_family"></div>
-
-      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/global_filters/device_family:
-
-      .. rst-class:: ansible-option-title
-
-      **device_family**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters/device_family" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Filter devices by product family classification.
-
-      Family categories group devices by hardware type and functionality.
-
-      Multiple families can be specified to include devices from any listed category.
-
-      Common families include "Switches and Hubs", "Routers", "Wireless Controller".
-
-      When not specified, devices from all families are included.
-
-      Family filtering applied after API retrieval during post- processing.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters/device_state"></div>
 
       .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/global_filters/device_state:
@@ -474,54 +475,6 @@ Parameters
       - :ansible-option-choices-entry:`"Onboarding"`
       - :ansible-option-choices-entry:`"Provisioned"`
       - :ansible-option-choices-entry:`"Error"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/site_name"></div>
-
-      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/global_filters/site_name:
-
-      .. rst-class:: ansible-option-title
-
-      **site_name**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters/site_name" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Filter devices by site name hierarchy location.
-
-      Only devices claimed to sites matching this hierarchy are included.
-
-      Site hierarchy must match full path as configured in Catalyst Center.
-
-      Format example "Global/USA/San Francisco" for multi-level site hierarchy.
-
-      Substring matching supported for site hierarchy filtering.
-
-      When not specified, devices from all sites are included.
-
-      Site filtering requires site ID resolution and applies after API retrieval.
-
-      Devices without site assignments are excluded when site filter specified.
 
 
       .. raw:: html
@@ -1159,14 +1112,12 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - device\_onboarding\_pnp.DeviceOnboardingPnp.get\_device\_list - sites.Sites.get\_sites (for site filtering only)
-   - Paths used are - GET /dna/intent/api/v1/onboarding/pnp-device - GET /dna/intent/api/v1/sites (for site filtering only)
+   - SDK Methods used are - device\_onboarding\_pnp.DeviceOnboardingPnp.get\_device\_list
+   - Paths used are - GET /dna/intent/api/v1/onboarding/pnp-device
    - Minimum Catalyst Center version required is 2.3.7.9 for PnP device APIs.
    - Module performs read-only operations and does not modify Catalyst Center configurations.
    - Generated YAML files contain only device\_info section with basic device attributes.
    - Site assignments, templates, projects, and advanced parameters are not included in output.
-   - Site IDs are automatically resolved to hierarchical site names for readability.
-   - Site resolution uses in-memory caching to minimize API calls during processing.
    - Module supports both check mode and normal execution mode with identical behavior.
    - Generated playbooks are compatible with pnp\_workflow\_manager module v6.40.0+.
    - Device transformation skips devices missing required fields (serial\_number, pid).
@@ -1201,9 +1152,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
-    - name: Generate device info with custom file path
+    - name: Generate device info with custom file path and append mode
       cisco.dnac.pnp_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1216,9 +1167,10 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/pnp_device_info.yml"
-            component_specific_filters:
-              components_list: ["device_info"]
+          file_path: "/tmp/pnp_device_info.yml"
+          file_mode: append
+          component_specific_filters:
+            components_list: ["device_info"]
 
     - name: Generate device info for unclaimed devices only
       cisco.dnac.pnp_playbook_config_generator:
@@ -1233,69 +1185,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/unclaimed_device_info.yml"
-            component_specific_filters:
-              components_list: ["device_info"]
-            global_filters:
-              device_state: ["Unclaimed"]
-
-    - name: Generate device info for switches only
-      cisco.dnac.pnp_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/switches_device_info.yml"
-            component_specific_filters:
-              components_list: ["device_info"]
-            global_filters:
-              device_family: ["Switches and Hubs"]
-
-    - name: Generate device info for devices at specific site
-      cisco.dnac.pnp_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/site_device_info.yml"
-            component_specific_filters:
-              components_list: ["device_info"]
-            global_filters:
-              site_name: "Global/USA/San Francisco"
-
-    - name: Generate device info for provisioned wireless controllers
-      cisco.dnac.pnp_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - file_path: "/tmp/wlc_device_info.yml"
-            component_specific_filters:
-              components_list: ["device_info"]
-            global_filters:
-              device_family: ["Wireless Controller"]
-              device_state: ["Provisioned"]
+          file_path: "/tmp/unclaimed_device_info.yml"
+          component_specific_filters:
+            components_list: ["device_info"]
+          global_filters:
+            device_state: ["Unclaimed"]
 
 
 
