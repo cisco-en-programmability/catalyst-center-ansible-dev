@@ -125,7 +125,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -135,7 +135,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`backup\_and\_restore\_workflow\_manager\` module.
+      A dictionary of filters for generating YAML playbook compatible with the 'backup\_and\_restore\_workflow\_manager' module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -434,6 +434,54 @@ Parameters
         </div>
 
 
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      File write mode for the generated YAML configuration file.
+
+      The overwrite option replaces existing file content with new content.
+
+      The append option adds new content to the end of existing file.
+
+      Defaults to overwrite if not specified.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"overwrite"`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
 
   * - .. raw:: html
 
@@ -1198,11 +1246,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_backup_restore_config.yaml"
-            component_specific_filters:
-              components_list:
-                - "nfs_configuration"
-                - "backup_storage_configuration"
+          file_path: "/tmp/catc_backup_restore_config.yaml"
+          component_specific_filters:
+            components_list:
+              - "nfs_configuration"
+              - "backup_storage_configuration"
 
     - name: Generate YAML for NFS-type backup storage only filtering by server_type
       cisco.dnac.backup_and_restore_playbook_config_generator:
@@ -1217,11 +1265,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_backup_storage_config.yaml"
-            component_specific_filters:
-              components_list: ["backup_storage_configuration"]
-              backup_storage_configuration:
-                - server_type: "NFS"
+          file_path: "/tmp/catc_backup_storage_config.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["backup_storage_configuration"]
+            backup_storage_configuration:
+              - server_type: "NFS"
 
     - name: Generate YAML for specific NFS server using exact match on server_ip and source_path
       cisco.dnac.backup_and_restore_playbook_config_generator:
@@ -1236,12 +1285,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_specific_nfs_config.yaml"
-            component_specific_filters:
-              components_list: ["nfs_configuration"]
-              nfs_configuration:
-                - server_ip: "172.27.17.90"
-                  source_path: "/home/nfsshare/backups/TB30"
+          file_path: "/tmp/catc_specific_nfs_config.yaml"
+          component_specific_filters:
+            components_list: ["nfs_configuration"]
+            nfs_configuration:
+              - server_ip: "172.27.17.90"
+                source_path: "/home/nfsshare/backups/TB30"
 
     - name: Generate YAML for all configurations without filtering useful for complete system documentation
       cisco.dnac.backup_and_restore_playbook_config_generator:
@@ -1256,10 +1305,10 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_backup_restore_config.yaml"
-            generate_all_configurations: true
+          file_path: "/tmp/catc_backup_restore_config.yaml"
+          generate_all_configurations: true
 
-    - name: Generate YAML Configuration for multiple NFS servers (each must have both server_ip and source_path)
+    - name: Append YAML Configuration for multiple NFS servers to existing file
       cisco.dnac.backup_and_restore_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1272,14 +1321,15 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_multiple_nfs_config.yaml"
-            component_specific_filters:
-              components_list: ["nfs_configuration"]
-              nfs_configuration:
-                - server_ip: "172.27.17.90"
-                  source_path: "/home/nfsshare/backups/TB30"
-                - server_ip: "172.27.17.91"
-                  source_path: "/home/nfsshare/backups/TB31"
+          file_path: "/tmp/catc_multiple_nfs_config.yaml"
+          file_mode: "append"
+          component_specific_filters:
+            components_list: ["nfs_configuration"]
+            nfs_configuration:
+              - server_ip: "172.27.17.90"
+                source_path: "/home/nfsshare/backups/TB30"
+              - server_ip: "172.27.17.91"
+                source_path: "/home/nfsshare/backups/TB31"
 
     - name: Generate YAML Configuration for Physical Disk backup storage only
       cisco.dnac.backup_and_restore_playbook_config_generator:
@@ -1294,11 +1344,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_physical_disk_backup.yaml"
-            component_specific_filters:
-              components_list: ["backup_storage_configuration"]
-              backup_storage_configuration:
-                - server_type: "NFS"
+          file_path: "/tmp/catc_physical_disk_backup.yaml"
+          component_specific_filters:
+            components_list: ["backup_storage_configuration"]
+            backup_storage_configuration:
+              - server_type: "NFS"
 
 
 
