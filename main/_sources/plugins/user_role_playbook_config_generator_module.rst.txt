@@ -126,7 +126,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -136,9 +136,9 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of configuration dictionaries specifying filters and output parameters for YAML playbook generation.
+      A dictionary of filters for generating YAML playbook compatible with the \ :literal:`user\_role\_workflow\_manager`\  module.
 
-      Each configuration item controls which components to extract and how to filter the data.
+      Filters specify which components to include in the YAML configuration file.
 
       Supports filtering by username, email, role name, or component type to generate selective configurations.
 
@@ -181,6 +181,8 @@ Parameters
       If \ :literal:`components\_list`\  is not specified, all supported components (user\_details and role\_details) are included.
 
       Each component can have specific filters to select subset of configurations based on attributes.
+
+      Ignored when generate\_all\_configurations is set to \ :literal:`true`\ .
 
 
       .. raw:: html
@@ -489,6 +491,54 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      File write mode for the generated YAML configuration file.
+
+      The overwrite option replaces existing file content with new content.
+
+      The append option adds new content to the end of existing file.
+
+      Defaults to overwrite if not specified.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
 
       .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-config/file_path:
@@ -522,8 +572,6 @@ Parameters
       For example, \ :literal:`user\_role\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
 
       The directory path must exist and be writable.
-
-      Supports absolute paths (e.g., \ :literal:`/tmp/config.yml`\ ) and relative paths (e.g., \ :literal:`./configs/users.yml`\ ).
 
 
       .. raw:: html
@@ -563,7 +611,7 @@ Parameters
 
       System roles (SUPER-ADMIN, NETWORK-ADMIN, OBSERVER) and default roles are automatically excluded.
 
-      If enabled, the \ :literal:`component\_specific\_filters`\  parameter becomes optional and defaults to all components.
+      When True, any component\_specific\_filters provided in the playbook are ignored and all components are retrieved.
 
       A default filename is generated automatically if \ :literal:`file\_path`\  is not specified using pattern \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
@@ -1218,7 +1266,6 @@ Notes
    - Generated YAML file structure matches the input format expected by \ :literal:`user\_role\_workflow\_manager`\  module.
    - Role permissions are transformed from API resourceTypes format to hierarchical permission structure with 9 categories.
    - User role assignments are transformed from role IDs to role names for readability.
-   - Empty permission categories are represented as \ :literal:`[{}]`\  in output to maintain consistent YAML structure.
    - All filter values are expected as lists of strings, even for single values.
    - Check mode is supported but does not generate files (dry-run).
    - SDK Methods used are - user\_and\_roles.UserandRoles.get\_users\_api - user\_and\_roles.UserandRoles.get\_roles\_api
@@ -1258,8 +1305,8 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
-            file_path: "/tmp/catc_user_role_config.yaml"
+          generate_all_configurations: true
+          file_path: "/tmp/catc_user_role_config.yaml"
 
     - name: Generate YAML Configuration with specific user components only
       cisco.dnac.user_role_playbook_config_generator:
@@ -1274,9 +1321,10 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_user_role_config.yaml"
-            component_specific_filters:
-              components_list: ["user_details"]
+          file_path: "/tmp/catc_user_role_config.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["user_details"]
 
     - name: Generate YAML Configuration with specific role components only
       cisco.dnac.user_role_playbook_config_generator:
@@ -1291,9 +1339,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_user_role_config.yaml"
-            component_specific_filters:
-              components_list: ["role_details"]
+          file_path: "/tmp/catc_user_role_config.yaml"
+          component_specific_filters:
+            components_list: ["role_details"]
 
     - name: Generate YAML Configuration for users with username filter
       cisco.dnac.user_role_playbook_config_generator:
@@ -1308,11 +1356,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_user_role_config.yaml"
-            component_specific_filters:
-              components_list: ["user_details"]
-              user_details:
-                - username: ["testuser1", "testuser2"]
+          file_path: "/tmp/catc_user_role_config.yaml"
+          component_specific_filters:
+            components_list: ["user_details"]
+            user_details:
+              - username: ["testuser1", "testuser2"]
 
     - name: Generate YAML Configuration for roles with role name filter
       cisco.dnac.user_role_playbook_config_generator:
@@ -1327,11 +1375,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_user_role_config.yaml"
-            component_specific_filters:
-              components_list: ["role_details"]
-              role_details:
-                - role_name: ["Custom-Admin-Role", "Network-Operator-Role"]
+          file_path: "/tmp/catc_user_role_config.yaml"
+          component_specific_filters:
+            components_list: ["role_details"]
+            role_details:
+              - role_name: ["Custom-Admin-Role", "Network-Operator-Role"]
 
     - name: Generate YAML Configuration for all components with no filters
       cisco.dnac.user_role_playbook_config_generator:
@@ -1346,9 +1394,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_user_role_config.yaml"
-            component_specific_filters:
-              components_list: ["user_details", "role_details"]
+          file_path: "/tmp/catc_user_role_config.yaml"
+          component_specific_filters:
+            components_list: ["user_details", "role_details"]
 
     - name: Generate YAML for users with specific email addresses
       cisco.dnac.user_role_playbook_config_generator:
@@ -1363,13 +1411,13 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_users_by_email.yaml"
-            component_specific_filters:
-              components_list: ["user_details"]
-              user_details:
-                - email: ["admin@example.com", "operator@example.com"]
+          file_path: "/tmp/catc_users_by_email.yaml"
+          component_specific_filters:
+            components_list: ["user_details"]
+            user_details:
+              - email: ["admin@example.com", "operator@example.com"]
 
-    - name: Generate YAML for users with specific role assignments
+    - name: Append YAML for users with specific role assignments to existing file
       cisco.dnac.user_role_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1382,11 +1430,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_admin_users.yaml"
-            component_specific_filters:
-              components_list: ["user_details"]
-              user_details:
-                - role_name: ["SUPER-ADMIN-ROLE", "Custom-Admin-Role"]
+          file_path: "/tmp/catc_admin_users.yaml"
+          file_mode: "append"
+          component_specific_filters:
+            components_list: ["user_details"]
+            user_details:
+              - role_name: ["SUPER-ADMIN-ROLE", "Custom-Admin-Role"]
 
     - name: Generate YAML with multiple filter criteria (OR logic)
       cisco.dnac.user_role_playbook_config_generator:
@@ -1401,12 +1450,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_filtered_users.yaml"
-            component_specific_filters:
-              components_list: ["user_details"]
-              user_details:
-                - username: ["testuser1"]
-                - email: ["admin@example.com"]
+          file_path: "/tmp/catc_filtered_users.yaml"
+          component_specific_filters:
+            components_list: ["user_details"]
+            user_details:
+              - username: ["testuser1"]
+              - email: ["admin@example.com"]
 
 
 

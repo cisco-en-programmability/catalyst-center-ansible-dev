@@ -124,7 +124,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -134,7 +134,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'application\_policy\_workflow\_manager' module.
+      A dictionary of filters for generating YAML playbook compatible with the 'application\_policy\_workflow\_manager' module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -375,6 +375,52 @@ Parameters
         </div>
 
 
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.application_policy_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specifies the file write mode for the generated YAML configuration file.
+
+      When set to "overwrite", the file will be created or replaced if it already exists.
+
+      When set to "append", the new configurations will be appended to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
 
   * - .. raw:: html
 
@@ -1118,7 +1164,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
     - name: Generate configurations with custom file path
       cisco.dnac.application_policy_playbook_config_generator:
@@ -1133,7 +1179,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/app_policy_config.yml"
+          file_path: "/tmp/app_policy_config.yml"
 
     - name: Generate specific queuing profiles
       cisco.dnac.application_policy_playbook_config_generator:
@@ -1148,11 +1194,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/queuing_profiles.yml"
-            component_specific_filters:
-              components_list: ["queuing_profile"]
-              queuing_profile:
-                profile_names_list: ["Enterprise-QoS-Profile", "Wireless-QoS"]
+          file_path: "/tmp/queuing_profiles.yml"
+          component_specific_filters:
+            components_list: ["queuing_profile"]
+            queuing_profile:
+              profile_names_list: ["Enterprise-QoS-Profile", "Wireless-QoS"]
 
     - name: Generate specific application policies
       cisco.dnac.application_policy_playbook_config_generator:
@@ -1167,11 +1213,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/app_policies.yml"
-            component_specific_filters:
-              components_list: ["application_policy"]
-              application_policy:
-                policy_names_list: ["wired_traffic_policy"]
+          file_path: "/tmp/app_policies.yml"
+          component_specific_filters:
+            components_list: ["application_policy"]
+            application_policy:
+              policy_names_list: ["wired_traffic_policy"]
 
     - name: Generate both queuing profiles and policies with filters
       cisco.dnac.application_policy_playbook_config_generator:
@@ -1186,13 +1232,31 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/complete_app_policy_config.yml"
-            component_specific_filters:
-              components_list: ["queuing_profile", "application_policy"]
-              queuing_profile:
-                profile_names_list: ["Enterprise-QoS-Profile"]
-              application_policy:
-                policy_names_list: ["wired_traffic_policy", "wireless_traffic_policy"]
+          file_path: "/tmp/complete_app_policy_config.yml"
+          component_specific_filters:
+            components_list: ["queuing_profile", "application_policy"]
+            queuing_profile:
+              profile_names_list: ["Enterprise-QoS-Profile"]
+            application_policy:
+              policy_names_list: ["wired_traffic_policy", "wireless_traffic_policy"]
+
+    - name: Generate configurations in append mode
+      cisco.dnac.application_policy_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          file_path: "/tmp/app_policy_config.yml"
+          file_mode: append
+          component_specific_filters:
+            components_list: ["queuing_profile"]
 
 
 
