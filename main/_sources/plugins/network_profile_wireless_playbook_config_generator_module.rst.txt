@@ -125,7 +125,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -135,7 +135,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'network\_profile\_wireless\_playbook\_config\_generator' module.
+      A dictionary of filters for generating YAML playbook compatible with the 'network\_profile\_wireless\_playbook\_config\_generator' module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -146,6 +146,52 @@ Parameters
 
         </div>
     
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.network_profile_wireless_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Determines how the output YAML configuration file is written.
+
+      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
+
+      When set to \ :literal:`append`\ , new content will be added to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -175,9 +221,9 @@ Parameters
 
       Path where the YAML configuration file will be saved.
 
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`network\_profile\_wireless\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`\<module\_name\>playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
 
-      For example, \ :literal:`network\_profile\_wireless\_playbook\_config\_2025-11-12\_21-43-26.yml`\ .
+      For example, 'network\_profile\_wireless\_playbook\_config\_2025-11-12\_21-43-26.yml'.
 
       Supports both absolute and relative file paths.
 
@@ -1241,7 +1287,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
     - name: Auto-generate YAML Configuration with custom file path
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1256,8 +1302,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/complete_wireless_profile_config.yml"
-            generate_all_configurations: true
+          file_path: "/tmp/complete_wireless_profile_config.yml"
+          file_mode: "overwrite"
+          generate_all_configurations: true
 
     - name: Generate YAML Configuration with default file path for given wireless profiles
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1272,8 +1319,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              profile_name_list: ["Campus_Wireless_Profile", "Enterprise_Wireless_Profile"]
+          file_mode: "overwrite"
+          global_filters:
+            profile_name_list:
+              - "Campus_Wireless_Profile"
+              - "Enterprise_Wireless_Profile"
 
     - name: Generate YAML Configuration with default file path based on Day-N templates filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1288,8 +1338,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              day_n_template_list: ["Periodic_Config_Audit", "Security_Compliance_Check"]
+          file_mode: "overwrite"
+          global_filters:
+            day_n_template_list:
+              - "Periodic_Config_Audit"
+              - "Security_Compliance_Check"
 
     - name: Generate YAML Configuration with default file path based on site list filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1304,8 +1357,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              site_list: ["Global/India/Chennai/Main_Office", "Global/USA/San_Francisco/Regional_HQ"]
+          file_mode: "overwrite"
+          global_filters:
+            site_list:
+              - "Global/India/Chennai/Main_Office"
+              - "Global/USA/San_Francisco/Regional_HQ"
 
     - name: Generate YAML Configuration with default file path based on ssid list filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1320,8 +1376,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              ssid_list: ["SSID1", "SSID2"]
+          file_mode: "overwrite"
+          global_filters:
+            ssid_list:
+              - "SSID1"
+              - "SSID2"
 
     - name: Generate YAML Configuration with default file path based on ap zone list filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1336,8 +1395,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              ap_zone_list: ["AP_Zone1", "AP_Zone2"]
+          file_mode: "overwrite"
+          global_filters:
+            ap_zone_list:
+              - "AP_Zone1"
+              - "AP_Zone2"
 
     - name: Generate YAML Configuration with default file path based on feature template list filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1352,8 +1414,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              feature_template_list: ["Default AAA_Radius_Attributes_Configuration", "Default CleanAir 6GHz Design"]
+          file_mode: "overwrite"
+          global_filters:
+            feature_template_list:
+              - "Default AAA_Radius_Attributes_Configuration"
+              - "Default CleanAir 6GHz Design"
 
     - name: Generate YAML Configuration with default file path based on additional interface list filters
       cisco.dnac.network_profile_wireless_playbook_config_generator:
@@ -1368,8 +1433,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              additional_interface_list: ["VLAN_22", "GigabitEthernet0/2"]
+          file_mode: "overwrite"
+          global_filters:
+            additional_interface_list:
+              - "VLAN_22"
+              - "GigabitEthernet0/2"
 
 
 

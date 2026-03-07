@@ -123,7 +123,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -133,9 +133,9 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`provision\_workflow\_manager\` module.
+      Configuration dictionary controlling YAML playbook generation behavior.
 
-      Filters specify which components to include in the YAML configuration file.
+      Defines output file path, component selection, file write mode, and filtering criteria for provisioned device extraction.
 
       If "components\_list" is specified, only those components are included, regardless of the filters.
 
@@ -506,6 +506,54 @@ Parameters
         </div>
 
 
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.provision_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Controls how the generated YAML content is written to the output file.
+
+      When set to 'overwrite', the file is created or replaced with new content.
+
+      When set to 'append', the generated content is appended to the existing file.
+
+      Append mode is useful for combining multiple device configurations into a single playbook file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
 
   * - .. raw:: html
 
@@ -1318,7 +1366,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_provision_config.yaml"
+          file_path: "/tmp/catc_provision_config.yaml"
 
     - name: Generate YAML Configuration for ALL provisioned devices (ignores all filters)
       cisco.dnac.provision_playbook_config_generator:
@@ -1333,8 +1381,8 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_all_provisioned_devices.yaml"
-            generate_all_configurations: true
+          file_path: "/tmp/catc_all_provisioned_devices.yaml"
+          generate_all_configurations: true
 
     - name: Generate YAML Configuration with specific wired devices filter
       cisco.dnac.provision_playbook_config_generator:
@@ -1349,9 +1397,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_provision_config.yaml"
-            component_specific_filters:
-              components_list: ["wired"]
+          file_path: "/tmp/catc_provision_config.yaml"
+          component_specific_filters:
+            components_list: ["wired"]
 
     - name: Generate YAML Configuration for devices with IP address filter (global)
       cisco.dnac.provision_playbook_config_generator:
@@ -1366,11 +1414,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_provision_config.yaml"
-            global_filters:
-              management_ip_address:
-                - "204.192.3.40"
-                - "204.192.12.201"
+          file_path: "/tmp/catc_provision_config.yaml"
+          global_filters:
+            management_ip_address:
+              - "204.192.3.40"
+              - "204.192.12.201"
 
     - name: Generate YAML Configuration for wired devices with multiple site filters
       cisco.dnac.provision_playbook_config_generator:
@@ -1385,13 +1433,13 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_provision_config.yaml"
-            component_specific_filters:
-              components_list: ["wired"]
-              wired:
-                - site_name_hierarchy:
-                    - "Global/USA/San Francisco/BGL_18"
-                    - "Global/USA/San Jose/SJ_BLD20"
+          file_path: "/tmp/catc_provision_config.yaml"
+          component_specific_filters:
+            components_list: ["wired"]
+            wired:
+              - site_name_hierarchy:
+                  - "Global/USA/San Francisco/BGL_18"
+                  - "Global/USA/San Jose/SJ_BLD20"
 
     - name: Generate YAML Configuration for all wired devices
       cisco.dnac.provision_playbook_config_generator:
@@ -1406,9 +1454,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_provision_config.yaml"
-            component_specific_filters:
-              components_list: ["wired"]
+          file_path: "/tmp/catc_provision_config.yaml"
+          component_specific_filters:
+            components_list: ["wired"]
 
     - name: Generate YAML Configuration for wireless devices only
       cisco.dnac.provision_playbook_config_generator:
@@ -1423,9 +1471,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_wireless_config.yaml"
-            component_specific_filters:
-              components_list: ["wireless"]
+          file_path: "/tmp/catc_wireless_config.yaml"
+          component_specific_filters:
+            components_list: ["wireless"]
 
     - name: Generate YAML Configuration for both wired and wireless devices
       cisco.dnac.provision_playbook_config_generator:
@@ -1440,9 +1488,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_all_devices_config.yaml"
-            component_specific_filters:
-              components_list: ["wired", "wireless"]
+          file_path: "/tmp/catc_all_devices_config.yaml"
+          component_specific_filters:
+            components_list: ["wired", "wireless"]
 
     - name: Generate YAML Configuration for wireless devices with specific site filter
       cisco.dnac.provision_playbook_config_generator:
@@ -1457,12 +1505,29 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_site_wireless_config.yaml"
-            component_specific_filters:
-              components_list: ["wireless"]
-              wireless:
-                - site_name_hierarchy:
-                    - "Global/USA/San Francisco/BGL_18"
+          file_path: "/tmp/catc_site_wireless_config.yaml"
+          component_specific_filters:
+            components_list: ["wireless"]
+            wireless:
+              - site_name_hierarchy:
+                  - "Global/USA/San Francisco/BGL_18"
+
+    - name: Generate YAML Configuration with append mode
+      cisco.dnac.provision_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        config:
+          file_path: "/tmp/catc_provision_config.yaml"
+          file_mode: append
+          generate_all_configurations: true
 
 
 
