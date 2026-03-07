@@ -128,7 +128,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -138,7 +138,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'discovery\_workflow\_manager' module.
+      A dictionary of filters for generating YAML playbook compatible with the 'discovery\_workflow\_manager' module.
 
       Filters specify which discovery tasks and configurations to include in the YAML configuration file.
 
@@ -151,6 +151,54 @@ Parameters
 
         </div>
     
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.discovery_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Specifies the file write mode for the generated YAML configuration file.
+
+      When set to \ :literal:`overwrite`\ , the file will be created or replaced if it already exists.
+
+      When set to \ :literal:`append`\ , the generated content will be appended to the existing file.
+
+      Default mode is \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1048,7 +1096,7 @@ Examples
         dnac_debug: "{{ dnac_debug }}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
     # Generate configurations for specific discovery tasks by name
     - name: Generate specific discovery configurations by name
@@ -1062,14 +1110,15 @@ Examples
         dnac_debug: "{{ dnac_debug }}"
         state: gathered
         config:
-          - file_path: "/tmp/specific_discoveries.yml"
-            global_filters:
-              discovery_name_list:
-                - "Multi_global"
-                - "Single IP Discovery"
-                - "CDP_Test_1"
+          file_path: "/tmp/specific_discoveries.yml"
+          file_mode: overwrite
+          global_filters:
+            discovery_name_list:
+              - "Multi_global"
+              - "Single IP Discovery"
+              - "CDP_Test_1"
 
-    # Generate configurations for specific discovery types
+    # Generate configurations for specific discovery types with append mode
     - name: Generate configurations by discovery type
       cisco.dnac.discovery_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
@@ -1081,11 +1130,12 @@ Examples
         dnac_debug: "{{ dnac_debug }}"
         state: gathered
         config:
-          - file_path: "/tmp/cdp_lldp_discoveries.yml"
-            global_filters:
-              discovery_type_list:
-                - "CDP"
-                - "LLDP"
+          file_path: "/tmp/cdp_lldp_discoveries.yml"
+          file_mode: append
+          global_filters:
+            discovery_type_list:
+              - "CDP"
+              - "LLDP"
 
 
 
