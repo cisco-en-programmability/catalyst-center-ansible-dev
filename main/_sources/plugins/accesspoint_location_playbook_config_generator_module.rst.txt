@@ -125,7 +125,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -135,7 +135,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the 'accesspoint\_location\_playbook\_config\_generator' module.
+      A dictionary of filters for generating YAML playbook compatible with the 'accesspoint\_location\_playbook\_config\_generator' module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -146,6 +146,52 @@ Parameters
 
         </div>
     
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.accesspoint_location_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Determines how the output YAML configuration file is written.
+
+      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
+
+      When set to \ :literal:`append`\ , new content will be added to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1159,7 +1205,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
     - name: Auto-generate YAML Configuration for all Access Point Location with custom file path
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1174,8 +1220,9 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "tmp/accesspoint_location_playbook_config.yml"
-            generate_all_configurations: true
+          file_path: "tmp/accesspoint_location_playbook_config.yml"
+          file_mode: "overwrite"
+          generate_all_configurations: true
 
     - name: Generate YAML Configuration with file path based on site list filters
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1190,11 +1237,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "tmp/accesspoint_location_playbook_config_site_base.yml"
-            global_filters:
-              site_list:
-                - Global/USA/SAN JOSE/SJ_BLD20/FLOOR1
-                - Global/USA/SAN JOSE/SJ_BLD20/FLOOR2
+          file_path: "tmp/accesspoint_location_playbook_config_site_base.yml"
+          file_mode: "overwrite"
+          global_filters:
+            site_list:
+              - Global/USA/SAN JOSE/SJ_BLD20/FLOOR1
+              - Global/USA/SAN JOSE/SJ_BLD20/FLOOR2
 
     - name: Generate YAML Configuration with file path based on planned access point list
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1209,10 +1257,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              planned_accesspoint_list:
-                - test_ap_location
-                - test_ap2_location
+          file_mode: "overwrite"
+          global_filters:
+            planned_accesspoint_list:
+              - test_ap_location
+              - test_ap2_location
 
     - name: Generate YAML Configuration with file path based on real access point list
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1227,10 +1276,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              real_accesspoint_list:
-                - Test_ap
-                - AP687D.B402.1614-AP-Test6
+          file_mode: "overwrite"
+          global_filters:
+            real_accesspoint_list:
+              - Test_ap
+              - AP687D.B402.1614-AP-Test6
 
     - name: Generate YAML Configuration with default file path based on access point model list
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1245,10 +1295,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              accesspoint_model_list:
-                - AP9120E
-                - AP9130E
+          file_mode: "overwrite"
+          global_filters:
+            accesspoint_model_list:
+              - AP9120E
+              - AP9130E
 
     - name: Generate YAML Configuration with default file path based on MAC Address list
       cisco.dnac.accesspoint_location_playbook_config_generator:
@@ -1263,10 +1314,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - global_filters:
-              mac_address_list:
-                - a4:88:73:d4:dd:80
-                - a4:88:73:d4:dd:81
+          file_mode: "overwrite"
+          global_filters:
+            mac_address_list:
+              - a4:88:73:d4:dd:80
+              - a4:88:73:d4:dd:81
 
 
 
