@@ -1350,6 +1350,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-tags-pla
 <p>serial_number: Uses the device serial number as the identifier (default)</p>
 <p>mac_address: Uses the device MAC address as the identifier</p>
 <p>ip_address: Uses the device IP address as the identifier</p>
+<p>Fallback Behavior: If the chosen device_identifier value is not available (None or empty) for a particular device, the module will automatically attempt to resolve the device using alternative identifiers in the following order: serial_number -&gt; ip_address -&gt; mac_address -&gt; hostname (skipping the primary identifier in the fallback chain). If a fallback identifier is used, the output key in the generated YAML will change to match the fallback identifier (e.g., 'serial_numbers' instead of 'hostnames'). If no identifier can be resolved for a device, that device is skipped with a warning. All fallback events are logged at WARNING level for visibility.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><a href="#id5"><span class="problematic" id="id6">:ansible-option-choices-entry:`&quot;hostname&quot;`</span></a></p></li>

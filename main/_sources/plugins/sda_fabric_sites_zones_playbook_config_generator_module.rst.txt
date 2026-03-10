@@ -123,7 +123,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -133,7 +133,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`sda\_fabric\_sites\_zones\_workflow\_manager\` module.
+      A dictionary of filters for generating YAML playbook compatible with the \`sda\_fabric\_sites\_zones\_workflow\_manager\` module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -366,6 +366,52 @@ Parameters
         </div>
 
 
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_sites_zones_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
 
   * - .. raw:: html
 
@@ -1117,7 +1163,8 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
+          file_mode: "overwrite"
 
     - name: Generate YAML Configuration with File Path specified
       cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
@@ -1132,8 +1179,9 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - generate_all_configurations: true
-            file_path: "tmp/catc_sda_fabric_sites_zones_config.yml"
+          generate_all_configurations: true
+          file_path: "tmp/catc_sda_fabric_sites_zones_config.yml"
+          file_mode: "overwrite"
 
     - name: Generate YAML Configuration with specific fabric sites components only
       cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
@@ -1148,9 +1196,10 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_sites"]
+          file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+          file_mode: "append"
+          component_specific_filters:
+            components_list: ["fabric_sites"]
 
     - name: Generate YAML Configuration with specific fabric sites components only
          using site_name_hierarchy filter
@@ -1166,11 +1215,11 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_sites_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_sites"]
-              fabric_sites:
-                - site_name_hierarchy: "Global/USA/California/San Jose"
+          file_path: "/tmp/catc_sda_fabric_sites_config.yml"
+          component_specific_filters:
+            components_list: ["fabric_sites"]
+            fabric_sites:
+              - site_name_hierarchy: "Global/USA/California/San Jose"
 
     - name: Generate YAML Configuration with specific fabric zones components only
       cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
@@ -1185,9 +1234,9 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_zones"]
+          file_path: "/tmp/catc_sda_fabric_zones_config.yml"
+          component_specific_filters:
+            components_list: ["fabric_zones"]
 
     - name: Generate YAML Configuration with specific fabric zones components only
          using site_name_hierarchy filter
@@ -1203,11 +1252,11 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_zones"]
-              fabric_zones:
-                - site_name_hierarchy: "Global/USA/California/San Jose"
+          file_path: "/tmp/catc_sda_fabric_zones_config.yml"
+          component_specific_filters:
+            components_list: ["fabric_zones"]
+            fabric_zones:
+              - site_name_hierarchy: "Global/USA/California/San Jose"
 
     - name: Generate YAML Configuration for all components
       cisco.dnac.sda_fabric_sites_zones_playbook_config_generator:
@@ -1222,9 +1271,9 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "/tmp/catc_sda_fabric_sites_zones_config.yml"
-            component_specific_filters:
-              components_list: ["fabric_sites", "fabric_zones"]
+          file_path: "/tmp/catc_sda_fabric_sites_zones_config.yml"
+          component_specific_filters:
+            components_list: ["fabric_sites", "fabric_zones"]
 
 
 
@@ -1330,7 +1379,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error in entry 1: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
 
 
       .. raw:: html

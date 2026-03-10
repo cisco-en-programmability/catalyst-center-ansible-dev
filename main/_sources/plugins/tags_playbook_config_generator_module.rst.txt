@@ -387,6 +387,8 @@ Parameters
 
       ip\_address: Uses the device IP address as the identifier
 
+      Fallback Behavior: If the chosen device\_identifier value is not available (None or empty) for a particular device, the module will automatically attempt to resolve the device using alternative identifiers in the following order: serial\_number -\> ip\_address -\> mac\_address -\> hostname (skipping the primary identifier in the fallback chain). If a fallback identifier is used, the output key in the generated YAML will change to match the fallback identifier (e.g., 'serial\_numbers' instead of 'hostnames'). If no identifier can be resolved for a device, that device is skipped with a warning. All fallback events are logged at WARNING level for visibility.
+
 
       .. rst-class:: ansible-option-line
 
