@@ -123,7 +123,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -133,7 +133,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`site\_workflow\_manager\` module.
+      A dictionary of filters for generating YAML playbook compatible with the \`site\_workflow\_manager\` module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -258,6 +258,10 @@ Parameters
 
       Supported keys in each list item are \ :literal:`site\_name\_hierarchy`\ , \ :literal:`parent\_name\_hierarchy`\ , and \ :literal:`site\_type`\ .
 
+      Multiple list items are processed independently and merged as a union in the final output.
+
+      \ :literal:`site\_name\_hierarchy`\  and \ :literal:`parent\_name\_hierarchy`\  cannot be used together in the same site list item. Use separate site list items to avoid ambiguous retrieval behavior.
+
 
       .. raw:: html
 
@@ -280,7 +284,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`any`
 
       .. raw:: html
 
@@ -291,6 +295,8 @@ Parameters
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
       Parent site name hierarchy filter.
+
+      Supports either a single hierarchy string or a list of hierarchy strings.
 
 
       .. raw:: html
@@ -314,7 +320,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`any`
 
       .. raw:: html
 
@@ -325,6 +331,8 @@ Parameters
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
       Site name hierarchy filter.
+
+      Supports either a single hierarchy string or a list of hierarchy strings.
 
 
       .. raw:: html
@@ -364,12 +372,60 @@ Parameters
 
       Can be a list to match multiple site types.
 
+      When specified in one site filter item, the same values are applied to sibling hierarchy-only site filter items in the same request to keep union output type-consistent.
+
 
       .. raw:: html
 
         </div>
 
 
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.site_playbook_config_generator_module__parameter-config/file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Controls how configuration is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content with the latest generated configuration.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
 
   * - .. raw:: html
 
@@ -1111,7 +1167,7 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Generate YAML configuration with site_name_hierarchy only
+    - name: Scenario 1 - Generate YAML configuration by separate parent and site hierarchy entries
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1124,13 +1180,18 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case1_site_name_hierarchy_only.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - site_name_hierarchy: "Global/USA/San Jose"
+          file_path: "/tmp/case3_site_and_parent_only.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
+            site:
+              - parent_name_hierarchy:
+                  - "Global/USAsdfsfs"
+              - site_name_hierarchy:
+                  - "Global/USA/San Francisco"
+                  - "Global/USA/San Jose"
 
-    - name: Generate YAML configuration with parent_name_hierarchy only
+    - name: Scenario 2 - Generate YAML configuration without hierarchy keys
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1143,13 +1204,12 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case2_parent_name_hierarchy_only.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - parent_name_hierarchy: "Global/USA"
+          file_path: "/tmp/case4_no_hierarchy_filters.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
 
-    - name: Generate YAML configuration with site_name_hierarchy and parent_name_hierarchy
+    - name: Scenario 3 - Generate YAML configuration by site hierarchy and site type
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1162,14 +1222,17 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case3_site_and_parent_only.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - site_name_hierarchy: "Global/USA/San Jose"
-                  parent_name_hierarchy: "Global/USA"
+          file_path: "/tmp/case5_site_name_and_site_type.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
+            site:
+              - site_name_hierarchy: "Global/USA/San Jose"
+                site_type:
+                  - "building"
+                  - "floor"
 
-    - name: Generate YAML configuration with no hierarchy input
+    - name: Scenario 4 - Generate YAML configuration by parent hierarchy and site type
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1182,11 +1245,16 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case4_no_hierarchy_filters.yaml"
-            component_specific_filters:
-              components_list: ["site"]
+          file_path: "/tmp/case6_parent_name_and_site_type.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
+            site:
+              - parent_name_hierarchy: "Global/USA"
+                site_type:
+                  - "floor"
 
-    - name: Generate YAML configuration with site_name_hierarchy and site_type list
+    - name: Scenario 5 - Generate YAML configuration by site hierarchy, parent hierarchy, and site type
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1199,16 +1267,18 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case5_site_name_and_site_type.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - site_name_hierarchy: "Global/USA/San Jose"
-                  site_type:
-                    - "building"
-                    - "floor"
+          file_path: "/tmp/case7_all_filters.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
+            site:
+              - site_name_hierarchy: "Global/USA/San Francisco"
+              - parent_name_hierarchy: "Global/USA"
+                site_type:
+                  - "building"
+                  - "floor"
 
-    - name: Generate YAML configuration with parent_name_hierarchy and site_type
+    - name: Scenario 6 - Generate YAML configuration by site type only
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1221,15 +1291,15 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case6_parent_name_and_site_type.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - parent_name_hierarchy: "Global/USA"
-                  site_type:
-                    - "building"
+          file_path: "/tmp/case8_site_type_only.yaml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["site"]
+            site:
+              - site_type:
+                  - "area"
 
-    - name: Generate YAML configuration with all filters
+    - name: Scenario 7 - Auto-generate YAML configuration for all sites with file path
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1242,17 +1312,11 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case7_all_filters.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - site_name_hierarchy: "Global/USA/San Jose"
-                  parent_name_hierarchy: "Global/USA"
-                  site_type:
-                    - "building"
-                    - "floor"
+          generate_all_configurations: true
+          file_path: "/tmp/case9_all_sites.yaml"
+          file_mode: "overwrite"
 
-    - name: Generate YAML configuration with site_type only
+    - name: Scenario 8 - Validation failure example for generate_all_configurations false
       cisco.dnac.site_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1265,43 +1329,7 @@ Examples
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
         config:
-          - file_path: "/tmp/case8_site_type_only.yaml"
-            component_specific_filters:
-              components_list: ["site"]
-              site:
-                - site_type:
-                    - "area"
-
-    - name: Auto-generate YAML configuration for all sites
-      cisco.dnac.site_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - generate_all_configurations: true
-            file_path: "/tmp/case9_all_sites.yaml"
-
-    - name: Auto-generate YAML configuration with default file path
-      cisco.dnac.site_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          - generate_all_configurations: true
+          generate_all_configurations: false
 
 
 
