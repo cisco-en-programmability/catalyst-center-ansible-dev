@@ -42,7 +42,7 @@ cisco.dnac.template_playbook_config_generator module -- Generate YAML playbook f
 .. Collection note
 
 .. note::
-    This module is part of the `cisco.dnac collection <https://galaxy.ansible.com/cisco/dnac>`_ (version 6.48.0).
+    This module is part of the `cisco.dnac collection <https://galaxy.ansible.com/cisco/dnac>`_ (version 6.48.1).
 
     To install it, use: :code:`ansible-galaxy collection install cisco.dnac`.
     You need further requirements to be able to use this module,
@@ -1249,7 +1249,7 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - generate_all_configurations: true
+          generate_all_configurations: true
 
     - name: Generate YAML Configuration with File Path specified
       cisco.dnac.template_playbook_config_generator:
@@ -1264,9 +1264,9 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - generate_all_configurations: true
-            file_path: "tmp/catc_templates_config.yml"
-            file_mode: "overwrite"
+          generate_all_configurations: true
+          file_path: "tmp/catc_templates_config.yml"
+          file_mode: "overwrite"
 
     - name: Generate YAML Configuration with specific template projects only
       cisco.dnac.template_playbook_config_generator:
@@ -1281,10 +1281,10 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            file_mode: "overwrite"
-            component_specific_filters:
-              components_list: ["projects"]
+          file_path: "tmp/catc_templates_config.yml"
+          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["projects"]
 
     - name: Generate YAML Configuration with specific configuration templates only
       cisco.dnac.template_playbook_config_generator:
@@ -1299,10 +1299,10 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            file_mode: "append"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
+          file_path: "tmp/catc_templates_config.yml"
+          file_mode: "append"
+          component_specific_filters:
+            components_list: ["configuration_templates"]
 
     - name: Generate YAML Configuration for projects with project name filter
       cisco.dnac.template_playbook_config_generator:
@@ -1317,12 +1317,12 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["projects"]
-              projects:
-                - name: "Project_A"
-                - name: "Project_B"
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+            components_list: ["projects"]
+            projects:
+              - name: "Project_A"
+              - name: "Project_B"
 
     - name: Generate YAML Configuration for templates with template name filter
       cisco.dnac.template_playbook_config_generator:
@@ -1337,12 +1337,12 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
-              configuration_templates:
-                - template_name: "Template_1"
-                - template_name: "Template_2"
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+          components_list: ["configuration_templates"]
+          configuration_templates:
+            - template_name: "Template_1"
+            - template_name: "Template_2"
 
     - name: Generate YAML Configuration for templates with project name filter
       cisco.dnac.template_playbook_config_generator:
@@ -1357,12 +1357,12 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
-              configuration_templates:
-                - project_name: "Project_A"
-                - project_name: "Project_B"
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+            components_list: ["configuration_templates"]
+            configuration_templates:
+              - project_name: "Project_A"
+              - project_name: "Project_B"
 
     - name: Generate YAML Configuration for templates with uncommitted filter
       cisco.dnac.template_playbook_config_generator:
@@ -1377,11 +1377,11 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
-              configuration_templates:
-                - include_uncommitted: true
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+            components_list: ["configuration_templates"]
+            configuration_templates:
+              - include_uncommitted: true
 
     - name: Generate YAML Configuration for templates with template name and project name
       cisco.dnac.template_playbook_config_generator:
@@ -1396,12 +1396,12 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
-              configuration_templates:
-                - project_name: "Project_A"
-                  template_name: "Template_1"
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+            components_list: ["configuration_templates"]
+            configuration_templates:
+              - project_name: "Project_A"
+                template_name: "Template_1"
 
     - name: Generate YAML Configuration for templates with comprehensive filters
       cisco.dnac.template_playbook_config_generator:
@@ -1416,13 +1416,13 @@ Examples
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
         config:
-          - file_path: "tmp/catc_templates_config.yml"
-            component_specific_filters:
-              components_list: ["configuration_templates"]
-              configuration_templates:
-                - template_name: "Template_1"
-                  project_name: "Project_A"
-                  include_uncommitted: true
+          file_path: "tmp/catc_templates_config.yml"
+          component_specific_filters:
+            components_list: ["configuration_templates"]
+            configuration_templates:
+              - template_name: "Template_1"
+                project_name: "Project_A"
+                include_uncommitted: true
 
 
 
