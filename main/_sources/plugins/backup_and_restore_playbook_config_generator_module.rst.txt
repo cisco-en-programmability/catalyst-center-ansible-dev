@@ -125,7 +125,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -139,7 +139,9 @@ Parameters
 
       Filters specify which components to include in the YAML configuration file.
 
-      If "components\_list" is specified, only those components are included, regardless of the filters.
+      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of the filters.
+
+      \ :literal:`component\_specific\_filters`\  is mandatory.
 
 
       .. raw:: html
@@ -163,7 +165,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -173,11 +175,15 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
+      Required when \ :literal:`config`\  is provided.
+
       Filters to specify which components to include in the YAML configuration file.
 
-      If "components\_list" is specified, only those components are included, regardless of other filters.
+      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
 
-      Ignored when generate\_all\_configurations is set to true.
+      If component filter blocks are provided (for example \ :literal:`nfs\_configuration`\ ), those components are automatically added to \ :literal:`components\_list`\  when missing.
+
+      If no component filter blocks are provided, \ :literal:`components\_list`\  is mandatory and must not be empty.
 
 
       .. raw:: html
@@ -302,7 +308,9 @@ Parameters
 
       Valid values are - NFS Configuration "nfs\_configuration" - Backup Storage Configuration "backup\_storage\_configuration"
 
-      If not specified, all components are included.
+      Required when no component-specific filter blocks are provided.
+
+      Empty list is invalid when no component-specific filter blocks are provided.
 
       Supports multiple filter entries for filtering multiple NFS servers.
 
@@ -434,142 +442,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      File write mode for the generated YAML configuration file.
-
-      The overwrite option replaces existing file content with new content.
-
-      The append option adds new content to the end of existing file.
-
-      Defaults to overwrite if not specified.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry:`"overwrite"`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`backup\_and\_restore\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`backup\_and\_restore\_playbook\_config\_2026-01-27\_14-21-41.yml`\ .
-
-      Supports both absolute and relative paths.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Generate YAML configuration for all available backup and restore components.
-
-      When set to true, generates configuration for both NFS configurations and backup storage configurations.
-
-      Takes precedence over component\_specific\_filters if both are specified.
-
-      If set to true and no component\_specific\_filters are provided, defaults to including all components.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1107,6 +979,96 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      File write mode for the generated YAML configuration file.
+
+      The overwrite option replaces existing file content with new content.
+
+      The append option adds new content to the end of existing file.
+
+      Defaults to overwrite if not specified.
+
+      file\_mode is only applicable when file\_path is provided.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`backup\_and\_restore\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`backup\_and\_restore\_playbook\_config\_2026-01-27\_14-21-41.yml`\ .
+
+      Supports both absolute and relative paths.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.backup_and_restore_playbook_config_generator_module__parameter-state:
@@ -1245,8 +1207,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_backup_restore_config.yaml"
         config:
-          file_path: "/tmp/catc_backup_restore_config.yaml"
           component_specific_filters:
             components_list:
               - "nfs_configuration"
@@ -1264,9 +1226,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_backup_storage_config.yaml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/catc_backup_storage_config.yaml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["backup_storage_configuration"]
             backup_storage_configuration:
@@ -1284,8 +1246,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_specific_nfs_config.yaml"
         config:
-          file_path: "/tmp/catc_specific_nfs_config.yaml"
           component_specific_filters:
             components_list: ["nfs_configuration"]
             nfs_configuration:
@@ -1304,9 +1266,12 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_backup_restore_config.yaml"
         config:
-          file_path: "/tmp/catc_backup_restore_config.yaml"
-          generate_all_configurations: true
+          component_specific_filters:
+            components_list:
+              - "nfs_configuration"
+              - "backup_storage_configuration"
 
     - name: Append YAML Configuration for multiple NFS servers to existing file
       cisco.dnac.backup_and_restore_playbook_config_generator:
@@ -1320,9 +1285,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_multiple_nfs_config.yaml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/catc_multiple_nfs_config.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["nfs_configuration"]
             nfs_configuration:
@@ -1343,10 +1308,48 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_physical_disk_backup.yaml"
         config:
-          file_path: "/tmp/catc_physical_disk_backup.yaml"
           component_specific_filters:
             components_list: ["backup_storage_configuration"]
+            backup_storage_configuration:
+              - server_type: "NFS"
+
+    - name: Component filter auto-adds missing component to components_list
+      cisco.dnac.backup_and_restore_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        file_path: "/tmp/catc_component_auto_add.yaml"
+        config:
+          component_specific_filters:
+            components_list: ["nfs_configuration"]
+            backup_storage_configuration:
+              - server_type: "NFS"
+
+    - name: Equivalent explicit components_list for same filter behavior
+      cisco.dnac.backup_and_restore_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: "{{dnac_log_level}}"
+        state: gathered
+        file_path: "/tmp/catc_component_explicit.yaml"
+        config:
+          component_specific_filters:
+            components_list: ["nfs_configuration", "backup_storage_configuration"]
             backup_storage_configuration:
               - server_type: "NFS"
 

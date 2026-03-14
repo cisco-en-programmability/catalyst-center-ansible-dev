@@ -72,7 +72,7 @@ Synopsis
 - Retrieves existing PnP device information from Cisco Catalyst Center PnP inventory including serial numbers, hostnames, device states, product IDs, and SUDI requirements.
 - Transforms API responses to playbook-compatible YAML format with parameter name mapping and structure optimization for Ansible execution.
 - Supports device state filtering for targeted device discovery.
-- Enables automated brownfield discovery by retrieving all registered PnP devices when generate\_all\_configurations is enabled.
+- Enables automated brownfield discovery by retrieving all registered PnP devices when \ :literal:`config`\  is omitted.
 - Creates structured playbook files ready for modification and redeployment through pnp\_workflow\_manager module.
 - Extracts essential device attributes without site assignments, templates, projects, or advanced configuration parameters.
 - Supports extraction of both claimed and unclaimed devices across all PnP workflow states.
@@ -129,7 +129,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -139,11 +139,11 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      Configuration dictionary controlling YAML playbook generation behavior.
+      Configuration dictionary controlling PnP filter behavior.
 
-      Defines output file path, component selection, file write mode, and filtering criteria for PnP device extraction.
+      When provided, at least one of \ :literal:`component\_specific\_filters`\  or \ :literal:`global\_filters`\  is mandatory.
 
-      When generate\_all\_configurations is True, automatically includes all PnP devices unless filters are explicitly specified.
+      To retrieve all PnP devices, omit \ :literal:`config`\ .
 
 
       .. raw:: html
@@ -181,9 +181,7 @@ Parameters
 
       Currently supports only 'device\_info' component for basic device information extraction.
 
-      Optional when generate\_all\_configurations is True, uses defaults if not provided.
-
-      When specified, only listed components are retrieved.
+      Must include \ :literal:`components\_list`\  with at least one component when provided.
 
 
       .. raw:: html
@@ -223,8 +221,6 @@ Parameters
 
       Device info includes serial\_number, hostname, state, pid, is\_sudi\_required, and authorize fields.
 
-      When not specified with generate\_all\_configurations True, defaults to ['device\_info'].
-
       Order of components in list determines order in generated YAML playbook structure.
 
 
@@ -232,161 +228,13 @@ Parameters
 
       :ansible-option-choices:`Choices:`
 
-      - :ansible-option-choices-entry-default:`"device\_info"` :ansible-option-choices-default-mark:`← (default)`
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-default-bold:`Default:` :ansible-option-default:`["device\_info"]`
-
-      .. raw:: html
-
-        </div>
-
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how the generated YAML content is written to the output file.
-
-      When set to 'overwrite', the file is created or replaced with new content.
-
-      When set to 'append', the generated content is appended to the existing file.
-
-      Append mode is useful for combining multiple device configurations into a single playbook file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
+      - :ansible-option-choices-entry:`"device\_info"`
 
 
       .. raw:: html
 
         </div>
 
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path where generated YAML configuration file will be saved.
-
-      If not provided, file is saved in current working directory with auto-generated filename.
-
-      Filename format when auto-generated is \ :literal:`pnp\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      Example auto-generated filename \ :literal:`pnp\_playbook\_config\_2026-02-06\_14-30-45.yml`\ .
-
-      Parent directories are created automatically if they do not exist.
-
-      File behavior depends on file\_mode setting.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When True, automatically retrieves all PnP device configurations from Catalyst Center.
-
-      Discovers all devices in PnP inventory and extracts basic device information.
-
-      Makes component\_specific\_filters optional by using default values when not provided.
-
-      Sets default components\_list to ['device\_info'] if not explicitly specified.
-
-      Useful for complete brownfield PnP inventory documentation and discovery workflows.
-
-      When False, requires explicit component\_specific\_filters configuration with components\_list.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
   * - .. raw:: html
 
@@ -415,13 +263,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Global filters to apply across PnP device extraction before component processing.
+      Global filters to apply across PnP device extraction.
 
-      Allows filtering devices by state, product family, and site location.
-
-      Filters are applied sequentially to reduce dataset before device information extraction.
-
-      All filters are optional and can be combined for precise device selection.
+      Currently supports filtering by device state only.
 
 
       .. raw:: html
@@ -1018,6 +862,84 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how generated YAML content is written when \ :literal:`file\_path`\  is provided.
+
+      \ :literal:`overwrite`\  creates/replaces the file.
+
+      \ :literal:`append`\  appends to existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-default-bold:`Default:` :ansible-option-default:`"overwrite"`
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Absolute or relative path where generated YAML configuration file will be saved.
+
+      If not provided, file is saved in current working directory with auto-generated filename.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.pnp_playbook_config_generator_module__parameter-state:
@@ -1151,10 +1073,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          generate_all_configurations: true
+        file_path: "/tmp/pnp_device_info.yml"
 
-    - name: Generate device info with custom file path and append mode
+    - name: Generate device info with component filter
       cisco.dnac.pnp_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1166,9 +1087,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/pnp_device_info.yml"
+        file_mode: append
         config:
-          file_path: "/tmp/pnp_device_info.yml"
-          file_mode: append
           component_specific_filters:
             components_list: ["device_info"]
 
@@ -1184,8 +1105,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/unclaimed_device_info.yml"
         config:
-          file_path: "/tmp/unclaimed_device_info.yml"
           component_specific_filters:
             components_list: ["device_info"]
           global_filters:
