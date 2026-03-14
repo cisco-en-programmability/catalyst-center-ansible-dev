@@ -124,7 +124,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -138,9 +138,9 @@ Parameters
 
       Filters specify which components to include in the YAML configuration file.
 
-      Global filters identify target settings by issue name or device type.
+      If \ :literal:`config`\  is provided, \ :literal:`component\_specific\_filters`\  is mandatory.
 
-      Component-specific filters allow selection of specific assurance issue features and detailed filtering.
+      If \ :literal:`config`\  is omitted, internal auto-discovery mode is used.
 
 
       .. raw:: html
@@ -164,7 +164,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -177,8 +177,6 @@ Parameters
       Filters to specify which assurance issue components and features to include in the YAML configuration file.
 
       Allows granular selection of specific components and their parameters.
-
-      If not specified, all supported assurance issue components will be extracted.
 
 
       .. raw:: html
@@ -343,144 +341,6 @@ Parameters
 
         </div>
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Determines how the output YAML configuration file is written.
-
-      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
-
-      When set to \ :literal:`append`\ , new content will be added to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path for the output YAML configuration file.
-
-      If not specified, a timestamped filename is auto-generated in the format \ :literal:`assurance\_issue\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`assurance\_issue\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
-
-      Parent directories are created automatically if they do not exist.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to True, automatically generates YAML configurations for all assurance issue components.
-
-      This mode discovers all configured assurance issues in Cisco Catalyst Center and extracts all supported configurations.
-
-      When enabled, the config parameter becomes optional and will use default values if not provided.
-
-      A default filename will be generated automatically if file\_path is not specified.
-
-      This is useful for complete brownfield assurance issue discovery and documentation.
-
-      Includes User-Defined Issue Definitions only.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1018,6 +878,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Determines how the output YAML configuration file is written.
+
+      Relevant only when \ :literal:`file\_path`\  is provided.
+
+      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
+
+      When set to \ :literal:`append`\ , new content will be added to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Absolute or relative path for the output YAML configuration file.
+
+      If not specified, a timestamped filename is auto-generated in the format \ :literal:`assurance\_issue\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      Parent directories are created automatically if they do not exist.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.assurance_issue_playbook_config_generator_module__parameter-state:
@@ -1138,27 +1084,6 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          component_specific_filters:
-            components_list: ["assurance_user_defined_issue_settings"]
-
-    # Example 2: Generate YAML Configuration for all user-defined issue components
-    - name: Generate complete user-defined issue configuration
-      cisco.dnac.assurance_issue_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          file_path: "/tmp/complete_assurance_config.yml"
-          file_mode: "overwrite"
-          generate_all_configurations: true
 
     # Example 3: Filter by specific issue name
     - name: Generate YAML for specific issue by name
@@ -1173,9 +1098,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/high_cpu_issue.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/high_cpu_issue.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             assurance_user_defined_issue_settings:
               - name: "High CPU Usage"
@@ -1193,9 +1118,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/enabled_issues.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/enabled_issues.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             assurance_user_defined_issue_settings:
               - is_enabled: true
@@ -1213,9 +1138,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/specific_enabled_issue.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/specific_enabled_issue.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             assurance_user_defined_issue_settings:
               - name: "Memory Leak Detection"

@@ -124,7 +124,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -139,6 +139,10 @@ Parameters
       Filters specify which components to include in the YAML configuration file.
 
       If "components\_list" is specified, only those components are included, regardless of the filters.
+
+      If config is not provided or is empty, all configurations for all tags and tag memberships will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -175,6 +179,10 @@ Parameters
       Filters to specify which components to include in the YAML configuration file.
 
       If "components\_list" is specified, only those components are included, regardless of other filters.
+
+      If filters for specific components (e.g., tag or tag\_memberships) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
+
+      At least one of components\_list or component filters must be provided.
 
 
       .. raw:: html
@@ -214,7 +222,9 @@ Parameters
 
       If specified, only the listed components will be included in the generated YAML file.
 
-      If not specified, all supported components will be included by default.
+      If not specified but component filters (tag or tag\_memberships) are provided, those components are automatically added to this list.
+
+      If neither components\_list nor any component filters are provided, an error will be raised.
 
 
       .. rst-class:: ansible-option-line
@@ -443,140 +453,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name "tags\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
-
-      For example, "tags\_playbook\_config\_2026-01-24\_12-33-20.yml".
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to True, automatically generates YAML configurations for all devices and all supported features.
-
-      This mode discovers all managed devices in Cisco Catalyst Center and extracts all supported configurations.
-
-      When enabled, the config parameter becomes optional and will use default values if not provided.
-
-      A default filename will be generated automatically if file\_path is not specified.
-
-      This is useful for complete brownfield infrastructure discovery and documentation.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1114,6 +990,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      This parameter is only relevant when \ :literal:`file\_path`\  is specified. Defaults to \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name "tags\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml".
+
+      For example, "tags\_playbook\_config\_2026-01-24\_12-33-20.yml".
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.tags_playbook_config_generator_module__parameter-state:
@@ -1211,6 +1173,23 @@ Notes
    - SDK Paths used are
      /dna/intent/api/v1/tag
      /dna/intent/api/v1/tag/${id}/member
+   - Auto-population of components\_list:
+     If component-specific filters (such as 'tag' or 'tag\_memberships') are provided
+     without explicitly including them in 'components\_list', those components will be
+     automatically added to 'components\_list'. This simplifies configuration by eliminating
+     the need to redundantly specify components in both places.
+
+   - Example of auto-population behavior:
+     If you provide filters for 'tag' without including 'tag' in 'components\_list',
+     the module will automatically add 'tag' to 'components\_list' before processing.
+     This allows you to write more concise playbooks.
+
+   - Validation requirements:
+     If 'component\_specific\_filters' is provided, at least one of the following must be true:
+     (1) 'components\_list' contains at least one component, OR
+     (2) Component-specific filters (e.g., 'tag', 'tag\_memberships') are provided.
+     If neither condition is met, the module will fail with a validation error.
+
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1255,8 +1234,7 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
-            config:
-              generate_all_configurations: true
+            # No config provided - generates all configurations
 
     # Example 2: Generate all configurations with custom file path
     - name: Generate complete brownfield tag configuration with custom filename
@@ -1280,10 +1258,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
-            config:
-              file_path: "/tmp/complete_tags_config.yaml"
-              generate_all_configurations: true
-              file_mode: "overwrite"
+            file_path: "/tmp/complete_tags_config.yaml"
+            file_mode: "overwrite"
+            # No config provided - generates all configurations
 
     # Example 3: Generate only tag configurations without memberships
     - name: Generate tag definitions only
@@ -1307,9 +1284,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/catc_tags.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag"]
 
@@ -1335,9 +1312,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/catc_tags.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
 
@@ -1363,13 +1340,46 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/catc_tags.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag", "tag_memberships"]
 
-    # Example 6: Filter specific tags by name
+    # Example 6: Auto-populate components_list from component filters
+    - name: Generate configuration with auto-populated components_list
+      hosts: dnac_servers
+      vars_files:
+        - credentials.yml
+      gather_facts: false
+      connection: local
+      tasks:
+        - name: Export tags by providing filters without explicit components_list
+          cisco.dnac.tags_playbook_config_generator:
+            dnac_host: "{{ dnac_host }}"
+            dnac_port: "{{ dnac_port }}"
+            dnac_username: "{{ dnac_username }}"
+            dnac_password: "{{ dnac_password }}"
+            dnac_verify: "{{ dnac_verify }}"
+            dnac_debug: "{{ dnac_debug }}"
+            dnac_version: "{{ dnac_version }}"
+            dnac_log: true
+            dnac_log_level: DEBUG
+            dnac_log_append: false
+            dnac_log_file_path: "{{ dnac_log_file_path }}"
+            state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
+            config:
+              component_specific_filters:
+                # No components_list specified, but tag filters are provided
+                # The 'tag' component will be automatically added to components_list
+                tag:
+                  - tag_name: Production
+                  - tag_name: Data-Center
+          # This will automatically include 'tag' in components_list and retrieve only those tags
+
+    # Example 7: Filter specific tags by name
     - name: Generate configuration for specific tags by name
       hosts: dnac_servers
       vars_files:
@@ -1391,16 +1401,16 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/catc_tags.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag", "tag_memberships"]
                 tag:
                   - tag_name: Production
                   - tag_name: Data-Center
 
-    # Example 7: Filter specific tag memberships by tag name
+    # Example 8: Filter specific tag memberships by tag name
     - name: Generate memberships for specific tags
       hosts: dnac_servers
       vars_files:
@@ -1422,16 +1432,16 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/catc_tags.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/catc_tags.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag", "tag_memberships"]
                 tag_memberships:
                   - tag_name: Campus-Switches
                   - tag_name: Core-Routers
 
-    # Example 8: Generate tag configuration with append mode
+    # Example 9: Generate tag configuration with append mode
     - name: Generate and append tag configuration
       hosts: dnac_servers
       vars_files:
@@ -1453,16 +1463,16 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/all_tags.yaml"
+            file_mode: "append"
             config:
-              file_path: "/tmp/all_tags.yaml"
-              file_mode: "append"
               component_specific_filters:
                 components_list: ["tag", "tag_memberships"]
                 tag:
                   - tag_name: Branch-Office
                   - tag_name: Access-Points
 
-    # Example 9: Retrieve all tag memberships with hostname as device identifier
+    # Example 10: Retrieve all tag memberships with hostname as device identifier
     - name: Generate all tag memberships using hostname identifier
       hosts: dnac_servers
       vars_files:
@@ -1484,16 +1494,16 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/tags_by_hostname.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/tags_by_hostname.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
                 tag_memberships:
                   - device_identifier: hostname
           # This will retrieve all tags with their members identified by hostname instead of serial_number
 
-    # Example 10: Retrieve specific tag membership with IP address as device identifier
+    # Example 11: Retrieve specific tag membership with IP address as device identifier
     - name: Generate specific tag membership using IP address identifier
       hosts: dnac_servers
       vars_files:
@@ -1515,9 +1525,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/production_tag_by_ip.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/production_tag_by_ip.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
                 tag_memberships:
@@ -1525,7 +1535,7 @@ Examples
                     device_identifier: ip_address
           # This will retrieve only the 'Production' tag's members with IP addresses
 
-    # Example 11: Retrieve tag memberships with MAC address as device identifier
+    # Example 12: Retrieve tag memberships with MAC address as device identifier
     - name: Generate tag memberships using MAC address identifier
       hosts: dnac_servers
       vars_files:
@@ -1547,9 +1557,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/tags_by_mac.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/tags_by_mac.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
                 tag_memberships:
@@ -1559,7 +1569,7 @@ Examples
                     device_identifier: mac_address
           # This will retrieve specific tags' members with MAC addresses
 
-    # Example 12: Retrieve tag memberships with default device identifier (serial_number)
+    # Example 13: Retrieve tag memberships with default device identifier (serial_number)
     - name: Generate tag memberships with default serial number identifier
       hosts: dnac_servers
       vars_files:
@@ -1581,16 +1591,16 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/tags_by_serial.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/tags_by_serial.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
                 tag_memberships:
                   - tag_name: Data-Center
           # When device_identifier is not specified, it defaults to 'serial_number'
 
-    # Example 13: Mixed configuration with different device identifiers
+    # Example 14: Mixed configuration with different device identifiers
     - name: Generate tag configurations with mixed device identifiers
       hosts: dnac_servers
       vars_files:
@@ -1612,9 +1622,9 @@ Examples
             dnac_log_append: false
             dnac_log_file_path: "{{ dnac_log_file_path }}"
             state: gathered
+            file_path: "/tmp/mixed_identifiers.yaml"
+            file_mode: "overwrite"
             config:
-              file_path: "/tmp/mixed_identifiers.yaml"
-              file_mode: "overwrite"
               component_specific_filters:
                 components_list: ["tag_memberships"]
                 tag_memberships:
