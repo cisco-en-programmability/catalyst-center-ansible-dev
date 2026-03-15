@@ -1157,6 +1157,7 @@ Modules
 * :ref:`wireless_controllers_wireless_mobility_groups_info module <ansible_collections.cisco.dnac.wireless_controllers_wireless_mobility_groups_info_module>` -- Information module for Wireless Controllers Wireless Mobility Groups
 * :ref:`wireless_controllers_wireless_mobility_groups_mobility_provision module <ansible_collections.cisco.dnac.wireless_controllers_wireless_mobility_groups_mobility_provision_module>` -- Resource module for Wireless Controllers Wireless Mobility Groups Mobility Provision
 * :ref:`wireless_controllers_wireless_mobility_groups_mobility_reset module <ansible_collections.cisco.dnac.wireless_controllers_wireless_mobility_groups_mobility_reset_module>` -- Resource module for Wireless Controllers Wireless Mobility Groups Mobility Reset
+* :ref:`wireless_design_playbook_config_generator module <ansible_collections.cisco.dnac.wireless_design_playbook_config_generator_module>` -- Generate YAML playbook for \ :literal:`wireless\_design\_workflow\_manager`\  module.
 * :ref:`wireless_design_workflow_manager module <ansible_collections.cisco.dnac.wireless_design_workflow_manager_module>` -- 
 * :ref:`wireless_dynamic_interface module <ansible_collections.cisco.dnac.wireless_dynamic_interface_module>` -- Resource module for Wireless Dynamic Interface
 * :ref:`wireless_dynamic_interface_info module <ansible_collections.cisco.dnac.wireless_dynamic_interface_info_module>` -- Information module for Wireless Dynamic Interface
@@ -2297,6 +2298,7 @@ Modules
     wireless_controllers_wireless_mobility_groups_info_module
     wireless_controllers_wireless_mobility_groups_mobility_provision_module
     wireless_controllers_wireless_mobility_groups_mobility_reset_module
+    wireless_design_playbook_config_generator_module
     wireless_design_workflow_manager_module
     wireless_dynamic_interface_module
     wireless_dynamic_interface_info_module
