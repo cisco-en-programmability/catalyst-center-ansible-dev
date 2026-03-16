@@ -124,7 +124,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -136,11 +136,9 @@ Parameters
 
       A dictionary of filters for generating YAML playbook compatible with the \`network\_settings\_workflow\_manager\` module.
 
-      Filters specify which components to include in the YAML configuration file.
+      If not provided, module runs internal auto-discovery for all supported components.
 
-      Global filters identify target settings by site name, pool name, or pool type.
-
-      Component-specific filters allow selection of specific network setting features and detailed filtering.
+      If provided, only \ :literal:`component\_specific\_filters`\  is accepted.
 
 
       .. raw:: html
@@ -164,7 +162,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -178,7 +176,7 @@ Parameters
 
       Allows granular selection of specific components and their parameters.
 
-      If not specified, all supported network settings components will be extracted.
+      Mandatory when \ :literal:`config`\  is provided.
 
 
       .. raw:: html
@@ -216,7 +214,9 @@ Parameters
 
       Valid values are ["global\_pool\_details", "reserve\_pool\_details", "network\_management\_details", "device\_controllability\_details"]
 
-      If not specified, all supported components are included.
+      If omitted, components are inferred from provided component filter blocks.
+
+      If a component filter block is provided but the component is missing in \ :literal:`components\_list`\ , the module auto-adds it internally.
 
       Example ["global\_pool\_details", "reserve\_pool\_details", "network\_management\_details"]
 
@@ -372,7 +372,7 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Pool type to filter global pools by type (Generic, LAN, WAN).
+      Pool type to filter global pools by type (Generic, Tunnel).
 
 
       .. rst-class:: ansible-option-line
@@ -380,8 +380,7 @@ Parameters
       :ansible-option-choices:`Choices:`
 
       - :ansible-option-choices-entry:`"Generic"`
-      - :ansible-option-choices-entry:`"LAN"`
-      - :ansible-option-choices-entry:`"WAN"`
+      - :ansible-option-choices-entry:`"Tunnel"`
 
 
       .. raw:: html
@@ -573,142 +572,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`network\_settings\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`network\_settings\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to True, automatically generates YAML configurations for all network settings components.
-
-      This mode discovers all configured network settings in Cisco Catalyst Center and extracts all supported configurations.
-
-      When enabled, the config parameter becomes optional and will use default values if not provided.
-
-      A default filename will be generated automatically if file\_path is not specified.
-
-      This is useful for complete network settings playbook config generator discovery and documentation.
-
-      Includes Global IP Pools, Reserve IP Pools, Network Management, Device Controllability, and AAA Settings.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1246,6 +1109,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      Relevant only when \ :literal:`file\_path`\  is provided.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`network\_settings\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`network\_settings\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.network_settings_playbook_config_generator_module__parameter-state:
@@ -1337,7 +1286,7 @@ Notes
 
 .. note::
    - SDK Methods used are - sites.Sites.get\_site - network\_settings.NetworkSettings.retrieves\_global\_ip\_address\_pools - network\_settings.NetworkSettings.retrieves\_ip\_address\_subpools - network\_settings.NetworkSettings.retrieve\_d\_h\_c\_p\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_d\_n\_s\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_telemetry\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_n\_t\_p\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_time\_zone\_settings\_for\_a\_site - network\_settings.NetworkSettings.retrieve\_aaa\_settings\_for\_a\_site - network\_settings.NetworkSettings.get\_device\_controllability\_settings,
-   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/global-pool - GET /dna/intent/api/v1/reserve-pool - GET /dna/intent/api/v1/network - GET /dna/intent/api/v1/device-credential - GET /dna/intent/api/v1/network-aaa
+   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/ipam/globalIpAddressPools - GET /dna/intent/api/v1/ipam/siteIpAddressPools - GET /dna/intent/api/v1/network - GET /dna/intent/api/v1/device-credential - GET /dna/intent/api/v1/network-aaa
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1353,8 +1302,8 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    # Generate YAML Configuration with default file path
-    - name: Generate YAML Configuration with default file path
+    # Auto-discovery mode: config omitted, all supported components discovered internally.
+    - name: Generate YAML Configuration with auto-discovery
       cisco.dnac.network_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1366,11 +1315,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          component_specific_filters:
-            components_list: ["global_pool_details"]
 
-    - name: Generate YAML Configuration for specific sites
+    # Filtered mode: config provided with required component_specific_filters.
+    - name: Generate YAML Configuration for selected components
       cisco.dnac.network_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1382,67 +1329,18 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/network_settings_config.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/network_settings_config.yml"
-          file_mode: "overwrite"
           component_specific_filters:
-            components_list: ["reserve_pool_details"]
-
-    - name: Generate YAML Configuration using explicit components list
-      cisco.dnac.network_settings_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          file_path: "/tmp/network_settings_config.yml"
-          file_mode: "overwrite"
-          component_specific_filters:
-            components_list: ["network_management_details"]
-
-    - name: Generate YAML Configuration for global pools with no filters
-      cisco.dnac.network_settings_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          file_path: "/tmp/network_settings_config.yml"
-          file_mode: "overwrite"
-          component_specific_filters:
-            components_list: ["device_controllability_details"]
-
-    - name: Generate YAML Configuration for reserve pools using site hierarchy
-      cisco.dnac.network_settings_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
-        dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
-        state: gathered
-        config:
-          file_path: "/tmp/reserve_pools_usa.yml"
-          file_mode: "append"
-          component_specific_filters:
-            components_list: ["reserve_pool_details"]
+            components_list:
+              - "global_pool_details"
+              - "reserve_pool_details"
+            global_pool_details:
+              - pool_name: "Global_Pool_1"
+                pool_type: "Generic"
             reserve_pool_details:
-              - site_hierarchy: "Global/USA"
+              - site_name: "Global/USA"
 
 
 

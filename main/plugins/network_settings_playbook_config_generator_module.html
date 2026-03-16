@@ -1246,16 +1246,16 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <p class="ansible-version-added">New in cisco.dnac 6.44.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#synopsis" id="id65">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id66">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id67">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#notes" id="id68">Notes</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id69">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id70">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#synopsis" id="id59">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id60">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id61">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#notes" id="id62">Notes</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id63">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id64">Return Values</a></p></li>
 </ul>
 </nav>
 <section id="synopsis">
-<h2><a class="toc-backref" href="#id65" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id59" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Generates YAML configurations compatible with the `network_settings_workflow_manager` module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.</p></li>
 <li><p>The YAML configurations generated represent the global pools, reserve pools, network management settings, device controllability settings, and AAA settings configured on the Cisco Catalyst Center.</p></li>
@@ -1263,7 +1263,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </ul>
 </section>
 <section id="requirements">
-<span id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-requirements"></span><h2><a class="toc-backref" href="#id66" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<span id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-requirements"></span><h2><a class="toc-backref" href="#id60" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>The below requirements are needed on the host that executes this module.</p>
 <ul class="simple">
 <li><p>dnacentersdk &gt;= 2.10.10</p></li>
@@ -1271,7 +1271,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </ul>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id67" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id61" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -1281,21 +1281,20 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-config"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config"><strong>config</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span> / <span class="ansible-option-required">required</span></p>
+<a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary of filters for generating YAML playbook compatible with the `network_settings_workflow_manager` module.</p>
-<p>Filters specify which components to include in the YAML configuration file.</p>
-<p>Global filters identify target settings by site name, pool name, or pool type.</p>
-<p>Component-specific filters allow selection of specific network setting features and detailed filtering.</p>
+<p>If not provided, module runs internal auto-discovery for all supported components.</p>
+<p>If provided, only <code class="docutils literal notranslate"><span class="pre">component_specific_filters</span></code> is accepted.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config-component-specific-filters"><strong>component_specific_filters</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters to specify which network settings components and features to include in the YAML configuration file.</p>
 <p>Allows granular selection of specific components and their parameters.</p>
-<p>If not specified, all supported network settings components will be extracted.</p>
+<p>Mandatory when <code class="docutils literal notranslate"><span class="pre">config</span></code> is provided.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1304,7 +1303,8 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of components to include in the YAML configuration file.</p>
 <p>Valid values are [&quot;global_pool_details&quot;, &quot;reserve_pool_details&quot;, &quot;network_management_details&quot;, &quot;device_controllability_details&quot;]</p>
-<p>If not specified, all supported components are included.</p>
+<p>If omitted, components are inferred from provided component filter blocks.</p>
+<p>If a component filter block is provided but the component is missing in <code class="docutils literal notranslate"><span class="pre">components_list</span></code>, the module auto-adds it internally.</p>
 <p>Example [&quot;global_pool_details&quot;, &quot;reserve_pool_details&quot;, &quot;network_management_details&quot;]</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
@@ -1344,12 +1344,11 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/global_pool_details/pool_type"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config-component-specific-filters-global-pool-details-pool-type"><strong>pool_type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/global_pool_details/pool_type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Pool type to filter global pools by type (Generic, LAN, WAN).</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Pool type to filter global pools by type (Generic, Tunnel).</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><a href="#id9"><span class="problematic" id="id10">:ansible-option-choices-entry:`&quot;Generic&quot;`</span></a></p></li>
-<li><p><a href="#id11"><span class="problematic" id="id12">:ansible-option-choices-entry:`&quot;LAN&quot;`</span></a></p></li>
-<li><p><a href="#id13"><span class="problematic" id="id14">:ansible-option-choices-entry:`&quot;WAN&quot;`</span></a></p></li>
+<li><p><a href="#id11"><span class="problematic" id="id12">:ansible-option-choices-entry:`&quot;Tunnel&quot;`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
@@ -1394,74 +1393,34 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Site name to filter reserve pools by specific site.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config-file-mode"><strong>file_mode</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Controls how config is written to the YAML file.</p>
-<p><code class="docutils literal notranslate"><span class="pre">overwrite</span></code> replaces existing file content.</p>
-<p><code class="docutils literal notranslate"><span class="pre">append</span></code> appends generated YAML content to the existing file.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry-default:`&quot;overwrite&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`&quot;append&quot;`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config-file-path"><strong>file_path</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Path where the YAML configuration file will be saved.</p>
-<p>If not provided, the file will be saved in the current working directory with a default file name <code class="docutils literal notranslate"><span class="pre">network_settings_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
-<p>For example, <code class="docutils literal notranslate"><span class="pre">network_settings_playbook_config_2026-01-24_12-33-20.yml</span></code>.</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-config-generate-all-configurations"><strong>generate_all_configurations</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>When set to True, automatically generates YAML configurations for all network settings components.</p>
-<p>This mode discovers all configured network settings in Cisco Catalyst Center and extracts all supported configurations.</p>
-<p>When enabled, the config parameter becomes optional and will use default values if not provided.</p>
-<p>A default filename will be generated automatically if file_path is not specified.</p>
-<p>This is useful for complete network settings playbook config generator discovery and documentation.</p>
-<p>Includes Global IP Pools, Reserve IP Pools, Network Management, Device Controllability, and AAA Settings.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
-<ul class="simple">
-<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry:`true`</span></a></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_api_task_timeout"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-api-task-timeout"><strong>dnac_api_task_timeout</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_api_task_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Defines the timeout in seconds for API calls to retrieve task details. If the task details are not received within this period, the process will end, and a timeout notification will be logged.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id23"><span class="problematic" id="id24">:ansible-option-default:`1200`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id13"><span class="problematic" id="id14">:ansible-option-default:`1200`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_debug"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-debug"><strong>dnac_debug</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_debug" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Indicates whether debugging is enabled in the Cisco Catalyst Center SDK.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id25"><span class="problematic" id="id26">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id27"><span class="problematic" id="id28">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id15"><span class="problematic" id="id16">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id17"><span class="problematic" id="id18">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_host"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-host"><strong>dnac_host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The hostname of the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_log"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-log"><strong>dnac_log</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
@@ -1473,34 +1432,34 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <p>If the log file exists, - It is overwritten or appended based on the &quot;dnac_log_append&quot; flag.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id29"><span class="problematic" id="id30">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><a href="#id31"><span class="problematic" id="id32">:ansible-option-choices-entry:`true`</span></a></p></li>
+<li><p><a href="#id19"><span class="problematic" id="id20">:ansible-option-choices-entry-default:`false`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id21"><span class="problematic" id="id22">:ansible-option-choices-entry:`true`</span></a></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_log_append"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-log-append"><strong>dnac_log_append</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_append" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines the mode of the file. Set to True for 'append' mode. Set to False for 'write' mode.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id33"><span class="problematic" id="id34">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id35"><span class="problematic" id="id36">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id23"><span class="problematic" id="id24">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id25"><span class="problematic" id="id26">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_log_file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-log-file-path"><strong>dnac_log_file_path</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Governs logging. Logs are recorded if dnac_log is True.</p>
 <p>If path is not specified, - When 'dnac_log_append' is True, 'dnac.log' is generated in the current Ansible directory; logs are appended. - When 'dnac_log_append' is False, 'dnac.log' is generated; logs are overwritten.</p>
 <p>If path is specified, - When 'dnac_log_append' is True, the file opens in append mode. - When 'dnac_log_append' is False, the file opens in write (w) mode. - In shared file scenarios, without append mode, content is overwritten after each module execution. - For a shared log file, set append to False for the 1st module (to overwrite); for subsequent modules, set append to True.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id37"><span class="problematic" id="id38">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id27"><span class="problematic" id="id28">:ansible-option-default:`&quot;dnac.log&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_log_level"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-log-level"><strong>dnac_log_level</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_log_level" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -1510,82 +1469,106 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <p>WARNING indicates potential future issues. Displays WARNING, ERROR, CRITICAL messages.</p>
 <p>INFO tracks normal operation. Displays INFO, WARNING, ERROR, CRITICAL messages.</p>
 <p>DEBUG provides detailed diagnostic info. Displays all log messages.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id39"><span class="problematic" id="id40">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id29"><span class="problematic" id="id30">:ansible-option-default:`&quot;WARNING&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_password"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-password"><strong>dnac_password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for authentication at the Cisco Catalyst Center.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_port"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-port"><strong>dnac_port</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_port" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the port number associated with the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id41"><span class="problematic" id="id42">:ansible-option-default:`&quot;443&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id31"><span class="problematic" id="id32">:ansible-option-default:`&quot;443&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_task_poll_interval"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-task-poll-interval"><strong>dnac_task_poll_interval</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_task_poll_interval" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the interval in seconds between successive calls to the API to retrieve task details.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id43"><span class="problematic" id="id44">:ansible-option-default:`2`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id33"><span class="problematic" id="id34">:ansible-option-default:`2`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_username"></div>
 <div class="ansibleOptionAnchor" id="parameter-user"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-user"><span id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-username"></span><strong>dnac_username</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: user</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The username for authentication at the Cisco Catalyst Center.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id45"><span class="problematic" id="id46">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id35"><span class="problematic" id="id36">:ansible-option-default:`&quot;admin&quot;`</span></a></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_verify"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-verify"><strong>dnac_verify</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_verify" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag to enable or disable SSL certificate verification.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id47"><span class="problematic" id="id48">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id49"><span class="problematic" id="id50">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id37"><span class="problematic" id="id38">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id39"><span class="problematic" id="id40">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-dnac_version"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-dnac-version"><strong>dnac_version</strong></p>
 <a class="ansibleOptionLink" href="#parameter-dnac_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the version of the Cisco Catalyst Center that the SDK should use.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id51"><span class="problematic" id="id52">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <a href="#id41"><span class="problematic" id="id42">:ansible-option-default:`&quot;2.2.3.3&quot;`</span></a></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-file_mode"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-file-mode"><strong>file_mode</strong></p>
+<a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Controls how config is written to the YAML file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">overwrite</span></code> replaces existing file content.</p>
+<p><code class="docutils literal notranslate"><span class="pre">append</span></code> appends generated YAML content to the existing file.</p>
+<p>Relevant only when <code class="docutils literal notranslate"><span class="pre">file_path</span></code> is provided.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><a href="#id43"><span class="problematic" id="id44">:ansible-option-choices-entry-default:`&quot;overwrite&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id45"><span class="problematic" id="id46">:ansible-option-choices-entry:`&quot;append&quot;`</span></a></p></li>
+</ul>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-file_path"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-file-path"><strong>file_path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path where the YAML configuration file will be saved.</p>
+<p>If not provided, the file will be saved in the current working directory with a default file name <code class="docutils literal notranslate"><span class="pre">network_settings_playbook_config_&lt;YYYY-MM-DD_HH-MM-SS&gt;.yml</span></code>.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">network_settings_playbook_config_2026-01-24_12-33-20.yml</span></code>.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The desired state of Cisco Catalyst Center after module execution.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id53"><span class="problematic" id="id54">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id47"><span class="problematic" id="id48">:ansible-option-choices-entry-default:`&quot;gathered&quot;`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-validate_response_schema"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-network-settings-playbook-config-generator-module-parameter-validate-response-schema"><strong>validate_response_schema</strong></p>
 <a class="ansibleOptionLink" href="#parameter-validate_response_schema" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Flag for Cisco Catalyst Center SDK to enable the validation of request bodies against a JSON schema.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><a href="#id55"><span class="problematic" id="id56">:ansible-option-choices-entry:`false`</span></a></p></li>
-<li><p><a href="#id57"><span class="problematic" id="id58">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><a href="#id49"><span class="problematic" id="id50">:ansible-option-choices-entry:`false`</span></a></p></li>
+<li><p><a href="#id51"><span class="problematic" id="id52">:ansible-option-choices-entry-default:`true`</span></a> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -1593,12 +1576,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </table>
 </section>
 <section id="notes">
-<h2><a class="toc-backref" href="#id68" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id62" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>SDK Methods used are - sites.Sites.get_site - network_settings.NetworkSettings.retrieves_global_ip_address_pools - network_settings.NetworkSettings.retrieves_ip_address_subpools - network_settings.NetworkSettings.retrieve_d_h_c_p_settings_for_a_site - network_settings.NetworkSettings.retrieve_d_n_s_settings_for_a_site - network_settings.NetworkSettings.retrieve_telemetry_settings_for_a_site - network_settings.NetworkSettings.retrieve_n_t_p_settings_for_a_site - network_settings.NetworkSettings.retrieve_time_zone_settings_for_a_site - network_settings.NetworkSettings.retrieve_aaa_settings_for_a_site - network_settings.NetworkSettings.get_device_controllability_settings,</p></li>
-<li><p>Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/global-pool - GET /dna/intent/api/v1/reserve-pool - GET /dna/intent/api/v1/network - GET /dna/intent/api/v1/device-credential - GET /dna/intent/api/v1/network-aaa</p></li>
+<li><p>Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/ipam/globalIpAddressPools - GET /dna/intent/api/v1/ipam/siteIpAddressPools - GET /dna/intent/api/v1/network - GET /dna/intent/api/v1/device-credential - GET /dna/intent/api/v1/network-aaa</p></li>
 <li><p>Does not support <code class="docutils literal notranslate"><span class="pre">check_mode</span></code></p></li>
 <li><p>The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK</p></li>
 <li><p>The parameters starting with dnac_ are used by the Cisco Catalyst Center Python SDK to establish the connection</p></li>
@@ -1606,9 +1589,9 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </div>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id69" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate YAML Configuration with default file path</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with default file path</span>
+<h2><a class="toc-backref" href="#id63" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-discovery mode: config omitted, all supported components discovered internally.</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with auto-discovery</span>
 <span class="w">  </span><span class="nt">cisco.dnac.network_settings_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1620,11 +1603,9 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;global_pool_details&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for specific sites</span>
+<span class="c1"># Filtered mode: config provided with required component_specific_filters.</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for selected components</span>
 <span class="w">  </span><span class="nt">cisco.dnac.network_settings_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
@@ -1636,72 +1617,23 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 <span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/network_settings_config.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/network_settings_config.yml&quot;</span>
-<span class="w">      </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
 <span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;reserve_pool_details&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration using explicit components list</span>
-<span class="w">  </span><span class="nt">cisco.dnac.network_settings_playbook_config_generator</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/network_settings_config.yml&quot;</span>
-<span class="w">      </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
-<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;network_management_details&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for global pools with no filters</span>
-<span class="w">  </span><span class="nt">cisco.dnac.network_settings_playbook_config_generator</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/network_settings_config.yml&quot;</span>
-<span class="w">      </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
-<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;device_controllability_details&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration for reserve pools using site hierarchy</span>
-<span class="w">  </span><span class="nt">cisco.dnac.network_settings_playbook_config_generator</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_host</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_username</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_password</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_verify</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_port</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_version</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_debug</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span><span class="nv">dnac_log_level</span><span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/reserve_pools_usa.yml&quot;</span>
-<span class="w">      </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;append&quot;</span>
-<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;reserve_pool_details&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;global_pool_details&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;reserve_pool_details&quot;</span>
+<span class="w">        </span><span class="nt">global_pool_details</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pool_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global_Pool_1&quot;</span>
+<span class="w">            </span><span class="nt">pool_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Generic&quot;</span>
 <span class="w">        </span><span class="nt">reserve_pool_details</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">site_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="return-values">
-<h2><a class="toc-backref" href="#id70" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id64" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible v13)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="ansible-option-table docutils align-default" style="width: 100%">
 <thead>
@@ -1716,7 +1648,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary with the response returned by the Cisco Catalyst Center Python SDK</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id59"><span class="problematic" id="id60">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;configurations\_generated&quot;: 15, &quot;file\_path&quot;: &quot;/tmp/network\_settings\_config.yml&quot;, &quot;message&quot;: &quot;YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [{&quot;component&quot;: &quot;network\_management\_details&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;NETWORK\_MGMT\_NOT\_CONFIGURED&quot;, &quot;error\_message&quot;: &quot;Network management not configured for this site&quot;, &quot;error\_type&quot;: &quot;api\_error&quot;}, &quot;site\_name&quot;: &quot;Global/USA/NewYork&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;sites\_with\_complete\_failure&quot;: [], &quot;sites\_with\_complete\_success&quot;: [&quot;Global/India/Mumbai&quot;, &quot;Global/India/Delhi&quot;], &quot;sites\_with\_partial\_success&quot;: [&quot;Global/USA/NewYork&quot;], &quot;success\_details&quot;: [{&quot;component&quot;: &quot;global\_pool\_details&quot;, &quot;pools\_processed&quot;: 5, &quot;site\_name&quot;: &quot;Global/India/Mumbai&quot;, &quot;status&quot;: &quot;success&quot;}], &quot;total\_components\_processed&quot;: 25, &quot;total\_failed\_operations&quot;: 3, &quot;total\_sites\_processed&quot;: 3, &quot;total\_successful\_operations&quot;: 22}}}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id53"><span class="problematic" id="id54">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;configurations\_generated&quot;: 15, &quot;file\_path&quot;: &quot;/tmp/network\_settings\_config.yml&quot;, &quot;message&quot;: &quot;YAML config generation succeeded for module 'network\_settings\_workflow\_manager'.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [{&quot;component&quot;: &quot;network\_management\_details&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;NETWORK\_MGMT\_NOT\_CONFIGURED&quot;, &quot;error\_message&quot;: &quot;Network management not configured for this site&quot;, &quot;error\_type&quot;: &quot;api\_error&quot;}, &quot;site\_name&quot;: &quot;Global/USA/NewYork&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;sites\_with\_complete\_failure&quot;: [], &quot;sites\_with\_complete\_success&quot;: [&quot;Global/India/Mumbai&quot;, &quot;Global/India/Delhi&quot;], &quot;sites\_with\_partial\_success&quot;: [&quot;Global/USA/NewYork&quot;], &quot;success\_details&quot;: [{&quot;component&quot;: &quot;global\_pool\_details&quot;, &quot;pools\_processed&quot;: 5, &quot;site\_name&quot;: &quot;Global/India/Mumbai&quot;, &quot;status&quot;: &quot;success&quot;}], &quot;total\_components\_processed&quot;: 25, &quot;total\_failed\_operations&quot;: 3, &quot;total\_sites\_processed&quot;: 3, &quot;total\_successful\_operations&quot;: 22}}}`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -1725,7 +1657,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary with the response when no configurations are found</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id61"><span class="problematic" id="id62">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;response&quot;: {&quot;message&quot;: &quot;No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [], &quot;sites\_with\_complete\_failure&quot;: [], &quot;sites\_with\_complete\_success&quot;: [], &quot;sites\_with\_partial\_success&quot;: [], &quot;success\_details&quot;: [], &quot;total\_components\_processed&quot;: 0, &quot;total\_failed\_operations&quot;: 0, &quot;total\_sites\_processed&quot;: 0, &quot;total\_successful\_operations&quot;: 0}}}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id55"><span class="problematic" id="id56">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;response&quot;: {&quot;message&quot;: &quot;No configurations or components to process for module 'network\_settings\_workflow\_manager'. Verify input filters or configuration.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [], &quot;sites\_with\_complete\_failure&quot;: [], &quot;sites\_with\_complete\_success&quot;: [], &quot;sites\_with\_partial\_success&quot;: [], &quot;success\_details&quot;: [], &quot;total\_components\_processed&quot;: 0, &quot;total\_failed\_operations&quot;: 0, &quot;total\_sites\_processed&quot;: 0, &quot;total\_successful\_operations&quot;: 0}}}`</span></a></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -1734,7 +1666,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-network-
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary with error details when YAML generation fails</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id63"><span class="problematic" id="id64">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation failed for module 'network\_settings\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;file\_path&quot;: &quot;/tmp/network\_settings\_config.yml&quot;, &quot;message&quot;: &quot;YAML config generation failed for module 'network\_settings\_workflow\_manager'.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [{&quot;component&quot;: &quot;global\_pool\_details&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;SITE\_NOT\_FOUND&quot;, &quot;error\_message&quot;: &quot;Site not found or not accessible&quot;, &quot;error\_type&quot;: &quot;site\_not\_found&quot;}, &quot;site\_name&quot;: &quot;Global/USA/NewYork&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;sites\_with\_complete\_failure&quot;: [&quot;Global/USA/NewYork&quot;], &quot;sites\_with\_complete\_success&quot;: [], &quot;sites\_with\_partial\_success&quot;: [&quot;Global/India/Mumbai&quot;], &quot;success\_details&quot;: [], &quot;total\_components\_processed&quot;: 10, &quot;total\_failed\_operations&quot;: 5, &quot;total\_sites\_processed&quot;: 2, &quot;total\_successful\_operations&quot;: 5}}}`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id57"><span class="problematic" id="id58">:ansible-rv-sample-value:`{&quot;msg&quot;: &quot;YAML config generation failed for module 'network\_settings\_workflow\_manager'.&quot;, &quot;response&quot;: {&quot;file\_path&quot;: &quot;/tmp/network\_settings\_config.yml&quot;, &quot;message&quot;: &quot;YAML config generation failed for module 'network\_settings\_workflow\_manager'.&quot;, &quot;operation\_summary&quot;: {&quot;failure\_details&quot;: [{&quot;component&quot;: &quot;global\_pool\_details&quot;, &quot;error\_info&quot;: {&quot;error\_code&quot;: &quot;SITE\_NOT\_FOUND&quot;, &quot;error\_message&quot;: &quot;Site not found or not accessible&quot;, &quot;error\_type&quot;: &quot;site\_not\_found&quot;}, &quot;site\_name&quot;: &quot;Global/USA/NewYork&quot;, &quot;status&quot;: &quot;failed&quot;}], &quot;sites\_with\_complete\_failure&quot;: [&quot;Global/USA/NewYork&quot;], &quot;sites\_with\_complete\_success&quot;: [], &quot;sites\_with\_partial\_success&quot;: [&quot;Global/India/Mumbai&quot;], &quot;success\_details&quot;: [], &quot;total\_components\_processed&quot;: 10, &quot;total\_failed\_operations&quot;: 5, &quot;total\_sites\_processed&quot;: 2, &quot;total\_successful\_operations&quot;: 5}}}`</span></a></p>
 </div></td>
 </tr>
 </tbody>
