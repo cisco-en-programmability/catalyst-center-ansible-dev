@@ -135,8 +135,6 @@ Parameters
 
       A dictionary of filters for generating YAML playbook compatible with the \`template\_workflow\_manager\` module.
 
-      Filters specify which components to include in the YAML configuration file.
-
       If config is not provided or empty, all configurations for all projects and templates will be generated.
 
       This is useful for complete brownfield infrastructure discovery and documentation.
@@ -1505,7 +1503,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\",\\n    \\"response\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\"\\n}\\n"`
 
 
       .. raw:: html

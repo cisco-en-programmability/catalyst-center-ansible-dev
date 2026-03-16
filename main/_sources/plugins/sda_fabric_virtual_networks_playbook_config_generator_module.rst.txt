@@ -69,7 +69,7 @@ Synopsis
 .. Description
 
 - Generates YAML configurations compatible with the \ :literal:`sda\_fabric\_virtual\_networks\_workflow\_manager`\  module, reducing the effort required to manually create Ansible playbooks and enabling programmatic modifications.
-- The YAML configurations generated represent the fabric vlans, virtual networks and anycast gateways configured on the Cisco Catalyst Center.
+- The YAML configurations generated represent Fabric VLANs, Virtual Networks, and Anycast Gateways configured on Cisco Catalyst Center.
 
 
 .. Aliases
@@ -123,7 +123,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -133,11 +133,13 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A dictionary of filters for generating YAML playbook compatible with the \`sda\_fabric\_virtual\_networks\_workflow\_manager\` module.
+      A dictionary of filters for generating YAML playbook compatible with the \ :literal:`sda\_fabric\_virtual\_networks\_workflow\_manager`\  module.
 
       Filters specify which components to include in the YAML configuration file.
 
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of the filters.
+      If config is not provided or empty, all configurations for all Fabric VLANs, Virtual Networks, and Anycast Gateways will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -173,7 +175,9 @@ Parameters
 
       Filters to specify which components to include in the YAML configuration file.
 
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
+      If filters for specific components (for example, \ :literal:`fabric\_vlan`\ , \ :literal:`virtual\_networks`\ , or \ :literal:`anycast\_gateways`\ ) are provided without explicitly including them in components\_list, those components are automatically added to components\_list.
+
+      At least one of components\_list or component filters must be provided.
 
 
       .. raw:: html
@@ -380,11 +384,11 @@ Parameters
 
       List of components to include in the YAML configuration file.
 
-      Valid values are - Fabric VLANs \ :literal:`fabric\_vlan`\  - Virtual Networks \ :literal:`virtual\_networks`\  - Anycast Gateways \ :literal:`anycast\_gateways`\ 
-
       For example, ["fabric\_vlan", "virtual\_networks", "anycast\_gateways"].
 
-      If not specified, all components are included.
+      If not specified but component specific filters are provided, those components are automatically added to this list.
+
+      If neither components\_list nor any component filters are provided, an error will be raised.
 
 
       .. rst-class:: ansible-option-line
@@ -572,140 +576,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`sda\_fabric\_virtual\_networks\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-20\_13-45-05.yml`\ .
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to \ :literal:`true`\ , automatically generates YAML configurations for all the fabric vlans, virtual networks and anycast gateways present in the Cisco Catalyst Center, ignoring any provided filters.
-
-      When enabled, the config parameter becomes optional and will use default values if not provided.
-
-      A default filename will be generated automatically if file\_path is not specified.
-
-      This is useful for complete playbook configuration infrastructure discovery and documentation.
-
-      When set to false, the module uses provided filters to generate a targeted YAML configuration.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1243,6 +1113,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      This parameter is only relevant when \ :literal:`file\_path`\  is specified. Defaults to \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`sda\_fabric\_virtual\_networks\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`sda\_fabric\_virtual\_networks\_playbook\_config\_2026-02-20\_13-45-05.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator_module__parameter-state:
@@ -1333,8 +1289,39 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - sites.Sites.get\_site - site\_design.SiteDesigns.get\_sites - sda.Sda.get\_layer2\_virtual\_networks - sda.Sda.get\_layer3\_virtual\_networks - sda.Sda.get\_anycast\_gateways - sda.Sda.get\_fabric\_sites - sda.Sda.get\_fabric\_zones - sda.Sda.get\_fabric\_sites\_by\_id - sda.Sda.get\_fabric\_zones\_by\_id
-   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/sda/layer2-virtual-networks - GET /dna/intent/api/v1/sda/layer3-virtual-networks - GET /dna/intent/api/v1/sda/anycast-gateways - GET /dna/intent/api/v1/sda/fabric-sites - GET /dna/intent/api/v1/sda/fabric-zones - GET /dna/intent/api/v1/sda/fabric-sites/{id} - GET /dna/intent/api/v1/sda/fabric-zones/{id}
+   - Cisco Catalyst Center \>= 2.3.7.9
+   - SDK Methods used are
+     sites.Sites.get\_site
+     site\_design.SiteDesigns.get\_sites
+     sda.Sda.get\_layer2\_virtual\_networks
+     sda.Sda.get\_layer3\_virtual\_networks
+     sda.Sda.get\_anycast\_gateways
+     sda.Sda.get\_fabric\_sites
+     sda.Sda.get\_fabric\_zones
+     sda.Sda.get\_fabric\_sites\_by\_id
+     sda.Sda.get\_fabric\_zones\_by\_id
+   - SDK Paths used are
+     GET /dna/intent/api/v1/sites
+     GET /dna/intent/api/v1/sda/layer2-virtual-networks
+     GET /dna/intent/api/v1/sda/layer3-virtual-networks
+     GET /dna/intent/api/v1/sda/anycast-gateways
+     GET /dna/intent/api/v1/sda/fabric-sites
+     GET /dna/intent/api/v1/sda/fabric-zones
+     GET /dna/intent/api/v1/sda/fabric-sites/{id}
+     GET /dna/intent/api/v1/sda/fabric-zones/{id}
+   - Auto-population of components\_list:
+     If component-specific filters (such as 'fabric\_vlan', 'virtual\_networks', or
+     'anycast\_gateways') are provided without explicitly including them in
+     'components\_list', those components will be automatically added to
+     'components\_list'. This simplifies configuration by eliminating the need to
+     redundantly specify components in both places.
+
+   - Validation requirements:
+     If 'component\_specific\_filters' is provided, at least one of the following must be true:
+     (1) 'components\_list' contains at least one component, OR
+     (2) Component-specific filters are provided.
+     If neither condition is met, the module will fail with a validation error.
+
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1357,126 +1344,122 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Auto-generate YAML Configuration for all components which
-         includes fabric vlans, virtual networks and anycast gateways.
+    - name: Auto-generate YAML Configuration for all components which includes Fabric VLANs, Virtual Networks, and Anycast Gateways
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_mode: "overwrite"
+        # No config provided - generates all configurations
 
     - name: Generate YAML Configuration with File Path specified
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_path: "/tmp/all_config.yml"
-          file_mode: "overwrite"
+        file_path: "tmp/all_configurations.yml"
+        file_mode: "overwrite"
+        # No config provided - generates all configurations
 
-    - name: Generate YAML Configuration with specific fabric vlan components only
+    - name: Generate YAML Configuration with specific Fabric VLAN components only
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_fabric_vlan_components_config.yml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/catc_fabric_vlan_components_config.yml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["fabric_vlan"]
 
-    - name: Generate YAML Configuration with specific virtual networks components only
+    - name: Generate YAML Configuration with specific Virtual Network components only
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_virtual_networks_components_config.yml"
         config:
-          file_path: "/tmp/catc_virtual_networks_components_config.yml"
           component_specific_filters:
             components_list: ["virtual_networks"]
 
-    - name: Generate YAML Configuration with specific anycast gateways components only
+    - name: Generate YAML Configuration with specific Anycast Gateway components only
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
 
-    - name: Generate YAML Configuration for fabric vlans with vlan name filter
+    - name: Generate YAML Configuration for Fabric VLANs with VLAN name filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_fabric_vlans_components_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_vlans_components_config.yml"
           component_specific_filters:
-            components_list: ["fabric_vlan"]
+            components_list: ["fabric_vlan"] # Optional
             fabric_vlan:
               - vlan_name: "vlan_1"
               - vlan_name: "vlan_2"
 
-    - name: Generate YAML Configuration for fabric vlans and virtual networks with multiple filters
+    - name: Generate YAML Configuration for Fabric VLANs and Virtual Networks with multiple filters
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_multiple_components_config.yml"
         config:
-          file_path: "/tmp/catc_multiple_components_config.yml"
           component_specific_filters:
             components_list: ["fabric_vlan", "virtual_networks"]
             fabric_vlan:
@@ -1488,55 +1471,55 @@ Examples
 
     - name: Generate YAML Configuration for all components with no filters
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_all_components_config.yml"
         config:
-          file_path: "/tmp/catc_all_components_config.yml"
           component_specific_filters:
             components_list: ["fabric_vlan", "virtual_networks", "anycast_gateways"]
 
-    - name: Generate YAML Configuration for fabric vlans with VLAN IDs filter
+    - name: Generate YAML Configuration for Fabric VLANs with VLAN ID filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_fabric_vlan_components_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_vlan_components_config.yml"
           component_specific_filters:
             components_list: ["fabric_vlan"]
             fabric_vlan:
               - vlan_id: 1031
               - vlan_id: 1038
 
-    - name: Generate YAML Configuration for fabric vlans with both VLAN name and ID filters
+    - name: Generate YAML Configuration for Fabric VLANs with both VLAN name and VLAN ID filters
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_fabric_vlan_components_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_vlan_components_config.yml"
           component_specific_filters:
             components_list: ["fabric_vlan"]
             fabric_vlan:
@@ -1545,80 +1528,80 @@ Examples
               - vlan_name: "Chennai-VN9-Pool2"
                 vlan_id: 1038
 
-    - name: Generate YAML Configuration for virtual networks with specific VN names
+    - name: Generate YAML Configuration for Virtual Networks with specific VN names
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_virtual_networks_components_config.yml"
         config:
-          file_path: "/tmp/catc_virtual_networks_components_config.yml"
           component_specific_filters:
             components_list: ["virtual_networks"]
             virtual_networks:
               - vn_name: "VN1"
               - vn_name: "VN3"
 
-    - name: Generate YAML Configuration for anycast gateways with VN name filter
+    - name: Generate YAML Configuration for Anycast Gateways with VN name filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
-            components_list: ["anycast_gateways"]
+            components_list: ["anycast_gateways"] # Optional
             anycast_gateways:
               - vn_name: "Chennai_VN1"
               - vn_name: "Chennai_VN3"
 
-    - name: Generate YAML Configuration for anycast gateways with IP pool name filter
+    - name: Generate YAML Configuration for Anycast Gateways with IP pool name filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
             anycast_gateways:
               - ip_pool_name: "Chennai-VN3-Pool1"
               - ip_pool_name: "Chennai-VN1-Pool2"
 
-    - name: Generate YAML Configuration for anycast gateways with VLAN ID and IP pool filter
+    - name: Generate YAML Configuration for Anycast Gateways with VLAN ID and IP pool filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
             anycast_gateways:
@@ -1626,40 +1609,40 @@ Examples
               - vlan_id: 1033
               - ip_pool_name: "Chennai-VN1-Pool2"
 
-    - name: Generate YAML Configuration for anycast gateways with VLAN name filter
+    - name: Generate YAML Configuration for Anycast Gateways with VLAN name filter
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
             anycast_gateways:
               - vlan_name: "Chennai-VN1-Pool2"
               - vlan_name: "Chennai-VN7-Pool1"
 
-    - name: Generate YAML Configuration for anycast gateways with VLAN name and ID combination
+    - name: Generate YAML Configuration for Anycast Gateways with VLAN name and VLAN ID combination
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
             anycast_gateways:
@@ -1668,20 +1651,20 @@ Examples
               - vlan_name: "Chennai-VN7-Pool1"
                 vlan_id: 1033
 
-    - name: Generate YAML Configuration for anycast gateways with comprehensive filters
+    - name: Generate YAML Configuration for Anycast Gateways with comprehensive filters
       cisco.dnac.sda_fabric_virtual_networks_playbook_config_generator:
-        dnac_host: "{{dnac_host}}"
-        dnac_username: "{{dnac_username}}"
-        dnac_password: "{{dnac_password}}"
-        dnac_verify: "{{dnac_verify}}"
-        dnac_port: "{{dnac_port}}"
-        dnac_version: "{{dnac_version}}"
-        dnac_debug: "{{dnac_debug}}"
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
-        dnac_log_level: "{{dnac_log_level}}"
+        dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "tmp/catc_anycast_gateways_components_config.yml"
         config:
-          file_path: "/tmp/catc_anycast_gateways_components_config.yml"
           component_specific_filters:
             components_list: ["anycast_gateways"]
             anycast_gateways:
@@ -1798,7 +1781,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\",\\n    \\"response\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\"\\n}\\n"`
 
 
       .. raw:: html

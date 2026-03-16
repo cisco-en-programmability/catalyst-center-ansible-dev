@@ -122,7 +122,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -136,7 +136,9 @@ Parameters
 
       Filters specify which components to include in the YAML configuration file.
 
-      If "components\_list" is specified, only those components are included, regardless of the filters.
+      If config is not provided or empty, all configurations for sda fabric transits will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -172,7 +174,9 @@ Parameters
 
       Filters to specify which components to include in the YAML configuration file.
 
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
+      If filters for specific components (e.g., sda\_fabric\_transits) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
+
+      At least one of components\_list or component filters must be provided.
 
 
       .. raw:: html
@@ -331,140 +335,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`sda\_fabric\_transits\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`sda\_fabric\_transits\_playbook\_config\_2026-02-20\_13-48-23.yml`\ .
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to \ :literal:`true`\ , automatically generates YAML configurations for all the fabric transits present in the Cisco Catalyst Center, ignoring any provided filters.
-
-      When enabled, the config parameter becomes optional and will use default values if not provided.
-
-      A default filename will be generated automatically if file\_path is not specified.
-
-      This is useful for complete playbook configuration infrastructure discovery and documentation.
-
-      When set to false, the module uses provided filters to generate a targeted YAML configuration.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1002,6 +872,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      This parameter is only relevant when \ :literal:`file\_path`\  is specified. Defaults to \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name  \ :literal:`sda\_fabric\_transits\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`sda\_fabric\_transits\_playbook\_config\_2026-02-20\_13-48-23.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.sda_fabric_transits_playbook_config_generator_module__parameter-state:
@@ -1092,8 +1048,31 @@ Notes
 -----
 
 .. note::
-   - SDK Methods used are - sites.Sites.get\_site - sda.Sda.get\_transit\_networks - network\_device.NetworkDevice.get\_device\_list
-   - Paths used are - GET /dna/intent/api/v1/sites - GET /dna/intent/api/v1/sda/transit-networks - GET /dna/intent/api/v1/network-device
+   - Cisco Catalyst Center \>= 2.3.7.9
+   - SDK Methods used are
+     sites.Sites.get\_site
+     sda.Sda.get\_transit\_networks
+     network\_device.NetworkDevice.get\_device\_list
+   - SDK Paths used are
+     GET /dna/intent/api/v1/sites
+     GET /dna/intent/api/v1/network-device
+   - Auto-population of components\_list:
+     If component-specific filters (such as 'sda\_fabric\_transits') are provided
+     without explicitly including them in 'components\_list', those components will be
+     automatically added to 'components\_list'. This simplifies configuration by eliminating
+     the need to redundantly specify components in both places.
+
+   - Example of auto-population behavior:
+     If you provide filters for 'sda\_fabric\_transits' without including 'sda\_fabric\_transits' in 'components\_list',
+     the module will automatically add 'sda\_fabric\_transits' to 'components\_list' before processing.
+     This allows you to write more concise playbooks.
+
+   - Validation requirements:
+     If 'component\_specific\_filters' is provided, at least one of the following must be true:
+     (1) 'components\_list' contains at least one component, OR
+     (2) Component-specific filters (e.g., 'sda\_fabric\_transits') are provided.
+     If neither condition is met, the module will fail with a validation error.
+
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1128,9 +1107,7 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_mode: "overwrite"
+        # No config provided - generates all configurations
 
     - name: Generate YAML Configuration with File Path specified
       cisco.dnac.sda_fabric_transits_playbook_config_generator:
@@ -1144,10 +1121,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_path: "/tmp/all_config.yml"
-          file_mode: "overwrite"
+        file_path: "/tmp/all_config.yml"
+        file_mode: "overwrite"
+        # No config provided - generates all configurations
 
     - name: Generate YAML Configuration with specific fabric transits components only
       cisco.dnac.sda_fabric_transits_playbook_config_generator:
@@ -1161,9 +1137,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_fabric_transits_config.yml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/catc_fabric_transits_config.yml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["sda_fabric_transits"]
 
@@ -1179,10 +1155,10 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_fabric_transits_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_transits_config.yml"
           component_specific_filters:
-            components_list: ["sda_fabric_transits"]
+            components_list: ["sda_fabric_transits"] # Optional
             sda_fabric_transits:
               - transit_type: "IP_BASED_TRANSIT"
               - transit_type: "SDA_LISP_BGP_TRANSIT"
@@ -1199,10 +1175,10 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_fabric_transits_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_transits_config.yaml"
           component_specific_filters:
-            components_list: ["sda_fabric_transits"]
+            components_list: ["sda_fabric_transits"] # Optional
             sda_fabric_transits:
               - name: "Transit1"
               - name: "Transit2"
@@ -1219,10 +1195,10 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_fabric_transits_config.yml"
         config:
-          file_path: "/tmp/catc_fabric_transits_config.yaml"
           component_specific_filters:
-            components_list: ["sda_fabric_transits"]
+            components_list: ["sda_fabric_transits"] # Optional
             sda_fabric_transits:
               - name: "Transit1"
                 transit_type: "IP_BASED_TRANSIT"
@@ -1333,7 +1309,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\",\\n    \\"response\\":\\n        \\"Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n    \\"msg\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\",\\n    \\"response\\":\\n        \\"Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\"\\n}\\n"`
 
 
       .. raw:: html

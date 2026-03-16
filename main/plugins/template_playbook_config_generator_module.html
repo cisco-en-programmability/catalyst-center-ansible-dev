@@ -1284,7 +1284,6 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-template
 <a class="ansibleOptionLink" href="#parameter-config" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary of filters for generating YAML playbook compatible with the `template_workflow_manager` module.</p>
-<p>Filters specify which components to include in the YAML configuration file.</p>
 <p>If config is not provided or empty, all configurations for all projects and templates will be generated.</p>
 <p>This is useful for complete brownfield infrastructure discovery and documentation.</p>
 <p>IMPORTANT NOTE - When config is not provided or empty, it will only retrieve committed templates. It does not include uncommitted templates. To include uncommitted templates, use the appropriate filters such as include_uncommitted under configuration_templates in component_specific_filters.</p>
@@ -1803,7 +1802,7 @@ If neither condition is met, the module will fail with a validation error.</p></
 </div></td>
 <td><div class="ansible-option-cell"><p>A string with the response returned by the Cisco Catalyst Center Python SDK</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> always</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id51"><span class="problematic" id="id52">:ansible-rv-sample-value:`&quot;{\\n    \\&quot;msg\\&quot;:\\n        \\&quot;Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\&quot;,\\n    \\&quot;response\\&quot;:\\n        \\&quot;Validation Error: 'component\_specific\_filters' must be provided with 'components\_list' key\\n         when 'generate\_all\_configurations' is set to False.\\&quot;\\n}\\n&quot;`</span></a></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <a href="#id51"><span class="problematic" id="id52">:ansible-rv-sample-value:`&quot;{\\n    \\&quot;msg\\&quot;:\\n        \\&quot;Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\&quot;,\\n    \\&quot;response\\&quot;:\\n        \\&quot;Validation Error: component\_specific\_filters is provided but no components are specified.\\n         Either provide 'components\_list' with at least one component, or provide filters for specific components.\\&quot;\\n}\\n&quot;`</span></a></p>
 </div></td>
 </tr>
 </tbody>
