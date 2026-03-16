@@ -133,7 +133,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -145,11 +145,9 @@ Parameters
 
       A dictionary of configuration parameters for generating YAML playbooks compatible with the \ :literal:`assurance\_device\_health\_score\_settings\_workflow\_manager`\  module.
 
-      Defines filters to specify which device families and KPI settings to include in the generated YAML configuration file.
+      If not provided, module performs internal auto-discovery for all supported configurations.
 
-      Supports auto-discovery mode to automatically extract all configured device health score settings without manual filter specification.
-
-      When \ :literal:`generate\_all\_configurations`\  is enabled, filter parameters become optional and defaults are applied automatically.
+      If provided, \ :literal:`component\_specific\_filters`\  is mandatory.
 
 
       .. raw:: html
@@ -173,7 +171,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -183,15 +181,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Dictionary of filters to specify which device families and KPI settings to include in the generated YAML configuration file.
+      Required when \ :literal:`config`\  is provided.
 
-      Allows granular selection of specific device families and their associated KPI configurations.
-
-      If not specified and \ :literal:`generate\_all\_configurations`\  is \ :literal:`false`\ , all configured device health score settings will be extracted.
-
-      Supports both modern nested structure (\ :literal:`device\_health\_score\_settings`\ ) and legacy flat structure (\ :literal:`device\_families`\ ) for backward compatibility.
-
-      Can contain \ :literal:`components\_list`\  to specify which components to process, \ :literal:`device\_families`\  for direct device family filtering, or nested \ :literal:`device\_health\_score\_settings`\  for component-specific filtering.
+      If a component filter is specified but missing in \ :literal:`components\_list`\ , the component is auto-added internally.
 
 
       .. raw:: html
@@ -225,15 +217,11 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      List of component types to extract from Catalyst Center.
+      List of specific components to include in generated YAML.
 
-      Currently supports only \ :literal:`device\_health\_score\_settings`\  component.
+      Empty list means no component selected unless explicit component filters are provided.
 
-      When specified without nested \ :literal:`device\_health\_score\_settings`\  filters, extracts all device families for the specified component.
-
-      Determines which component processing workflows to execute during YAML generation.
-
-      Future versions may support additional component types for expanded brownfield extraction capabilities.
+      Conditionally required when no component filter is provided.
 
 
       .. rst-class:: ansible-option-line
@@ -346,148 +334,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path where the generated YAML configuration file will be saved.
-
-      If not provided, the module generates a default filename in the current working directory with the format \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      Example default filename \ :literal:`assurance\_device\_health\_score\_settings\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
-
-      The directory path will be created automatically if it does not exist.
-
-      Supports both absolute paths (\ :literal:`/tmp/config.yml`\ ) and relative paths (\ :literal:`./configs/health\_score.yml`\ ).
-
-      File will be overwritten if it already exists at the specified path.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Enables auto-discovery mode to automatically generate YAML configurations for all device families and all available KPI settings configured in Cisco Catalyst Center.
-
-      When enabled (\ :literal:`true`\ ), the module discovers all device health score settings without requiring manual filter specification.
-
-      Overrides any provided \ :literal:`component\_specific\_filters`\  to ensure complete infrastructure discovery.
-
-      Useful for brownfield documentation, infrastructure audits, and comprehensive configuration backups.
-
-      When enabled with no \ :literal:`file\_path`\  specified, generates a default timestamped filename in the current working directory.
-
-      Setting to \ :literal:`false`\  requires explicit filter specification via \ :literal:`component\_specific\_filters`\  for targeted extraction.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1025,6 +871,86 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      File write mode for YAML output.
+
+      Relevant only when \ :literal:`file\_path`\  is provided.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Output YAML file path.
+
+      If not provided, a default filename is generated by the brownfield helper file-name function.
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.assurance_device_health_score_settings_playbook_config_generator_module__parameter-state:
@@ -1126,7 +1052,7 @@ Notes
    - The module executes multiple API calls with \ :literal:`includeForOverallHealth`\  parameter variations (true and false) to ensure complete KPI data extraction.
    - When device families are specified, separate API calls are made for each device family for optimal performance and data filtering.
    - Operation summaries include detailed success/failure statistics with device family categorization for troubleshooting and validation.
-   - Supports both auto-discovery mode (\ :literal:`generate\_all\_configurations=true`\ ) for complete infrastructure extraction and targeted mode with filters for specific components.
+   - Supports both internal auto-discovery mode (when \ :literal:`config`\  is omitted) and targeted mode (when \ :literal:`component\_specific\_filters`\  is provided).
    - Check mode is supported but does not perform actual YAML file generation; it validates parameters and returns expected operation results.
    - The module is idempotent; running multiple times with the same parameters generates identical YAML content (except generation timestamp in header).
    - Generated YAML files can be used directly with \ :literal:`assurance\_device\_health\_score\_settings\_workflow\_manager`\  module to apply configurations to other Catalyst Center instances.
@@ -1170,9 +1096,6 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_mode: "overwrite"
 
     - name: Generate YAML Configuration with custom file path
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1186,10 +1109,11 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "tmp/assurance_health_score_settings.yml"
+        file_mode: overwrite
         config:
-          file_path: "tmp/assurance_health_score_settings.yml"
-          generate_all_configurations: true
-          file_mode: "overwrite"
+          component_specific_filters:
+            components_list: ["device_health_score_settings"]
 
     - name: Generate YAML Configuration for all device health score components
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
@@ -1203,9 +1127,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/assurance_health_score_settings.yml"
+        file_mode: overwrite
         config:
-          file_path: "/tmp/assurance_health_score_settings.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["device_health_score_settings"]
 
@@ -1221,15 +1145,15 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/specific_device_health_score_settings.yml"
+        file_mode: overwrite
         config:
-          file_path: "/tmp/specific_device_health_score_settings.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["device_health_score_settings"]
             device_health_score_settings:
               device_families: ["UNIFIED_AP", "ROUTER", "SWITCH_AND_HUB", "WIRELESS_CONTROLLER"]
 
-    - name: Generate YAML Configuration using legacy filter format
+    - name: Generate YAML Configuration with implicit component auto-add
       cisco.dnac.assurance_device_health_score_settings_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1241,11 +1165,10 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/implicit_component_device_health_score_settings.yml"
+        file_mode: append
         config:
-          file_path: "/tmp/legacy_device_health_score_settings.yml"
-          file_mode: "append"
           component_specific_filters:
-            components_list: ["device_health_score_settings"]
             device_health_score_settings:
               device_families: ["UNIFIED_AP", "ROUTER"]
 
@@ -1567,7 +1490,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_families, device\_health\_score\_settings.", "response": {"message": "Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_families, device\_health\_score\_settings."}}`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_health\_score\_settings.", "response": {"message": "Invalid component\_specific\_filters parameter(s) found: invalid\_param. Allowed parameters are: components\_list, device\_health\_score\_settings."}}`
 
 
       .. raw:: html
