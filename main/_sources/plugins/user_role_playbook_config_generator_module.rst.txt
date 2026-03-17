@@ -126,7 +126,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -138,9 +138,11 @@ Parameters
 
       A dictionary of filters for generating YAML playbook compatible with the \ :literal:`user\_role\_workflow\_manager`\  module.
 
-      Filters specify which components to include in the YAML configuration file.
+      If \ :literal:`config`\  is omitted, module internally sets \ :literal:`generate\_all\_configurations=true`\  and retrieves all supported components.
 
-      Supports filtering by username, email, role name, or component type to generate selective configurations.
+      If \ :literal:`config`\  is provided, \ :literal:`component\_specific\_filters`\  is mandatory.
+
+      Under \ :literal:`config`\ , only \ :literal:`component\_specific\_filters`\  is allowed.
 
 
       .. raw:: html
@@ -176,13 +178,15 @@ Parameters
 
       Filters to specify which components to include in the YAML configuration file and criteria for filtering data.
 
+      Mandatory when \ :literal:`config`\  is provided.
+
       If \ :literal:`components\_list`\  is specified, only those components are included in the output file.
 
-      If \ :literal:`components\_list`\  is not specified, all supported components (user\_details and role\_details) are included.
+      If component filter blocks (for example \ :literal:`user\_details`\  or \ :literal:`role\_details`\ ) are provided, corresponding components are auto-added into \ :literal:`components\_list`\ .
+
+      If no component filter blocks are provided, \ :literal:`components\_list`\  must be provided and non-empty.
 
       Each component can have specific filters to select subset of configurations based on attributes.
-
-      Ignored when generate\_all\_configurations is set to \ :literal:`true`\ .
 
 
       .. raw:: html
@@ -220,7 +224,9 @@ Parameters
 
       Supported components are \ :literal:`user\_details`\  and \ :literal:`role\_details`\ .
 
-      If not specified, all components are included by default.
+      If component filter blocks are not specified, this option is mandatory and must be non-empty.
+
+      If component filter blocks are specified, missing components are auto-added.
 
       Order in the list does not affect output structure.
 
@@ -487,148 +493,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      File write mode for the generated YAML configuration file.
-
-      The overwrite option replaces existing file content with new content.
-
-      The append option adds new content to the end of existing file.
-
-      Defaults to overwrite if not specified.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path where the YAML configuration file will be saved.
-
-      If not provided, the file is saved in the current working directory with auto-generated filename.
-
-      Default filename pattern is \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`user\_role\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
-
-      The directory path must exist and be writable.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When set to \ :literal:`true`\ , automatically generates YAML configurations for all users and custom roles without requiring explicit filters.
-
-      Discovers all users and custom roles in Catalyst Center and extracts complete configurations.
-
-      System roles (SUPER-ADMIN, NETWORK-ADMIN, OBSERVER) and default roles are automatically excluded.
-
-      When True, any component\_specific\_filters provided in the playbook are ignored and all components are retrieved.
-
-      A default filename is generated automatically if \ :literal:`file\_path`\  is not specified using pattern \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      Useful for complete brownfield discovery, documentation, and disaster recovery planning.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1166,6 +1030,94 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      File write mode for the generated YAML configuration file.
+
+      The overwrite option replaces existing file content with new content.
+
+      The append option adds new content to the end of existing file.
+
+      Relevant only when \ :literal:`file\_path`\  is provided.
+
+      Defaults to overwrite if not specified.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Absolute or relative path where the YAML configuration file will be saved.
+
+      If not provided, the file is saved in the current working directory with auto-generated filename.
+
+      Default filename pattern is \ :literal:`user\_role\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.user_role_playbook_config_generator_module__parameter-state:
@@ -1304,9 +1256,7 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_path: "/tmp/catc_user_role_config.yaml"
+        file_path: "/tmp/catc_user_role_config.yaml"
 
     - name: Generate YAML Configuration with specific user components only
       cisco.dnac.user_role_playbook_config_generator:
@@ -1320,9 +1270,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_user_role_config.yaml"
+        file_mode: "overwrite"
         config:
-          file_path: "/tmp/catc_user_role_config.yaml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["user_details"]
 
@@ -1338,8 +1288,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_user_role_config.yaml"
         config:
-          file_path: "/tmp/catc_user_role_config.yaml"
           component_specific_filters:
             components_list: ["role_details"]
 
@@ -1355,8 +1305,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_user_role_config.yaml"
         config:
-          file_path: "/tmp/catc_user_role_config.yaml"
           component_specific_filters:
             components_list: ["user_details"]
             user_details:
@@ -1374,8 +1324,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_user_role_config.yaml"
         config:
-          file_path: "/tmp/catc_user_role_config.yaml"
           component_specific_filters:
             components_list: ["role_details"]
             role_details:
@@ -1393,8 +1343,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_user_role_config.yaml"
         config:
-          file_path: "/tmp/catc_user_role_config.yaml"
           component_specific_filters:
             components_list: ["user_details", "role_details"]
 
@@ -1410,8 +1360,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_users_by_email.yaml"
         config:
-          file_path: "/tmp/catc_users_by_email.yaml"
           component_specific_filters:
             components_list: ["user_details"]
             user_details:
@@ -1429,9 +1379,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_admin_users.yaml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/catc_admin_users.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["user_details"]
             user_details:
@@ -1449,8 +1399,8 @@ Examples
         dnac_log: true
         dnac_log_level: "{{dnac_log_level}}"
         state: gathered
+        file_path: "/tmp/catc_filtered_users.yaml"
         config:
-          file_path: "/tmp/catc_filtered_users.yaml"
           component_specific_filters:
             components_list: ["user_details"]
             user_details:
