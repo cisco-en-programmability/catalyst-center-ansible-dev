@@ -1190,6 +1190,12 @@ Notes
      (2) Component-specific filters (e.g., 'tag', 'tag\_memberships') are provided.
      If neither condition is met, the module will fail with a validation error.
 
+   - System tags filtering:
+     System tags (tags with systemTag=True) are automatically excluded from the generated YAML configuration.
+     These tags are managed by Cisco Catalyst Center and cannot be modified by users, so they are filtered out
+     to ensure the generated playbook only contains user-manageable tags. This filtering is applied regardless
+     of whether you're generating all tags or using specific filters.
+
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
