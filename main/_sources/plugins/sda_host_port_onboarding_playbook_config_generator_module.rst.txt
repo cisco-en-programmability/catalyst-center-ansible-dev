@@ -127,7 +127,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -137,11 +137,15 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      Configuration parameters for YAML playbook generation workflow.
+      A dictionary of filters for generating YAML playbook compatible with the \`sda\_host\_port\_onboarding\_workflow\_manager\` module.
 
-      Defines output file path, auto-discovery mode, and component-specific filters for targeted SDA host port onboarding extraction.
+      Filters specify which components to include in the YAML configuration file.
 
-      At least one of generate\_all\_configurations or component\_specific\_filters with components\_list must be specified to identify target configurations.
+      If "components\_list" is specified, only those components are included, regardless of the filters.
+
+      If config is not provided or is empty, all configurations for all port assignments, port channels and wireless SSIDs will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -175,13 +179,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Component-based filters for targeted SDA host port onboarding extraction.
+      Filters to specify which components to include in the YAML configuration file.
 
-      Requires components\_list to specify which components to process.
+      If "components\_list" is specified, only those components are included, regardless of other filters.
 
-      When generate\_all\_configurations is False, component\_specific\_filters with components\_list must be provided.
+      If filters for specific components (e.g., port\_assignments, port\_channels, or wireless\_ssids) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
 
-      Filters apply independently per component type (port assignments, port channels, wireless SSIDs).
+      At least one of components\_list or component filters must be provided.
 
 
       .. raw:: html
@@ -219,11 +223,11 @@ Parameters
 
       Valid values are 'port\_assignments' for interface port assignments, 'port\_channels' for port channel configurations, and 'wireless\_ssids' for wireless SSID mappings to VLANs within fabric sites.
 
-      If not specified when generate\_all\_configurations is False, validation fails requiring explicit component selection.
+      If specified, only the listed components will be included in the generated YAML file.
 
-      Multiple components can be specified for combined extraction.
+      If not specified but component filters (port\_assignments, port\_channels, or wireless\_ssids) are provided, those components are automatically added to this list.
 
-      For example, [port\_assignments, port\_channels, wireless\_ssids]
+      If neither components\_list nor any component filters are provided, an error will be raised.
 
 
       .. rst-class:: ansible-option-line
@@ -482,144 +486,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Controls how config is written to the YAML file.
-
-      \ :literal:`overwrite`\  replaces existing file content.
-
-      \ :literal:`append`\  appends generated YAML content to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path for YAML configuration file output.
-
-      If not provided, generates default filename in current working directory with pattern 'sda\_host\_port\_onboarding\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml'
-
-      Example default filename 'sda\_host\_port\_onboarding\_playbook\_config\_2026-02-27\_14-31-46.yml'
-
-      Directory created automatically if path does not exist.
-
-      Supports YAML file extension (.yml or .yaml).
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Enables auto-discovery mode for complete SDA fabric infrastructure extraction.
-
-      When True, extracts all port assignments, port channels, and wireless SSIDs for all fabric sites without filter restrictions.
-
-      Ignores component\_specific\_filters if provided; retrieves complete brownfield SDA host port onboarding inventory from Catalyst Center.
-
-      Automatically generates timestamped filename if file\_path not specified.
-
-      Useful for complete fabric documentation, configuration backup, and disaster recovery planning.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1157,6 +1023,94 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Absolute or relative path for YAML configuration file output.
+
+      If not provided, generates default filename in current working directory with pattern 'sda\_host\_port\_onboarding\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml'
+
+      Example default filename 'sda\_host\_port\_onboarding\_playbook\_config\_2026-02-27\_14-31-46.yml'
+
+      Directory created automatically if path does not exist.
+
+      Supports YAML file extension (.yml or .yaml).
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-state:
@@ -1256,6 +1210,9 @@ Notes
    - Device management IP addresses are resolved from device IDs for all port configurations enabling device-specific port onboarding playbooks.
    - Generated YAML uses OrderedDumper for consistent key ordering enabling version control.
    - Fabric site hierarchical paths must match exact Catalyst Center fabric site structure.
+   - Auto-population of components\_list: If component-specific filters (such as port\_assignments, port\_channels, or wireless\_ssids) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list. This simplifies configuration by eliminating the need to redundantly specify components in both places.
+   - Example of auto-population behavior: If you provide filters for port\_assignments without including port\_assignments in components\_list, the module will automatically add port\_assignments to components\_list before processing. This allows you to write more concise playbooks.
+   - Validation requirements: If component\_specific\_filters is provided, at least one of the following must be true - (1) components\_list contains at least one component, OR (2) Component-specific filters (e.g., port\_assignments, port\_channels, wireless\_ssids) are provided. If neither condition is met, the module will fail with a validation error.
    - Does not support \ :literal:`check\_mode`\ 
    - The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK
    - The parameters starting with dnac\_ are used by the Cisco Catalyst Center Python SDK to establish the connection
@@ -1278,7 +1235,8 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Generate YAML playbook for SDA host port onboarding workflow manager which includes all components
+    - name: Generate YAML playbook for host port onboarding workflow manager
+        which includes all fabric sites's host port onboarding details
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -1290,9 +1248,7 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_mode: "overwrite"
+        file_mode: "overwrite"
 
     - name: Generate YAML Configuration with File Path specified
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
@@ -1306,10 +1262,8 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
-        config:
-          generate_all_configurations: true
-          file_path: "sda_host_port_onboarding_config.yml"
-          file_mode: "overwrite"
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
 
     - name: Generate YAML Configuration with specific component port assignments filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
@@ -1323,18 +1277,16 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
         config:
-          generate_all_configurations: false
-          file_path: "port_assignments_config.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["port_assignments"]
             port_assignments:
               fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
-                - "Global/USA/RTP/Building2"
+                - "Global/Site_India/Karnataka/Bangalore"
 
-    - name: Generate YAML Configuration with port channels component
+    - name: Generate YAML Configuration with specific component port channels filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -1346,16 +1298,16 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "port_channels_config.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["port_channels"]
             port_channels:
               fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
+                - "Global/Site_India/Karnataka/Bangalore"
 
-    - name: Generate YAML Configuration with wireless SSIDs component
+    - name: Generate YAML Configuration with specific component wireless ssids filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -1367,42 +1319,14 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
         config:
-          file_path: "wireless_ssids_config.yml"
-          file_mode: "overwrite"
           component_specific_filters:
             components_list: ["wireless_ssids"]
             wireless_ssids:
               fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
-                - "Global/USA/RTP/Building2"
-
-    - name: Generate YAML Configuration with multiple components and fabric site filters
-      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
-        dnac_log: true
-        dnac_log_level: DEBUG
-        state: gathered
-        config:
-          file_path: "complete_sda_config.yml"
-          file_mode: "overwrite"
-          component_specific_filters:
-            components_list: ["port_assignments", "port_channels", "wireless_ssids"]
-            port_assignments:
-              fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
-            port_channels:
-              fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
-            wireless_ssids:
-              fabric_site_name_hierarchy:
-                - "Global/USA/San Jose/Building1"
+                - "Global/Site_India/Karnataka/Bangalore"
 
 
 
