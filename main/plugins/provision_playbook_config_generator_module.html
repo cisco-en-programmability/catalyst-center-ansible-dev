@@ -1302,6 +1302,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-provisio
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of components to include in the YAML configuration file.</p>
 <p>Valid values are - Wired Devices &quot;wired&quot; - Wireless Devices &quot;wireless&quot;</p>
+<p>Duplicate component names are not allowed.</p>
 <p>Required and non-empty when no component-specific filter block is provided.</p>
 <p>If wired/wireless filter blocks are provided, missing component names are auto-added.</p>
 <p>For example, [&quot;wired&quot;, &quot;wireless&quot;].</p>

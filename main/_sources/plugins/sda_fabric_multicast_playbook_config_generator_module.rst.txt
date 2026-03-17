@@ -128,7 +128,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -138,11 +138,15 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of configuration filters for generating YAML playbooks compatible with the \ :literal:`sda\_fabric\_multicast\_workflow\_manager`\  module.
+      A dictionary of filters for generating YAML playbook compatible with the \ :literal:`sda\_fabric\_multicast\_workflow\_manager`\  module.
 
-      Each configuration entry can include file path specification, component filters, and auto-discovery settings.
+      Filters specify which components to include in the YAML configuration file.
 
-      Multiple configuration entries can be provided to generate separate playbooks with different filter criteria.
+      If "components\_list" is specified, only those components are included, regardless of the filters.
+
+      If config is not provided or is empty, all configurations for all fabric sites will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -176,15 +180,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Component-level filters to selectively include specific configurations in the generated playbook.
+      Filters to specify which components to include in the YAML configuration file.
 
-      Allows fine-grained control over which fabric multicast configurations are extracted from Cisco Catalyst Center.
+      If "components\_list" is specified, only those components are included, regardless of other filters.
 
-      If \ :literal:`components\_list`\  is specified, only those components are processed regardless of other filters.
+      If filters for specific components (e.g., fabric\_multicast) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
 
-      If \ :literal:`generate\_all\_configurations`\  is \ :literal:`true`\ , these filters are ignored and all configurations are retrieved.
-
-      Supports filtering by fabric site hierarchy and Layer 3 virtual network names.
+      At least one of components\_list or component filters must be provided when config is specified.
 
 
       .. raw:: html
@@ -365,98 +367,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path where the generated YAML playbook file will be saved.
-
-      If not specified, the file is saved in the current working directory with an auto-generated filename.
-
-      Default filename format is \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`sda\_fabric\_multicast\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Enables automatic discovery and generation of YAML configurations for all fabric multicast deployments.
-
-      When \ :literal:`true`\ , retrieves all SDA fabric multicast configurations from Cisco Catalyst Center without requiring specific filters.
-
-      Overrides any provided \ :literal:`component\_specific\_filters`\  to ensure complete configuration retrieval.
-
-      Ideal for complete infrastructure configuration export and comprehensive documentation.
-
-      If enabled, a default filename will be auto-generated when \ :literal:`file\_path`\  is not provided.
-
-      Default filename format: \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -994,6 +904,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      This parameter is only relevant when \ :literal:`file\_path`\  is specified. Defaults to \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`sda\_fabric\_multicast\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`sda\_fabric\_multicast\_playbook\_config\_2026-01-30\_19-16-01.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.sda_fabric_multicast_playbook_config_generator_module__parameter-state:
@@ -1110,6 +1106,7 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    # Example 1: Generate all configurations (default behavior when config is omitted)
     - name: Generate YAML playbook for all SDA fabric multicast configurations
       cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
@@ -1122,10 +1119,26 @@ Examples
         dnac_log: true
         dnac_log_level: INFO
         state: gathered
-        config:
-          - generate_all_configurations: true
-            file_path: "/path/to/output/all_fabric_multicast_configs.yml"
+        # No config provided - generates all configurations
 
+    # Example 2: Generate all configurations with custom file path
+    - name: Generate complete SDA fabric multicast configuration with custom filename
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: INFO
+        state: gathered
+        file_path: "/tmp/complete_sda_fabric_multicast_config.yaml"
+        file_mode: "overwrite"
+        # No config provided - generates all configurations
+
+    # Example 3: Generate fabric multicast configurations for a specific fabric site
     - name: Generate YAML playbook for specific fabric site
       cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
@@ -1137,14 +1150,16 @@ Examples
         dnac_debug: "{{ dnac_debug }}"
         dnac_log: true
         state: gathered
+        file_path: "/tmp/site_specific_multicast.yaml"
+        file_mode: "overwrite"
         config:
-          - file_path: "/path/to/output/site_specific_multicast.yml"
-            component_specific_filters:
-              components_list:
-                - fabric_multicast
-              fabric_multicast:
-                - fabric_name: "Global/USA/San Jose/Building1"
+          component_specific_filters:
+            components_list:
+              - fabric_multicast
+            fabric_multicast:
+              - fabric_name: "Global/USA/San Jose/Building1"
 
+    # Example 4: Generate configuration for specific fabric and virtual network
     - name: Generate YAML playbook for specific fabric and virtual network
       cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
@@ -1155,13 +1170,16 @@ Examples
         dnac_version: "{{ dnac_version }}"
         dnac_debug: "{{ dnac_debug }}"
         state: gathered
+        file_path: "/tmp/fabric_vn_specific_multicast.yaml"
+        file_mode: "overwrite"
         config:
-          - component_specific_filters:
-              fabric_multicast:
-                - fabric_name: "Global/USA/San Jose/Building1"
-                  layer3_virtual_network: "GUEST_VN"
+          component_specific_filters:
+            fabric_multicast:
+              - fabric_name: "Global/USA/San Jose/Building1"
+                layer3_virtual_network: "GUEST_VN"
 
-    - name: Generate playbook for multiple fabric sites with auto-generated filename
+    # Example 5: Auto-populate components_list from component filters
+    - name: Generate configuration with auto-populated components_list
       cisco.dnac.sda_fabric_multicast_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -1171,12 +1189,54 @@ Examples
         dnac_version: "{{ dnac_version }}"
         dnac_debug: "{{ dnac_debug }}"
         state: gathered
+        file_path: "/tmp/san_jose_fabric.yaml"
+        file_mode: "overwrite"
         config:
-          - component_specific_filters:
-              fabric_multicast:
-                - fabric_name: "Global/USA/San Jose/Building1"
-                - fabric_name: "Global/USA/San Jose/Building2"
-                - fabric_name: "Global/Europe/London/DataCenter1"
+          component_specific_filters:
+            # No components_list specified, but fabric_multicast filters are provided
+            # The 'fabric_multicast' component will be automatically added to components_list
+            fabric_multicast:
+              - fabric_name: "Global/USA/San Jose/Building1"
+
+    # Example 6: Generate configuration with append mode
+    - name: Generate and append SDA fabric multicast configuration
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        state: gathered
+        file_path: "/tmp/all_fabric_multicast.yaml"
+        file_mode: "append"
+        config:
+          component_specific_filters:
+            components_list:
+              - fabric_multicast
+            fabric_multicast:
+              - fabric_name: "Global/Europe/London/DataCenter1"
+
+    # Example 7: Generate playbook for multiple fabric sites
+    - name: Generate playbook for multiple fabric sites
+      cisco.dnac.sda_fabric_multicast_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        state: gathered
+        file_path: "/tmp/multiple_sites_multicast.yaml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            fabric_multicast:
+              - fabric_name: "Global/USA/San Jose/Building1"
+              - fabric_name: "Global/USA/San Jose/Building2"
+              - fabric_name: "Global/Europe/London/DataCenter1"
 
 
 

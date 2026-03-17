@@ -213,6 +213,8 @@ Parameters
 
       Valid values are - Wired Devices "wired" - Wireless Devices "wireless"
 
+      Duplicate component names are not allowed.
+
       Required and non-empty when no component-specific filter block is provided.
 
       If wired/wireless filter blocks are provided, missing component names are auto-added.
