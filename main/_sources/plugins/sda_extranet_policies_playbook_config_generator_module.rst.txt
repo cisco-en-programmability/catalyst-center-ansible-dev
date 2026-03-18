@@ -134,7 +134,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -144,11 +144,15 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of configuration filters for generating YAML playbooks compatible with the \ :literal:`sda\_extranet\_policies\_workflow\_manager`\  module.
+      A dictionary of filters for generating YAML playbook compatible with the \ :literal:`sda\_extranet\_policies\_workflow\_manager`\  module.
 
-      Each configuration entry can include file path specification, component filters, and auto-discovery settings.
+      Filters specify which components to include in the YAML configuration file.
 
-      Multiple configuration entries can be provided to generate separate playbooks with different filter criteria.
+      If "components\_list" is specified, only those components are included, regardless of the filters.
+
+      If config is not provided or is empty, all configurations for all extranet policies will be generated.
+
+      This is useful for complete brownfield infrastructure discovery and documentation.
 
 
       .. raw:: html
@@ -182,13 +186,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Absolute or relative path where the generated YAML playbook file will be saved.
+      Filters to specify which components to include in the YAML configuration file.
 
-      If not provided, the file is saved in the current working directory with an auto-generated filename.
+      If "components\_list" is specified, only those components are included, regardless of other filters.
 
-      Default filename format: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
+      If filters for specific components (e.g., extranet\_policies) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
 
-      Ensure the directory path exists and has write permissions.
+      At least one of components\_list or component filters must be provided when config is specified.
 
 
       .. raw:: html
@@ -317,134 +321,6 @@ Parameters
         </div>
 
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Absolute or relative path where the generated YAML playbook file will be saved.
-
-      If not provided, the file is saved in the current working directory with an auto-generated filename.
-
-      Default filename format: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`sda\_extranet\_policies\_playbook\_config\_2025-04-22\_21-43-26.yml`\ .
-
-      Ensure the directory path exists and has write permissions.
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Enables automatic discovery and generation of YAML configurations for all SDA extranet policies.
-
-      When \ :literal:`true`\ , retrieves all extranet policies from Cisco Catalyst Center without requiring specific filters.
-
-      Overrides any provided \ :literal:`component\_specific\_filters`\  to ensure complete configuration retrieval.
-
-      Ideal for complete brownfield infrastructure migration and documentation.
-
-      Default filename format when file\_path not provided: \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ 
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div>
-
-      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-config/global_filters:
-
-      .. rst-class:: ansible-option-title
-
-      **global_filters**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`dictionary`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Global-level filters that apply across all components.
-
-      Currently not used by this module but reserved for future extensibility.
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -982,6 +858,92 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Controls how config is written to the YAML file.
+
+      \ :literal:`overwrite`\  replaces existing file content.
+
+      \ :literal:`append`\  appends generated YAML content to the existing file.
+
+      This parameter is only relevant when \ :literal:`file\_path`\  is specified. Defaults to \ :literal:`overwrite`\ .
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`sda\_extranet\_policies\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`sda\_extranet\_policies\_playbook\_config\_2026-01-30\_19-16-01.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.sda_extranet_policies_playbook_config_generator_module__parameter-state:
@@ -1098,6 +1060,7 @@ Examples
 .. code-block:: yaml+jinja
 
     
+    # Example 1: Generate all configurations (default behavior when config is omitted)
     - name: Generate YAML playbook for all SDA extranet policies
       cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
@@ -1110,10 +1073,10 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
-        config:
-          - generate_all_configurations: true
+        # No config provided - generates all configurations
 
-    - name: Generate YAML playbook for all SDA extranet policies with custom file path
+    # Example 2: Generate all configurations with custom file path
+    - name: Generate complete SDA extranet policies configuration with custom filename
       cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
@@ -1125,10 +1088,11 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
-        config:
-          - generate_all_configurations: true
-            file_path: "/tmp/all_extranet_policies.yml"
+        file_path: "/tmp/complete_sda_extranet_policies_config.yaml"
+        file_mode: "overwrite"
+        # No config provided - generates all configurations
 
+    # Example 3: Generate extranet policies configurations for a specific policy
     - name: Generate YAML playbook for specific extranet policy by name
       cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
@@ -1141,13 +1105,16 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "/tmp/policy_specific.yaml"
+        file_mode: "overwrite"
         config:
-          - component_specific_filters:
-              components_list:
-                - extranet_policies
-              extranet_policies:
-                - extranet_policy_name: "Test_1"
+          component_specific_filters:
+            components_list:
+              - extranet_policies
+            extranet_policies:
+              - extranet_policy_name: "Test_1"
 
+    # Example 4: Generate configuration for multiple specific extranet policies
     - name: Generate YAML playbook for multiple specific extranet policies
       cisco.dnac.sda_extranet_policies_playbook_config_generator:
         dnac_host: "{{dnac_host}}"
@@ -1160,35 +1127,60 @@ Examples
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "/tmp/selected_extranet_policies.yaml"
+        file_mode: "overwrite"
         config:
-          - file_path: "/tmp/selected_extranet_policies.yml"
-            component_specific_filters:
-              components_list:
-                - extranet_policies
-              extranet_policies:
-                - extranet_policy_name: "Test_1"
-                - extranet_policy_name: "Test_2"
-                - extranet_policy_name: "Test_3"
+          component_specific_filters:
+            components_list:
+              - extranet_policies
+            extranet_policies:
+              - extranet_policy_name: "Test_1"
+              - extranet_policy_name: "Test_2"
+              - extranet_policy_name: "Test_3"
 
-    - name: Generate multiple playbooks with different filters
+    # Example 5: Auto-populate components_list from component filters
+    - name: Generate configuration with auto-populated components_list
       cisco.dnac.sda_extranet_policies_playbook_config_generator:
-        dnac_host: "{{ dnac_host }}"
-        dnac_username: "{{ dnac_username }}"
-        dnac_password: "{{ dnac_password }}"
-        dnac_verify: "{{ dnac_verify }}"
-        dnac_port: "{{ dnac_port }}"
-        dnac_version: "{{ dnac_version }}"
-        dnac_debug: "{{ dnac_debug }}"
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
         dnac_log: true
         dnac_log_level: DEBUG
         state: gathered
+        file_path: "/tmp/test_policy.yaml"
+        file_mode: "overwrite"
         config:
-          - file_path: "/tmp/policy_test1.yml"
-            component_specific_filters:
-              extranet_policies:
-                - extranet_policy_name: "Test_1"
-          - file_path: "/tmp/all_policies.yml"
-            generate_all_configurations: true
+          component_specific_filters:
+            # No components_list specified, but extranet_policies filters are provided
+            # The 'extranet_policies' component will be automatically added to components_list
+            extranet_policies:
+              - extranet_policy_name: "Test_1"
+
+    # Example 6: Generate configuration with append mode
+    - name: Generate and append SDA extranet policies configuration
+      cisco.dnac.sda_extranet_policies_playbook_config_generator:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "/tmp/all_extranet_policies.yaml"
+        file_mode: "append"
+        config:
+          component_specific_filters:
+            components_list:
+              - extranet_policies
+            extranet_policies:
+              - extranet_policy_name: "Test_2"
 
 
 
