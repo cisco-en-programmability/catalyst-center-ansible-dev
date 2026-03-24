@@ -1287,8 +1287,12 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-tags-pla
 <td><div class="ansible-option-cell"><p>A dictionary of filters for generating YAML playbook compatible with the `tags_workflow_manager` module.</p>
 <p>Filters specify which components to include in the YAML configuration file.</p>
 <p>If &quot;components_list&quot; is specified, only those components are included, regardless of the filters.</p>
-<p>If config is not provided or is empty, all configurations for all tags and tag memberships will be generated.</p>
+<p>If config is not provided (omitted entirely), all configurations for all tags and tag memberships will be generated.</p>
 <p>This is useful for complete brownfield infrastructure discovery and documentation.</p>
+<dl class="simple">
+<dt>Important: An empty dictionary {} is not valid. Either omit 'config' entirely to generate</dt><dd><p>all configurations, or provide specific filters within 'config'.</p>
+</dd>
+</dl>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">

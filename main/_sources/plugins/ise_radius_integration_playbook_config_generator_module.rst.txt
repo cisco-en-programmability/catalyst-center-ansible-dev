@@ -123,7 +123,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
+      :ansible-option-type:`dictionary`
 
       .. raw:: html
 
@@ -133,7 +133,7 @@ Parameters
 
         <div class="ansible-option-cell">
 
-      A list of filters for generating YAML playbook compatible with the \`ise\_radius\_integration\_workflow\_manager\` module.
+      A dictionary of filters for generating YAML playbook compatible with the \`ise\_radius\_integration\_workflow\_manager\` module.
 
       Filters specify which components to include in the YAML configuration file.
 
@@ -342,136 +342,6 @@ Parameters
 
         </div>
 
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_mode"></div>
-
-      .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-config/file_mode:
-
-      .. rst-class:: ansible-option-title
-
-      **file_mode**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_mode" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Determines how the output YAML configuration file is written.
-
-      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
-
-      When set to \ :literal:`append`\ , new content will be added to the existing file.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
-      - :ansible-option-choices-entry:`"append"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/file_path"></div>
-
-      .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-config/file_path:
-
-      .. rst-class:: ansible-option-title
-
-      **file_path**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/file_path" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      Path where the YAML configuration file will be saved.
-
-      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`ise\_radius\_integration\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
-
-      For example, \ :literal:`ise\_radius\_integration\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/generate_all_configurations"></div>
-
-      .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-config/generate_all_configurations:
-
-      .. rst-class:: ansible-option-title
-
-      **generate_all_configurations**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/generate_all_configurations" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`boolean`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      When true, include all authentication and policy server components in the YAML configuration file.
-
-      When false, include only the components listed in \ :literal:`component\_specific\_filters.components\_list`\ .
-
-      Ignored if \ :literal:`component\_specific\_filters.components\_list`\  is specified.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry:`false`
-      - :ansible-option-choices-entry:`true`
-
-
-      .. raw:: html
-
-        </div>
 
 
   * - .. raw:: html
@@ -1009,6 +879,90 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_mode"></div>
+
+      .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-file_mode:
+
+      .. rst-class:: ansible-option-title
+
+      **file_mode**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_mode" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Determines how the output YAML configuration file is written.
+
+      When set to \ :literal:`overwrite`\ , the file will be replaced with new content.
+
+      When set to \ :literal:`append`\ , new content will be added to the existing file.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`"overwrite"` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`"append"`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-file_path"></div>
+
+      .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-file_path:
+
+      .. rst-class:: ansible-option-title
+
+      **file_path**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-file_path" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Path where the YAML configuration file will be saved.
+
+      If not provided, the file will be saved in the current working directory with a default file name \ :literal:`ise\_radius\_integration\_playbook\_config\_\<YYYY-MM-DD\_HH-MM-SS\>.yml`\ .
+
+      For example, \ :literal:`ise\_radius\_integration\_playbook\_config\_2026-01-24\_12-33-20.yml`\ .
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-state"></div>
 
       .. _ansible_collections.cisco.dnac.ise_radius_integration_playbook_config_generator_module__parameter-state:
@@ -1150,10 +1104,10 @@ Examples
         dnac_log: true
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "/tmp/ise_radius_integration_config.yaml"
+        file_mode: "overwrite"
         config:
           generate_all_configurations: true
-          file_path: "/tmp/ise_radius_integration_config.yaml"
-          file_mode: "overwrite"
 
     - name: Generate YAML Configuration for mentioned components without File Path specified
       cisco.dnac.ise_radius_integration_playbook_config_generator:
@@ -1167,10 +1121,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "/tmp/ise_radius_integration_config.yaml"
+        file_mode: "append"
         config:
-          generate_all_configurations: false
-          file_path: "/tmp/ise_radius_integration_config.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["authentication_policy_server"]
 
@@ -1186,9 +1139,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "/tmp/ise_radius_integration_config.yaml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/ise_radius_integration_config.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["authentication_policy_server"]
             authentication_policy_server:
@@ -1206,9 +1159,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "/tmp/ise_radius_integration_config.yaml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/ise_radius_integration_config.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["authentication_policy_server"]
             authentication_policy_server:
@@ -1226,9 +1179,9 @@ Examples
         dnac_log: true
         dnac_log_level: "{{ dnac_log_level }}"
         state: gathered
+        file_path: "/tmp/ise_radius_integration_config.yaml"
+        file_mode: "append"
         config:
-          file_path: "/tmp/ise_radius_integration_config.yaml"
-          file_mode: "append"
           component_specific_filters:
             components_list: ["authentication_policy_server"]
             authentication_policy_server:

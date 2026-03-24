@@ -285,7 +285,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -295,7 +295,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Device family to filter devices by type (e.g., 'Switches and Hubs', 'Routers').
+      One or more device families to filter devices by type (e.g., 'Switches and Hubs', 'Routers').
+
+      A single string is normalized to a one-item list for backward compatibility.
 
 
       .. raw:: html
@@ -319,7 +321,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -329,7 +331,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Management IP address to filter devices by IP address.
+      One or more management IP addresses to filter devices by IP address.
+
+      A single string is normalized to a one-item list for backward compatibility.
 
 
       .. raw:: html
@@ -424,7 +428,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -434,7 +438,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Device family to filter devices by type (e.g., 'Wireless Controller').
+      One or more device families to filter devices by type (e.g., 'Wireless Controller').
+
+      A single string is normalized to a one-item list for backward compatibility.
 
 
       .. raw:: html
@@ -458,7 +464,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`string`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -468,7 +474,9 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Management IP address to filter devices by IP address.
+      One or more management IP addresses to filter devices by IP address.
+
+      A single string is normalized to a one-item list for backward compatibility.
 
 
       .. raw:: html
@@ -1302,6 +1310,11 @@ Examples
         config:
           component_specific_filters:
             components_list: ["wired", "wireless"]
+            wired:
+              - management_ip_address:
+                  - "204.1.2.9"
+                device_family:
+                  - "Switches and Hubs"
 
 
 

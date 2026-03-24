@@ -140,9 +140,13 @@ Parameters
 
       If "components\_list" is specified, only those components are included, regardless of the filters.
 
-      If config is not provided or is empty, all configurations for all tags and tag memberships will be generated.
+      If config is not provided (omitted entirely), all configurations for all tags and tag memberships will be generated.
 
       This is useful for complete brownfield infrastructure discovery and documentation.
+
+      Important: An empty dictionary {} is not valid. Either omit 'config' entirely to generate
+          all configurations, or provide specific filters within 'config'.
+          
 
 
       .. raw:: html
