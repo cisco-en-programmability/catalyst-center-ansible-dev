@@ -1527,7 +1527,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <h2><a class="toc-backref" href="#id52" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ul class="simple">
+<ul>
 <li><p>Cisco Catalyst Center &gt;= 2.3.7.9</p></li>
 <li><p>SDK Methods used are
 sites.Sites.get_site
@@ -1546,11 +1546,28 @@ GET /dna/intent/api/v1/sda/fabric-zones/{id}</p></li>
 If component-specific filters (such as 'fabric_sites' or 'fabric_zones') are provided
 without explicitly including them in 'components_list', those components will be
 automatically added to 'components_list'.</p></li>
-<li><p>Validation requirements:
-If 'component_specific_filters' is provided, at least one of the following must be true:
-(1) 'components_list' contains at least one component, OR
-(2) Component-specific filters are provided.
-If neither condition is met, the module will fail with a validation error.</p></li>
+<li><p>Module result behavior (changed/ok/failed):
+The module result reflects local file state only, not Catalyst Center state.
+In overwrite mode, the full file content is compared (excluding volatile
+fields like timestamps and playbook path). In append mode, only the last
+YAML document in the file is compared against the newly generated
+configuration. If a file contains multiple config entries from previous
+appends, only the most recent entry is used for the idempotency check.
+- changed=true (status: success): The generated YAML configuration differs</p>
+<blockquote>
+<div><p>from the existing output file (or the file does not exist). The file was
+written and the configuration was updated.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>changed=false (status: ok): The generated YAML configuration matches the
+existing output file content. The write was skipped as the file is
+already up-to-date.</p></li>
+<li><p>failed=true (status: failed): The module encountered a validation error,
+API failure, or file write error. No file was written or modified.</p></li>
+</ul>
+<p>Note: Re-running with identical inputs and unchanged Catalyst Center state
+will produce changed=false, ensuring idempotent playbook behavior.</p>
+</li>
 <li><p>Does not support <code class="docutils literal notranslate"><span class="pre">check_mode</span></code></p></li>
 <li><p>The plugin runs on the control node and does not use any ansible connection plugins instead embedded connection manager from Cisco Catalyst Center SDK</p></li>
 <li><p>The parameters starting with dnac_ are used by the Cisco Catalyst Center Python SDK to establish the connection</p></li>
@@ -1725,7 +1742,7 @@ If neither condition is met, the module will fail with a validation error.</p></
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>Abhishek Maheshwari (&#64;abmahesh)</p></li>
-<li><p>Sunil Shatagopa (&#64;sunilshatagopa)</p></li>
+<li><p>Sunil Shatagopa (&#64;shatagopasunil)</p></li>
 <li><p>Madhan Sankaranarayanan (&#64;madhansansel)</p></li>
 </ul>
 </section>
