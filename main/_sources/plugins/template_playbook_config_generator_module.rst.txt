@@ -135,11 +135,13 @@ Parameters
 
       A dictionary of filters for generating YAML playbook compatible with the \`template\_workflow\_manager\` module.
 
-      If config is not provided or empty, all configurations for all projects and templates will be generated.
+      If config is not provided (omitted entirely), all configurations for all projects and templates will be generated.
 
       This is useful for complete brownfield infrastructure discovery and documentation.
 
-      IMPORTANT NOTE - When config is not provided or empty, it will only retrieve committed templates. It does not include uncommitted templates. To include uncommitted templates, use the appropriate filters such as include\_uncommitted under configuration\_templates in component\_specific\_filters.
+      Important - An empty dictionary {} is not valid. Either omit 'config' entirely to generate all configurations, or provide specific filters within 'config'.
+
+      IMPORTANT NOTE - When config is not provided (omitted entirely), it will only retrieve committed templates. It does not include uncommitted templates. To include uncommitted templates, use the appropriate filters such as include\_uncommitted under configuration\_templates in component\_specific\_filters.
 
 
       .. raw:: html
@@ -174,8 +176,6 @@ Parameters
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
       Filters to specify which components to include in the YAML configuration file.
-
-      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
 
       If filters for specific components (e.g., projects or configuration\_templates) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
 

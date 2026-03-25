@@ -137,9 +137,11 @@ Parameters
 
       Filters specify which components to include in the YAML configuration file.
 
-      If config is not provided or empty, all configurations for all fabric sites and fabric zones will be generated.
+      If config is not provided (omitted entirely), all configurations for all fabric sites and fabric zones will be generated.
 
       This is useful for complete brownfield infrastructure discovery and documentation.
+
+      Important - An empty dictionary {} is not valid. Either omit 'config' entirely to generate all configurations, or provide specific filters within 'config'.
 
 
       .. raw:: html
