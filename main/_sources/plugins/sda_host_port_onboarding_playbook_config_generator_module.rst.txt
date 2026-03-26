@@ -260,7 +260,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
 
       .. raw:: html
 
@@ -270,19 +270,71 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Filters for port assignment configuration extraction.
+      Filters for port channel configuration extraction.
 
-      Extracts only port assignments for specified fabric site hierarchies.
+      Each list entry targets one fabric site with optional device-level filtering by management IP address, serial number, or hostname.
+
+      Extracts only port assignments for specified fabric site hierarchies and optionally only for devices matching the specified device\_ips, serial\_numbers, or hostnames within those sites.
+
+      When multiple device filters (device\_ips, serial\_numbers, hostnames) are specified in the same list entry, they are combined using AND logic. A device must match ALL specified filters to be included.
+
+      Each filter type is optional and independent. Omitting a filter type means no restriction on that attribute.
 
       Fabric site names must be full hierarchical paths (case-sensitive).
 
-      If not specified when component included in components\_list, extracts all port assignments across all fabric sites.
+      If not specified when component included in components\_list, extracts all port assignments across all fabric sites and all devices.
 
 
       .. raw:: html
 
         </div>
     
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/device_ips"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_assignments/device_ips:
+
+      .. rst-class:: ansible-option-title
+
+      **device_ips**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/device_ips" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      List of device management IP addresses to filter extraction within this fabric site.
+
+      Each IP is matched against the managementIpAddress field resolved from Catalyst Center for each device in the fabric site.
+
+      Devices whose management IP does not match any IP in this list are skipped.
+
+      Combined with serial\_numbers and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of device IPs independently.
+
+      If omitted, no IP-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["1.1.1.1", "1.1.1.2"]
+
+
+      .. raw:: html
+
+        </div>
+
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -300,6 +352,46 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Fabric site hierarchical paths to extract port assignments.
+
+      Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).
+
+      Extracts port assignments for all devices within specified fabric sites.
+
+      For example, "Global/USA/San Jose/Building1"
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/hostnames"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_assignments/hostnames:
+
+      .. rst-class:: ansible-option-title
+
+      **hostnames**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/hostnames" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
       :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
@@ -310,13 +402,65 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      List of fabric site hierarchical paths to extract port assignments.
+      List of device hostnames to filter extraction within this fabric site.
 
-      Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).
+      Each hostname is matched against the hostname field resolved from Catalyst Center for each device in the fabric site.
 
-      Extracts port assignments for all devices within specified fabric sites.
+      Devices whose hostname does not match any value in this list are skipped.
 
-      For example, ["Global/USA/San Jose/Building1", "Global/USA/RTP/Building2"]
+      Combined with device\_ips and serial\_numbers using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of hostnames independently.
+
+      If omitted, no hostname-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["switch1", "switch2"]
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/serial_numbers"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_assignments/serial_numbers:
+
+      .. rst-class:: ansible-option-title
+
+      **serial_numbers**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/serial_numbers" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      List of device serial numbers to filter extraction within this fabric site.
+
+      Each serial number is matched against the serialNumber field resolved from Catalyst Center for each device in the fabric site.
+
+      Devices whose serial number does not match any value in this list are skipped.
+
+      Combined with device\_ips and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of serial numbers independently.
+
+      If omitted, no serial number-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["FJC2327U0S2", "FJC2327U0S3"]
 
 
       .. raw:: html
@@ -341,7 +485,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=dictionary`
 
       .. raw:: html
 
@@ -353,17 +497,69 @@ Parameters
 
       Filters for port channel configuration extraction.
 
-      Extracts only port channels for specified fabric site hierarchies.
+      Each list entry targets one fabric site with optional device-level filtering by management IP address, serial number, or hostname.
+
+      Extracts only port channels for specified fabric site hierarchies and optionally only for devices matching the specified device\_ips, serial\_numbers, or hostnames within those sites.
+
+      When multiple device filters (device\_ips, serial\_numbers, hostnames) are specified in the same list entry, they are combined using AND logic. A device must match ALL specified filters to be included.
+
+      Each filter type is optional and independent. Omitting a filter type means no restriction on that attribute.
 
       Fabric site names must be full hierarchical paths (case-sensitive).
 
-      If not specified when component included in components\_list, extracts all port channels across all fabric sites.
+      If not specified when component included in components\_list, extracts all port channels across all fabric sites and all devices.
 
 
       .. raw:: html
 
         </div>
     
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/device_ips"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_channels/device_ips:
+
+      .. rst-class:: ansible-option-title
+
+      **device_ips**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/device_ips" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      List of device management IP addresses to filter extraction within this fabric site.
+
+      Each IP is matched against the managementIpAddress field resolved from Catalyst Center for each device in the fabric site.
+
+      Devices whose management IP does not match any IP in this list are skipped.
+
+      Combined with serial\_numbers and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of device IPs independently.
+
+      If omitted, no IP-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["1.1.1.1", "1.1.1.2"]
+
+
+      .. raw:: html
+
+        </div>
+
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -381,6 +577,46 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
+      :ansible-option-type:`string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      Fabric site hierarchical paths to extract port channels.
+
+      Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).
+
+      Extracts port channel configurations for all devices within specified fabric sites.
+
+      For example, "Global/USA/San Jose/Building1"
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/hostnames"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_channels/hostnames:
+
+      .. rst-class:: ansible-option-title
+
+      **hostnames**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/hostnames" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
       :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
@@ -391,13 +627,65 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      List of fabric site hierarchical paths to extract port channels.
+      List of device hostnames to filter extraction within this fabric site.
 
-      Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).
+      Each hostname is matched against the hostname field resolved from Catalyst Center for each device in the fabric site.
 
-      Extracts port channel configurations for all devices within specified fabric sites.
+      Devices whose hostname does not match any value in this list are skipped.
 
-      For example, ["Global/USA/San Jose/Building1", "Global/USA/RTP/Building2"]
+      Combined with device\_ips and serial\_numbers using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of hostnames independently.
+
+      If omitted, no hostname-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["switch1", "switch2"]
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/serial_numbers"></div>
+
+      .. _ansible_collections.cisco.dnac.sda_host_port_onboarding_playbook_config_generator_module__parameter-config/component_specific_filters/port_channels/serial_numbers:
+
+      .. rst-class:: ansible-option-title
+
+      **serial_numbers**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/serial_numbers" title="Permalink to this option"></a>
+
+      .. rst-class:: ansible-option-type-line
+
+      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
+
+      List of device serial numbers to filter extraction within this fabric site.
+
+      Each serial number is matched against the serialNumber field resolved from Catalyst Center for each device in the fabric site.
+
+      Devices whose serial number does not match any value in this list are skipped.
+
+      Combined with device\_ips and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.
+
+      Scoped per list entry. Each fabric site entry can specify its own set of serial numbers independently.
+
+      If omitted, no serial number-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).
+
+      For example, ["FJC2327U0S2", "FJC2327U0S3"]
 
 
       .. raw:: html
@@ -1265,6 +1553,33 @@ Examples
         file_path: "host_onboarding_playbook.yml"
         file_mode: "overwrite"
 
+    - name: Generate YAML with multiple fabric sites and per-site device IP filtering
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list: ["port_assignments", "port_channels"]
+            port_assignments:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                device_ips:
+                  - 1.1.1.1
+              - fabric_site_name_hierarchy: "Global/USA/RTP/Building2"
+            port_channels:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                device_ips:
+                  - 1.1.1.1
+
     - name: Generate YAML Configuration with specific component port assignments filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
@@ -1283,8 +1598,56 @@ Examples
           component_specific_filters:
             components_list: ["port_assignments"]
             port_assignments:
-              fabric_site_name_hierarchy:
-                - "Global/Site_India/Karnataka/Bangalore"
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                device_ips:
+                  - 1.1.1.1
+                  - 1.1.1.2
+
+    - name: Generate YAML Configuration with specific component port assignments filters
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list: ["port_assignments"]
+            port_assignments:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                serial_numbers:
+                  - FJC27251Z8B
+                  - FJC27251Z8C
+
+    - name: Generate YAML Configuration with specific component port assignments filters
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list: ["port_assignments"]
+            port_assignments:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                hostnames:
+                  - switch1
+                  - switch2
 
     - name: Generate YAML Configuration with specific component port channels filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
@@ -1304,8 +1667,94 @@ Examples
           component_specific_filters:
             components_list: ["port_channels"]
             port_channels:
-              fabric_site_name_hierarchy:
-                - "Global/Site_India/Karnataka/Bangalore"
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                device_ips:
+                  - 1.1.1.1
+                  - 1.1.1.2
+
+    - name: Generate YAML Configuration with specific component port channels filters
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list: ["port_channels"]
+            port_channels:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                serial_numbers:
+                  - FJC27251Z8B
+                  - FJC27251Z8C
+
+    - name: Generate YAML Configuration with specific component port channels filters
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list: ["port_channels"]
+            port_channels:
+              - fabric_site_name_hierarchy: "Global/Site_India/Karnataka/Bangalore"
+                hostnames:
+                  - switch1
+                  - switch2
+
+    - name: Generate YAML with AND-combined device filters per site
+      cisco.dnac.sda_host_port_onboarding_playbook_config_generator:
+        dnac_host: "{{ dnac_host }}"
+        dnac_username: "{{ dnac_username }}"
+        dnac_password: "{{ dnac_password }}"
+        dnac_verify: "{{ dnac_verify }}"
+        dnac_port: "{{ dnac_port }}"
+        dnac_version: "{{ dnac_version }}"
+        dnac_debug: "{{ dnac_debug }}"
+        dnac_log: true
+        dnac_log_level: DEBUG
+        state: gathered
+        file_path: "host_onboarding_playbook.yml"
+        file_mode: "overwrite"
+        config:
+          component_specific_filters:
+            components_list:
+              - "port_assignments"
+              - "port_channels"
+            port_assignments:
+              # Site 1: AND filter — device must match IP AND hostname
+              - fabric_site_name_hierarchy: "Global/USA/San Jose/Building1"
+                device_ips:
+                  - 1.1.1.1
+                hostnames:
+                  - switch1
+              # Site 2: single filter — only serial number filtering
+              - fabric_site_name_hierarchy: "Global/USA/RTP/Building2"
+                serial_numbers:
+                  - FJC2327U0S2
+                  - FJC2327U0S3
+              # Site 3: no device filter — extracts all devices
+              - fabric_site_name_hierarchy: "Global/India/Bangalore/Building3"
+            port_channels:
+              - fabric_site_name_hierarchy: "Global/USA/San Jose/Building1"
+                device_ips:
+                  - 1.1.1.1
 
     - name: Generate YAML Configuration with specific component wireless ssids filters
       cisco.dnac.sda_host_port_onboarding_playbook_config_generator:

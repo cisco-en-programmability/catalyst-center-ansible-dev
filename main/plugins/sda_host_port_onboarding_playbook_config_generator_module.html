@@ -1323,42 +1323,126 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-host
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments"><strong>port_assignments</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters for port assignment configuration extraction.</p>
-<p>Extracts only port assignments for specified fabric site hierarchies.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters for port channel configuration extraction.</p>
+<p>Each list entry targets one fabric site with optional device-level filtering by management IP address, serial number, or hostname.</p>
+<p>Extracts only port assignments for specified fabric site hierarchies and optionally only for devices matching the specified device_ips, serial_numbers, or hostnames within those sites.</p>
+<p>When multiple device filters (device_ips, serial_numbers, hostnames) are specified in the same list entry, they are combined using AND logic. A device must match ALL specified filters to be included.</p>
+<p>Each filter type is optional and independent. Omitting a filter type means no restriction on that attribute.</p>
 <p>Fabric site names must be full hierarchical paths (case-sensitive).</p>
-<p>If not specified when component included in components_list, extracts all port assignments across all fabric sites.</p>
+<p>If not specified when component included in components_list, extracts all port assignments across all fabric sites and all devices.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/fabric_site_name_hierarchy"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments-fabric-site-name-hierarchy"><strong>fabric_site_name_hierarchy</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/fabric_site_name_hierarchy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/device_ips"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments-device-ips"><strong>device_ips</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/device_ips" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of fabric site hierarchical paths to extract port assignments.</p>
-<p>Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).</p>
-<p>Extracts port assignments for all devices within specified fabric sites.</p>
-<p>For example, [&quot;Global/USA/San Jose/Building1&quot;, &quot;Global/USA/RTP/Building2&quot;]</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device management IP addresses to filter extraction within this fabric site.</p>
+<p>Each IP is matched against the managementIpAddress field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose management IP does not match any IP in this list are skipped.</p>
+<p>Combined with serial_numbers and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of device IPs independently.</p>
+<p>If omitted, no IP-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;1.1.1.1&quot;, &quot;1.1.1.2&quot;]</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/fabric_site_name_hierarchy"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments-fabric-site-name-hierarchy"><strong>fabric_site_name_hierarchy</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/fabric_site_name_hierarchy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Fabric site hierarchical paths to extract port assignments.</p>
+<p>Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).</p>
+<p>Extracts port assignments for all devices within specified fabric sites.</p>
+<p>For example, &quot;Global/USA/San Jose/Building1&quot;</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/hostnames"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments-hostnames"><strong>hostnames</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/hostnames" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device hostnames to filter extraction within this fabric site.</p>
+<p>Each hostname is matched against the hostname field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose hostname does not match any value in this list are skipped.</p>
+<p>Combined with device_ips and serial_numbers using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of hostnames independently.</p>
+<p>If omitted, no hostname-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;switch1&quot;, &quot;switch2&quot;]</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_assignments/serial_numbers"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-assignments-serial-numbers"><strong>serial_numbers</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_assignments/serial_numbers" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device serial numbers to filter extraction within this fabric site.</p>
+<p>Each serial number is matched against the serialNumber field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose serial number does not match any value in this list are skipped.</p>
+<p>Combined with device_ips and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of serial numbers independently.</p>
+<p>If omitted, no serial number-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;FJC2327U0S2&quot;, &quot;FJC2327U0S3&quot;]</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-channels"><strong>port_channels</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Filters for port channel configuration extraction.</p>
-<p>Extracts only port channels for specified fabric site hierarchies.</p>
+<p>Each list entry targets one fabric site with optional device-level filtering by management IP address, serial number, or hostname.</p>
+<p>Extracts only port channels for specified fabric site hierarchies and optionally only for devices matching the specified device_ips, serial_numbers, or hostnames within those sites.</p>
+<p>When multiple device filters (device_ips, serial_numbers, hostnames) are specified in the same list entry, they are combined using AND logic. A device must match ALL specified filters to be included.</p>
+<p>Each filter type is optional and independent. Omitting a filter type means no restriction on that attribute.</p>
 <p>Fabric site names must be full hierarchical paths (case-sensitive).</p>
-<p>If not specified when component included in components_list, extracts all port channels across all fabric sites.</p>
+<p>If not specified when component included in components_list, extracts all port channels across all fabric sites and all devices.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/device_ips"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-channels-device-ips"><strong>device_ips</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/device_ips" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device management IP addresses to filter extraction within this fabric site.</p>
+<p>Each IP is matched against the managementIpAddress field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose management IP does not match any IP in this list are skipped.</p>
+<p>Combined with serial_numbers and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of device IPs independently.</p>
+<p>If omitted, no IP-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;1.1.1.1&quot;, &quot;1.1.1.2&quot;]</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/fabric_site_name_hierarchy"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-channels-fabric-site-name-hierarchy"><strong>fabric_site_name_hierarchy</strong></p>
-<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/fabric_site_name_hierarchy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/fabric_site_name_hierarchy" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of fabric site hierarchical paths to extract port channels.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Fabric site hierarchical paths to extract port channels.</p>
 <p>Site names must match exact hierarchical paths in Catalyst Center (case-sensitive).</p>
 <p>Extracts port channel configurations for all devices within specified fabric sites.</p>
-<p>For example, [&quot;Global/USA/San Jose/Building1&quot;, &quot;Global/USA/RTP/Building2&quot;]</p>
+<p>For example, &quot;Global/USA/San Jose/Building1&quot;</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/hostnames"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-channels-hostnames"><strong>hostnames</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/hostnames" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device hostnames to filter extraction within this fabric site.</p>
+<p>Each hostname is matched against the hostname field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose hostname does not match any value in this list are skipped.</p>
+<p>Combined with device_ips and serial_numbers using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of hostnames independently.</p>
+<p>If omitted, no hostname-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;switch1&quot;, &quot;switch2&quot;]</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-config/component_specific_filters/port_channels/serial_numbers"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-host-port-onboarding-playbook-config-generator-module-parameter-config-component-specific-filters-port-channels-serial-numbers"><strong>serial_numbers</strong></p>
+<a class="ansibleOptionLink" href="#parameter-config/component_specific_filters/port_channels/serial_numbers" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of device serial numbers to filter extraction within this fabric site.</p>
+<p>Each serial number is matched against the serialNumber field resolved from Catalyst Center for each device in the fabric site.</p>
+<p>Devices whose serial number does not match any value in this list are skipped.</p>
+<p>Combined with device_ips and hostnames using AND logic when multiple filter types are specified in the same list entry. A device must satisfy all specified filters to be included.</p>
+<p>Scoped per list entry. Each fabric site entry can specify its own set of serial numbers independently.</p>
+<p>If omitted, no serial number-based filtering is applied and all devices in the fabric site are candidates (subject to other filters).</p>
+<p>For example, [&quot;FJC2327U0S2&quot;, &quot;FJC2327U0S3&quot;]</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1628,6 +1712,33 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-host
 <span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
 <span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
 
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML with multiple fabric sites and per-site device IP filtering</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_assignments&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;port_channels&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">port_assignments</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA/RTP/Building2&quot;</span>
+<span class="w">        </span><span class="nt">port_channels</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port assignments filters</span>
 <span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
@@ -1646,8 +1757,56 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-host
 <span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_assignments&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">port_assignments</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.2</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port assignments filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_assignments&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">port_assignments</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">serial_numbers</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC27251Z8B</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC27251Z8C</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port assignments filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_assignments&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">port_assignments</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">hostnames</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch2</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port channels filters</span>
 <span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
@@ -1667,8 +1826,94 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-host
 <span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_channels&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">        </span><span class="nt">port_channels</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.2</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port channels filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_channels&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">port_channels</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">serial_numbers</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC27251Z8B</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC27251Z8C</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component port channels filters</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;port_channels&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">port_channels</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/Site_India/Karnataka/Bangalore&quot;</span>
+<span class="w">            </span><span class="nt">hostnames</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch1</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch2</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML with AND-combined device filters per site</span>
+<span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dnac_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_host</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_username</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_password</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_verify</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_verify</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_port</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_version</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_debug</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">dnac_debug</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="nt">dnac_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">dnac_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gathered</span>
+<span class="w">    </span><span class="nt">file_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;host_onboarding_playbook.yml&quot;</span>
+<span class="w">    </span><span class="nt">file_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;overwrite&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">component_specific_filters</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">components_list</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;port_assignments&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;port_channels&quot;</span>
+<span class="w">        </span><span class="nt">port_assignments</span><span class="p">:</span>
+<span class="w">          </span><span class="c1"># Site 1: AND filter — device must match IP AND hostname</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA/San</span><span class="nv"> </span><span class="s">Jose/Building1&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">            </span><span class="nt">hostnames</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch1</span>
+<span class="w">          </span><span class="c1"># Site 2: single filter — only serial number filtering</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA/RTP/Building2&quot;</span>
+<span class="w">            </span><span class="nt">serial_numbers</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC2327U0S2</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FJC2327U0S3</span>
+<span class="w">          </span><span class="c1"># Site 3: no device filter — extracts all devices</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/India/Bangalore/Building3&quot;</span>
+<span class="w">        </span><span class="nt">port_channels</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fabric_site_name_hierarchy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Global/USA/San</span><span class="nv"> </span><span class="s">Jose/Building1&quot;</span>
+<span class="w">            </span><span class="nt">device_ips</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate YAML Configuration with specific component wireless ssids filters</span>
 <span class="w">  </span><span class="nt">cisco.dnac.sda_host_port_onboarding_playbook_config_generator</span><span class="p">:</span>
