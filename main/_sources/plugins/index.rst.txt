@@ -6,7 +6,7 @@
 Cisco.Dnac
 ==========
 
-Collection version 6.48.2
+Collection version 6.49.0
 
 .. contents::
    :local:
@@ -46,6 +46,9 @@ DEPRECATED - Use cisco.catalystcenter instead. Ansible Modules for Cisco DNA Cen
 * Karthick S N <kasn@cisco.com>
 * Sunil Shatagopa <sshatago@cisco.com>
 * Vivek Raj Penke <vpenke@cisco.com>
+* Vidhya Rathinam <virathin@cisco.com>
+* Mridul Saurabh <msaurabh@cisco.com>
+* Jeet Ram <jeeram@cisco.com>
 
 **Supported ansible-core versions:**
 
