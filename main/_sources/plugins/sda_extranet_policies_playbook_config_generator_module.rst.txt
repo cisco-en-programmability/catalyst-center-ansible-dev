@@ -176,7 +176,7 @@ Parameters
 
       .. rst-class:: ansible-option-type-line
 
-      :ansible-option-type:`dictionary`
+      :ansible-option-type:`dictionary` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -188,11 +188,11 @@ Parameters
 
       Filters to specify which components to include in the YAML configuration file.
 
-      If "components\_list" is specified, only those components are included, regardless of other filters.
+      This parameter is mandatory when \ :literal:`config`\  is provided. Omitting it or providing an empty value will result in a validation error.
 
-      If filters for specific components (e.g., extranet\_policies) are provided without explicitly including them in components\_list, those components will be automatically added to components\_list.
+      If \ :literal:`components\_list`\  is specified, only those components are included, regardless of other filters.
 
-      At least one of components\_list or component filters must be provided when config is specified.
+      If filters for specific components (e.g., \ :literal:`extranet\_policies`\ ) are provided without explicitly including them in \ :literal:`components\_list`\ , those components will be automatically added to \ :literal:`components\_list`\ .
 
 
       .. raw:: html
