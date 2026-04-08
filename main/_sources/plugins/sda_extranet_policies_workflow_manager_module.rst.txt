@@ -1202,7 +1202,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
 Authors
 ~~~~~~~
 
-- Rugvedi Kapse (@rukapse) Madhan Sankaranarayanan (@madhansansel)
+- Rugvedi Kapse (@rukapse) Madhan Sankaranarayanan (@madhansansel) Archit Soni (@koderchit)
 
 
 
