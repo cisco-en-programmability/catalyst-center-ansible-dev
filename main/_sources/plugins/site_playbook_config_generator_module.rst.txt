@@ -380,7 +380,7 @@ Parameters
 
       Can be a list to match multiple site types.
 
-      When specified in one site filter item, the same values are applied to sibling hierarchy-only site filter items in the same request to keep union output type-consistent.
+      When omitted, all three site types are targeted for that filter item (area, building, and floor).
 
 
       .. raw:: html
