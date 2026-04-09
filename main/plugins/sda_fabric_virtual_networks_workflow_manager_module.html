@@ -1493,7 +1493,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <div class="ansibleOptionAnchor" id="parameter-config/anycast_gateways/vlan_id"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-workflow-manager-module-parameter-config-anycast-gateways-vlan-id"><strong>vlan_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/anycast_gateways/vlan_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>ID of the VLAN for the anycast gateway. The allowed VLAN range is 2-4093, except for reserved VLANs 1002-1005, 2046, and 4094. If deploying an anycast gateway on a fabric zone, this 'vlan_id' must match the 'vlan_id' of the corresponding anycast gateway on the fabric site. This field is optional if the parameter 'auto_generate_vlan_name' is set to true. Updating this field is not allowed.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>ID of the VLAN for the anycast gateway. Allowed VLAN range is 2-4093. Reserved VLANs are 1002-1005 and 2046. We do not allow users to create anycast gateways with reserved VLANs, but we accept reserved VLANs to support idempotent behavior. If deploying an anycast gateway on a fabric zone, this vlan_id must match the vlan_id of the corresponding anycast gateway on the fabric site. This field is optional if the parameter 'auto_generate_vlan_name' is set to true. Updating this field is not allowed.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1611,7 +1611,7 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <div class="ansibleOptionAnchor" id="parameter-config/fabric_vlan/vlan_id"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-sda-fabric-virtual-networks-workflow-manager-module-parameter-config-fabric-vlan-vlan-id"><strong>vlan_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/fabric_vlan/vlan_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>ID for the layer2 VLAN network. Allowed VLAN range is 2-4093 except for reserved VLANs 1002-1005, and 2046. If deploying on a fabric zone, this vlan_id must match the vlan_id of the corresponding layer2 virtual network on the fabric site. And update of this field is not allowed.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>ID for the layer2 VLAN network. Allowed VLAN range is 2-4093. Reserved VLANs are 1002-1005 and 2046. We do not allow users to create fabric VLANs with reserved VLANs, but we accept reserved VLANs to support idempotent behavior. If deploying on a fabric zone, this vlan_id must match the vlan_id of the corresponding layer2 virtual network on the fabric site. And update of this field is not allowed.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -2286,7 +2286,9 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-sda-fabr
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Abhishek Maheshwari (&#64;abmahesh) Madhan Sankaranarayanan (&#64;madhansansel)</p></li>
+<li><p>Abhishek Maheshwari (&#64;abmahesh)</p></li>
+<li><p>Sunil Shatagopa (&#64;shatagopasunil)</p></li>
+<li><p>Madhan Sankaranarayanan (&#64;madhansansel)</p></li>
 </ul>
 </section>
 <section id="collection-links">
