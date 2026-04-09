@@ -8388,8 +8388,8 @@ Examples
           - ip_address: 204.1.2.3
             layer2_configuration:
               authentication:
-              enable_dot1x_authentication: true
-              authentication_config_mode: NEW_STYLE
+                enable_dot1x_authentication: true
+                authentication_config_mode: NEW_STYLE
 
     - name: Configure LACP and PAGP Port Channels
       cisco.dnac.wired_campus_automation_workflow_manager:
