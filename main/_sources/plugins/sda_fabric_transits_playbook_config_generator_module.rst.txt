@@ -329,7 +329,20 @@ Parameters
 
       Transit type to filter fabric transits by type.
 
-      Valid values are IP\_BASED\_TRANSIT, SDA\_LISP\_PUB\_SUB\_TRANSIT, SDA\_LISP\_BGP\_TRANSIT
+      \ :literal:`IP\_BASED\_TRANSIT`\  selects transits that use IP-based routing with BGP between fabric sites.
+
+      \ :literal:`SDA\_LISP\_PUB\_SUB\_TRANSIT`\  selects transits that use SDA with LISP Publish-Subscribe control plane.
+
+      \ :literal:`SDA\_LISP\_BGP\_TRANSIT`\  selects transits that use SDA with LISP BGP control plane.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry:`"IP\_BASED\_TRANSIT"`
+      - :ansible-option-choices-entry:`"SDA\_LISP\_PUB\_SUB\_TRANSIT"`
+      - :ansible-option-choices-entry:`"SDA\_LISP\_BGP\_TRANSIT"`
 
 
       .. raw:: html
