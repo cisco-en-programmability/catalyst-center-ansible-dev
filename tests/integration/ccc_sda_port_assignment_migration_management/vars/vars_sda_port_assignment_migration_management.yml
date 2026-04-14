@@ -1,0 +1,250 @@
+---
+###############################################################################################################
+# Test data for SDA Port Assignment Migration Workflow Manager integration tests.
+#
+# TESTBED CONSTRAINT: EN1 and EN2 have non-overlapping physical interface sets
+#   EN1 (204.1.2.5) has GigabitEthernet1/0/x  (C9300L-24P single switch)
+#   EN2 (204.1.2.6) has GigabitEthernet2/0/x  (C9300-48U stack member 2)
+# Consequently every positive migration scenario below supplies an 'interface_mapping'
+# translating Gi1/0/x -> Gi2/0/x. The "no-mapping success" path is covered in the unit
+# tests via synthetic fixtures rather than on this testbed.
+#
+# Migration direction:
+#   source      = EN1 (IAC-TB4-SJ-EN1-9300.cisco.com / 204.1.2.5) - receives dummy port
+#                 assignments in the pre-test task so the source has real data to migrate.
+#   destination = EN2 (IAC-TB4-SJ-EN2-9300.cisco.com / 204.1.2.6) - wiped clean in the
+#                 pre-test task so the first positive scenario exercises the "add" path.
+#
+# The test playbook runs all scenarios with dnac_log_append: true so each scenario's API
+# responses accumulate in dnac.log for fixture extraction by the unit tests.
+#
+# Prerequisites:
+#   Run tests/workflow/setup_en1_for_migration_test.yml once to make sure EN1 is in the
+#   fabric as an Edge node.
+###############################################################################################################
+
+###############################################################################################################
+# Pre-test: add dummy port assignments to the source (EN1) so it has real data to migrate.
+# This input matches the playbook schema for sda_host_port_onboarding_workflow_manager.
+###############################################################################################################
+pre_test_source_populate:
+  - ip_address: "204.1.2.5"
+    fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    port_assignments:
+      - interface_name: "GigabitEthernet1/0/5"
+        connected_device_type: "USER_DEVICE"
+        data_vlan_name: "SJ_CLIENT_DATA"
+      - interface_name: "GigabitEthernet1/0/6"
+        connected_device_type: "USER_DEVICE"
+        data_vlan_name: "SJ_CLIENT_DATA"
+      - interface_name: "GigabitEthernet1/0/8"
+        connected_device_type: "ACCESS_POINT"
+        data_vlan_name: "SJ_AP_MGMT"
+
+###############################################################################################################
+# Pre-test: wipe any existing port assignments on the destination (EN2) so the positive
+# scenarios exercise the "add" path on first run.
+###############################################################################################################
+pre_test_destination_wipe:
+  - ip_address: "204.1.2.6"
+    fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    port_assignments:
+      - interface_name: "GigabitEthernet2/0/5"
+      - interface_name: "GigabitEthernet2/0/6"
+      - interface_name: "GigabitEthernet2/0/8"
+
+###############################################################################################################
+# Post-test: wipe port assignments on both devices so the test is repeatable and leaves no
+# lingering config on the fabric.
+###############################################################################################################
+post_test_source_wipe:
+  - ip_address: "204.1.2.5"
+    fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    port_assignments:
+      - interface_name: "GigabitEthernet1/0/5"
+      - interface_name: "GigabitEthernet1/0/6"
+      - interface_name: "GigabitEthernet1/0/8"
+
+post_test_destination_wipe:
+  - ip_address: "204.1.2.6"
+    fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    port_assignments:
+      - interface_name: "GigabitEthernet2/0/5"
+      - interface_name: "GigabitEthernet2/0/6"
+      - interface_name: "GigabitEthernet2/0/8"
+
+###############################################################################################################
+# Scenario 1 (positive): Migrate with interface mapping - first run exercises the "add"
+# path on EN2. Expected: all three destination interfaces created, changed=true.
+###############################################################################################################
+migrate_with_mapping_add:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+      - source_interface: "GigabitEthernet1/0/6"
+        destination_interface: "GigabitEthernet2/0/6"
+      - source_interface: "GigabitEthernet1/0/8"
+        destination_interface: "GigabitEthernet2/0/8"
+
+###############################################################################################################
+# Scenario 2 (positive): Same config as Scenario 1, second run. Destination now matches
+# source; all three interfaces should be classified as "no_update". changed=false.
+###############################################################################################################
+migrate_with_mapping_idempotent:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+      - source_interface: "GigabitEthernet1/0/6"
+        destination_interface: "GigabitEthernet2/0/6"
+      - source_interface: "GigabitEthernet1/0/8"
+        destination_interface: "GigabitEthernet2/0/8"
+
+###############################################################################################################
+# Scenario 3 (positive): Same mapping but identify source/destination by hostname. Exercises
+# the hostname branch of _resolve_device (get_device_list {"hostname": ...}).
+###############################################################################################################
+migrate_with_mapping_by_hostname:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      hostname: "IAC-TB4-SJ-EN1-9300.cisco.com"
+    destination_device:
+      hostname: "IAC-TB4-SJ-EN2-9300.cisco.com"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+      - source_interface: "GigabitEthernet1/0/6"
+        destination_interface: "GigabitEthernet2/0/6"
+      - source_interface: "GigabitEthernet1/0/8"
+        destination_interface: "GigabitEthernet2/0/8"
+
+###############################################################################################################
+# Negative scenarios - offline config validation (no API traffic)
+###############################################################################################################
+
+# 4: hierarchy missing the "Global/" prefix. Exercises _validate_fabric_site_hierarchy.
+invalid_fabric_hierarchy_prefix:
+  - fabric_site_name_hierarchy: "USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+
+# 5: source_device without ip_address or hostname. Exercises _validate_device_config.
+invalid_source_device_missing_identifier:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device: {}
+    destination_device:
+      ip_address: "204.1.2.6"
+
+# 6: Invalid IPv4 address. Exercises is_valid_ipv4 in _validate_device_config.
+invalid_source_device_bad_ipv4:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "not.an.ip.addr"
+    destination_device:
+      ip_address: "204.1.2.6"
+
+# 7: Source and destination resolve to the same device. Exercises
+# _validate_source_destination_not_same.
+invalid_same_source_and_destination:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.5"
+
+# 8: interface_mapping supplied but empty.
+invalid_empty_interface_mapping:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping: []
+
+# 9: Duplicate source_interface.
+invalid_duplicate_source_interface:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/6"
+
+# 10: Duplicate destination_interface.
+invalid_duplicate_destination_interface:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+      - source_interface: "GigabitEthernet1/0/6"
+        destination_interface: "GigabitEthernet2/0/5"
+
+###############################################################################################################
+# Negative scenarios - API-backed validation (hit get_have; require live Catalyst Center)
+###############################################################################################################
+
+# 11: Non-existent source device IP. Exercises _resolve_device "not found" branch.
+invalid_source_device_not_in_inventory:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "10.255.255.254"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+
+# 12: Valid hierarchy format but not a real fabric site. Exercises _resolve_fabric_id
+# "site not found" branch.
+invalid_fabric_site_not_found:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/NONEXISTENT_BUILDING"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet2/0/5"
+
+# 13: interface_mapping references a source_interface that doesn't exist on the source
+# device. Exercises Rule A source-side check in _validate_interface_mapping_against_devices.
+invalid_mapping_source_interface_not_on_device:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet9/9/9"
+        destination_interface: "GigabitEthernet2/0/5"
+
+# 14: interface_mapping references a destination_interface that doesn't exist on the
+# destination device. Exercises Rule A destination-side check.
+invalid_mapping_destination_interface_not_on_device:
+  - fabric_site_name_hierarchy: "Global/USA/San Jose/BLDG23"
+    source_device:
+      ip_address: "204.1.2.5"
+    destination_device:
+      ip_address: "204.1.2.6"
+    interface_mapping:
+      - source_interface: "GigabitEthernet1/0/5"
+        destination_interface: "GigabitEthernet9/9/9"
