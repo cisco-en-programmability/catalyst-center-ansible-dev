@@ -460,7 +460,7 @@ class _Synth:
     def task_chain(task_id, num_polls=1):
         """One POST that returns taskId, then num_polls task_detail SUCCESS polls."""
         return [_Synth.post_task_response(task_id)] + [
-            _Synth.task_detail(task_id, "SUCCESS") for _ in range(num_polls)
+            _Synth.task_detail(task_id, "SUCCESS") for unused_idx in range(num_polls)
         ]
 
     @staticmethod
@@ -1533,7 +1533,7 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
             # task failure may trigger a failure-reason fetch; return empty to
             # be safe against any trailing _exec call. Extra items at the end
             # of side_effect are ignored if unused.
-            + [{"response": []} for _ in range(10)]
+            + [{"response": []} for unused_idx in range(10)]
         )
         cfg = dict(_SYNTH_BASE_CFG, interface_mapping=[
             {"source_interface": "GigabitEthernet1/0/1",
