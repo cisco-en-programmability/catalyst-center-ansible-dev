@@ -70,6 +70,29 @@
     }
   },
 
+  "playbook_config_network_management_by_server_types": {
+    "component_specific_filters": {
+      "components_list": ["network_management_details"],
+      "network_management_details": [
+        {
+          "site_name_list": ["Global/Fabric_Test"],
+          "server_types": [
+            "dhcp_server",
+            "dns_server",
+            "ntp_server",
+            "network_aaa",
+            "client_and_endpoint_aaa",
+            "netflow_collector",
+            "snmp_server",
+            "syslog_server",
+            "timezone",
+            "message_of_the_day"
+          ]
+        }
+      ]
+    }
+  },
+
   "playbook_config_device_controllability_by_site": {
     "component_specific_filters": {
       "components_list": ["device_controllability_details"]
