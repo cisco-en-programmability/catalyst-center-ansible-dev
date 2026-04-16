@@ -954,7 +954,11 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
         prelude = _Synth.prelude(src_pa, dest_pa, [], [])
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-update-pa", num_polls=2)
+            # task_chain MUST use num_polls=1: the poll loop breaks as soon as
+            # it sees an endTime, so a second task_detail would be left over
+            # and the *next* _exec call (verify's get_port_assignments) would
+            # consume it - corrupting the list with its dict keys.
+            + _Synth.task_chain("task-update-pa", num_polls=1)
             + _Synth.verify_epilogue(
                 [_Synth.port_assignment(_Synth.DEST_DEVICE_ID,
                                         "GigabitEthernet1/0/1", vlan="VLAN_NEW")],
@@ -991,10 +995,18 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
         # migrate" guard). Actually the guard allows just channels. Let's
         # keep assignments empty to exercise the channels-only path.
         src_pa = []
-        prelude = _Synth.prelude(src_pa, [], src_pc, [])
+        # Destination has no existing port-channels / assignments, so
+        # collect_interfaces would yield an empty dest_interfaces set and the
+        # mapping validation would reject TenGi1/0/1. Declare the interfaces
+        # explicitly so the dest get_interfaces fixture reports them as
+        # physically present.
+        prelude = _Synth.prelude(
+            src_pa, [], src_pc, [],
+            dest_interfaces={"TenGigabitEthernet1/0/1", "TenGigabitEthernet1/0/2"},
+        )
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-add-pc", num_polls=2)
+            + _Synth.task_chain("task-add-pc", num_polls=1)
             + _Synth.verify_epilogue(
                 [],
                 [_Synth.port_channel(
@@ -1044,7 +1056,7 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
         prelude = _Synth.prelude(src_pa, [], src_pc, dest_pc)
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-update-pc", num_polls=2)
+            + _Synth.task_chain("task-update-pc", num_polls=1)
             + _Synth.verify_epilogue([], dest_pc)
         )
         cfg = dict(_SYNTH_BASE_CFG, interface_mapping=[
@@ -1116,12 +1128,22 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
             _Synth.port_assignment(_Synth.DEST_DEVICE_ID, "GigabitEthernet1/0/3",
                                    vlan="VLAN_KEEP"),  # no-update path
         ]
-        prelude = _Synth.prelude(src_pa, dest_pa, [], [])
+        # Destination inventory must physically include Gi1/0/1 (which is not
+        # in dest_pa yet). Declare all three interface names so the dest
+        # get_interfaces fixture reports them.
+        prelude = _Synth.prelude(
+            src_pa, dest_pa, [], [],
+            dest_interfaces={
+                "GigabitEthernet1/0/1",
+                "GigabitEthernet1/0/2",
+                "GigabitEthernet1/0/3",
+            },
+        )
         # Two tasks: add then update, each polled once.
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-add", num_polls=2)
-            + _Synth.task_chain("task-upd", num_polls=2)
+            + _Synth.task_chain("task-add", num_polls=1)
+            + _Synth.task_chain("task-upd", num_polls=1)
             + _Synth.verify_epilogue(
                 [_Synth.port_assignment(_Synth.DEST_DEVICE_ID,
                                         "GigabitEthernet1/0/1", vlan="VLAN_NEW"),
@@ -1170,7 +1192,7 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
         )
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-add-identity", num_polls=2)
+            + _Synth.task_chain("task-add-identity", num_polls=1)
             + _Synth.verify_epilogue(
                 [_Synth.port_assignment(_Synth.DEST_DEVICE_ID,
                                         "GigabitEthernet1/0/1")],
@@ -1448,7 +1470,13 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
             ["TenGigabitEthernet1/0/1", "TenGigabitEthernet1/0/2"],
             protocol="LACP",
         )]
-        prelude = _Synth.prelude([], [], src_pc, [])
+        # Declare the mapped destination interface physically so we clear Rule
+        # A's "exists on destination" check and reach the Rule B partial
+        # mapping check.
+        prelude = _Synth.prelude(
+            [], [], src_pc, [],
+            dest_interfaces={"TenGigabitEthernet1/0/1"},
+        )
         self._synth_side_effect = prelude
         cfg = dict(_SYNTH_BASE_CFG, interface_mapping=[
             # Only one of two members is mapped.
@@ -1555,7 +1583,12 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
             _Synth.SRC_DEVICE_ID, "Port-channel1", members,
             protocol="LACP",
         )]
-        prelude = _Synth.prelude([], [], src_pc, [])
+        # Declare the mapped destination interfaces physically so we clear the
+        # mapping validation and reach the port-channels POST.
+        prelude = _Synth.prelude(
+            [], [], src_pc, [],
+            dest_interfaces=set(members),
+        )
         # POST returns a response with NO taskId.
         no_task_post = {"response": {"url": "/no-task-here"}, "version": "1.0"}
         self._synth_side_effect = prelude + [no_task_post]
@@ -1606,10 +1639,15 @@ class TestSDAPortAssignmentMigrationWorkflowManager(TestDnacModule):
         src_pa = [
             _Synth.port_assignment(_Synth.SRC_DEVICE_ID, "GigabitEthernet1/0/1"),
         ]
-        prelude = _Synth.prelude(src_pa, [], [], [])
+        # Destination has no PA yet (add path) but the interface must exist
+        # physically for the mapping validation to pass.
+        prelude = _Synth.prelude(
+            src_pa, [], [], [],
+            dest_interfaces={"GigabitEthernet1/0/1"},
+        )
         self._synth_side_effect = (
             prelude
-            + _Synth.task_chain("task-add-then-verify-miss", num_polls=2)
+            + _Synth.task_chain("task-add-then-verify-miss", num_polls=1)
             # Verify epilogue returns EMPTY destination assignments - should
             # trigger the "requested port assignment ... is missing" warning.
             + [
