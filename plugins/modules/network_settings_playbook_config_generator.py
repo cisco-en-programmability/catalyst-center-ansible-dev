@@ -129,10 +129,13 @@ options:
                 required: false
           network_management_details:
             description:
-            - Network management settings to filter by site.
+            - Network management settings to filter by site and/or server type.
             - If C(network_management_details) sub-filter is not provided under C(component_specific_filters),
               the module defaults to retrieving settings for the B(Global) (root) site only.
             - To retrieve settings for specific sites, provide a C(site_name_list) with the desired site names.
+            - To retrieve only specific server types, provide a C(server_types) list. Site and server filters
+              are combined with B(AND) logic.
+            - If C(server_types) is omitted, all server types are retrieved (backward-compatible).
             type: list
             elements: dict
             required: false
@@ -145,6 +148,28 @@ options:
                 type: list
                 elements: str
                 required: false
+              server_types:
+                description:
+                - List of server/settings types to include in the output.
+                - Valid values are C(dhcp_server), C(dns_server), C(ntp_server), C(network_aaa),
+                  C(client_and_endpoint_aaa), C(netflow_collector), C(snmp_server), C(syslog_server),
+                  C(timezone), C(message_of_the_day).
+                - If omitted, all server types are included (default/backward-compatible behaviour).
+                - Combined with C(site_name_list) using AND logic.
+                type: list
+                elements: str
+                required: false
+                choices:
+                  - dhcp_server
+                  - dns_server
+                  - ntp_server
+                  - network_aaa
+                  - client_and_endpoint_aaa
+                  - netflow_collector
+                  - snmp_server
+                  - syslog_server
+                  - timezone
+                  - message_of_the_day
           device_controllability_details:
             description:
             - Device controllability settings to filter by site.
@@ -223,6 +248,44 @@ EXAMPLES = r"""
             pool_type: "Generic"
         reserve_pool_details:
           - site_name: "Global/USA"
+
+# Network management details filtered by site and specific server types.
+# server_types uses AND logic with site_name_list: only the listed server types
+# are included in the output for the specified sites.
+# All 10 available server types are shown below; include only the ones you need.
+- name: Generate YAML Configuration for network management - filtered by server type
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_config.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - site_name_list:
+              - "Global/USA/California"
+              - "Global/India/Mumbai"
+            server_types:
+              - dhcp_server
+              - dns_server
+              - ntp_server
+              - network_aaa
+              - client_and_endpoint_aaa
+              - netflow_collector
+              - snmp_server
+              - syslog_server
+              - timezone
+              - message_of_the_day
 """
 
 RETURN = r"""
@@ -517,6 +580,23 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                             "type": "list",
                             "required": False,
                             "elements": "str"
+                        },
+                        "server_types": {
+                            "type": "list",
+                            "required": False,
+                            "elements": "str",
+                            "choices": [
+                                "dhcp_server",
+                                "dns_server",
+                                "ntp_server",
+                                "network_aaa",
+                                "client_and_endpoint_aaa",
+                                "netflow_collector",
+                                "snmp_server",
+                                "syslog_server",
+                                "timezone",
+                                "message_of_the_day",
+                            ]
                         },
                     },
                     "reverse_mapping_function": self.network_management_reverse_mapping_function,
@@ -3455,8 +3535,9 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
             )
             component_specific_filters = []
 
-        # Extract site_name_list from component specific filters
+        # Extract site_name_list and server_types from component specific filters
         site_name_list = []
+        requested_server_types = []
         if component_specific_filters:
             self.log(
                 "Processing {0} component-specific filter criteria".format(
@@ -3497,6 +3578,31 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                             ),
                             "WARNING"
                         )
+
+                if "server_types" in filter_param:
+                    extracted_types = filter_param["server_types"]
+                    if isinstance(extracted_types, list):
+                        requested_server_types.extend(extracted_types)
+                        self.log(
+                            "Extracted server_types filter: {0}".format(extracted_types),
+                            "DEBUG"
+                        )
+                    else:
+                        self.log(
+                            "Invalid server_types type in component filter - expected list, got {0}".format(
+                                type(extracted_types).__name__
+                            ),
+                            "WARNING"
+                        )
+
+        # Deduplicate while preserving order
+        requested_server_types = list(dict.fromkeys(requested_server_types))
+        self.log(
+            "Server type filter: {0} (empty = all types)".format(
+                requested_server_types if requested_server_types else "<all>"
+            ),
+            "INFO"
+        )
 
         # If no component specific filters, check global filters
         if not site_name_list:
@@ -4041,20 +4147,39 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                 entry = self.clean_nm_entry(entry)
 
                 # ---- Apply unified reverse mapping ----
+                # Build the full settings dict first, then prune by server_types if specified
+                all_settings = {
+                    "network_aaa": self.extract_network_aaa(entry),
+                    "client_and_endpoint_aaa": self.extract_client_aaa(entry),
+                    "dhcp_server": self.extract_dhcp(entry),
+                    "dns_server": self.extract_dns(entry),
+                    "ntp_server": self.extract_ntp(entry),
+                    "timezone": self.extract_timezone(entry),
+                    "message_of_the_day": self.extract_banner(entry),
+                    "netflow_collector": self.extract_netflow(entry),
+                    "snmp_server": self.extract_snmp(entry),
+                    "syslog_server": self.extract_syslog(entry),
+                }
+
+                if requested_server_types:
+                    # AND logic: keep only the server types explicitly requested
+                    filtered_settings = {
+                        k: v for k, v in all_settings.items()
+                        if k in requested_server_types
+                    }
+                    self.log(
+                        "server_types filter applied for site '{0}': keeping {1} of {2} server types".format(
+                            site_name, len(filtered_settings), len(all_settings)
+                        ),
+                        "DEBUG"
+                    )
+                else:
+                    # No server_types filter — default: include all (backward-compatible)
+                    filtered_settings = all_settings
+
                 transformed_entry = self.prune_empty({
                     "site_name": site_name,
-                    "settings": {
-                        "network_aaa": self.extract_network_aaa(entry),
-                        "client_and_endpoint_aaa": self.extract_client_aaa(entry),
-                        "dhcp_server": self.extract_dhcp(entry),
-                        "dns_server": self.extract_dns(entry),
-                        "ntp_server": self.extract_ntp(entry),
-                        "timezone": self.extract_timezone(entry),
-                        "message_of_the_day": self.extract_banner(entry),
-                        "netflow_collector": self.extract_netflow(entry),
-                        "snmp_server": self.extract_snmp(entry),
-                        "syslog_server": self.extract_syslog(entry),
-                    }
+                    "settings": filtered_settings
                 })
 
                 transformed_nm.append(transformed_entry)

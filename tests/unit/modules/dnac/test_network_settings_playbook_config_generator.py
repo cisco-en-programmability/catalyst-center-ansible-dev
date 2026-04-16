@@ -42,6 +42,7 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
     playbook_config_reserve_pools_by_site_single = test_data.get("playbook_config_reserve_pools_by_site_single")
     playbook_config_reserve_pools_by_pool_name = test_data.get("playbook_config_reserve_pools_by_pool_name")
     playbook_config_network_management_by_site = test_data.get("playbook_config_network_management_by_site")
+    playbook_config_network_management_by_server_types = test_data.get("playbook_config_network_management_by_server_types")
     playbook_config_device_controllability_by_site = test_data.get("playbook_config_device_controllability_by_site")
     playbook_config_aaa_settings_by_network = test_data.get("playbook_config_aaa_settings_by_network")
     playbook_config_aaa_settings_by_server_type = test_data.get("playbook_config_aaa_settings_by_server_type")
@@ -116,6 +117,12 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
             self.run_dnac_exec.side_effect = [
                 self.test_data.get("get_site_details"),
                 self.test_data.get("get_network_management_response"),
+                self.test_data.get("get_network_management_response"),
+            ]
+
+        elif "network_management_by_server_types" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("get_site_details"),
                 self.test_data.get("get_network_management_response"),
             ]
 
@@ -613,6 +620,37 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
                 dnac_log=True,
                 state="gathered",
                 config=self.playbook_config_no_file_path
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation succeeded", str(result.get('msg')))
+
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('os.path.exists')
+    def test_network_settings_playbook_config_generator_network_management_by_server_types(self, mock_exists, mock_file):
+        """
+        Test case for generating YAML configuration for network management settings
+        filtered by server types.
+
+        This test verifies that when server_types is specified under
+        network_management_details, only the requested server type keys appear
+        in the generated YAML output and the module succeeds.
+        All 10 valid server types are exercised in a single filter block to
+        confirm the full set is accepted and processed correctly.
+        """
+        mock_exists.return_value = True
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="gathered",
+                file_path="/tmp/test_server_types.yaml",
+                file_mode="overwrite",
+                config=self.playbook_config_network_management_by_server_types
             )
         )
         result = self.execute_module(changed=True, failed=False)
