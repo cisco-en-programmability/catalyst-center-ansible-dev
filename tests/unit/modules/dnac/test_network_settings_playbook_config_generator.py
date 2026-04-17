@@ -43,6 +43,7 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
     playbook_config_reserve_pools_by_pool_name = test_data.get("playbook_config_reserve_pools_by_pool_name")
     playbook_config_network_management_by_site = test_data.get("playbook_config_network_management_by_site")
     playbook_config_network_management_by_server_types = test_data.get("playbook_config_network_management_by_server_types")
+    playbook_config_network_management_by_ip_address = test_data.get("playbook_config_network_management_by_ip_address")
     playbook_config_device_controllability_by_site = test_data.get("playbook_config_device_controllability_by_site")
     playbook_config_aaa_settings_by_network = test_data.get("playbook_config_aaa_settings_by_network")
     playbook_config_aaa_settings_by_server_type = test_data.get("playbook_config_aaa_settings_by_server_type")
@@ -124,6 +125,13 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
             self.run_dnac_exec.side_effect = [
                 self.test_data.get("get_site_details"),
                 self.test_data.get("get_network_management_response"),
+            ]
+
+        elif "network_management_by_ip_address" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("get_site_details"),
+                self.test_data.get("get_aaa_settings_response"),
+                self.test_data.get("get_dhcp_for_site_response"),
             ]
 
         elif "device_controllability_by_site" in self._testMethodName:
@@ -651,6 +659,37 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
                 file_path="/tmp/test_server_types.yaml",
                 file_mode="overwrite",
                 config=self.playbook_config_network_management_by_server_types
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation succeeded", str(result.get('msg')))
+
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('os.path.exists')
+    def test_network_settings_playbook_config_generator_network_management_by_ip_address(self, mock_exists, mock_file):
+        """
+        Test case for generating YAML configuration for network management settings
+        filtered by IP address.
+
+        This test verifies that when ip_address_list is specified under
+        network_management_details, only sites whose server settings contain
+        at least one of the requested IP addresses are included in the output.
+        The fixture uses 10.1.1.10, which appears in the DHCP server list of
+        the Global site in get_network_management_response.
+        """
+        mock_exists.return_value = True
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="gathered",
+                file_path="/tmp/test_ip_address.yaml",
+                file_mode="overwrite",
+                config=self.playbook_config_network_management_by_ip_address
             )
         )
         result = self.execute_module(changed=True, failed=False)
