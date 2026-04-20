@@ -573,6 +573,8 @@ Parameters
 
       The duration of the Intelligent Capture session in minutes.
 
+      Accepted range is 30 to 480 minutes (inclusive).
+
 
       .. raw:: html
 
