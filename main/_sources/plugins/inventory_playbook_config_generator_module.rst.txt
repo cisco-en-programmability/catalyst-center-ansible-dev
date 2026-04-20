@@ -173,9 +173,13 @@ Parameters
 
         <div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
 
-      Global filters to filter inventory data.
+      Global filters used to filter inventory data.
 
-      All provided filter groups are combined using logical AND.
+      Multiple filters under \ :literal:`global\_filters`\  are combined using logical AND.
+
+      At least one supported global filter must be provided when using \ :literal:`global\_filters`\ .
+
+      Unknown keys fail validation with an error.
 
 
       .. raw:: html
@@ -1081,7 +1085,7 @@ Notes
 
    - Filter behavior:
      When \ :literal:`config.global\_filters`\  is provided, \ :literal:`devices`\ , \ :literal:`device\_roles`\ , and \ :literal:`device\_types`\  are
-     applied with AND semantics. Unknown global filter keys are ignored.
+     applied with AND semantics. Unknown global filter keys fail validation with an error.
 
    - Module result behavior (changed/ok/failed):
      The module result reflects local file state only, not Catalyst Center state.

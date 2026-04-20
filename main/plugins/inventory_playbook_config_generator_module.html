@@ -1293,8 +1293,10 @@ see <a class="reference internal" href="#ansible-collections-cisco-dnac-inventor
 <div class="ansibleOptionAnchor" id="parameter-config/global_filters"></div><p class="ansible-option-title" id="ansible-collections-cisco-dnac-inventory-playbook-config-generator-module-parameter-config-global-filters"><strong>global_filters</strong></p>
 <a class="ansibleOptionLink" href="#parameter-config/global_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Global filters to filter inventory data.</p>
-<p>All provided filter groups are combined using logical AND.</p>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Global filters used to filter inventory data.</p>
+<p>Multiple filters under <code class="docutils literal notranslate"><span class="pre">global_filters</span></code> are combined using logical AND.</p>
+<p>At least one supported global filter must be provided when using <code class="docutils literal notranslate"><span class="pre">global_filters</span></code>.</p>
+<p>Unknown keys fail validation with an error.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -1549,7 +1551,7 @@ When <code class="docutils literal notranslate"><span class="pre">config</span><
 generates inventory configuration for all discovered devices without applying filters.</p></li>
 <li><p>Filter behavior:
 When <code class="docutils literal notranslate"><span class="pre">config.global_filters</span></code> is provided, <code class="docutils literal notranslate"><span class="pre">devices</span></code>, <code class="docutils literal notranslate"><span class="pre">device_roles</span></code>, and <code class="docutils literal notranslate"><span class="pre">device_types</span></code> are
-applied with AND semantics. Unknown global filter keys are ignored.</p></li>
+applied with AND semantics. Unknown global filter keys fail validation with an error.</p></li>
 <li><p>Module result behavior (changed/ok/failed):
 The module result reflects local file state only, not Catalyst Center state.
 In overwrite mode, generated YAML is compared against existing file content after
