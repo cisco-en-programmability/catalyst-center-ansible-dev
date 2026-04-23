@@ -2690,6 +2690,39 @@ class BrownFieldHelper:
         self.status = "success"
         return self
 
+    def should_use_string_pagination_params(self, fixed_sdk_version):
+        """
+        Determine if pagination params should be sent as strings for SDK compatibility.
+
+        Args:
+            fixed_sdk_version (str): SDK version where the pagination conversion fix is
+                available. Example: "2.11.2".
+
+        Returns:
+            bool: True when installed dnacentersdk version is lower than
+                fixed_sdk_version, else False.
+
+        Note:
+            Certain dnacentersdk versions required string values for pagination
+            params like offset/limit in some wrappers. Newer versions normalize
+            these values safely. Passing the target version keeps this helper
+            reusable for different compatibility thresholds.
+
+            This helper intentionally reuses self.compare_dnac_versions for SDK
+            version comparison as well. Both DNAC and dnacentersdk versions are
+            represented as dotted numeric segments (for example, "2.11.2"), so
+            the same comparison logic applies consistently.
+        """
+        if not getattr(self, "dnacentersdk_version", None):
+            self.dnacentersdk_version = self.get_dnacentersdk_version()
+
+        return (
+            self.compare_dnac_versions(
+                self.dnacentersdk_version, fixed_sdk_version
+            )
+            < 0
+        )
+
     def execute_get_with_pagination(
         self,
         api_family,

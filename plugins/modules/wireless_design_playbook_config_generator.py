@@ -434,6 +434,7 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         super().__init__(module)
         self.module_schema = self.get_workflow_elements_schema()
         self.module_name = "wireless_design_workflow_manager"
+        self.dnacentersdk_version = self.get_dnacentersdk_version()
         self.country_code_map = None
         self._api_response_to_module_attribute_map = None
 
@@ -3369,6 +3370,11 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "DEBUG"
         )
 
+        # SDK versions below 2.11.2 can require offset/limit as strings in paginated calls.
+        use_strings_for_pagination = self.should_use_string_pagination_params(
+            "2.11.2"
+        )
+
         params = {}
         if component_specific_filters:
             self.log(
@@ -3395,7 +3401,10 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "DEBUG"
                 )
                 wireless_access_point_profile_details = self.execute_get_with_pagination(
-                    api_family, api_function, params
+                    api_family,
+                    api_function,
+                    params,
+                    use_strings=use_strings_for_pagination,
                 )
 
                 if wireless_access_point_profile_details:
@@ -3423,7 +3432,10 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             self.log("Fetching all wireless access point profiles from Catalyst Center", "DEBUG")
 
             wireless_access_point_profile_details = self.execute_get_with_pagination(
-                api_family, api_function, params
+                api_family,
+                api_function,
+                params,
+                use_strings=use_strings_for_pagination,
             )
 
             if wireless_access_point_profile_details:
@@ -3633,6 +3645,11 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "DEBUG"
         )
 
+        # SDK versions below 2.11.2 can require offset/limit as strings in paginated calls.
+        use_strings_for_pagination = self.should_use_string_pagination_params(
+            "2.11.2"
+        )
+
         params = {}
         if component_specific_filters:
             self.log(
@@ -3656,7 +3673,10 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "DEBUG"
                 )
                 wireless_anchor_group_details = self.execute_get_with_pagination(
-                    api_family, api_function, params
+                    api_family,
+                    api_function,
+                    params,
+                    use_strings=use_strings_for_pagination,
                 )
 
                 if "anchor_group_name" in filter_param:
@@ -3685,7 +3705,10 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             self.log("Fetching all wireless anchor groups from Catalyst Center", "DEBUG")
 
             wireless_anchor_group_details = self.execute_get_with_pagination(
-                api_family, api_function, params
+                api_family,
+                api_function,
+                params,
+                use_strings=use_strings_for_pagination,
             )
 
             if wireless_anchor_group_details:

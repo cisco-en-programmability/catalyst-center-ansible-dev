@@ -12,11 +12,11 @@ try:
 except ImportError:
     HAS_FERNET = False
 try:
+    import dnacentersdk
     from dnacentersdk import api, exceptions
+    DNAC_SDK_IS_INSTALLED = True
 except ImportError:
     DNAC_SDK_IS_INSTALLED = False
-else:
-    DNAC_SDK_IS_INSTALLED = True
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.common import validation
 from abc import ABCMeta, abstractmethod
@@ -153,6 +153,10 @@ class DnacBase():
 
         # Versions are equal
         return 0
+
+    def get_dnacentersdk_version(self):
+        """Returns the installed dnacentersdk version string."""
+        return self.dnac.dnacentersdk_version
 
     def get_safe_log_config(self, config_dict):
         """
@@ -2997,6 +3001,7 @@ class DNACSDK(object):
                 verify=params.get("dnac_verify"),
                 debug=params.get("dnac_debug"),
             )
+            self.dnacentersdk_version = dnacentersdk.__version__
             if params.get("dnac_debug") and LOGGING_IN_STANDARD:
                 self.logger.addHandler(logging.StreamHandler())
         else:
