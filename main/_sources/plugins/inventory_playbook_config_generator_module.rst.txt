@@ -282,51 +282,6 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-        <div class="ansibleOptionAnchor" id="parameter-config/global_filters/device_types"></div>
-
-      .. _ansible_collections.cisco.dnac.inventory_playbook_config_generator_module__parameter-config/global_filters/device_types:
-
-      .. rst-class:: ansible-option-title
-
-      **device_types**
-
-      .. raw:: html
-
-        <a class="ansibleOptionLink" href="#parameter-config/global_filters/device_types" title="Permalink to this option"></a>
-
-      .. rst-class:: ansible-option-type-line
-
-      :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
-
-      .. raw:: html
-
-        </div>
-
-    - .. raw:: html
-
-        <div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell">
-
-      List of inventory device types to include.
-
-
-      .. rst-class:: ansible-option-line
-
-      :ansible-option-choices:`Choices:`
-
-      - :ansible-option-choices-entry:`"COMPUTE\_DEVICE"`
-      - :ansible-option-choices-entry:`"MERAKI\_DASHBOARD"`
-      - :ansible-option-choices-entry:`"THIRD\_PARTY\_DEVICE"`
-      - :ansible-option-choices-entry:`"NETWORK\_DEVICE"`
-      - :ansible-option-choices-entry:`"ACCESS\_POINT"`
-
-
-      .. raw:: html
-
-        </div>
-
-  * - .. raw:: html
-
-        <div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-config/global_filters/devices"></div>
 
       .. _ansible_collections.cisco.dnac.inventory_playbook_config_generator_module__parameter-config/global_filters/devices:
@@ -1078,13 +1033,12 @@ Notes
      devices.Devices.get\_device\_list
    - SDK/REST Paths used are
      GET /dna/intent/api/v1/network-device
-     GET /dna/intent/api/v1/device-credential/network-device
    - Auto-discovery mode:
      When \ :literal:`config`\  is omitted entirely, the module runs in auto-discovery mode and
      generates inventory configuration for all discovered devices without applying filters.
 
    - Filter behavior:
-     When \ :literal:`config.global\_filters`\  is provided, \ :literal:`devices`\ , \ :literal:`device\_roles`\ , and \ :literal:`device\_types`\  are
+     When \ :literal:`config.global\_filters`\  is provided, \ :literal:`devices`\  and \ :literal:`device\_roles`\  are
      applied with AND semantics. Unknown global filter keys fail validation with an error.
 
    - Module result behavior (changed/ok/failed):
@@ -1146,7 +1100,7 @@ Examples
         file_path: "tmp/catc_inventory_config.yml"
         file_mode: "overwrite"
 
-    - name: Generate YAML Configuration filtered by device roles and types
+    - name: Generate YAML Configuration filtered by device roles
       cisco.dnac.inventory_playbook_config_generator:
         dnac_host: "{{ dnac_host }}"
         dnac_username: "{{ dnac_username }}"
@@ -1163,7 +1117,6 @@ Examples
         config:
           global_filters:
             device_roles: ["ACCESS", "CORE"]
-            device_types: ["NETWORK_DEVICE", "ACCESS_POINT"]
             device_identifier: "hostname"
 
     - name: Generate YAML Configuration for selected devices using serial number and IP
