@@ -70,17 +70,6 @@
     }
   },
 
-  "playbook_config_network_management_by_ip_address": {
-    "component_specific_filters": {
-      "components_list": ["network_management_details"],
-      "network_management_details": [
-        {
-          "ip_address_list": ["10.1.1.10"]
-        }
-      ]
-    }
-  },
-
   "playbook_config_network_management_by_server_types": {
     "component_specific_filters": {
       "components_list": ["network_management_details"],
