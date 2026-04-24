@@ -174,19 +174,6 @@ options:
                   - syslog_server
                   - timezone
                   - message_of_the_day
-              ip_address_list:
-                description:
-                - List of server IP addresses to match against all server settings of each site.
-                - A site is included only if B(any) of its server IPs matches B(any) entry in this list (substring match supported).
-                - Covered server types - C(dhcp_server), C(dns_server), C(ntp_server),
-                  C(network_aaa), C(client_and_endpoint_aaa), C(netflow_collector),
-                  C(snmp_server), C(syslog_server).
-                - Useful for finding all sites that use a specific server (e.g., a shared DHCP server).
-                - Combined with C(site_name_list) and C(server_types) using AND logic.
-                - If omitted, no IP filtering is applied.
-                type: list
-                elements: str
-                required: false
           device_controllability_details:
             description:
             - Device controllability settings to filter by site.
@@ -303,39 +290,6 @@ EXAMPLES = r"""
               - syslog_server
               - timezone
               - message_of_the_day
-
-# Network management details filtered by server IP address.
-# Only sites whose settings contain 10.1.1.10 (in any server type) are included.
-# Combine with site_name_list and/or server_types for finer control.
-- name: Find all sites using a specific server IP
-  cisco.dnac.network_settings_playbook_config_generator:
-    dnac_host: "{{dnac_host}}"
-    dnac_username: "{{dnac_username}}"
-    dnac_password: "{{dnac_password}}"
-    dnac_verify: "{{dnac_verify}}"
-    dnac_port: "{{dnac_port}}"
-    dnac_version: "{{dnac_version}}"
-    dnac_debug: "{{dnac_debug}}"
-    dnac_log: true
-    dnac_log_level: "{{dnac_log_level}}"
-    state: gathered
-    file_path: "/tmp/sites_using_server.yml"
-    file_mode: "overwrite"
-    config:
-      component_specific_filters:
-        components_list:
-          - "network_management_details"
-        network_management_details:
-          - ip_address_list:
-              - "10.1.1.10"
-          # Optionally narrow down by site and server type as well:
-          # - site_name_list:
-          #     - "Global/USA"
-          #   server_types:
-          #     - dhcp_server
-          #     - dns_server
-          #   ip_address_list:
-          #     - "10.1.1.10"
 """
 
 RETURN = r"""
@@ -647,11 +601,6 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                                 "timezone",
                                 "message_of_the_day",
                             ]
-                        },
-                        "ip_address_list": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "str"
                         },
                     },
                     "reverse_mapping_function": self.network_management_reverse_mapping_function,
