@@ -2984,10 +2984,18 @@ class AssuranceSettings(DnacBase):
                     params=user_issue_params,
                 )
             except Exception as msg:
-                self.msg = "Exception occurred while creating the user defined issue: {msg}".format(
-                    msg=msg
-                )
-                self.log(str(msg), "ERROR")
+                error_str = str(msg)
+                if "9003" in error_str or "max supported number" in error_str or "UDIs have hit max" in error_str:
+                    self.msg = (
+                        "Failed to create the user-defined issue '{name}'. "
+                        "The system has reached the maximum limit of 50 custom issues. "
+                        "Please delete one or more existing issues before creating new ones."
+                    ).format(name=issue.get("name"))
+                else:
+                    self.msg = "Exception occurred while creating the user defined issue: {msg}".format(
+                        msg=msg
+                    )
+                self.log(error_str, "ERROR")
                 self.set_operation_result(
                     "failed", False, self.msg, "ERROR"
                 ).check_return_status()
