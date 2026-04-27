@@ -679,7 +679,7 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             dict: A dictionary containing the workflow filters schema with the following structure:
                 - network_elements (dict): Contains configuration for different network element types
                     - fabric_multicast (dict): Configuration for fabric multicast operations
-                        - filters (list): List of filter parameters (fabric_name, layer3_virtual_network)
+                        - filters (dict): Dict of filter parameters with type/required specs (fabric_name, layer3_virtual_network)
                         - reverse_mapping_function (method): Function to map fabric multicast specifications
                         - api_function (str): API function name for retrieving fabric multicast
                         - api_family (str): API family identifier
@@ -697,7 +697,10 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         schema = {
             "network_elements": {
                 "fabric_multicast": {
-                    "filters": ["fabric_name", "layer3_virtual_network"],
+                    "filters": {
+                        "fabric_name": {"type": "str", "required": False},
+                        "layer3_virtual_network": {"type": "str", "required": False},
+                    },
                     "reverse_mapping_function": self.fabric_multicast_temp_spec,
                     "api_function": "get_multicast_virtual_networks",
                     "api_family": "sda",
@@ -727,6 +730,8 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         Returns:
             dict: Dictionary with 'fabric_multicast' key containing list of processed multicast
                   configurations modified according to fabric_multicast_temp_spec template.
+            None: If no multicast configurations are found for processing, or if transformation
+                produces no valid output.
 
         Description:
             Fetches fabric multicast details using component-specific filters or retrieves all
@@ -904,10 +909,10 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
 
         if not all_multicast_configs:
             self.log(
-                "No multicast configurations to process. Returning empty fabric_multicast list.",
+                "No multicast configurations to process. Returning None.",
                 "WARNING",
             )
-            return {"fabric_multicast": []}
+            return None
 
         # Modify multicast details using temp_spec
         self.log(
@@ -923,6 +928,13 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         multicast_details = self.modify_parameters(
             fabric_multicast_temp_spec, all_multicast_configs
         )
+
+        if not multicast_details:
+            self.log(
+                "No multicast configurations were transformed successfully, returning None",
+                "WARNING",
+            )
+            return None
 
         self.log(
             f"Successfully transformed {len(multicast_details)} multicast configuration(s)",
@@ -1472,6 +1484,8 @@ class SdaFabricMulticastPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         """
 
         self.log(f"Creating Parameters for API Calls with state: {state}", "INFO")
+
+        self.validate_params(config)
 
         want = {}
 
