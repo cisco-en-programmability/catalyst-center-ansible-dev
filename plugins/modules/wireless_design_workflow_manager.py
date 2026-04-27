@@ -19579,8 +19579,8 @@ class WirelessDesign(DnacBase):
         def update_params(offset, limit):
             """Update the params dictionary with pagination info."""
             params.update({
-            "offset": offset,
-            "limit": limit
+                "offset": offset,
+                "limit": limit
             })
 
         try:
