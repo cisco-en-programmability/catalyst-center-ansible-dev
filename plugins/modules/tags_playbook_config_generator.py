@@ -833,13 +833,13 @@ class TagsPlaybookGenerator(DnacBase, BrownFieldHelper):
             dict: A dictionary containing the workflow filters schema with the following structure:
                 - network_elements (dict): Contains configuration for different network element types
                     - tags (dict): Configuration for tag-related operations
-                        - filters (list): List of filter parameters (tag_name, tag_id)
+                        - filters (dict): Dict of filter parameters with type/required specs (tag_name, tag_id)
                         - reverse_mapping_function (method): Function to map tag specifications
                         - api_function (str): API function name for retrieving tags
                         - api_family (str): API family identifier
                         - get_function_name (method): Method to get tag configuration
                     - tag_memberships (dict): Configuration for tag membership operations
-                        - filters (list): List of filter parameters (tag_name, tag_id)
+                        - filters (dict): Dict of filter parameters with type/required/choices specs (tag_name, tag_id, device_identifier)
                         - reverse_mapping_function (method): Function to map tag membership specs
                         - api_function (str): API function name for retrieving tag members
                         - api_family (str): API family identifier
@@ -855,14 +855,31 @@ class TagsPlaybookGenerator(DnacBase, BrownFieldHelper):
         schema = {
             "network_elements": {
                 "tags": {
-                    "filters": ["tag_name", "tag_id"],
+                    "filters": {
+                        "tag_name": {"type": "str", "required": False},
+                        "tag_id": {"type": "str", "required": False},
+                    },
                     "reverse_mapping_function": self.tag_temp_spec,
                     "api_function": "get_tag",
                     "api_family": "tag",
                     "get_function_name": self.get_tags_configuration,
                 },
                 "tag_memberships": {
-                    "filters": ["tag_name", "tag_id", "device_identifier"],
+                    "filters": {
+                        "tag_name": {"type": "str", "required": False},
+                        "tag_id": {"type": "str", "required": False},
+                        "device_identifier": {
+                            "type": "str",
+                            "required": False,
+                            "default": "serial_number",
+                            "choices": [
+                                "hostname",
+                                "serial_number",
+                                "mac_address",
+                                "ip_address",
+                            ],
+                        },
+                    },
                     "reverse_mapping_function": self.tag_memberships_temp_spec,
                     "api_function": "get_tag_members_by_id",
                     "api_family": "tag",
