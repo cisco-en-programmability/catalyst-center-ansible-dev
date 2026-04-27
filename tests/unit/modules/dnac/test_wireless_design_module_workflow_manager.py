@@ -66,6 +66,13 @@ class TestWirelessDesign(TestDnacModule):
     playbook_event_driven_rrm_update = test_data.get("playbook_event_driven_rrm_update")
     playbook_event_driven_rrm_delete = test_data.get("playbook_event_driven_rrm_delete")
 
+    playbook_80211be_add = test_data.get("playbook_80211be_add")
+    playbook_80211be_update = test_data.get("playbook_80211be_update")
+    playbook_80211be_delete = test_data.get("playbook_80211be_delete")
+    playbook_config_interfaces_vlan_id_zero_no_change = test_data.get(
+        "playbook_config_interfaces_vlan_id_zero_no_change"
+    )
+
     def setUp(self):
         super(TestWirelessDesign, self).setUp()
 
@@ -180,6 +187,11 @@ class TestWirelessDesign(TestDnacModule):
                 self.test_data.get("response_get_task_id_success"),
                 self.test_data.get("response_get_task_status_by_id_success"),
                 self.test_data.get("response_get_interfaces_post_create_success"),
+            ]
+
+        if "interfaces_vlan_id_zero_no_change" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("response_get_interfaces_2_success"),
             ]
 
         if "update_interfaces" in self._testMethodName:
@@ -792,6 +804,29 @@ class TestWirelessDesign(TestDnacModule):
                 self.test_data.get("EVENT_DRIVEN_RRM_CONFIGURATION_delete"),
                 self.test_data.get("task_019a3888-0d37-7585-9b41-4af1a8797dec"),
             ]
+
+        if "playbook_80211be_add" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("802_11_BE_PROFILES_get"),
+                self.test_data.get("802_11_BE_PROFILES_create"),
+                self.test_data.get("task_019b4543-bfb9-722b-a5a0-a10a5ab78f53"),
+            ]
+
+        if "playbook_80211be_update" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("802_11_BE_PROFILES_get_update"),
+                self.test_data.get("802_11_BE_PROFILES_update_get"),
+                self.test_data.get("802_11_BE_PROFILES_update"),
+                self.test_data.get("task_019b46a2-3f4e-7c5d-8a1e-1234567890ab"),
+            ]
+
+        if "playbook_80211be_delete" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("802_11_BE_PROFILES_get_delete"),
+                self.test_data.get("802_11_BE_PROFILES_delete"),
+                self.test_data.get("task_019b454e-aae5-7d65-9316-ac49ff056b3f"),
+            ]
+
     # SUCCESS TESTCASES ########################################################################################
 
     def test_create_ssid(self):
@@ -920,6 +955,27 @@ class TestWirelessDesign(TestDnacModule):
         self.assertIn(
             "Delete Interface(s) Task succeeded for the following interface(s)",
             result.get("msg"),
+        )
+
+    def test_interfaces_vlan_id_zero_no_change(self):
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=False,
+                dnac_log_level="DEBUG",
+                dnac_version="2.3.7.9",
+                config_verify=True,
+                dnac_log_append=False,
+                state="merged",
+                config=self.playbook_config_interfaces_vlan_id_zero_no_change,
+            )
+        )
+        result = self.execute_module(changed=False, failed=False)
+        self.assertEqual(
+            result.get("msg"),
+            "No Wireless Design operations were required for the provided parameters in the Cisco Catalyst Center.",
         )
 
     def test_add_power_profiles(self):
@@ -1234,7 +1290,7 @@ class TestWirelessDesign(TestDnacModule):
         self.assertEqual(
             result.get('msg'),
             {
-                "aaa_radius_attributes_delete": {
+                "aaa_radius_attributes_delete_or_reset": {
                     "sample_design": "Successfully deleted AAA Radius Attribute."
                 }
             }
@@ -1300,7 +1356,7 @@ class TestWirelessDesign(TestDnacModule):
         self.assertEqual(
             result.get('msg'),
             {
-                "advanced_ssids_delete": {
+                "advanced_ssids_delete_or_reset": {
                     "sample_advanced_ssid_design": "Successfully deleted Advanced SSID."
                 }
             }
@@ -1340,14 +1396,10 @@ class TestWirelessDesign(TestDnacModule):
                 config=self.playbook_clean_air_update
             )
         )
-        result = self.execute_module(changed=True, failed=False)
+        result = self.execute_module(changed=False, failed=False)
         self.assertEqual(
             result.get('msg'),
-            {
-                "clean_air_update": {
-                    "sample_cleanair_design_24ghz": "Successfully updated CleanAir Profile."
-                }
-            }
+            "No Wireless Design operations were required for the provided parameters in the Cisco Catalyst Center."
         )
 
     def test_wireless_design_workflow_manager_playbook_clean_air_delete(self):
@@ -1366,7 +1418,7 @@ class TestWirelessDesign(TestDnacModule):
         self.assertEqual(
             result.get('msg'),
             {
-                "clean_air_delete": {
+                "clean_air_delete_or_reset": {
                     "sample_cleanair_design_24ghz": "Successfully deleted CleanAir Profile."
                 }
             }
@@ -1429,10 +1481,12 @@ class TestWirelessDesign(TestDnacModule):
             )
         )
         result = self.execute_module(changed=True, failed=False)
+        print(11111111111111)
+        print(result)
         self.assertEqual(
             result.get('msg'),
             {
-                "dot11ax_delete": {
+                "dot11ax_delete_or_reset": {
                     "dot11ax_24ghz_design": "Successfully deleted dot11ax configuration."
                 }
             }
@@ -1809,5 +1863,69 @@ class TestWirelessDesign(TestDnacModule):
                 "event_driven_rrm_delete": {
                     "edrrm_2_4ghz_design": "Successfully deleted Event-Driven RRM configuration."
                 }
+            }
+        )
+
+    def test_wireless_design_workflow_manager_playbook_80211be_add(self):
+        set_module_args(
+            dict(
+                dnac_version='3.1.3.0',
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=True,
+                state="merged",
+                config=self.playbook_80211be_add
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertEqual(
+            result.get('msg'),
+            {
+                "80211be_add": {
+                    "sample_design": "Successfully created 802.11be profile."
+                }
+            }
+        )
+
+    def test_wireless_design_workflow_manager_playbook_80211be_update(self):
+        set_module_args(
+            dict(
+                dnac_version='3.1.3.0',
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=True,
+                state="merged",
+                config=self.playbook_80211be_update
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertEqual(
+            result.get('msg'),
+            {
+                "80211be_update": {
+                    "sample_design": "Successfully updated 802.11be profile."
+                }
+            }
+        )
+
+    def test_wireless_design_workflow_manager_playbook_80211be_delete(self):
+        set_module_args(
+            dict(
+                dnac_version='3.1.3.0',
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=True,
+                state="deleted",
+                config=self.playbook_80211be_delete
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertEqual(
+            result.get('msg'),
+            {
+                "80211be_delete": "Successfully deleted 1 802.11be profile(s). Details: {'sample_design': 'Successfully deleted 802.11be profile.'}"
             }
         )

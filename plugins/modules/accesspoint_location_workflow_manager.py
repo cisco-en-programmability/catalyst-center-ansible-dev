@@ -71,6 +71,8 @@ options:
               Determines how the access point will be managed within the specified position.
               This field is only required when assigning or deleting real access point to/from an existing planned position.
               It is not required when creating, updating, or deleting a planned access point position itself.
+              Use C(assign_planned_ap) to assign a planned access point to an actual access point.
+              Use C(manage_real_ap) to update or delete the real access point from the position.
             type: str
             required: false
             choices:
@@ -94,13 +96,13 @@ options:
             suboptions:
               x_position:
                 description: >
-                  The X coordinate of the access point's position. allows from 0 to 100
-                type: int
+                  The X coordinate of the access point's position. allows from 0.0 to 100.0
+                type: float
                 required: true
               y_position:
                 description: >
-                  The Y coordinate of the access point's position. allows from 0 to 88
-                type: int
+                  The Y coordinate of the access point's position. allows from 0.0 to 100.0
+                type: float
                 required: true
               z_position:
                 description: >
@@ -233,8 +235,8 @@ EXAMPLES = r"""
               - accesspoint_name: AP687D.B402.1614-AP-location_Test6
                 accesspoint_model: AP9120E
                 position:
-                  x_position: 30  # x-axis: from 0 to 100
-                  y_position: 30  # y-axis: from 0 to 88
+                  x_position: 30  # x-axis: from 0.0 to 100.0
+                  y_position: 30  # y-axis: from 0.0 to 100.0
                   z_position: 8  # height: from 3.0 to 10
                 radios:  # Minimum Items: 1; Maximum Items: 4
                   - bands: ["2.4"]  # can be 2.4, 5 and 6
@@ -304,8 +306,8 @@ EXAMPLES = r"""
               - accesspoint_name: IAC-TB4-SJ-AP1
                 accesspoint_model: AP9120E
                 position:
-                  x_position: 30  # x-axis: from 0 to 100
-                  y_position: 30  # y-axis: from 0 to 88
+                  x_position: 30  # x-axis: from 0.0 to 100.0
+                  y_position: 30  # y-axis: from 0.0 to 100.0
                   z_position: 8  # height: from 3.0 to 10
                 radios:  # Minimum Items: 1; Maximum Items: 4
                   - bands: ["2.4"]  # can be 2.4, 5 and 6
@@ -374,8 +376,8 @@ EXAMPLES = r"""
                 mac_address: a4:88:73:d4:dd:80  # Required for real access point creation
                 accesspoint_model: AP9120E
                 position:
-                  x_position: 20  # x-axis: from 0 to 100
-                  y_position: 30  # y-axis: from 0 to 88
+                  x_position: 30  # x-axis: from 0.0 to 100.0
+                  y_position: 30  # y-axis: from 0.0 to 100.0
                   z_position: 8  # height: from 3.0 to 10
                 radios:  # Minimum Items: 1; Maximum Items: 4
                   - bands: ["2.4"]  # can be 2.4, 5 and 6
@@ -419,12 +421,13 @@ EXAMPLES = r"""
         config:  # Minimum 1; Maximum 100 config hierarchy
           - floor_site_hierarchy: "Global/USA/SAN JOSE/SJ_BLD23/FLOOR1"
             access_points:
-              - accesspoint_name: AP687D.B402.1614-AP-location_Test6
+              - accesspoint_name: AP687D.B402.1614  # Accesspoint hostname
+                action: assign_planned_ap  # Required for real access point update
                 mac_address: a4:88:73:d4:dd:80  # Required for real access point creation
                 accesspoint_model: AP9120E
                 position:
-                  x_position: 20  # x-axis: from 0 to 100
-                  y_position: 30  # y-axis: from 0 to 88
+                  x_position: 30  # x-axis: from 0.0 to 100.0
+                  y_position: 30  # y-axis: from 0.0 to 100.0
                   z_position: 8  # height: from 3.0 to 10
                 radios:  # Minimum Items: 1; Maximum Items: 4
                   - bands: ["2.4"]  # can be 2.4, 5 and 6
@@ -726,9 +729,9 @@ class AccessPointLocation(DnacBase):
                 "accesspoint_model": {"type": "str", "required": False},
                 "position": {
                     "type": "dict",
-                    "x_position": {"type": "int", "required": False},  # 0-100 range
-                    "y_position": {"type": "int", "required": False},  # 0-88 range
-                    "z_position": {"type": "int", "required": False},  # 3.0-10.0 range
+                    "x_position": {"type": "float", "required": False},  # 0.0-100.0 range
+                    "y_position": {"type": "float", "required": False},  # 0.0-100.0 range
+                    "z_position": {"type": "float", "required": False},  # 3.0-10.0 range
                 },
                 "radios": {
                     "type": "list",
@@ -906,20 +909,20 @@ class AccessPointLocation(DnacBase):
                 x_position = position.get("x_position")
                 if x_position is None:
                     errormsg.append("x_position: X Position is missing in playbook.")
-                elif x_position and isinstance(x_position, int) and not (0 < x_position < 100):
-                    errormsg.append("x_position: X Position must be between 0 and 100.")
+                elif x_position and isinstance(x_position, (int, float)) and not (0 < x_position <= 100):
+                    errormsg.append("x_position: X Position must be between 0.0 and 100.0.")
 
                 y_position = position.get("y_position")
                 if y_position is None:
                     errormsg.append("y_position: Y Position is missing in playbook.")
-                elif y_position and isinstance(y_position, int) and not (0 < y_position < 88):
-                    errormsg.append("y_position: Y Position must be between 0 and 88.")
+                elif y_position and isinstance(y_position, (int, float)) and not (0 < y_position <= 100):
+                    errormsg.append("y_position: Y Position must be between 0.0 and 100.0.")
 
                 z_position = position.get("z_position")
                 if z_position is None:
                     errormsg.append("z_position: Z Position is missing in playbook.")
-                elif z_position and isinstance(z_position, (int, float)) and not (3 < z_position < 10):
-                    errormsg.append("z_position: Z Position must be between 3 and 10.")
+                elif z_position and isinstance(z_position, (int, float)) and not (3 <= z_position <= 10):
+                    errormsg.append("z_position: Z Position must be between 3.0 and 10.0.")
 
             radios = each_access_point.get("radios")
             if not radios:
@@ -2178,7 +2181,7 @@ class AccessPointLocation(DnacBase):
             - Provides detailed logging for debugging and operational visibility
         """
         self.log(
-            f"Processing access point position creation/updation for: {self.have.get('site_name')}",
+            f"Processing access point position creation/update for: {self.have.get('site_name')}",
             "INFO",
         )
 
@@ -2318,7 +2321,7 @@ class AccessPointLocation(DnacBase):
                 self.log(self.msg, "ERROR")
                 self.location_not_updated.append(collect_ap_list)
             else:
-                self.msg = f"Unable to process planned Access Point position updation for: {self.have.get('site_name')}"
+                self.msg = f"Unable to process planned Access Point position update for: {self.have.get('site_name')}"
                 self.log(self.msg, "ERROR")
                 self.location_not_updated.append(collect_ap_list)
 
@@ -2352,7 +2355,7 @@ class AccessPointLocation(DnacBase):
                 self.log(self.msg, "ERROR")
                 self.location_not_updated.append(collect_ap_list)
             else:
-                self.msg = f"Unable to process real Access Point position updation for: {self.have.get('site_name')}"
+                self.msg = f"Unable to process real Access Point position update for: {self.have.get('site_name')}"
                 self.log(self.msg, "ERROR")
                 self.location_not_updated.append(collect_ap_list)
 
@@ -3417,9 +3420,7 @@ class AccessPointLocation(DnacBase):
             if self.location_deleted:
                 deleted_count = len(self.location_deleted)
                 success_msg = (
-                    "Access point positions deleted successfully: {0}".format(
-                        self.location_deleted
-                    )
+                    "Access point positions deleted successfully."
                 )
                 self.log(success_msg, "INFO")
                 self.msg = success_msg
@@ -3490,8 +3491,25 @@ class AccessPointLocation(DnacBase):
             self.msg = "Access point position deletion workflow completed"
             self.log(self.msg, "INFO")
 
+        if self.location_deleted:
+            self.result_response['accesspoint_deletion'].append(
+                "The access point positions for {0}".format(", ".join(self.location_deleted)) +
+                " have been successfully deleted from the site " + site_hierarchy)
+
+        if self.location_already_deleted:
+            self.result_response['already_processed'].append(
+                "No changes required - access point positions already deleted and "
+                "verified successfully: {0}".format(", ".join(self.location_already_deleted)) +
+                " from the site " + site_hierarchy)
+
+        if self.location_not_deleted:
+            self.result_response['unprocessed'].append(
+                f"Unable to delete the following access point positions: {self.location_not_deleted}" +
+                " from the site " + site_hierarchy)
+
+        # Set verification results and validate return status
         self.set_operation_result(
-            self.status, self.changed, self.msg, "INFO"
+            self.status, self.changed, self.msg, "INFO", self.result_response
         ).check_return_status()
 
         return self

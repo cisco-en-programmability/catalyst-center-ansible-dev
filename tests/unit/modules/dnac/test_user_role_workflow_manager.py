@@ -24,6 +24,13 @@ from ansible_collections.cisco.dnac.plugins.modules import user_role_workflow_ma
 from .dnac_module import TestDnacModule, set_module_args, loadPlaybookData
 
 
+INVALID_MISSING_CONFIG_MSG = (
+    "'Configuration parameters such as 'username', 'email', or 'role_name' are missing from the playbook' or "
+    "'The 'user_details' key is invalid for role creation, update, or deletion' or "
+    "'The 'role_details' key is invalid for user creation, update, or deletion'"
+)
+
+
 class TestDnacUserRoleWorkflowManager(TestDnacModule):
 
     module = user_role_workflow_manager

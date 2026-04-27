@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2025, Cisco Systems
+# Copyright (c) 2026, Cisco Systems
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """Ansible module to manage wireless design operations in Cisco Catalyst Center."""
@@ -26,6 +26,20 @@ description:
     and deletion of Wireless Design elements. - To associate
     them with a Wireless Profile, utilize the 'network_wireless_profile_workflow_manager'
     module.
+  - "DISCLAIMER - Feature Template Attribute Reset (state: deleted):
+    This module supports resetting individual feature attributes
+    to null without deleting the entire feature template.
+    This is achieved by using state=deleted with feature_attributes
+    or unlocked_attributes specified in the playbook.
+    THIS FUNCTIONALITY IS NOT RECOMMENDED FOR GENERAL USE.
+    It is intended for advanced use cases only and may produce
+    unexpected results if mandatory fields are inadvertently reset.
+    Use with caution and always verify the configuration after
+    applying a reset operation. Prefer using state=merged to
+    update feature attributes to desired values instead.
+    Mandatory fields (e.g., radio_band, event_driven_rrm_enable,
+    global_multicast_enabled) are automatically preserved and
+    cannot be reset to null."
 version_added: "6.17.0"
 extends_documentation_fragment:
   - cisco.dnac.workflow_manager_params
@@ -92,12 +106,14 @@ options:
               - Required for creating, updating, or
                 deleting SSIDs.
             type: str
+            required: true
           ssid_type:
             description:
               - Specifies the type of WLAN.
               - Required in merged state for creating
                 or updating SSIDs.
             type: str
+            required: true
             choices: ["Enterprise", "Guest"]
           wlan_profile_name:
             description:
@@ -1298,12 +1314,14 @@ options:
               - Required for create, update, and delete
                 operations.
             type: str
+            required: true
           vlan_id:
             description:
               - Specifies the VLAN ID in range is 1
                 to 4094.
               - Required for create and update operations.
             type: int
+            required: true
       power_profiles:
         description:
           - This API allows the user to create a custom
@@ -1344,6 +1362,7 @@ options:
               - This parameter is required for add/create/update
                 power profile(s) operation.
             type: str
+            required: true
           power_profile_description:
             description:
               - Description of the Power Profile. Max
@@ -1430,6 +1449,7 @@ options:
               - This parameter required for create/update/delete
                 Access Point profile(s) operation.
             type: str
+            required: true
           access_point_profile_description:
             description:
               - Description of the AP profile. Max length
@@ -1765,7 +1785,7 @@ options:
                     between mesh access points over
                     the 5 GHz frequency band.
                 type: str
-                choices: ["auto", "802.11abg", "802.12ac", "802.11ax", "802.11n"]
+                choices: ["auto", "802.11abg", "802.11ac", "802.11ax", "802.11n"]
                 default: "auto"
               ghz_2_4_backhaul_data_rates:
                 description:
@@ -2005,6 +2025,7 @@ options:
               - Required for profile create/update/delete
                 radio frequency profile operations.
             type: str
+            required: true
           default_rf_profile:
             description:
               - Indicates if this is the default RF
@@ -2980,6 +3001,7 @@ options:
               - Required parameter for anchor groups
                 operations.
             type: str
+            required: true
           mobility_anchors:
             description:
               - List of Mobility Anchors associated
@@ -2997,6 +3019,7 @@ options:
                 "managed_device", "device_type"
             type: list
             elements: dict
+            required: true
             suboptions:
               device_name:
                 description: Peer Host Name.
@@ -3084,11 +3107,13 @@ options:
                 required: true
               unlocked_attributes:
                 description:
-                  - Set to true to unlock attributes for manual configuration.
-                  - When false, attributes are locked and managed by the template.
-                  - Allows flexibility in attribute configuration when needed.
-                type: bool
-                default: false
+                  - List of AAA Radius attribute names to unlock for manual configuration.
+                  - Use snake_case attribute names in the playbook.
+                  - Supported value is C(called_station_id).
+                type: list
+                elements: str
+                choices:
+                  - called_station_id
           advanced_ssid:
             description:
               - Advanced SSID configuration parameters for enhanced wireless features.
@@ -3461,15 +3486,6 @@ options:
                   - Must correspond to an existing design in Cisco Catalyst Center.
                 type: str
                 required: true
-              radio_band:
-                description:
-                  - Radio frequency band for CleanAir monitoring and interference detection.
-                  - 2_4GHZ monitors 2.4 GHz spectrum for interference sources.
-                  - 5GHZ monitors 5 GHz spectrum for interference sources.
-                  - 6GHZ monitors 6 GHz spectrum for interference sources.
-                type: str
-                required: true
-                choices: ["2_4GHZ", "5GHZ", "6GHZ"]
               feature_attributes:
                 description:
                   - CleanAir feature settings and interference detection parameters.
@@ -3477,6 +3493,15 @@ options:
                 type: dict
                 required: false
                 suboptions:
+                  radio_band:
+                    description:
+                      - Radio frequency band for CleanAir monitoring and interference detection.
+                      - 2_4GHZ monitors 2.4 GHz spectrum for interference sources.
+                      - 5GHZ monitors 5 GHz spectrum for interference sources.
+                      - 6GHZ monitors 6 GHz spectrum for interference sources.
+                    type: str
+                    required: true
+                    choices: ["2_4GHZ", "5GHZ", "6GHZ"]
                   clean_air:
                     description:
                       - Enable CleanAir spectrum intelligence functionality.
@@ -3504,6 +3529,20 @@ options:
                     description:
                       - Specific interference source detection and classification settings.
                       - Controls which types of interference sources are monitored.
+                      - "IMPORTANT - Band Compatibility Requirements:"
+                      - "6GHz band - Supports only continuous_transmitter"
+                      - "5GHz band - Supports these interferers:"
+                      - "  * continuous_transmitter, generic_dect, generic_tdd, jammer"
+                      - "  * motorola_canopy, si_fhss, spectrum80211_non_standard_channel"
+                      - "  * spectrum_inverted, super_ag, video_camera, wimax_fixed, wimax_mobile"
+                      - "2.4GHz band - Supports all interferers:"
+                      - "  * ble_beacon, bluetooth_paging_inquiry, bluetooth_sco_acl"
+                      - "  * continuous_transmitter, generic_dect, generic_tdd, jammer"
+                      - "  * microwave_oven, motorola_canopy, si_fhss, spectrum80211_fh"
+                      - "  * spectrum80211_non_standard_channel, spectrum802154"
+                      - "  * spectrum_inverted, super_ag, video_camera"
+                      - "  * wimax_fixed, wimax_mobile, xbox"
+                      - "The module will validate and reject invalid interferer/band combinations."
                     type: dict
                     required: false
                     suboptions:
@@ -3634,48 +3673,64 @@ options:
                   radio_band:
                     description:
                       - Radio frequency band for 802.11ax feature application.
-                      - Specifies which band should use these Wi-Fi 6 settings.
+                      - Supported values are 2_4GHZ, 5GHZ, 6GHZ.
+                      - 6GHZ is supported only on Cisco IOS-XE based Wireless Controllers running 17.7.1 and above.
                     type: str
                   bss_color:
                     description:
                       - Enable BSS (Basic Service Set) coloring for spatial reuse.
                       - Helps distinguish between overlapping BSSs to reduce interference.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.1 and above.
+                      - Supported radio bands are 2_4GHZ, 5GHZ, 6GHZ.
                     type: bool
                     default: False
                   target_waketime_broadcast:
                     description:
                       - Enable broadcast Target Wake Time (TWT) announcements.
                       - Coordinates sleep schedules for multiple clients simultaneously.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.3.1 and above.
+                      - Supported radio bands are 2_4GHZ, 5GHZ, 6GHZ.
                     type: bool
                     default: False
                   non_srg_obss_pd_max_threshold:
                     description:
                       - Maximum threshold for non-SRG OBSS Packet Detection in dBm.
                       - Controls sensitivity for detecting overlapping BSS transmissions.
-                      - Range typically -82 to -62 dBm.
+                      - Valid range is between -82 to -62 dBm.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.4 and above.
+                      - Supported radio bands are 2_4GHZ and 5GHZ only.
+                      - Not supported for 6GHZ.
                     type: int
                   target_wakeup_time_11ax:
                     description:
                       - Enable Target Wake Time feature for 802.11ax clients.
                       - Allows clients to negotiate sleep schedules to save power.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.1 and above.
+                      - Supported radio bands are 2_4GHZ, 5GHZ, 6GHZ.
                     type: bool
                     default: False
                   obss_pd:
                     description:
                       - Enable Overlapping BSS Packet Detection for spatial reuse.
                       - Improves spectrum efficiency in dense deployments.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.4 and above.
+                      - Supported radio bands are 2_4GHZ and 5GHZ only.
+                      - Not supported for 6GHZ.
                     type: bool
                     default: False
                   multiple_bssid:
                     description:
                       - Enable Multiple BSSID feature for 802.11ax.
                       - Allows transmission of multiple SSID beacons efficiently.
+                      - Supported on Cisco IOS-XE based Wireless Controllers running 17.7.1 and above.
+                      - Supported radio bands are 6GHZ only.
                     type: bool
                     default: False
               unlocked_attributes:
                 description:
                   - List of 802.11ax attribute names unlocked for manual configuration.
                   - Allows selective override of Wi-Fi 6 template settings.
+                  - Only attributes defined under feature_attributes are allowed.
                 type: list
                 elements: str
                 required: false
@@ -3747,7 +3802,8 @@ options:
                     description:
                       - Radio frequency band for Event-Driven RRM operation.
                       - RRM algorithms will monitor and optimize this band.
-                      - Note - Currently, 6 GHz band is not supported for Event-Driven RRM
+                      - Supported values are 2_4GHZ and 5GHZ only.
+                      - Note - 6 GHz band is not supported for Event-Driven RRM.
                     type: str
                     required: true
                     choices: ["2_4GHZ", "5GHZ"]
@@ -3770,7 +3826,9 @@ options:
                     choices: ["LOW", "MEDIUM", "HIGH", "CUSTOM"]
                   event_driven_rrm_custom_threshold_val:
                     description:
-                      - Custom threshold value when threshold_level is set to CUSTOM.
+                      - Custom threshold value when event_driven_rrm_threshold_level is set to CUSTOM.
+                      - Only valid when event_driven_rrm_threshold_level is set to CUSTOM.
+                      - Will be ignored for LOW/MEDIUM/HIGH threshold levels.
                       - Defines the specific sensitivity level for RRM activation.
                       - Higher values require more significant changes to trigger RRM.
                     type: int
@@ -4028,6 +4086,109 @@ options:
                 type: list
                 elements: str
                 required: false
+      802_11_be_profiles:
+        description:
+          - Configuration for 802.11be (Wi-Fi 7) profile settings.
+          - Enables advanced Wi-Fi 7 features for improved performance and efficiency.
+          - Controls OFDMA and MU-MIMO settings for both downlink and uplink transmission.
+        type: list
+        elements: dict
+        required: false
+        suboptions:
+          profile_name:
+            description:
+              - Name of the 802.11be profile.
+              - Must correspond to an existing design in Cisco Catalyst Center.
+              - Profile name must not exceed 64 characters in length.
+              - profile name cannot be updated once created.
+            type: str
+            required: true
+          ofdma_up_link:
+            description:
+              - Enable or disable OFDMA for uplink transmission.
+              - When enabled, multiple clients can transmit simultaneously on different subcarriers.
+              - Reduces latency and improves efficiency for uplink traffic.
+              - Particularly beneficial for applications requiring low latency and high reliability.
+            type: bool
+            default: true
+            required: false
+          ofdma_down_link:
+            description:
+              - Enable or disable OFDMA (Orthogonal Frequency Division Multiple Access) for downlink transmission.
+              - When enabled, allows multiple clients to be served simultaneously on different subcarriers.
+              - Improves spectral efficiency and network capacity in high-density environments.
+              - OFDMA downlink is a Wi-Fi 7 feature that enhances performance for multiple concurrent users.
+            type: bool
+            default: true
+            required: false
+          mu_mimo_up_link:
+            description:
+              - Enable or disable MU-MIMO for uplink transmission.
+              - When enabled, multiple clients can transmit to the access point simultaneously.
+              - Improves upload capacity and reduces contention in high-density environments.
+              - Enhances performance for applications with heavy uplink traffic requirements.
+            type: bool
+            default: false
+            required: false
+          mu_mimo_down_link:
+            description:
+              - Enable or disable Multi-User Multiple-Input Multiple-Output for downlink transmission.
+              - When enabled, allows simultaneous transmission to multiple clients.
+              - Increases overall network throughput and spectral efficiency.
+              - MU-MIMO downlink works in conjunction with OFDMA for optimal Wi-Fi 7 performance.
+            type: bool
+            default: false
+            required: false
+          ofdma_multi_ru:
+            description:
+              - Enable or disable OFDMA Multi-RU (Resource Unit) allocation.
+              - Multi-RU allows a single client to use multiple non-contiguous resource units.
+              - Provides more flexible spectrum utilization and improved throughput for individual clients.
+              - This is an advanced Wi-Fi 7 feature that optimizes resource allocation dynamically.
+              - When enabled, clients can benefit from aggregated bandwidth across multiple RUs.
+            type: bool
+            default: false
+            required: false
+      flex_connect_configuration:
+        description:
+          - Configuration for FlexConnect Native VLAN settings at site level.
+          - Allows updating the Native VLAN ID for FlexConnect-enabled access points.
+          - FlexConnect configurations can only be UPDATED or DELETED, not created.
+          - The Native VLAN setting controls which VLAN is used for untagged traffic on FlexConnect APs.
+          - Changes apply to the specified site and optionally to child sites in the hierarchy.
+        type: list
+        elements: dict
+        required: false
+        suboptions:
+          site_name_hierarchy:
+            description:
+              - Full hierarchical path of the site where FlexConnect Native VLAN should be configured.
+              - Must be an existing site in Cisco Catalyst Center (e.g., "Global/USA/San Jose/Building1").
+              - The site must have FlexConnect capability enabled.
+              - FlexConnect settings are inherited from parent sites if not overridden.
+              - Required for both update and delete operations.
+            type: str
+            required: true
+          vlan_id:
+            description:
+              - Native VLAN ID to be configured for FlexConnect at the specified site.
+              - Must be a valid VLAN ID between 1 and 4094.
+              - This VLAN is used for untagged traffic on FlexConnect access points.
+              - Changes to this value update the existing FlexConnect configuration.
+              - Required for update operations only (not needed for delete).
+            type: int
+            required: false
+          remove_override_in_hierarchy:
+            description:
+              - Controls whether to remove FlexConnect overrides from child sites during deletion.
+              - When set to true, removes the Native VLAN override from the specified site AND all child sites.
+              - When set to false, only removes the override from the specified site, leaving child site overrides intact.
+              - Applies only to delete operations (state=deleted).
+              - If not specified, defaults to true to maintain consistency across the site hierarchy.
+              - Has no effect during update operations (state=merged).
+            type: bool
+            default: true
+            required: false
 
 requirements:
   - dnacentersdk >= 2.10.3
@@ -4138,12 +4299,6 @@ EXAMPLES = r"""
       - feature_template_config:
           - dot11be_configuration:
               - design_name: "dot11be_24ghz_design"
-                feature_attributes:
-                  dot11be_status: false
-                  radio_band: "2_4GHZ"
-                unlocked_attributes:
-                  - "dot11be_status"
-                  - "radio_band"
 - name: Add dot11ax profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4220,20 +4375,6 @@ EXAMPLES = r"""
       - feature_template_config:
           - dot11ax_configuration:
               - design_name: "dot11ax_24ghz_design"
-                feature_attributes:
-                  radio_band: "2_4GHZ"
-                  bss_color: true
-                  target_waketime_broadcast: true
-                  non_srg_obss_pd_max_threshold: -78
-                  target_wakeup_time_11ax: false
-                  obss_pd: true
-                unlocked_attributes:
-                  - "radio_band"
-                  - "bss_color"
-                  - "target_waketime_broadcast"
-                  - "non_srg_obss_pd_max_threshold"
-                  - "target_wakeup_time_11ax"
-                  - "obss_pd"
 - name: Add dot11ax profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4310,20 +4451,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - dot11ax_configuration:
               - design_name: "dot11ax_5ghz_design"
-                feature_attributes:
-                  radio_band: "5GHZ"
-                  bss_color: false
-                  target_waketime_broadcast: false
-                  non_srg_obss_pd_max_threshold: -75
-                  target_wakeup_time_11ax: true
-                  obss_pd: true
-                unlocked_attributes:
-                  - "radio_band"
-                  - "bss_color"
-                  - "target_waketime_broadcast"
-                  - "non_srg_obss_pd_max_threshold"
-                  - "target_wakeup_time_11ax"
-                  - "obss_pd"
+
 - name: Add dot11ax profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4396,18 +4524,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - dot11ax_configuration:
               - design_name: "dot11ax_6ghz_design"
-                feature_attributes:
-                  radio_band: "6GHZ"
-                  bss_color: true
-                  target_waketime_broadcast: false
-                  multiple_bssid: true
-                  target_wakeup_time_11ax: true
-                unlocked_attributes:
-                  - "radio_band"
-                  - "bss_color"
-                  - "target_waketime_broadcast"
-                  - "multiple_bssid"
-                  - "target_wakeup_time_11ax"
+
 - name: Add cleanair profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4471,42 +4588,43 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
     config:
-      - clean_air_configuration:
-          - design_name: "sample_cleanair_design_24ghz"
-            feature_attributes:
-              radio_band: 2_4GHZ   # enum: 2_4GHZ, 5GHZ, 6GHZ
-              clean_air: true
-              clean_air_device_reporting: true
-              persistent_device_propagation: false
-              description: "CleanAir profile for 2.4GHz office deployment"
-              # Interferers Features (map)
-              interferers_features:
-                ble_beacon: true                     # Only applicable for 2_4GHZ
-                bluetooth_paging_inquiry: false     # Only applicable for 2_4GHZ
-                bluetooth_sco_acl: false            # Only applicable for 2_4GHZ
-                continuous_transmitter: true       # Applicable for 2_4GHZ, 5GHZ, 6GHZ
-                generic_dect: false                 # 2_4GHZ and 5GHZ
-                generic_tdd: false                  # Only 2_4GHZ
-                jammer: false                       # 2_4GHZ and 5GHZ
-                microwave_oven: true                # Only 2_4GHZ
-                motorola_canopy: false              # 2_4GHZ and 5GHZ
-                si_fhss: false                      # 2_4GHZ and 5GHZ
-                spectrum80211_fh: false             # 2_4GHZ only
-                spectrum80211_non_standard_channel: false  # 2_4GHZ and 5GHZ
-                spectrum802154: false               # 2_4GHZ only
-                spectrum_inverted: false            # 2_4GHZ and 5GHZ
-                super_ag: true                     # 2_4GHZ and 5GHZ
-                video_camera: false                 # 2_4GHZ and 5GHZ
-                wimax_fixed: false                  # 2_4GHZ and 5GHZ
-                wimax_mobile: false                 # 2_4GHZ and 5GHZ
-                xbox: false                         # 2_4GHZ only
-            unlocked_attributes:
-              - "clean_air"
-              - "clean_air_device_reporting"
-              - "persistent_device_propagation"
-              - "description"
-              - "interferers_features.ble_beacon"
-              - "interferers_features.continuous_transmitter"
+      - feature_template_config:
+          - clean_air_configuration:
+              - design_name: "sample_cleanair_design_24ghz"
+                feature_attributes:
+                  radio_band: 2_4GHZ   # enum: 2_4GHZ, 5GHZ, 6GHZ
+                  clean_air: true
+                  clean_air_device_reporting: true
+                  persistent_device_propagation: false
+                  description: "CleanAir profile for 2.4GHz office deployment"
+                  # Interferers Features (map)
+                  interferers_features:
+                    ble_beacon: true                     # Only applicable for 2_4GHZ
+                    bluetooth_paging_inquiry: false     # Only applicable for 2_4GHZ
+                    bluetooth_sco_acl: false            # Only applicable for 2_4GHZ
+                    continuous_transmitter: true       # Applicable for 2_4GHZ, 5GHZ, 6GHZ
+                    generic_dect: false                 # 2_4GHZ and 5GHZ
+                    generic_tdd: false                  # Only 2_4GHZ
+                    jammer: false                       # 2_4GHZ and 5GHZ
+                    microwave_oven: true                # Only 2_4GHZ
+                    motorola_canopy: false              # 2_4GHZ and 5GHZ
+                    si_fhss: false                      # 2_4GHZ and 5GHZ
+                    spectrum80211_fh: false             # 2_4GHZ only
+                    spectrum80211_non_standard_channel: false  # 2_4GHZ and 5GHZ
+                    spectrum802154: false               # 2_4GHZ only
+                    spectrum_inverted: false            # 2_4GHZ and 5GHZ
+                    super_ag: true                     # 2_4GHZ and 5GHZ
+                    video_camera: false                 # 2_4GHZ and 5GHZ
+                    wimax_fixed: false                  # 2_4GHZ and 5GHZ
+                    wimax_mobile: false                 # 2_4GHZ and 5GHZ
+                    xbox: false                         # 2_4GHZ only
+                unlocked_attributes:
+                  - "clean_air"
+                  - "clean_air_device_reporting"
+                  - "persistent_device_propagation"
+                  - "description"
+                  - "interferers_features.ble_beacon"
+                  - "interferers_features.continuous_transmitter"
 - name: Delete cleanair profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4520,42 +4638,10 @@ EXAMPLES = r"""
     dnac_log_level: "{{dnac_log_level}}"
     state: deleted
     config:
-      - clean_air_configuration:
-          - design_name: "sample_cleanair_design_24ghz"
-            feature_attributes:
-              radio_band: 2_4GHZ   # enum: 2_4GHZ, 5GHZ, 6GHZ
-              clean_air: true
-              clean_air_device_reporting: true
-              persistent_device_propagation: false
-              description: "CleanAir profile for 2.4GHz office deployment"
-              # Interferers Features (map)
-              interferers_features:
-                ble_beacon: true                     # Only applicable for 2_4GHZ
-                bluetooth_paging_inquiry: false     # Only applicable for 2_4GHZ
-                bluetooth_sco_acl: false            # Only applicable for 2_4GHZ
-                continuous_transmitter: true       # Applicable for 2_4GHZ, 5GHZ, 6GHZ
-                generic_dect: false                 # 2_4GHZ and 5GHZ
-                generic_tdd: false                  # Only 2_4GHZ
-                jammer: false                       # 2_4GHZ and 5GHZ
-                microwave_oven: true                # Only 2_4GHZ
-                motorola_canopy: false              # 2_4GHZ and 5GHZ
-                si_fhss: false                      # 2_4GHZ and 5GHZ
-                spectrum80211_fh: false             # 2_4GHZ only
-                spectrum80211_non_standard_channel: false  # 2_4GHZ and 5GHZ
-                spectrum802154: false               # 2_4GHZ only
-                spectrum_inverted: false            # 2_4GHZ and 5GHZ
-                super_ag: true                     # 2_4GHZ and 5GHZ
-                video_camera: false                 # 2_4GHZ and 5GHZ
-                wimax_fixed: false                  # 2_4GHZ and 5GHZ
-                wimax_mobile: false                 # 2_4GHZ and 5GHZ
-                xbox: false                         # 2_4GHZ only
-            unlocked_attributes:
-              - "clean_air"
-              - "clean_air_device_reporting"
-              - "persistent_device_propagation"
-              - "description"
-              - "interferers_features.ble_beacon"
-              - "interferers_features.continuous_transmitter"
+      - feature_template_config:
+          - clean_air_configuration:
+              - design_name: "sample_cleanair_design_24ghz"
+
 - name: Add event driven rrm profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4622,15 +4708,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - event_driven_rrm_configuration:
               - design_name: "edrrm_2_4ghz_design"
-                feature_attributes:
-                  radio_band: "2_4GHZ"  # 2_4GHZ, 5GHZ
-                  event_driven_rrm_enable: false
-                  event_driven_rrm_threshold_level: "HIGH"   # LOW, MEDIUM, HIGH, CUSTOM
-                  # event_driven_rrm_custom_threshold_val: 50   # must be between 1–99
-                unlocked_attributes:
-                  - "event_driven_rrm_enable"
-                  - "event_driven_rrm_threshold_level"
-                  - "event_driven_rrm_custom_threshold_val"
+
 - name: Add multicast profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4703,18 +4781,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - multicast_configuration:
               - design_name: "multicast_office_profile_1"
-                feature_attributes:
-                  global_multicast_enabled: false
-                  multicast_ipv4_mode: "MULTICAST"     # UNICAST or MULTICAST
-                  multicast_ipv4_address: "239.1.1.25"  # must be in 224.0.0.0 - 239.255.255.255 if mode=MULTICAST
-                  multicast_ipv6_mode: "MULTICAST"    # UNICAST or MULTICAST
-                  multicast_ipv6_address: "FF05::1"   # must follow FF[0/1][1-5,8,E] rule if mode=MULTICAST
-                unlocked_attributes:
-                  - "global_multicast_enabled"
-                  - "multicast_ipv4_mode"
-                  - "multicast_ipv4_address"
-                  - "multicast_ipv6_mode"
-                  - "multicast_ipv6_address"
+
 - name: Add rrm fra profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4785,17 +4852,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - rrm_fra_configuration:
               - design_name: "fra_design_1"
-                feature_attributes:
-                  radio_band: "2_4GHZ_5GHZ"
-                  fra_freeze: true
-                  fra_status: false
-                  fra_interval: 12
-                  fra_sensitivity: "HIGH"
-                unlocked_attributes:
-                  - fra_freeze
-                  - fra_status
-                  - fra_interval
-                  - fra_sensitivity
+
 - name: Add rrm general profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4862,15 +4919,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - rrm_general_configuration:
               - design_name: "rrm_general_24ghz_country_scope"
-                feature_attributes:
-                  radio_band: "2_4GHZ"                          # supported only on IOS-XE >= 17.9.1
-                  monitoring_channels: "MONITORING_CHANNELS_COUNTRY"
-                  neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT"
-                  throughput_threshold: 150000
-                  coverage_hole_detection: false
-                unlocked_attributes:
-                  - "monitoring_channels"
-                  - "coverage_hole_detection"
+
 - name: Add rrm general profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -4941,17 +4990,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - rrm_general_configuration:
               - design_name: "rrm_general_5ghz_default"
-                feature_attributes:
-                  radio_band: "5GHZ"                           # enum: 2_4GHZ, 5GHZ, 6GHZ
-                  monitoring_channels: "MONITORING_CHANNELS_DCA"   # enum: MONITORING_CHANNELS_ALL, MONITORING_CHANNELS_COUNTRY, MONITORING_CHANNELS_DCA
-                  neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT"  # enum: NEIGHBOR_DISCOVER_TYPE_TRANSPARENT, NEIGHBOR_DISCOVER_TYPE_PROTECTED
-                  throughput_threshold: 500000                  # 1000..10000000
-                  coverage_hole_detection: false
-                unlocked_attributes:
-                  - "monitoring_channels"
-                  - "neighbor_discover_type"
-                  - "throughput_threshold"
-                  - "coverage_hole_detection"
+
 - name: Add rrm general profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5016,14 +5055,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - rrm_general_configuration:
               - design_name: "rrm_general_6ghz_high_thr"
-                feature_attributes:
-                  radio_band: "6GHZ"
-                  monitoring_channels: "MONITORING_CHANNELS_ALL"
-                  neighbor_discover_type: "NEIGHBOR_DISCOVER_TYPE_PROTECTED"
-                  throughput_threshold: 2500000
-                  coverage_hole_detection: true
-                unlocked_attributes:
-                  - "throughput_threshold"
+
 - name: Add flexconnect profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5080,10 +5112,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - flexconnect_configuration:
               - design_name: "flexconnect_branch_office"
-                feature_attributes:
-                  overlap_ip_enable: false
-                unlocked_attributes:
-                  - "overlap_ip_enable"
+
 - name: Add aaa radius profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5102,7 +5131,7 @@ EXAMPLES = r"""
               - design_name: "sample_design"
                 called_station_id: "sample_id"
                 unlocked_attributes:
-                  - "calledStationId"
+                  - "called_station_id"
 - name: Update aaa radius profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5121,7 +5150,7 @@ EXAMPLES = r"""
               - design_name: "sample_designnn"
                 called_station_id: "sample_id"
                 unlocked_attributes:
-                  - "calledStationId"
+                  - "called_station_id"
 - name: Delete aaa radius profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5138,9 +5167,7 @@ EXAMPLES = r"""
       - feature_template_config:
           - aaa_radius_attribute:
               - design_name: "sample_designnn"
-                called_station_id: "sample_id"
-                unlocked_attributes:
-                  - "calledStationId"
+
 - name: Add advanced ssid profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5153,80 +5180,80 @@ EXAMPLES = r"""
     dnac_log: true
     dnac_log_level: "{{dnac_log_level}}"
     state: merged
-  config:
-    - feature_template_config:
-        - advanced_ssid:
-            - design_name: "sample_advanced_ssid_design"
-              feature_attributes:
-                peer2peer_blocking: "DISABLE"   # enum: DROP, FORWARD_UP, ALLOW_PVT_GROUP, DISABLE
-                passive_client: false
-                prediction_optimization: false
-                dual_band_neighbor_list: false
-                radius_nac_state: true
-                dhcp_required: true
-                dhcp_server: "10.10.10.5"
-                flex_local_auth: false
-                target_wakeup_time: true
-                downlink_ofdma: true
-                uplink_ofdma: true
-                downlink_mu_mimo: true
-                uplink_mu_mimo: true
-                dot11ax: true
-                aironet_ie_support: true
-                load_balancing: false
-                dtim_period_5ghz: 2   # 1-255
-                dtim_period_24ghz: 2  # 1-255
-                scan_defer_time: 100
-                max_clients: 200
-                max_clients_per_radio: 100   # 0-500
-                max_clients_per_ap: 300      # 0-1200
-                wmm_policy: "ALLOWED"        # DISABLED, REQUIRED, ALLOWED
-                multicast_buffer: true
-                multicast_buffer_value: 50
-                media_stream_multicast_direct: true
-                mu_mimo_11ac: true
-                wifi_to_cellular_steering: false
-                wifi_alliance_agile_multiband: false
-                fastlane_asr: false
-                dot11v_bss_max_idle_protected: false
-                universal_ap_admin: false
-                opportunistic_key_caching: false
-                ip_source_guard: false
-                dhcp_opt82_remote_id_sub_option: false
-                vlan_central_switching: false
-                call_snooping: false
-                send_disassociate: false
-                sent_486_busy: false
-                ip_mac_binding: false
-                idle_threshold: 300
-                defer_priority_0: false
-                defer_priority_1: false
-                defer_priority_2: false
-                defer_priority_3: false
-                defer_priority_4: false
-                defer_priority_5: false
-                defer_priority_6: false
-                defer_priority_7: false
-                share_data_with_client: false
-                advertise_support: false
-                advertise_pc_analytics_support: false
-                send_beacon_on_association: false
-                send_beacon_on_roam: false
-                fast_transition_reassociation_timeout: 200
-                mdns_mode: "MDNS_SD_BRIDGING"  # MDNS_SD_BRIDGING, MDNS_SD_DROP, MDNS_SD_GATEWAY
-              unlocked_attributes:
-                - "peer2peer_blocking"
-                - "passive_client"
-                - "dot11ax"
-                - "load_balancing"
-                - "max_clients"
-                - "max_clients_per_radio"
-                - "max_clients_per_ap"
-                - "wmm_policy"
-                - "dtim_period_5ghz"
-                - "dtim_period_24ghz"
-                - "scan_defer_time"
-                - "mdns_mode"
+    config:
+      - feature_template_config:
+          - advanced_ssid:
+              - design_name: "sample_advanced_ssid_design"
+                feature_attributes:
+                  peer2peer_blocking: "DISABLE"   # enum: DROP, FORWARD_UP, ALLOW_PVT_GROUP, DISABLE
+                  passive_client: false
+                  prediction_optimization: false
+                  dual_band_neighbor_list: false
+                  radius_nac_state: true
+                  dhcp_required: true
+                  dhcp_server: "10.10.10.5"
+                  flex_local_auth: false
+                  target_wakeup_time: true
+                  downlink_ofdma: true
+                  uplink_ofdma: true
+                  downlink_mu_mimo: true
+                  uplink_mu_mimo: true
+                  dot11ax: true
+                  aironet_ie_support: true
+                  load_balancing: false
+                  dtim_period_5ghz: 2   # 1-255
+                  dtim_period_24ghz: 2  # 1-255
+                  scan_defer_time: 100
+                  max_clients: 200
+                  max_clients_per_radio: 100   # 0-500
+                  max_clients_per_ap: 300      # 0-1200
+                  wmm_policy: "ALLOWED"        # DISABLED, REQUIRED, ALLOWED
+                  multicast_buffer: true
+                  multicast_buffer_value: 50
+                  media_stream_multicast_direct: true
+                  mu_mimo_11ac: true
+                  wifi_to_cellular_steering: false
+                  wifi_alliance_agile_multiband: false
+                  fastlane_asr: false
+                  dot11v_bss_max_idle_protected: false
+                  universal_ap_admin: false
+                  opportunistic_key_caching: false
+                  ip_source_guard: false
+                  dhcp_opt82_remote_id_sub_option: false
+                  vlan_central_switching: false
+                  call_snooping: false
+                  send_disassociate: false
+                  sent_486_busy: false
+                  ip_mac_binding: false
+                  idle_threshold: 300
+                  defer_priority_0: false
+                  defer_priority_1: false
+                  defer_priority_2: false
+                  defer_priority_3: false
+                  defer_priority_4: false
+                  defer_priority_5: false
+                  defer_priority_6: false
+                  defer_priority_7: false
+                  share_data_with_client: false
+                  advertise_support: false
+                  advertise_pc_analytics_support: false
+                  send_beacon_on_association: false
+                  send_beacon_on_roam: false
+                  fast_transition_reassociation_timeout: 200
+                  mdns_mode: "MDNS_SD_BRIDGING"  # MDNS_SD_BRIDGING, MDNS_SD_DROP, MDNS_SD_GATEWAY
+                unlocked_attributes:
+                  - "peer2peer_blocking"
+                  - "passive_client"
+                  - "dot11ax"
+                  - "load_balancing"
+                  - "max_clients"
+                  - "max_clients_per_radio"
+                  - "max_clients_per_ap"
+                  - "wmm_policy"
+                  - "dtim_period_5ghz"
+                  - "dtim_period_24ghz"
+                  - "scan_defer_time"
+                  - "mdns_mode"
 - name: Update advanced ssid profiles
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -5329,76 +5356,7 @@ EXAMPLES = r"""
     - feature_template_config:
         - advanced_ssid:
             - design_name: "sample_advanced_ssid_design"
-              feature_attributes:
-                peer2peer_blocking: "DISABLE"   # enum: DROP, FORWARD_UP, ALLOW_PVT_GROUP, DISABLE
-                passive_client: false
-                prediction_optimization: false
-                dual_band_neighbor_list: false
-                radius_nac_state: true
-                dhcp_required: true
-                dhcp_server: "10.10.10.5"
-                flex_local_auth: false
-                target_wakeup_time: true
-                downlink_ofdma: true
-                uplink_ofdma: true
-                downlink_mu_mimo: true
-                uplink_mu_mimo: true
-                dot11ax: true
-                aironet_ie_support: true
-                load_balancing: false
-                dtim_period_5ghz: 2   # 1-255
-                dtim_period_24ghz: 2  # 1-255
-                scan_defer_time: 100
-                max_clients: 200
-                max_clients_per_radio: 100   # 0-500
-                max_clients_per_ap: 300      # 0-1200
-                wmm_policy: "ALLOWED"        # DISABLED, REQUIRED, ALLOWED
-                multicast_buffer: true
-                multicast_buffer_value: 50
-                media_stream_multicast_direct: true
-                mu_mimo_11ac: true
-                wifi_to_cellular_steering: false
-                wifi_alliance_agile_multiband: false
-                fastlane_asr: false
-                dot11v_bss_max_idle_protected: false
-                universal_ap_admin: false
-                opportunistic_key_caching: false
-                ip_source_guard: false
-                dhcp_opt82_remote_id_sub_option: true
-                vlan_central_switching: true
-                call_snooping: false
-                send_disassociate: false
-                sent_486_busy: false
-                ip_mac_binding: false
-                idle_threshold: 300
-                defer_priority_0: false
-                defer_priority_1: false
-                defer_priority_2: false
-                defer_priority_3: false
-                defer_priority_4: false
-                defer_priority_5: false
-                defer_priority_6: false
-                defer_priority_7: false
-                share_data_with_client: false
-                advertise_support: false
-                advertise_pc_analytics_support: false
-                send_beacon_on_association: false
-                send_beacon_on_roam: false
-                fast_transition_reassociation_timeout: 200
-                mdns_mode: "MDNS_SD_BRIDGING"  # MDNS_SD_BRIDGING, MDNS_SD_DROP, MDNS_SD_GATEWAY
-              unlocked_attributes:
-                - "peer2peer_blocking"
-                - "passive_client"
-                - "dot11ax"
-                - "load_balancing"
-                - "max_clients"
-                - "max_clients_per_radio"
-                - "max_clients_per_ap"
-                - "wmm_policy"
-                - "dtim_period_5ghz"
-                - "dtim_period_24ghz"
-                - "scan_defer_time"
-                - "mdns_mode"
+
 - name: Add SSIDs
   cisco.dnac.wireless_design_workflow_manager:
     dnac_host: "{{dnac_host}}"
@@ -7134,6 +7092,325 @@ EXAMPLES = r"""
           - anchor_group_name: "Enterprise_Anchor_Group"
           - anchor_group_name: "Branch_Anchor_Group"
           - anchor_group_name: "DataCenter_Anchor_Group"
+
+# Create 802.11be profiles
+- name: Add 802.11be profiles
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: merged
+    config:
+      - 802_11_be_profiles:
+          - profile_name: "wifi7_office_profile"
+            ofdma_up_link: true
+            ofdma_down_link: true
+            mu_mimo_up_link: false
+            mu_mimo_down_link: false
+            ofdma_multi_ru: false
+
+# Update 802.11be profiles
+- name: Update 802.11be profiles
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: merged
+    config:
+      - 802_11_be_profiles:
+          - profile_name: "wifi7_office_profile"
+            ofdma_up_link: true              # Changed from false to true
+            ofdma_down_link: true
+            mu_mimo_up_link: false
+            mu_mimo_down_link: true          # Changed from false to true
+            ofdma_multi_ru: false
+
+# Delete 802.11be profiles
+- name: Delete 802.11be profiles
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - 802_11_be_profiles:
+          - profile_name: "wifi7_office_profile"
+
+# Update flex connect configuration
+- name: Delete 802.11be profiles
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: merged
+    config:
+      - flex_connect_configuration:
+          - site_name_hierarchy: Global/USA/SAN-FRANCISCO/SF_BLD2
+            vlan_id: 200
+
+# Delete flex connect configuration
+- name: Delete flex connect configuration
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - flex_connect_configuration:
+          - site_name_hierarchy: Global/USA/SAN-FRANCISCO/SF_BLD3
+            vlan_id: 200
+            remove_override_in_hierarchy: true  # only for deleted state
+
+# ============================================================================
+# DISCLAIMER: Feature Template Attribute Reset Examples (state: deleted)
+# ============================================================================
+# The following examples demonstrate how to RESET specific feature template
+# attributes to null without deleting the entire template.
+#
+# THIS FUNCTIONALITY IS NOT RECOMMENDED FOR GENERAL USE.
+# It is intended for advanced use cases only. Prefer using state=merged to
+# update attributes to desired values instead.
+#
+# How it works:
+#   - state: deleted with ONLY design_name -> DELETES the entire template
+#   - state: deleted with feature_attributes or unlocked_attributes specified
+#     -> RESETS only those specified attributes to null (template is preserved)
+#
+# Mandatory fields (radio_band, event_driven_rrm_enable, global_multicast_enabled)
+# are automatically preserved and cannot be reset to null.
+#
+# The operation is idempotent: if attributes are already null, no action is taken.
+# ============================================================================
+
+- name: "[NOT RECOMMENDED] Reset specific FlexConnect attributes to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - flexconnect_configuration:
+              - design_name: "flexconnect_branch_office"
+                unlocked_attributes:
+                  - "overlap_ip_enable"
+
+- name: "[NOT RECOMMENDED] Reset specific Advanced SSID attributes to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - advanced_ssid:
+              - design_name: "my_ssid_design"
+                feature_attributes:
+                  passive_client: false
+                  peer2peer_blocking: "DISABLE"
+
+- name: "[NOT RECOMMENDED] Reset specific dot11ax attributes to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - dot11ax_configuration:
+              - design_name: "dot11ax_24ghz_design"
+                feature_attributes:
+                  bss_color: true
+                  obss_pd: true
+                unlocked_attributes:
+                  - "bss_color"
+                  - "obss_pd"
+
+- name: "[NOT RECOMMENDED] Reset specific CleanAir attributes to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - clean_air_configuration:
+              - design_name: "cleanair_design"
+                unlocked_attributes:
+                  - "clean_air"
+                  - "clean_air_device_reporting"
+
+- name: "[NOT RECOMMENDED] Reset specific dot11be attributes to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - dot11be_configuration:
+              - design_name: "dot11be_design"
+                feature_attributes:
+                  dot11be_status: true
+
+- name: "[NOT RECOMMENDED] Reset specific Event-Driven RRM attributes to null (event_driven_rrm_enable is preserved)"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - event_driven_rrm_configuration:
+              - design_name: "rrm_event_design"
+                feature_attributes:
+                  event_driven_rrm_threshold_level: "LOW"
+                  event_driven_rrm_custom_threshold_val: 10
+
+- name: "[NOT RECOMMENDED] Reset specific Multicast attributes to null (global_multicast_enabled is preserved)"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - multicast_configuration:
+              - design_name: "multicast_design"
+                feature_attributes:
+                  multicast_ipv4_mode: "MULTICAST"
+                  multicast_ipv4_address: "239.0.0.1"
+
+- name: "[NOT RECOMMENDED] Reset specific RRM-FRA attributes to null (radio_band is preserved)"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - rrm_fra_configuration:
+              - design_name: "fra_design"
+                unlocked_attributes:
+                  - "fra_freeze"
+                  - "fra_sensitivity"
+
+- name: "[NOT RECOMMENDED] Reset specific RRM General attributes to null (radio_band is preserved)"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - rrm_general_configuration:
+              - design_name: "rrm_general_design"
+                unlocked_attributes:
+                  - "monitoring_channels"
+                  - "coverage_hole_detection"
+
+- name: "[NOT RECOMMENDED] Reset AAA RADIUS attribute to null"
+  cisco.dnac.wireless_design_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: deleted
+    config:
+      - feature_template_config:
+          - aaa_radius_attribute:
+              - design_name: "aaa_radius_design"
+                unlocked_attributes:
+                  - "called_station_id"
 """
 
 RETURN = r"""
@@ -7187,6 +7464,7 @@ class WirelessDesign(DnacBase):
         self.supported_states = ["merged", "deleted"]
         self.is_default_rf_profile_in_config = False
         super().__init__(module)
+        self._SNAKE_CASE_RE = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
 
     def validate_input(self):
         """
@@ -7511,6 +7789,7 @@ class WirelessDesign(DnacBase):
                         "dca_channels_list": {"type": "list"},
                         "supported_data_rates_list": {"type": "list"},
                         "mandatory_data_rates_list": {"type": "list"},
+                        "standard_power_service": {"type": "bool"},
                         "minimum_power_level": {"type": "int"},
                         "maximum_power_level": {"type": "int"},
                         "rx_sop_threshold": {"type": "str"},
@@ -7596,8 +7875,13 @@ class WirelessDesign(DnacBase):
                         "required": False,
                         "options": {
                             "design_name": {"type": "str"},
+                            "new_design_name": {"type": "str"},
                             "called_station_id": {"type": "str"},
-                            "unlocked_attributes": {"type": "bool", "required": False},
+                            "unlocked_attributes": {
+                                "type": "list",
+                                "elements": "str",
+                                "required": False,
+                            },
                         },
                     },
                     "advanced_ssid": {
@@ -7683,14 +7967,14 @@ class WirelessDesign(DnacBase):
                         "required": False,
                         "options": {
                             "design_name": {"type": "str"},
-                            "radio_band": {
-                                "type": "str",
-                                "choices": ["2_4GHZ", "5GHZ", "6GHZ"]
-                            },
                             "feature_attributes": {
                                 "type": "dict",
                                 "required": False,
                                 "options": {
+                                    "radio_band": {
+                                        "type": "str",
+                                        "choices": ["2_4GHZ", "5GHZ", "6GHZ"]
+                                    },
                                     "clean_air": {"type": "bool", "default": False},
                                     "clean_air_device_reporting": {"type": "bool", "default": False},
                                     "persistent_device_propagation": {"type": "bool", "default": False},
@@ -7974,6 +8258,29 @@ class WirelessDesign(DnacBase):
                     }
                 },
             },
+            "802_11_be_profiles": {
+                "type": "list",
+                "elements": "dict",
+                "required": False,
+                "options": {
+                    "profile_name": {"type": "str"},
+                    "ofdma_up_link": {"type": "bool", "default": True},
+                    "ofdma_down_link": {"type": "bool", "default": True},
+                    "mu_mimo_up_link": {"type": "bool", "default": False},
+                    "mu_mimo_down_link": {"type": "bool", "default": False},
+                    "ofdma_multi_ru": {"type": "bool", "default": False},
+                },
+            },
+            "flex_connect_configuration": {
+                "type": "list",
+                "elements": "dict",
+                "required": False,
+                "options": {
+                    "site_name_hierarchy": {"type": "str"},
+                    "vlan_id": {"type": "int"},
+                    "remove_override_in_hierarchy": {"type": "bool", "default": True}
+                }
+            }
         }
 
         # Validate params against the expected schema
@@ -7985,6 +8292,12 @@ class WirelessDesign(DnacBase):
             self.set_operation_result("failed", False, self.msg, "ERROR")
             return self
 
+        validation_error = self._validate_feature_template_unlocked_attributes(valid_temp)
+        if validation_error:
+            self.msg = validation_error
+            self.set_operation_result("failed", False, self.msg, "ERROR")
+            return self
+
         # Set the validated configuration and update the result with success status
         self.validated_config = valid_temp
         self.msg = "Successfully validated playbook configuration parameters using 'validated_input': {0}".format(
@@ -7993,21 +8306,146 @@ class WirelessDesign(DnacBase):
         self.set_operation_result("success", False, self.msg, "INFO")
         return self
 
+    def _is_snake_case_unlocked_attribute(self, attribute_name):
+        """
+        Check whether an unlocked attribute path uses snake_case segments only.
+
+        Args:
+            attribute_name (str): Attribute name or dotted path from the playbook.
+
+        Returns:
+            bool: True when all path segments are snake_case, otherwise False.
+        """
+        if not isinstance(attribute_name, str) or not attribute_name:
+            return False
+
+        return all(self._SNAKE_CASE_RE.match(segment) for segment in attribute_name.split("."))
+
+    def _collect_feature_template_attribute_paths(self, options, prefix=""):
+        """
+        Collect valid snake_case attribute paths from feature template schema options.
+
+        Args:
+            options (dict): Feature attribute schema options.
+            prefix (str): Optional prefix for nested attribute paths.
+
+        Returns:
+            set: Supported snake_case attribute paths.
+        """
+        collected_paths = set()
+
+        for key, spec in (options or {}).items():
+            full_key = "{0}.{1}".format(prefix, key) if prefix else key
+            nested_options = {}
+            if isinstance(spec, dict):
+                nested_options = spec.get("options") or {}
+
+            if nested_options:
+                collected_paths.update(
+                    self._collect_feature_template_attribute_paths(
+                        nested_options, full_key
+                    )
+                )
+            else:
+                collected_paths.add(full_key)
+
+        return collected_paths
+
+    def _validate_feature_template_unlocked_attributes(self, config):
+        """
+        Validate that feature_template_config unlocked_attributes use snake_case.
+
+        Args:
+            config (list): Validated top-level module config list.
+
+        Returns:
+            str | None: Error message on validation failure, otherwise None.
+        """
+        self.log("Validating feature_template_config unlocked_attributes for snake_case compliance.", "DEBUG")
+        feature_template_spec = (
+            self.temp_spec.get("feature_template_config", {}).get("options", {})
+        )
+
+        for config_item in config or []:
+            feature_template_config = config_item.get("feature_template_config") or []
+            for template_block in feature_template_config:
+                for template_name, template_entries in (template_block or {}).items():
+                    template_spec = feature_template_spec.get(template_name, {})
+                    entry_options = template_spec.get("options", {})
+                    unlocked_spec = entry_options.get("unlocked_attributes", {})
+
+                    if unlocked_spec.get("type") != "list":
+                        self.log(
+                            "Skipping template '{0}': unlocked_attributes is not type 'list'.".format(template_name),
+                            "DEBUG"
+                        )
+                        continue
+
+                    allowed_unlock_attributes = self._collect_feature_template_attribute_paths(
+                        entry_options.get("feature_attributes", {}).get("options", {})
+                    )
+                    if not allowed_unlock_attributes:
+                        allowed_unlock_attributes = {
+                            option_name for option_name in entry_options.keys()
+                            if option_name not in (
+                                "design_name",
+                                "new_design_name",
+                                "feature_attributes",
+                                "unlocked_attributes",
+                            )
+                        }
+
+                    for entry in template_entries or []:
+                        design_name = entry.get("design_name", "<unknown>")
+                        unlocked_attributes = entry.get("unlocked_attributes") or []
+
+                        invalid_style = [
+                            attribute_name for attribute_name in unlocked_attributes
+                            if not self._is_snake_case_unlocked_attribute(attribute_name)
+                        ]
+                        if invalid_style:
+                            error_msg = (
+                                "Invalid unlocked_attributes {0} for feature template "
+                                "'{1}' in design '{2}'. Use snake_case attribute names only."
+                            ).format(invalid_style, template_name, design_name)
+                            self.log(error_msg, "WARNING")
+                            return error_msg
+
+                        invalid_names = [
+                            attribute_name for attribute_name in unlocked_attributes
+                            if attribute_name not in allowed_unlock_attributes
+                        ]
+                        if invalid_names:
+                            error_msg = (
+                                "Invalid unlocked_attributes {0} for feature template "
+                                "'{1}' in design '{2}'. Allowed values are: {3}."
+                            ).format(
+                                invalid_names, template_name, design_name,
+                                sorted(allowed_unlock_attributes),
+                            )
+                            self.log(error_msg, "WARNING")
+                            return error_msg
+
+        return None
+
     def verify_delete_rrm_general_requirement(self, rrm_general_list):
         """
-        Determines which RRM General configuration templates need to be deleted
+        Determines which RRM General configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             rrm_general_list (list): A list of dicts containing the requested RRM General
                                     configuration parameters for deletion.
                                     Example: [{"design_name": "rrm_general_design"}]
         Returns:
-            list: A list of RRM General configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of RRM General configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of RRM General configurations for deletion.", "INFO")
+        self.log("Starting verification of RRM General configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing RRM General configurations
         existing_blocks = self.get_rrm_general_profiles()
@@ -8025,7 +8463,7 @@ class WirelessDesign(DnacBase):
         for index, requested_cfg in enumerate(rrm_general_list, start=1):
             design_name = requested_cfg.get("design_name")
             self.log(
-                "Iteration {0}: Checking RRM General config '{1}' for deletion.".format(
+                "Iteration {0}: Checking RRM General config '{1}' for deletion/reset.".format(
                     index, design_name
                 ),
                 "DEBUG",
@@ -8035,27 +8473,120 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: RRM General config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "radio_band": "radioBand",
+                        "monitoring_channels": "monitoringChannels",
+                        "neighbor_discover_type": "neighborDiscoverType",
+                        "throughput_threshold": "throughputThreshold",
+                        "coverage_hole_detection": "coverageHoleDetection",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_rrm_general_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: RRM General config '{1}' is already reset. No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: RRM General config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: RRM General config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: RRM General config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: RRM General config '{1}' not found -> no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "RRM General configurations scheduled for deletion: {0} - {1}".format(
+            "RRM General configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_rrm_general = already_reset_list
+            self.log(
+                "RRM General configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_list
 
@@ -8345,19 +8876,22 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_rrm_fra_requirement(self, rrm_fra_list):
         """
-        Determines which RRM-FRA configuration templates need to be deleted
+        Determines which RRM-FRA configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             rrm_fra_list (list): A list of dicts containing the requested RRM-FRA
                                 configuration parameters for deletion.
                                 Example: [{"design_name": "fra_design_1"}]
         Returns:
-            list: A list of RRM-FRA configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of RRM-FRA configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of RRM-FRA configurations for deletion.", "INFO")
+        self.log("Starting verification of RRM-FRA configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing RRM-FRA configurations
         existing_blocks = self.get_rrm_fra_profiles()
@@ -8375,7 +8909,7 @@ class WirelessDesign(DnacBase):
         for index, requested_cfg in enumerate(rrm_fra_list, start=1):
             design_name = requested_cfg.get("design_name")
             self.log(
-                "Iteration {0}: Checking RRM-FRA config '{1}' for deletion.".format(
+                "Iteration {0}: Checking RRM-FRA config '{1}' for deletion/reset.".format(
                     index, design_name
                 ),
                 "DEBUG",
@@ -8385,27 +8919,120 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: RRM-FRA config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "radio_band": "radioBand",
+                        "fra_freeze": "fraFreeze",
+                        "fra_status": "fraStatus",
+                        "fra_interval": "fraInterval",
+                        "fra_sensitivity": "fraSensitivity",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_rrm_fra_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: RRM-FRA config '{1}' is already reset. No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: RRM-FRA config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: RRM-FRA config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: RRM-FRA config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: RRM-FRA config '{1}' not found -> no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "RRM-FRA configurations scheduled for deletion: {0} - {1}".format(
+            "RRM-FRA configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_rrm_fra = already_reset_list
+            self.log(
+                "RRM-FRA configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_list
 
@@ -8501,13 +9128,28 @@ class WirelessDesign(DnacBase):
                 }
             }
 
+            # Convert fra_sensitivity from Ansible format to API format
+            # API expects: "Low", "Medium", "High", "Higher", "Even Higher", "Super High"
+            # Ansible uses: "LOW", "MEDIUM", "HIGH", "HIGHER", "EVEN_HIGHER", "SUPER_HIGH"
+            api_fra_sensitivity = None
+            if fra_sensitivity is not None:
+                sensitivity_map = {
+                    "LOW": "Low",
+                    "MEDIUM": "Medium",
+                    "HIGH": "High",
+                    "HIGHER": "Higher",
+                    "EVEN_HIGHER": "Even Higher",
+                    "SUPER_HIGH": "Super High"
+                }
+                api_fra_sensitivity = sensitivity_map.get(fra_sensitivity, fra_sensitivity)
+
             # Use a mapping and loop to set optional attributes only when provided
             fa_attr_map = {
                 "fraFreeze": fra_freeze,
                 "fraStatus": fra_status,
                 # store fraInterval as int if provided (we validated above)
                 "fraInterval": int(fra_interval) if fra_interval is not None else None,
-                "fraSensitivity": fra_sensitivity,
+                "fraSensitivity": api_fra_sensitivity,
             }
             for key, value in fa_attr_map.items():
                 if value is not None:
@@ -8545,8 +9187,10 @@ class WirelessDesign(DnacBase):
             existing_interval = existing_fa.get("fraInterval")
             desired_interval = desired_fa.get("fraInterval")
 
-            existing_sens = str(existing_fa.get("fraSensitivity") or "").upper()
-            desired_sens = str(desired_fa.get("fraSensitivity") or "").upper()
+            # Normalize sensitivity for comparison: convert both to uppercase and remove spaces
+            # API returns "Even Higher" or "Super High", we need to compare against "EVEN_HIGHER", "SUPER_HIGH"
+            existing_sens = str(existing_fa.get("fraSensitivity") or "").upper().replace(" ", "_")
+            desired_sens = str(desired_fa.get("fraSensitivity") or "").upper().replace(" ", "_")
 
             needs_update = (
                 existing_fa.get("radioBand") != desired_fa.get("radioBand") or
@@ -8633,19 +9277,22 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_multicast_requirement(self, multicast_list):
         """
-        Determines which multicast configuration templates need to be deleted
+        Determines which multicast configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             multicast_list (list): A list of dicts containing the requested multicast
                                 configuration parameters for deletion.
                                 Example: [{"design_name": "multicast_office_profile"}]
         Returns:
-            list: A list of multicast configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of multicast configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of multicast configurations for deletion.", "INFO")
+        self.log("Starting verification of multicast configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing multicast configurations
         existing_blocks = self.get_multicast_profiles()
@@ -8663,7 +9310,7 @@ class WirelessDesign(DnacBase):
         for index, requested_cfg in enumerate(multicast_list, start=1):
             design_name = requested_cfg.get("design_name")
             self.log(
-                "Iteration {0}: Checking multicast config '{1}' for deletion.".format(
+                "Iteration {0}: Checking multicast config '{1}' for deletion/reset.".format(
                     index, design_name
                 ),
                 "DEBUG",
@@ -8673,27 +9320,120 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: multicast config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "global_multicast_enabled": "globalMulticastEnabled",
+                        "multicast_ipv4_mode": "multicastIpv4Mode",
+                        "multicast_ipv4_address": "multicastIpv4Address",
+                        "multicast_ipv6_mode": "multicastIpv6Mode",
+                        "multicast_ipv6_address": "multicastIpv6Address",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"global_multicast_enabled"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_multicast_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: Multicast config '{1}' is already reset. No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: Multicast config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: Multicast config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: multicast config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: multicast config '{1}' not found -> no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "multicast configurations scheduled for deletion: {0} - {1}".format(
+            "multicast configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_multicast = already_reset_list
+            self.log(
+                "Multicast configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_list
 
@@ -8842,14 +9582,40 @@ class WirelessDesign(DnacBase):
             desired_attrs = payload.get("featureAttributes", {}) or {}
             desired_unlocked = payload.get("unlockedAttributes", []) or []
 
-            if (
-                existing_attrs.get("globalMulticastEnabled") != desired_attrs.get("globalMulticastEnabled")
-                or existing_attrs.get("multicastIpv4Mode") != desired_attrs.get("multicastIpv4Mode")
-                or existing_attrs.get("multicastIpv4Address") != desired_attrs.get("multicastIpv4Address")
-                or existing_attrs.get("multicastIpv6Mode") != desired_attrs.get("multicastIpv6Mode")
-                or existing_attrs.get("multicastIpv6Address") != desired_attrs.get("multicastIpv6Address")
-                or set(existing_unlocked) != set(desired_unlocked)
-            ):
+            # Only compare fields that the user actually provided (not None) in the desired payload.
+            # This prevents false updates when the API returns default values for optional fields
+            needs_update = False
+            compare_keys = [
+                "globalMulticastEnabled",
+                "multicastIpv4Mode",
+                "multicastIpv4Address",
+                "multicastIpv6Mode",
+                "multicastIpv6Address",
+            ]
+            for key in compare_keys:
+                desired_val = desired_attrs.get(key)
+                if desired_val is None:
+                    continue
+                if existing_attrs.get(key) != desired_val:
+                    self.log(
+                        "Multicast profile '{0}': field '{1}' differs - existing: '{2}', desired: '{3}'".format(
+                            design_name, key, existing_attrs.get(key), desired_val
+                        ),
+                        "DEBUG",
+                    )
+                    needs_update = True
+                    break
+
+            if not needs_update and set(existing_unlocked) != set(desired_unlocked):
+                self.log(
+                    "Multicast profile '{0}': unlockedAttributes differ - existing: '{1}', desired: '{2}'".format(
+                        design_name, existing_unlocked, desired_unlocked
+                    ),
+                    "DEBUG",
+                )
+                needs_update = True
+
+            if needs_update:
                 payload["id"] = existing["id"]
                 update_list.append(payload)
                 self.log("Multicast profile '{0}' marked for update.".format(design_name), "DEBUG")
@@ -8932,16 +9698,21 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_flexconnect_requirement(self, flex_list):
         """
-        Build payloads (with id) for FlexConnect templates to delete.
+        Determines which FlexConnect templates need to be deleted or reset
+        based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             flex_list (list): A list of dicts containing the requested FlexConnect
                          configuration parameters for deletion.
                          Example: [{"design_name": "flex_design_1"}]
         Returns:
-            list: A list of FlexConnect configuration templates scheduled for deletion,including their IDs.
+            list: A list of FlexConnect configuration templates to process (delete or reset)
         """
         delete_list = []
         skipped = []
+        already_reset_list = []  # Track items that are already reset
 
         existing_blocks = self.get_flexconnect_profiles() or []
         instances = []
@@ -8955,17 +9726,95 @@ class WirelessDesign(DnacBase):
                 skipped.append(idx)
                 self.log("Iteration {0}: Missing 'design_name' in delete entry. Skipping.".format(idx), "ERROR")
                 continue
+
             if dn in existing_by_name:
+                existing = existing_by_name[dn]
                 got = dict(req)
-                got["id"] = existing_by_name[dn].get("id")
-                delete_list.append(got)
-                self.log("Iteration {0}: FlexConnect '{1}' -> DELETE".format(idx, dn), "INFO")
+                got["id"] = existing.get("id")
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(req.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    playbook_feature_attrs = req.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = req.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+                        self.log(
+                            "Iteration {0}: feature_attributes empty, using unlocked_attributes as reset keys: {1}".format(
+                                idx, list(playbook_feature_attrs.keys())
+                            ),
+                            "DEBUG",
+                        )
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "overlap_ip_enable": "overlapIpEnable",
+                    }
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_flexconnect_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        idx, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: FlexConnect '{1}' is already reset. No reset needed.".format(idx, dn),
+                                "INFO",
+                            )
+                            already_reset_list.append(dn)
+                        else:
+                            self.log(
+                                "Iteration {0}: FlexConnect '{1}' needs RESET.".format(idx, dn),
+                                "INFO",
+                            )
+                            delete_list.append(got)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(idx, dn),
+                            "WARNING",
+                        )
+                        delete_list.append(got)
+                else:
+                    # DELETE operation
+                    self.log("Iteration {0}: FlexConnect '{1}' -> DELETE".format(idx, dn), "INFO")
+                    delete_list.append(got)
             else:
                 self.log("Iteration {0}: FlexConnect '{1}' not found -> skip".format(idx, dn), "INFO")
 
-        self.log("FlexConnect scheduled for delete: {0}".format(delete_list), "DEBUG")
+        self.log("FlexConnect scheduled for processing: {0}".format(delete_list), "DEBUG")
         if skipped:
             self.log("FlexConnect entries skipped due to missing design_name: {0}".format(skipped), "WARNING")
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_flexconnect = already_reset_list
+            self.log(
+                "FlexConnect configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
+
         return delete_list
 
     def verify_create_update_flexconnect_requirement(self, flex_list):
@@ -9014,7 +9863,17 @@ class WirelessDesign(DnacBase):
             if unlocked:
                 # Only valid attribute is overlap_ip_enable -> overlapIpEnable
                 name_map = {"overlap_ip_enable": "overlapIpEnable"}
-                payload["unlockedAttributes"] = [name_map.get(u, u) for u in unlocked]
+
+                invalid = [u for u in unlocked if u not in name_map]
+                if invalid:
+                    self.msg = (
+                        "Invalid unlocked_attributes {0} for flexconnect design '{1}'. "
+                        "Allowed values are: {2}."
+                    ).format(invalid, design_name, sorted(name_map.keys()))
+                    self.set_operation_result("failed", False, self.msg, "ERROR")
+                    return self
+
+                payload["unlockedAttributes"] = [name_map[u] for u in unlocked]
 
             existing = existing_by_name.get(design_name)
             if not existing:
@@ -9100,19 +9959,22 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_dot11be_requirement(self, dot11be_list):
         """
-        Determines which dot11be configuration templates need to be deleted
+        Determines which dot11be configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             dot11be_list (list): A list of dicts containing the requested dot11be
                                 configuration parameters for deletion.
                                 Example: [{"design_name": "dot11be_2.4ghz_design"}]
         Returns:
-            list: A list of dot11be configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of dot11be configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of dot11be configurations for deletion.", "INFO")
+        self.log("Starting verification of dot11be configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing dot11be configurations
         existing_blocks = self.get_dot11be_profiles()
@@ -9131,7 +9993,7 @@ class WirelessDesign(DnacBase):
         for index, requested_cfg in enumerate(dot11be_list or [], start=1):
             design_name = requested_cfg.get("design_name")
             self.log(
-                "Iteration {0}: Checking dot11be config '{1}' for deletion.".format(
+                "Iteration {0}: Checking dot11be config '{1}' for deletion/reset.".format(
                     index, design_name
                 ),
                 "INFO",
@@ -9141,30 +10003,117 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: dot11be config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "dot11be_status": "dot11beStatus",
+                        "radio_band": "radioBand",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_dot11be_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: dot11be config '{1}' is already reset (playbook attributes are null). No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: dot11be config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: dot11be config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: dot11be config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: dot11be config '{1}' not found -> no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "dot11be configurations scheduled for deletion: {0} - {1}".format(
+            "dot11be configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
-        self.log("dot11be configurations scheduled for deletion: {0} - {1}".format(
-            len(delete_list), delete_list
-        ), "Warning")
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_dot11be = already_reset_list
+            self.log(
+                "dot11be configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_list
 
@@ -9553,19 +10502,22 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_event_rrm_requirement(self, event_rrm_list):
         """
-        Determines which Event-Driven RRM configuration templates need to be deleted
+        Determines which Event-Driven RRM configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             event_rrm_list (list): A list of dicts containing the requested Event-Driven RRM
                                 configuration parameters for deletion.
                                 Example: [{"design_name": "edrrm_2_4ghz_design"}]
         Returns:
-            list: A list of Event-Driven RRM configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of Event-Driven RRM configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of Event-Driven RRM configurations for deletion.", "INFO")
+        self.log("Starting verification of Event-Driven RRM configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing Event-Driven RRM configurations (summary)
         existing_blocks = self.get_event_rrm_profiles()
@@ -9583,7 +10535,7 @@ class WirelessDesign(DnacBase):
         for index, requested_cfg in enumerate(event_rrm_list or [], start=1):
             design_name = requested_cfg.get("design_name")
             self.log(
-                "Iteration {0}: Checking Event-Driven RRM config '{1}' for deletion.".format(
+                "Iteration {0}: Checking Event-Driven RRM config '{1}' for deletion/reset.".format(
                     index, design_name
                 ),
                 "DEBUG",
@@ -9593,45 +10545,140 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: Event-Driven RRM config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "radio_band": "radioBand",
+                        "event_driven_rrm_enable": "eventDrivenRrmEnable",
+                        "event_driven_rrm_threshold_level": "eventDrivenRrmThresholdLevel",
+                        "event_driven_rrm_custom_threshold_val": "eventDrivenRrmCustomThresholdVal",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band", "event_driven_rrm_enable"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_event_rrm_profile_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: Event-Driven RRM config '{1}' is already reset (playbook attributes are null). No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: Event-Driven RRM config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: Event-Driven RRM config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: Event-Driven RRM config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: Event-Driven RRM config '{1}' not found -> no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "Event-Driven RRM configurations scheduled for deletion: {0} - {1}".format(
+            "Event-Driven RRM configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
 
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_event_rrm = already_reset_list
+            self.log(
+                "Event-Driven RRM configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
+
         return delete_list
 
     def verify_delete_dot11axs_requirement(self, dot11ax_list):
         """
-        Determines which dot11ax configuration templates need to be deleted
+        Determines which dot11ax configuration templates need to be deleted or reset
         based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             dot11ax_list (list): A list of dicts containing the requested dot11ax
                                 configuration parameters for deletion.
                                 Example: [{"design_name": "dot11ax_24ghz_design"}]
         Returns:
-            list: A list of dot11ax configuration templates scheduled for deletion,
-                including their IDs.
+            list: A list of dot11ax configuration templates to process (delete or reset)
         """
         delete_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of dot11ax configurations for deletion.", "INFO")
+        self.log("Starting verification of dot11ax configurations for deletion/reset.", "INFO")
 
         # Retrieve all existing dot11ax configurations
         existing_blocks = self.get_dot11ax_templates()
@@ -9659,27 +10706,122 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 cfg_to_delete = requested_cfg.copy()
                 cfg_to_delete["id"] = existing.get("id")
-                delete_list.append(cfg_to_delete)
-                self.log(
-                    "Iteration {0}: dot11ax config '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested_cfg.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested_cfg.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested_cfg.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "radio_band": "radioBand",
+                        "bss_color": "bssColor",
+                        "target_waketime_broadcast": "targetWaketimeBroadcast",
+                        "non_srg_obss_pd_max_threshold": "nonSRGObssPdMaxThreshold",
+                        "target_wakeup_time_11ax": "targetWakeUpTime11ax",
+                        "obss_pd": "obssPd",
+                        "multiple_bssid": "multipleBssid",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_dot11ax_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            current_val = feature_attrs.get(api_key)
+                            if current_val is not None:
+                                self.log(
+                                    "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                        index, api_key, current_val
+                                    ),
+                                    "DEBUG",
+                                )
+                                is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: dot11ax config '{1}' is already reset (playbook attributes are null). No reset needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: dot11ax config '{1}' needs RESET.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_list.append(cfg_to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_list.append(cfg_to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: dot11ax config '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_list.append(cfg_to_delete)
             else:
                 self.log(
-                    "Iteration {0}: dot11ax config '{1}' not found -> no deletion required.".format(
+                    "Iteration {0}: dot11ax config '{1}' not found - no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "dot11ax configurations scheduled for deletion: {0} - {1}".format(
+            "dot11ax configurations scheduled for processing: {0} - {1}".format(
                 len(delete_list), delete_list
             ),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_dot11ax = already_reset_list
+            self.log(
+                "dot11ax configurations already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_list
 
@@ -9945,17 +11087,20 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_clean_air_requirement(self, clean_air_list):
         """
-        Determines which CleanAir profiles need to be deleted based on the requested parameters.
+        Determines which CleanAir profiles need to be deleted or reset based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             clean_air_list (list): A list of dicts containing the requested CleanAir parameters for deletion.
                                 Example: [{"design_name": "sample_cleanair_design_24ghz"}]
         Returns:
-            list: A list of CleanAir entries to delete. Each entry is the original requested dict
-                with an added "id" key (the controller template id) when a match is found.
+            list: A list of CleanAir entries to process (delete or reset)
         """
         delete_clean_air_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of CleanAir profiles for deletion.", "INFO")
+        self.log("Starting verification of CleanAir profiles for deletion/reset.", "INFO")
 
         # Retrieve all existing CleanAir templates
         existing_blocks = self.get_clean_air_templates() or []
@@ -9988,25 +11133,279 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 to_delete = requested.copy()
                 to_delete["id"] = existing.get("id")
-                delete_clean_air_list.append(to_delete)
-                self.log(
-                    "Iteration {0}: CleanAir '{1}' scheduled for deletion (id={2}).".format(
-                        idx, design_name, existing.get("id")
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            idx, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Extract playbook feature_attributes to check only those keys
+                    playbook_feature_attrs = requested.get("feature_attributes") or {}
+
+                    # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                    unlocked_attrs_list = requested.get("unlocked_attributes") or []
+                    if not playbook_feature_attrs and unlocked_attrs_list:
+                        playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                    # Key mapping: snake_case (playbook) -> camelCase (API)
+                    key_name_map = {
+                        "radio_band": "radioBand",
+                        "clean_air": "cleanAir",
+                        "clean_air_device_reporting": "cleanAirDeviceReporting",
+                        "persistent_device_propagation": "persistentDevicePropagation",
+                        "description": "description",
+                        "interferers_features": "interferersFeatures",
+                    }
+
+                    # Key mapping for interferers_features sub-keys
+                    interferers_key_map = {
+                        "ble_beacon": "bleBeacon",
+                        "bluetooth_paging_inquiry": "bluetoothPagingInquiry",
+                        "bluetooth_sco_acl": "bluetoothScoAcl",
+                        "continuous_transmitter": "continuousTransmitter",
+                        "generic_dect": "genericDect",
+                        "generic_tdd": "genericTdd",
+                        "jammer": "jammer",
+                        "microwave_oven": "microwaveOven",
+                        "motorola_canopy": "motorolaCanopy",
+                        "si_fhss": "siFhss",
+                        "spectrum80211_fh": "spectrum80211Fh",
+                        "spectrum80211_non_standard_channel": "spectrum80211NonStandardChannel",
+                        "spectrum802154": "spectrum802154",
+                        "spectrum_inverted": "spectrumInverted",
+                        "super_ag": "superAg",
+                        "video_camera": "videoCamera",
+                        "wimax_fixed": "wimaxFixed",
+                        "wimax_mobile": "wimaxMobile",
+                        "xbox": "xbox",
+                    }
+
+                    # Mandatory fields that cannot be null - skip from reset check
+                    mandatory_fields = {"radio_band"}
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_clean_air_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        is_reset = True
+
+                        # Check ONLY playbook-specified attributes
+                        for snake_key in playbook_feature_attrs.keys():
+                            if snake_key in mandatory_fields:
+                                continue  # Skip mandatory fields from reset check
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+
+                            if snake_key == "interferers_features" and isinstance(playbook_feature_attrs.get(snake_key), dict):
+                                # Check nested interferers sub-keys
+                                current_interferers = feature_attrs.get("interferersFeatures", {})
+                                if current_interferers is None:
+                                    continue  # Already null
+                                for intf_snake_key in playbook_feature_attrs[snake_key].keys():
+                                    intf_api_key = interferers_key_map.get(intf_snake_key, intf_snake_key)
+                                    current_val = current_interferers.get(intf_api_key)
+                                    if current_val is not None:
+                                        self.log(
+                                            "Iteration {0}: Interferer '{1}' has value '{2}' (not null). Reset needed.".format(
+                                                idx, intf_api_key, current_val
+                                            ),
+                                            "DEBUG",
+                                        )
+                                        is_reset = False
+                                        break
+                            else:
+                                current_val = feature_attrs.get(api_key)
+                                if current_val is not None:
+                                    self.log(
+                                        "Iteration {0}: Attribute '{1}' has value '{2}' (not null). Reset needed.".format(
+                                            idx, api_key, current_val
+                                        ),
+                                        "DEBUG",
+                                    )
+                                    is_reset = False
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: CleanAir '{1}' is already reset (playbook attributes are null). No reset needed.".format(
+                                    idx, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: CleanAir '{1}' needs RESET.".format(
+                                    idx, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_clean_air_list.append(to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                idx, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_clean_air_list.append(to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: CleanAir '{1}' will be DELETED (only design_name provided).".format(
+                            idx, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_clean_air_list.append(to_delete)
             else:
                 self.log(
-                    "Iteration {0}: CleanAir '{1}' not found - no deletion required.".format(idx, design_name),
+                    "Iteration {0}: CleanAir '{1}' not found - no action required.".format(idx, design_name),
                     "INFO",
                 )
 
         self.log(
-            "CleanAir profiles scheduled for deletion: {0} - {1}".format(len(delete_clean_air_list), delete_clean_air_list),
+            "CleanAir profiles scheduled for processing: {0} - {1}".format(len(delete_clean_air_list), delete_clean_air_list),
             "DEBUG",
         )
 
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_clean_air = already_reset_list
+            self.log(
+                "CleanAir profiles already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
+
         return delete_clean_air_list
+
+    def _validate_clean_air_interferer_band_compatibility(self, design_name, radio_band, interferers_features):
+        """
+        Validate that interferer types are compatible with the specified radio band.
+        Args:
+            design_name (str): Name of the design for error reporting
+            radio_band (str): Radio band (2_4GHZ, 5GHZ, or 6GHZ)
+            interferers_features (dict): Dictionary of interferer settings
+        Raises:
+            Sets self.status to "failed" and raises check_return_status() if validation fails
+        """
+        if not interferers_features:
+            return  # No interferers configured, nothing to validate
+
+        # Define interferers supported by each band (snake_case keys)
+        # 2.4GHz supports all interferers
+        interferers_24ghz = {
+            "ble_beacon", "bluetooth_paging_inquiry", "bluetooth_sco_acl",
+            "continuous_transmitter", "generic_dect", "generic_tdd", "jammer",
+            "microwave_oven", "motorola_canopy", "si_fhss", "spectrum80211_fh",
+            "spectrum80211_non_standard_channel", "spectrum802154", "spectrum_inverted",
+            "super_ag", "video_camera", "wimax_fixed", "wimax_mobile", "xbox"
+        }
+
+        # 5GHz supports subset (excludes BLE, Bluetooth variants, microwave_oven, spectrum80211_fh, spectrum802154, xbox)
+        interferers_5ghz = {
+            "continuous_transmitter", "generic_dect", "generic_tdd", "jammer",
+            "motorola_canopy", "si_fhss", "spectrum80211_non_standard_channel",
+            "spectrum_inverted", "super_ag", "video_camera", "wimax_fixed", "wimax_mobile"
+        }
+
+        # 6GHz supports only continuous_transmitter
+        interferers_6ghz = {
+            "continuous_transmitter"
+        }
+
+        # Determine which interferers are allowed for this band
+        if radio_band == "2_4GHZ":
+            allowed_interferers = interferers_24ghz
+        elif radio_band == "5GHZ":
+            allowed_interferers = interferers_5ghz
+        elif radio_band == "6GHZ":
+            allowed_interferers = interferers_6ghz
+        else:
+            # Unknown band, skip validation (let API handle it)
+            return
+
+        # Check if any enabled interferers are not supported by this band
+        invalid_interferers = []
+        for interferer_key, interferer_value in interferers_features.items():
+            # Only check interferers that are enabled (set to True)
+            if interferer_value is True and interferer_key not in allowed_interferers:
+                invalid_interferers.append(interferer_key)
+
+        if invalid_interferers:
+            band_display = radio_band.replace("_", ".")
+            self.msg = (
+                "Invalid CleanAir configuration for design '{0}': The following interferers are not "
+                "supported on {1} band: {2}. Please refer to the module documentation for the complete "
+                "band/interferer compatibility matrix."
+            ).format(design_name, band_display, ", ".join(invalid_interferers))
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+
+    def _get_all_interferers_with_defaults(self, radio_band):
+        """
+        Get all possible interferers with false defaults based on radio_band.
+        Args:
+            radio_band (str): Radio band (2_4GHZ, 5GHZ, or 6GHZ)
+        Returns:
+            dict: All interferers with false defaults
+        """
+        # Base interferers for all bands
+        interferers = {}
+
+        if radio_band == "2_4GHZ":
+            interferers.update({
+                "bleBeacon": False,
+                "bluetoothPagingInquiry": False,
+                "bluetoothScoAcl": False,
+                "continuousTransmitter": False,
+                "genericDect": False,
+                "genericTdd": False,
+                "jammer": False,
+                "microwaveOven": False,
+                "motorolaCanopy": False,
+                "siFhss": False,
+                "spectrum80211Fh": False,
+                "spectrum80211NonStandardChannel": False,
+                "spectrum802154": False,
+                "spectrumInverted": False,
+                "superAg": False,
+                "videoCamera": False,
+                "wimaxFixed": False,
+                "wimaxMobile": False,
+                "xbox": False,
+            })
+        elif radio_band == "5GHZ":
+            interferers.update({
+                "continuousTransmitter": False,
+                "genericDect": False,
+                "genericTdd": False,
+                "jammer": False,
+                "motorolaCanopy": False,
+                "siFhss": False,
+                "spectrum80211NonStandardChannel": False,
+                "spectrumInverted": False,
+                "superAg": False,
+                "videoCamera": False,
+                "wimaxFixed": False,
+                "wimaxMobile": False,
+            })
+        elif radio_band == "6GHZ":
+            # 6GHz supports only continuousTransmitter
+            interferers.update({
+                "continuousTransmitter": False,
+            })
+
+        return interferers
 
     def _normalize_clean_air_payload(self, requested_entry, key_name_map, snake_to_camel):
         """
@@ -10019,17 +11418,24 @@ class WirelessDesign(DnacBase):
             dict: Normalized payload with camelCase keys
         """
         design_name = requested_entry.get("design_name")
-        radio_band = requested_entry.get("radio_band")
         requested_features_raw = requested_entry.get("feature_attributes") or {}
+        # Extract radio_band from feature_attributes (not from top level)
+        radio_band = requested_features_raw.get("radio_band")
         requested_unlocked = requested_entry.get("unlocked_attributes")
         requested_unlocked = [] if requested_unlocked is None else requested_unlocked
+
+        # Validate interferer/band compatibility BEFORE normalization
+        interferers_features = requested_features_raw.get("interferers_features")
+        if interferers_features and radio_band:
+            self._validate_clean_air_interferer_band_compatibility(design_name, radio_band, interferers_features)
 
         # Build normalized features (convert top-level keys)
         normalized_features = {}
         for raw_k, raw_v in requested_features_raw.items():
             if raw_k == "interferers_features" and isinstance(raw_v, dict):
-                # nested interferersFeatures: normalize inner keys
-                interferers = {}
+                # Get all possible interferers with defaults based on radio_band
+                interferers = self._get_all_interferers_with_defaults(radio_band)
+                # Override with user-specified values
                 for ik, iv in raw_v.items():
                     inner_key = key_name_map.get(ik, ik)
                     interferers[inner_key] = iv
@@ -10093,20 +11499,24 @@ class WirelessDesign(DnacBase):
                 needs_update = True
         else:
             # Compare entire interferersFeatures map
+            # Compare all keys from both requested and existing, treating missing as False
             req_map = normalized_features.get("interferersFeatures", {}) or {}
             exist_map = existing_features.get("interferersFeatures", {}) or {}
 
+            # Iterate over all keys from both maps
             for inner_key in set(list(req_map.keys()) + list(exist_map.keys())):
-                req_val = to_bool_if_str(req_map.get(inner_key))
+                req_val = req_map.get(inner_key)
                 exist_val = exist_map.get(inner_key)
 
-                if exist_val is None and isinstance(req_val, bool):
-                    exist_val = (
-                        boolean_defaults.get("interferersFeatures", {}).get(inner_key)
-                        if isinstance(boolean_defaults.get("interferersFeatures"), dict)
-                        else False
-                    )
-                if isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
+                # Treat missing values as False for both sides
+                if req_val is None:
+                    req_val = False
+                else:
+                    req_val = to_bool_if_str(req_val)
+
+                if exist_val is None:
+                    exist_val = False
+                elif isinstance(exist_val, str) and exist_val.lower() in ("true", "false"):
                     exist_val = exist_val.lower() == "true"
 
                 if exist_val != req_val:
@@ -10213,8 +11623,8 @@ class WirelessDesign(DnacBase):
             "jammer": "jammer",
             "microwave_oven": "microwaveOven",
             "motorola_canopy": "motorolaCanopy",
-            "si_fhss": "siFHSS",
-            "spectrum80211_fh": "spectrum80211FH",
+            "si_fhss": "siFhss",
+            "spectrum80211_fh": "spectrum80211Fh",
             "spectrum80211_non_standard_channel": "spectrum80211NonStandardChannel",
             "spectrum802154": "spectrum802154",
             "spectrum_inverted": "spectrumInverted",
@@ -10335,17 +11745,20 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_advanced_ssid_requirement(self, adv_ssid_list):
         """
-        Determines which Advanced SSIDs need to be deleted based on the requested parameters.
+        Determines which Advanced SSIDs need to be deleted or reset based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             adv_ssid_list (list): A list of dicts containing the requested Advanced SSID parameters for deletion.
                                 Example: [{"design_name": "Corporate_WLAN_Design"}]
         Returns:
-            list: A list of Advanced SSID entries to delete. Each entry is the original requested dict
-                with an added "id" key (the controller template id) when a match is found.
+            list: A list of Advanced SSID entries to process (delete or reset)
         """
         delete_ssid_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of Advanced SSIDs for deletion.", "INFO")
+        self.log("Starting verification of Advanced SSIDs for deletion/reset.", "INFO")
 
         # Retrieve all existing Advanced SSID templates
         existing_blocks = self.get_advanced_ssid_templates() or []
@@ -10378,23 +11791,156 @@ class WirelessDesign(DnacBase):
                 existing = existing_dict[design_name]
                 to_delete = requested.copy()
                 to_delete["id"] = existing.get("id")
-                delete_ssid_list.append(to_delete)
-                self.log(
-                    "Iteration {0}: Advanced SSID '{1}' scheduled for deletion (id={2}).".format(
-                        idx, design_name, existing.get("id")
-                    ),
-                    "INFO",
-                )
+
+                # Determine operation type based on payload content
+                essential_keys = {"design_name"}
+                payload_keys = set(requested.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            idx, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_advanced_ssid_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+
+                        # Check if ONLY playbook-specified attributes are already null
+                        playbook_feature_attrs = requested.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = requested.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Map playbook keys to API keys
+                        key_name_map = {
+                            "peer2peer_blocking": "peer2peerblocking",
+                            "passive_client": "passiveClient",
+                            "prediction_optimization": "predictionOptimization",
+                            "dual_band_neighbor_list": "dualBandNeighborList",
+                            "radius_nac_state": "radiusNacState",
+                            "dhcp_required": "dhcpRequired",
+                            "dhcp_server": "dhcpServer",
+                            "flex_local_auth": "flexLocalAuth",
+                            "target_wakeup_time": "targetWakeupTime",
+                            "downlink_ofdma": "downlinkOfdma",
+                            "uplink_ofdma": "uplinkOfdma",
+                            "downlink_mu_mimo": "downlinkMuMimo",
+                            "uplink_mu_mimo": "uplinkMuMimo",
+                            "dot11ax": "dot11ax",
+                            "aironet_ie_support": "aironetIESupport",
+                            "load_balancing": "loadBalancing",
+                            "dtim_period_5ghz": "dtimPeriod5GHz",
+                            "dtim_period_24ghz": "dtimPeriod24GHz",
+                            "scan_defer_time": "scanDeferTime",
+                            "max_clients": "maxClients",
+                            "max_clients_per_radio": "maxClientsPerRadio",
+                            "max_clients_per_ap": "maxClientsPerAp",
+                            "wmm_policy": "wmmPolicy",
+                            "multicast_buffer": "multicastBuffer",
+                            "multicast_buffer_value": "multicastBufferValue",
+                            "media_stream_multicast_direct": "mediaStreamMulticastDirect",
+                            "mu_mimo_11ac": "muMimo11ac",
+                            "wifi_to_cellular_steering": "wifiToCellularSteering",
+                            "wifi_alliance_agile_multiband": "wifiAllianceAgileMultiband",
+                            "fastlane_asr": "fastlaneASR",
+                            "dot11v_bss_max_idle_protected": "dot11vBSSMaxIdleProtected",
+                            "universal_ap_admin": "universalAPAdmin",
+                            "opportunistic_key_caching": "opportunisticKeyCaching",
+                            "ip_source_guard": "ipSourceGuard",
+                            "dhcp_opt82_remote_id_sub_option": "dhcpOpt82RemoteIDSubOption",
+                            "vlan_central_switching": "vlanCentralSwitching",
+                            "call_snooping": "callSnooping",
+                            "send_disassociate": "sendDisassociate",
+                            "sent_486_busy": "sent486Busy",
+                            "ip_mac_binding": "ipMacBinding",
+                            "defer_priority_0": "deferPriority0",
+                            "defer_priority_1": "deferPriority1",
+                            "defer_priority_2": "deferPriority2",
+                            "defer_priority_3": "deferPriority3",
+                            "defer_priority_4": "deferPriority4",
+                            "defer_priority_5": "deferPriority5",
+                            "defer_priority_6": "deferPriority6",
+                            "defer_priority_7": "deferPriority7",
+                            "share_data_with_client": "shareDataWithClient",
+                            "advertise_support": "advertiseSupport",
+                            "advertise_pc_analytics_support": "advertisePCAnalyticsSupport",
+                            "send_beacon_on_association": "sendBeaconOnAssociation",
+                            "send_beacon_on_roam": "sendBeaconOnRoam",
+                            "idle_threshold": "idleThreshold",
+                            "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
+                            "mdns_mode": "mDNSMode",
+                        }
+
+                        # Check if all playbook-specified attributes are null
+                        is_reset = True
+                        for playbook_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(playbook_key, playbook_key)
+                            current_value = feature_attrs.get(api_key)
+                            if current_value is not None and current_value != "":
+                                is_reset = False
+                                break
+
+                        if is_reset:
+                            self.log(
+                                "Iteration {0}: Advanced SSID '{1}' is already reset (playbook attributes are null). No reset needed.".format(
+                                    idx, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)
+                        else:
+                            self.log(
+                                "Iteration {0}: Advanced SSID '{1}' needs RESET.".format(
+                                    idx, design_name
+                                ),
+                                "INFO",
+                            )
+                            delete_ssid_list.append(to_delete)
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                idx, design_name
+                            ),
+                            "WARNING",
+                        )
+                        delete_ssid_list.append(to_delete)
+                else:
+                    # DELETE operation: Always schedule for deletion
+                    self.log(
+                        "Iteration {0}: Advanced SSID '{1}' will be DELETED (only design_name provided).".format(
+                            idx, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_ssid_list.append(to_delete)
             else:
                 self.log(
-                    "Iteration {0}: Advanced SSID '{1}' not found - no deletion required.".format(idx, design_name),
+                    "Iteration {0}: Advanced SSID '{1}' not found - no action required.".format(idx, design_name),
                     "INFO",
                 )
 
         self.log(
-            "Advanced SSIDs scheduled for deletion: {0} - {1}".format(len(delete_ssid_list), delete_ssid_list),
+            "Advanced SSIDs scheduled for processing: {0} - {1}".format(len(delete_ssid_list), delete_ssid_list),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_advanced_ssids = already_reset_list
+            self.log(
+                "Advanced SSIDs already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_ssid_list
 
@@ -10452,7 +11998,7 @@ class WirelessDesign(DnacBase):
             "mu_mimo_11ac": "muMimo11ac",
 
             # vendor / extra flags
-            "aironet_ie_support": "aironetIeSupport",
+            "aironet_ie_support": "aironetIESupport",
             "load_balancing": "loadBalancing",
 
             # timing / counts / numeric
@@ -10461,7 +12007,7 @@ class WirelessDesign(DnacBase):
             "scan_defer_time": "scanDeferTime",
             "max_clients": "maxClients",
             "max_clients_per_radio": "maxClientsPerRadio",
-            "max_clients_per_ap": "maxClientsPerAP",
+            "max_clients_per_ap": "maxClientsPerAp",
             "idle_threshold": "idleThreshold",
             "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
 
@@ -10474,14 +12020,14 @@ class WirelessDesign(DnacBase):
             # steering / agile multiband / fastlane
             "wifi_to_cellular_steering": "wifiToCellularSteering",
             "wifi_alliance_agile_multiband": "wifiAllianceAgileMultiband",
-            "fastlane_asr": "fastlaneAsr",
+            "fastlane_asr": "fastlaneASR",
 
             # 11v / AP admin / caching / security guards
-            "dot11v_bss_max_idle_protected": "dot11vBssMaxIdleProtected",
-            "universal_ap_admin": "universalApAdmin",
+            "dot11v_bss_max_idle_protected": "dot11vBSSMaxIdleProtected",
+            "universal_ap_admin": "universalAPAdmin",
             "opportunistic_key_caching": "opportunisticKeyCaching",
             "ip_source_guard": "ipSourceGuard",
-            "dhcp_opt82_remote_id_sub_option": "dhcpOpt82RemoteIdSubOption",
+            "dhcp_opt82_remote_id_sub_option": "dhcpOpt82RemoteIDSubOption",
             "vlan_central_switching": "vlanCentralSwitching",
 
             # call / snooping / disassociate / busy
@@ -10505,7 +12051,7 @@ class WirelessDesign(DnacBase):
             # sharing / analytics / beacons
             "share_data_with_client": "shareDataWithClient",
             "advertise_support": "advertiseSupport",
-            "advertise_pc_analytics_support": "advertisePcAnalyticsSupport",
+            "advertise_pc_analytics_support": "advertisePCAnalyticsSupport",
             "send_beacon_on_association": "sendBeaconOnAssociation",
             "send_beacon_on_roam": "sendBeaconOnRoam",
 
@@ -10572,9 +12118,23 @@ class WirelessDesign(DnacBase):
 
                 normalized_feature_attrs[target_key] = raw_val
 
-            payload = {"designName": design_name, "featureAttributes": normalized_feature_attrs}
+            # **FIX: Normalize unlocked_attributes from snake_case to camelCase**
+            normalized_unlocked = []
             if requested_unlocked:
-                payload["unlockedAttributes"] = requested_unlocked
+                for attr in requested_unlocked:
+                    if attr in key_name_map:
+                        normalized_unlocked.append(key_name_map[attr])
+                    else:
+                        # fallback: snake_case to camelCase conversion
+                        if "_" in attr:
+                            parts = attr.split("_")
+                            normalized_unlocked.append(parts[0] + "".join(p.capitalize() for p in parts[1:]))
+                        else:
+                            normalized_unlocked.append(attr)
+
+            payload = {"designName": design_name, "featureAttributes": normalized_feature_attrs}
+            if normalized_unlocked:
+                payload["unlockedAttributes"] = normalized_unlocked
 
             self.log("Evaluating design: {0} (field_to_check={1})".format(design_name, field_to_check), "DEBUG")
 
@@ -10624,7 +12184,6 @@ class WirelessDesign(DnacBase):
                             self.log("Diff for {0}: existing({1}) != requested({2})".format(attr_key, exist_value, req_value), "DEBUG")
                             per_design_diffs.append((attr_key, exist_value, req_value))
                             needs_update = True
-                            # continue scanning to capture all diffs
                             continue
 
                     # wmmPolicy tolerant (case-insensitive)
@@ -10662,21 +12221,21 @@ class WirelessDesign(DnacBase):
                             continue
 
                 # If still no difference found, compare unlocked attributes
-                if set(existing_unlocked) != set(requested_unlocked):
-                    self.log("Unlocked attrs differ: existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked), "DEBUG")
-                    per_design_diffs.append(("unlockedAttributes", existing_unlocked, requested_unlocked))
+                if set(existing_unlocked) != set(normalized_unlocked):
+                    self.log("Unlocked attrs differ: existing({0}) != requested({1})".format(existing_unlocked, normalized_unlocked), "DEBUG")
+                    per_design_diffs.append(("unlockedAttributes", existing_unlocked, normalized_unlocked))
                     needs_update = True
 
             else:
                 # Only compare the single requested field or unlocked attributes
                 if field_to_check in ("unlocked_attributes", "unlockedAttributes") or field_check_key == "unlockedAttributes":
-                    if set(existing_unlocked) != set(requested_unlocked):
+                    if set(existing_unlocked) != set(normalized_unlocked):
                         self.log(
                             "Unlocked attrs differ (single-field check): "
-                            "existing({0}) != requested({1})".format(existing_unlocked, requested_unlocked),
+                            "existing({0}) != requested({1})".format(existing_unlocked, normalized_unlocked),
                             "DEBUG",
                         )
-                        per_design_diffs.append(("unlockedAttributes", existing_unlocked, requested_unlocked))
+                        per_design_diffs.append(("unlockedAttributes", existing_unlocked, normalized_unlocked))
                         needs_update = True
                 else:
                     # if the requested payload didn't include the field to check, treat as NO-UPDATE
@@ -10732,9 +12291,30 @@ class WirelessDesign(DnacBase):
                                 per_design_diffs.append((field_check_key, exist_value, req_value))
                                 needs_update = True
 
-            # Finalize lists
+            # Finalize lists - **FIX: Always ensure unlockedAttributes is in the update payload when it differs**
             if needs_update:
                 payload["id"] = existing_entry.get("id")
+
+                # **FIX: Ensure unlockedAttributes is always included in update payload when there's a difference**
+                if "unlockedAttributes" not in payload:
+                    if normalized_unlocked:
+                        payload["unlockedAttributes"] = normalized_unlocked
+                        self.log(
+                            "Design '{0}': Adding unlockedAttributes to update payload: {1}".format(
+                                design_name, normalized_unlocked
+                            ),
+                            "INFO"
+                        )
+                    elif existing_unlocked:
+                        # Explicitly clear unlocked attributes if playbook wants empty list
+                        payload["unlockedAttributes"] = []
+                        self.log(
+                            "Design '{0}': Clearing unlockedAttributes in update payload (was: {1})".format(
+                                design_name, existing_unlocked
+                            ),
+                            "INFO"
+                        )
+
                 update_payloads.append(payload)
                 update_diffs[design_name] = per_design_diffs
                 self.log("Design '{0}' marked for UPDATE. Diffs: {1}".format(design_name, per_design_diffs), "INFO")
@@ -10881,17 +12461,20 @@ class WirelessDesign(DnacBase):
 
     def verify_delete_aaa_radius_attributes_requirement(self, aaa_attr_list):
         """
-        Determines whether AAA Radius Attributes need to be deleted based on the requested parameters.
+        Determines whether AAA Radius Attributes need to be deleted or reset based on the requested parameters.
+        - If only design_name is provided: Schedules for deletion (entire template)
+        - If other attributes are provided: Schedules for reset (update with null values)
+
         Args:
             aaa_attr_list (list): A list of dictionaries containing the requested AAA Radius Attribute parameters for deletion.
                                 Example: [{"design_name": "AAA_Radius_Template_01"}]
         Returns:
-            list: A list of AAA Radius Attribute entries to delete. Each entry is the original requested dict
-                with an added "id" key (the controller template id) when a match is found.
+            list: A list of AAA Radius Attribute entries (with added "id" key) that need processing
         """
         delete_attrs_list = []
+        already_reset_list = []  # Track items that are already reset
 
-        self.log("Starting verification of AAA Radius Attributes for deletion.", "INFO")
+        self.log("Starting verification of AAA Radius Attributes for deletion/reset.", "INFO")
 
         # Retrieve all existing AAA Radius Attributes
         existing_blocks = self.get_aaa_radius_attributes()
@@ -10905,11 +12488,14 @@ class WirelessDesign(DnacBase):
         existing_dict = {attr["designName"]: attr for attr in instances}
         self.log("Converted existing AAA Radius Attributes to dictionary.", "DEBUG")
 
+        # Essential keys that should always be present
+        essential_keys = {"design_name"}
+
         # Iterate over the requested attributes
         for index, requested_attr in enumerate(aaa_attr_list, start=1):
             design_name = requested_attr.get("design_name")
             self.log(
-                "Iteration {0}: Checking AAA Radius Attribute '{1}' for deletion requirement.".format(
+                "Iteration {0}: Checking AAA Radius Attribute '{1}' for deletion/reset requirement.".format(
                     index, design_name
                 ),
                 "DEBUG",
@@ -10918,29 +12504,86 @@ class WirelessDesign(DnacBase):
             if design_name in existing_dict:
                 # Match found → prepare payload with ID
                 existing = existing_dict[design_name]
-                attr_to_delete = requested_attr.copy()
-                attr_to_delete["id"] = existing.get("id")
-                delete_attrs_list.append(attr_to_delete)
-                self.log(
-                    "Iteration {0}: AAA Radius Attribute '{1}' scheduled for deletion.".format(
-                        index, design_name
-                    ),
-                    "INFO",
-                )
+                attr_payload = requested_attr.copy()
+                attr_payload["id"] = existing.get("id")
+
+                # Determine operation type based on payload content
+                payload_keys = set(requested_attr.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
+                if has_other_attributes:
+                    # RESET operation: Check if already reset (idempotency)
+                    self.log(
+                        "Iteration {0}: Other attributes provided for '{1}'. Checking if reset is needed.".format(
+                            index, design_name
+                        ),
+                        "DEBUG",
+                    )
+
+                    # Fetch current template details to check if already reset
+                    template_id = existing.get("id")
+                    template_details = self.get_aaa_radius_attribute_details(template_id)
+
+                    if template_details:
+                        feature_attrs = template_details.get("featureAttributes", {})
+                        current_called_station_id = feature_attrs.get("calledStationId")
+
+                        if current_called_station_id is None or current_called_station_id == "":
+                            self.log(
+                                "Iteration {0}: AAA Radius Attribute '{1}' is already reset. No action needed.".format(
+                                    index, design_name
+                                ),
+                                "INFO",
+                            )
+                            already_reset_list.append(design_name)  # Track for messaging
+                            continue  # Skip adding to list - already reset
+                        else:
+                            self.log(
+                                "Iteration {0}: AAA Radius Attribute '{1}' will be RESET (current value: {2}).".format(
+                                    index, design_name, current_called_station_id
+                                ),
+                                "INFO",
+                            )
+                    else:
+                        self.log(
+                            "Iteration {0}: Could not fetch details for '{1}'. Will attempt reset.".format(
+                                index, design_name
+                            ),
+                            "WARNING",
+                        )
+
+                    delete_attrs_list.append(attr_payload)
+                else:
+                    # DELETE operation
+                    self.log(
+                        "Iteration {0}: AAA Radius Attribute '{1}' will be DELETED (only design_name provided).".format(
+                            index, design_name
+                        ),
+                        "INFO",
+                    )
+                    delete_attrs_list.append(attr_payload)
             else:
                 self.log(
-                    "Iteration {0}: Deletion not required for AAA Radius Attribute '{1}'. It does not exist.".format(
+                    "Iteration {0}: AAA Radius Attribute '{1}' does not exist - no action required.".format(
                         index, design_name
                     ),
                     "INFO",
                 )
 
         self.log(
-            "AAA Radius Attributes scheduled for deletion: {0} - {1}".format(
+            "AAA Radius Attributes scheduled for processing: {0} - {1}".format(
                 len(delete_attrs_list), delete_attrs_list
             ),
             "DEBUG",
         )
+
+        # Store already reset info for later use in messaging
+        if already_reset_list:
+            self.already_reset_aaa_attrs = already_reset_list
+            self.log(
+                "AAA Radius Attributes already reset (no action needed): {0}".format(already_reset_list),
+                "INFO",
+            )
 
         return delete_attrs_list
 
@@ -10952,8 +12595,11 @@ class WirelessDesign(DnacBase):
             aaa_attr_list (list): A list of dictionaries containing the requested AAA Radius Attribute parameters.
                 Each dictionary should contain:
                     - design_name (str): The unique design/profile name
+                    - new_design_name (str, optional): New name for the design (for rename operation)
                     - called_station_id (str): The called station ID value
-                    - unlocked_attributes (bool, optional): Whether to unlock the calledStationId attribute
+                    - unlocked_attributes (list, optional): List of snake_case
+                      attribute names to unlock. Supported value:
+                      called_station_id
         Returns:
             tuple: Three lists containing AAA Radius Attribute configurations:
                 - add_attrs (list): Payloads for new AAA Radius Attribute configurations to create
@@ -10978,8 +12624,22 @@ class WirelessDesign(DnacBase):
         # Iterate requested attributes
         for attr in aaa_attr_list:
             design_name = attr.get("design_name")
+            new_design_name = attr.get("new_design_name")
             called_station_id = attr.get("called_station_id")
-            unlocked_attributes = attr.get("unlocked_attributes", False)
+            called_station_id = called_station_id.upper()
+            unlocked_attributes = attr.get("unlocked_attributes", []) or []
+            aaa_name_map = {"called_station_id": "calledStationId"}
+            desired_unlocked = [aaa_name_map[a] for a in unlocked_attributes]
+            self.log("Evaluating AAA Radius Attribute design: {0}".format(design_name), "DEBUG")
+            self.log("Requested called_station_id: {0}".format(called_station_id), "DEBUG")
+            self.log(
+                "Resolved unlocked_attributes for design '{0}': desired_unlocked={1}".format(
+                    design_name, desired_unlocked
+                ),
+                "DEBUG"
+            )
+            if new_design_name:
+                self.log("New design name requested: {0}".format(new_design_name), "DEBUG")
 
             # validate the called_station_id value
             allowed_values = [
@@ -10992,40 +12652,90 @@ class WirelessDesign(DnacBase):
                     called_station_id, design_name, allowed_values))
                 self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
 
-            # Build payload
-            payload = {
-                "designName": design_name,
-                "featureAttributes": {"calledStationId": called_station_id},
-            }
-            if unlocked_attributes:
-                payload["unlockedAttributes"] = ["calledStationId"]
-
+            # Check if design_name exists
             existing = existing_dict.get(design_name)
 
-            if not existing:
-                # CREATE payload
-                add_attrs.append(payload)
-                self.log("AAA Radius Attribute '{0}' scheduled for creation.".format(design_name), "DEBUG")
-            else:
+            # Case 1: design_name exists
+            if existing:
+                self.log("Design '{0}' exists in Cisco Catalyst Center.".format(design_name), "DEBUG")
+
+                # Get existing details for comparison
                 details = self.get_aaa_radius_attribute_details(existing["id"])
                 self.log("Details for {0}: {1}".format(design_name, details), "DEBUG")
 
                 existing_called = details.get("featureAttributes", {}).get("calledStationId")
                 existing_unlocked = details.get("unlockedAttributes", []) or []
 
-                # Desired unlocked (only set if explicitly requested True)
-                desired_unlocked = ["calledStationId"] if unlocked_attributes else []
-
-                # Compare both fields
-                if (
+                # Determine if update is needed (config changes or rename)
+                config_changed = (
                     existing_called != called_station_id
                     or set(existing_unlocked) != set(desired_unlocked)
-                ):
+                )
+
+                # Case 1a: new_design_name is provided - rename with potential config update
+                if new_design_name:
+                    self.log("Rename requested from '{0}' to '{1}'.".format(design_name, new_design_name), "INFO")
+
+                    # Check if new_design_name already exists (conflict check)
+                    if new_design_name in existing_dict and new_design_name != design_name:
+                        self.msg = ("Cannot rename design '{0}' to '{1}' - target name already exists.".format(
+                            design_name, new_design_name))
+                        self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+
+                    # Build update payload with new name and potentially new config
+                    payload = {
+                        "id": existing["id"],
+                        "designName": new_design_name,  # Use new name
+                        "featureAttributes": {"calledStationId": called_station_id},
+                    }
+                    if desired_unlocked:
+                        payload["unlockedAttributes"] = ["calledStationId"]
+
                     update_attrs.append(payload)
-                    self.log("AAA Radius Attribute '{0}' marked for update.".format(design_name), "DEBUG")
+                    self.log("AAA Radius Attribute '{0}' scheduled for rename to '{1}' with config update.".format(
+                        design_name, new_design_name), "DEBUG")
+
+                # Case 1b: No rename, but config changed
+                elif config_changed:
+                    payload = {
+                        "id": existing["id"],
+                        "designName": design_name,  # Keep original name
+                        "featureAttributes": {"calledStationId": called_station_id},
+                    }
+                    if desired_unlocked:
+                        payload["unlockedAttributes"] = ["calledStationId"]
+
+                    update_attrs.append(payload)
+                    self.log("AAA Radius Attribute '{0}' marked for config update.".format(design_name), "DEBUG")
+
+                # Case 1c: No changes needed
                 else:
                     no_update_attrs.append(details)
                     self.log("AAA Radius Attribute '{0}' requires no update.".format(design_name), "DEBUG")
+
+            # Case 2: design_name does NOT exist
+            else:
+                self.log("Design '{0}' does not exist in Cisco Catalyst Center.".format(design_name), "DEBUG")
+
+                # Case 2a: new_design_name provided but design_name doesn't exist
+                # Per requirement: "take design name as priority and create it"
+                if new_design_name:
+                    self.log(
+                        "Design '{0}' does not exist. new_design_name '{1}' provided but will be ignored. "
+                        "Creating with original design_name '{0}' as priority.".format(design_name, new_design_name),
+                        "WARNING"
+                    )
+
+                # Create with design_name (prioritize design_name for creation)
+                payload = {
+                    "designName": design_name,
+                    "featureAttributes": {"calledStationId": called_station_id},
+                }
+                if desired_unlocked:
+                    payload["unlockedAttributes"] = ["calledStationId"]
+
+                add_attrs.append(payload)
+                self.log("AAA Radius Attribute '{0}' scheduled for creation.".format(design_name), "DEBUG")
 
         self.log("AAA Radius Attributes to Add: {0}".format(add_attrs), "DEBUG")
         self.log("AAA Radius Attributes to Update: {0}".format(update_attrs), "DEBUG")
@@ -11475,14 +13185,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_multicast(self, params):
         """
-        Handles deletion of Multicast configurations in Cisco Catalyst Center.
+        Handles deletion/reset of Multicast configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of multicast payloads to delete.
+            params (list): A list of multicast payloads to process.
                         Each payload must contain at least the template 'id'.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for Multicast Configurations.", "INFO")
+        self.log("Processing DELETE/RESET for Multicast Configurations.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
 
         results = {}
@@ -11493,7 +13206,7 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting Multicast configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing Multicast configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
@@ -11502,25 +13215,143 @@ class WirelessDesign(DnacBase):
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_multicast_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    self.check_tasks_response_status(response, "delete_multicast_configuration_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted Multicast configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "global_multicast_enabled": "globalMulticastEnabled",
+                            "multicast_ipv4_mode": "multicastIpv4Mode",
+                            "multicast_ipv4_address": "multicastIpv4Address",
+                            "multicast_ipv6_mode": "multicastIpv6Mode",
+                            "multicast_ipv6_address": "multicastIpv6Address",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"global_multicast_enabled"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes
+                        current_details = self.get_multicast_profile_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current Multicast feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting Multicast with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_multicast_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_multicast_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for Multicast configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset Multicast configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete Multicast configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_multicast_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Received API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_multicast_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted Multicast configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete Multicast configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             self.msg = {"multicast_delete": results}
@@ -12316,15 +14147,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_rrm_general(self, params):
         """
-        Handles deletion of RRM General configurations in Cisco Catalyst Center.
+        Handles deletion/reset of RRM General configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of RRM General payloads to delete.
-                        Each payload must contain at least the template 'id'
-                        and optionally 'design_name' or 'designName'.
+            params (list): A list of RRM General payloads to process.
+                        Each payload must contain at least the template 'id'.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for RRM General Configurations.", "INFO")
+        self.log("Processing DELETE/RESET for RRM General Configurations.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
 
         results = {}
@@ -12335,7 +14168,7 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting RRM General configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing RRM General configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
@@ -12344,31 +14177,136 @@ class WirelessDesign(DnacBase):
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_r_r_m_general_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted RRM General configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "radio_band": "radioBand",
+                            "monitoring_channels": "monitoringChannels",
+                            "neighbor_discover_type": "neighborDiscoverType",
+                            "throughput_threshold": "throughputThreshold",
+                            "coverage_hole_detection": "coverageHoleDetection",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"radio_band"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes
+                        current_details = self.get_rrm_general_profile_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current RRM General feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None (skip mandatory)
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting RRM General with payload: {0}".format(reset_payload), "DEBUG")
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="update_r_r_m_general_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+                        self.log("Reset API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "update_r_r_m_general_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for RRM General configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset RRM General configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete RRM General configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_r_r_m_general_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Received API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted RRM General configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete RRM General configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
             self.msg = {"rrm_general_delete": results}
-            # If every result is Failed/Exception/Skipped -> failed; else success
             self.status = (
                 "failed" if results and all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values())
                 else "success"
@@ -12384,15 +14322,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_rrm_fra(self, params):
         """
-        Handles deletion of RRM-FRA configurations in Cisco Catalyst Center.
+        Handles deletion/reset of RRM-FRA configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of RRM-FRA payloads to delete.
-                        Each payload must contain at least the template 'id'
-                        and optionally 'design_name' or 'designName'.
+            params (list): A list of RRM-FRA payloads to process.
+                        Each payload must contain at least the template 'id'.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for RRM-FRA Configurations.", "INFO")
+        self.log("Processing DELETE/RESET for RRM-FRA Configurations.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
 
         results = {}
@@ -12403,7 +14343,7 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting RRM-FRA configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing RRM-FRA configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
@@ -12412,26 +14352,132 @@ class WirelessDesign(DnacBase):
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_r_r_m_f_r_a_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # Validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted RRM-FRA configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "radio_band": "radioBand",
+                            "fra_freeze": "fraFreeze",
+                            "fra_status": "fraStatus",
+                            "fra_interval": "fraInterval",
+                            "fra_sensitivity": "fraSensitivity",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"radio_band"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes
+                        current_details = self.get_rrm_fra_profile_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current RRM-FRA feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None (skip mandatory)
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting RRM-FRA with payload: {0}".format(reset_payload), "DEBUG")
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="update_r_r_m_f_r_a_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+                        self.log("Reset API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "update_r_r_m_f_r_a_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for RRM-FRA configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset RRM-FRA configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete RRM-FRA configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_r_r_m_f_r_a_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Received API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted RRM-FRA configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete RRM-FRA configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
@@ -12449,34 +14495,138 @@ class WirelessDesign(DnacBase):
             return self
 
     def process_delete_flexconnect(self, params):
-        self.log("Processing DELETE for FlexConnect.", "INFO")
+        """
+        Handles deletion/reset of FlexConnect configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
+        Args:
+            params (list): A list of FlexConnect payloads to process.
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing DELETE/RESET for FlexConnect.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
         results = {}
         try:
             for payload in params or []:
                 dn = payload.get("design_name") or payload.get("designName") or "Unknown"
                 tid = payload.get("id")
-                self.log("Deleting FlexConnect: design='{0}', id='{1}'".format(dn, tid), "DEBUG")
+                self.log("Processing FlexConnect: design='{0}', id='{1}'".format(dn, tid), "DEBUG")
                 if not tid:
                     results[dn] = "Skipped delete: missing 'id' in payload."
                     self.log(results[dn], "ERROR")
                     continue
+
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
+
                 try:
-                    resp = self.dnac._exec(
-                        family="wireless",
-                        function="delete_flex_connect_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": tid},
-                    )
-                    self.log("Received API response: {0}".format(resp), "DEBUG")
-                    self.check_tasks_response_status(resp, "delete_feature_template")
-                    results[dn] = (
-                        "Successfully deleted FlexConnect."
-                        if self.status not in ["failed", "exited"]
-                        else "Failed to delete FlexConnect: {0}".format(self.msg)
-                    )
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation.".format(dn),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+                            self.log(
+                                "feature_attributes empty, using unlocked_attributes as reset keys: {0}".format(
+                                    list(playbook_feature_attrs.keys())
+                                ),
+                                "DEBUG",
+                            )
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "overlap_ip_enable": "overlapIpEnable",
+                        }
+
+                        # Fetch current template details - API REPLACES entire featureAttributes
+                        current_details = self.get_flexconnect_profile_details(tid)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current FlexConnect feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            reset_feature_attrs[api_key] = None
+                            self.log(
+                                "Setting attribute '{0}' to null for reset.".format(api_key),
+                                "DEBUG"
+                            )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": dn,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting FlexConnect with payload: {0}".format(reset_payload), "DEBUG")
+
+                        resp = self.dnac._exec(
+                            family="wireless",
+                            function="update_flex_connect_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": tid, "payload": reset_payload},
+                        )
+                        self.log("Reset API response: {0}".format(resp), "DEBUG")
+                        self.check_tasks_response_status(resp, "update_flex_connect_configuration_feature_template")
+                        results[dn] = (
+                            "Successfully reset the feature attributes for FlexConnect configuration."
+                            if self.status not in ["failed", "exited"]
+                            else "Failed to reset FlexConnect: {0}".format(self.msg)
+                        )
+                    else:
+                        # DELETE operation
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(dn),
+                            "INFO"
+                        )
+                        resp = self.dnac._exec(
+                            family="wireless",
+                            function="delete_flex_connect_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": tid},
+                        )
+                        self.log("Received API response: {0}".format(resp), "DEBUG")
+                        self.check_tasks_response_status(resp, "delete_feature_template")
+                        results[dn] = (
+                            "Successfully deleted FlexConnect."
+                            if self.status not in ["failed", "exited"]
+                            else "Failed to delete FlexConnect: {0}".format(self.msg)
+                        )
                 except Exception as exc:
-                    results[dn] = "Exception while deleting: {0}".format(str(exc))
+                    results[dn] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[dn], "ERROR")
             self.msg = {"flexconnect_delete": results}
             self.status = "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
@@ -12490,14 +14640,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_dot11be(self, params):
         """
-        Handles deletion of dot11be configurations in Cisco Catalyst Center.
+        Handles deletion/reset of dot11be configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of dot11be payloads to delete.
+            params (list): A list of dot11be payloads to process.
                         Each payload must contain at least the template 'id' and optionally 'design_name' or 'designName'.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for dot11be Configurations.", "INFO")
+        self.log("Processing DELETE/RESET for dot11be Configurations.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
 
         results = {}
@@ -12508,7 +14661,7 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting dot11be configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing dot11be configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
@@ -12517,26 +14670,142 @@ class WirelessDesign(DnacBase):
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_dot11be_status_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted dot11be configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting playbook attributes to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "dot11be_status": "dot11beStatus",
+                            "radio_band": "radioBand",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"radio_band"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes,
+                        # so we must start from current state and only null out playbook keys
+                        current_details = self.get_dot11be_profile_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current dot11be feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_dot11be_status_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_dot11be_status_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for dot11be configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset dot11be configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete dot11be configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_dot11be_status_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Received API response: {0}".format(response), "DEBUG")
+                        # validate the returned task(s)
+                        self.check_tasks_response_status(response, "delete_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted dot11be configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete dot11be configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
@@ -12556,15 +14825,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_dot11ax(self, params):
         """
-        Handles deletion of dot11ax configurations in Cisco Catalyst Center.
+        Handles the deletion or reset of dot11ax configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of dot11ax payloads to delete.
-                        Each payload must contain at least the template 'id' and optionally 'design_name' or 'designName'.
+            params (list): A list of dot11ax payloads to process.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for dot11ax Configurations.", "INFO")
-        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+        self.log("Processing DELETE/RESET for dot11ax Configurations.", "INFO")
+        self.log("Params for processing: {0}".format(params), "DEBUG")
 
         results = {}
 
@@ -12574,40 +14845,160 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting dot11ax configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing dot11ax configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
                 if not template_id:
-                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    results[design_name] = "Skipped: missing 'id' in payload."
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_dot11ax_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted dot11ax configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting playbook attributes to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "radio_band": "radioBand",
+                            "bss_color": "bssColor",
+                            "target_waketime_broadcast": "targetWaketimeBroadcast",
+                            "non_srg_obss_pd_max_threshold": "nonSRGObssPdMaxThreshold",
+                            "target_wakeup_time_11ax": "targetWakeUpTime11ax",
+                            "obss_pd": "obssPd",
+                            "multiple_bssid": "multipleBssid",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"radio_band"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes,
+                        # so we must start from current state and only null out playbook keys
+                        current_details = self.get_dot11ax_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", [])
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current dot11ax feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_dot11ax_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_dot11ax_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for dot11ax configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset dot11ax configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete dot11ax configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Call DELETE API
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_dot11ax_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Delete API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_dot11ax_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted dot11ax configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete dot11ax configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
-            self.msg = {"dot11ax_delete": results}
-            # If every result contains 'Failed' or 'Exception' or 'Skipped', mark overall as failed; else success
+            self.msg = {"dot11ax_delete_or_reset": results}
             self.status = (
                 "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
             )
@@ -12615,22 +15006,24 @@ class WirelessDesign(DnacBase):
             return self
 
         except Exception as exc:
-            self.msg = {"dot11ax_delete": "Exception during delete: {0}".format(str(exc))}
+            self.msg = {"dot11ax_delete_or_reset": "Exception during operation: {0}".format(str(exc))}
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
     def process_delete_clean_air(self, params):
         """
-        Handles the deletion of CleanAir profiles in Cisco Catalyst Center.
+        Handles the deletion or reset of CleanAir profiles in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of CleanAir payloads to delete.
-                        Each payload must contain at least the template 'id' and optionally 'design_name' or 'designName'.
+            params (list): A list of CleanAir payloads to process.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for CleanAir Profiles.", "INFO")
-        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+        self.log("Processing DELETE/RESET for CleanAir Profiles.", "INFO")
+        self.log("Params for processing: {0}".format(params), "DEBUG")
 
         results = {}
 
@@ -12640,40 +15033,201 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting CleanAir Profile: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing CleanAir Profile: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
                 if not template_id:
-                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    results[design_name] = "Skipped: missing 'id' in payload."
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_clean_air_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted CleanAir Profile."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting values to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "radio_band": "radioBand",
+                            "clean_air": "cleanAir",
+                            "clean_air_device_reporting": "cleanAirDeviceReporting",
+                            "persistent_device_propagation": "persistentDevicePropagation",
+                            "description": "description",
+                            "interferers_features": "interferersFeatures",
+                        }
+
+                        # Key mapping for interferers_features sub-keys
+                        interferers_key_map = {
+                            "ble_beacon": "bleBeacon",
+                            "bluetooth_paging_inquiry": "bluetoothPagingInquiry",
+                            "bluetooth_sco_acl": "bluetoothScoAcl",
+                            "continuous_transmitter": "continuousTransmitter",
+                            "generic_dect": "genericDect",
+                            "generic_tdd": "genericTdd",
+                            "jammer": "jammer",
+                            "microwave_oven": "microwaveOven",
+                            "motorola_canopy": "motorolaCanopy",
+                            "si_fhss": "siFhss",
+                            "spectrum80211_fh": "spectrum80211Fh",
+                            "spectrum80211_non_standard_channel": "spectrum80211NonStandardChannel",
+                            "spectrum802154": "spectrum802154",
+                            "spectrum_inverted": "spectrumInverted",
+                            "super_ag": "superAg",
+                            "video_camera": "videoCamera",
+                            "wimax_fixed": "wimaxFixed",
+                            "wimax_mobile": "wimaxMobile",
+                            "xbox": "xbox",
+                        }
+
+                        # Mandatory fields that cannot be null - preserve their current value
+                        mandatory_fields = {"radio_band"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes,
+                        # so we must start from current state and only null out playbook keys
+                        current_details = self.get_clean_air_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", [])
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Collect playbook API keys to know which ones to null out
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+
+                        # Now override ONLY playbook-specified keys with None
+                        for snake_key, value in playbook_feature_attrs.items():
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current/playbook value
+                                api_key = key_name_map.get(snake_key, snake_key)
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                                continue
+
+                            api_key = key_name_map.get(snake_key, snake_key)
+
+                            if snake_key == "interferers_features" and isinstance(value, dict):
+                                # Handle nested dict: preserve non-playbook sub-keys,
+                                # null out only playbook sub-keys
+                                current_interferers = current_feature_attrs.get("interferersFeatures", {}) or {}
+                                reset_interferers = copy.deepcopy(current_interferers)
+                                for intf_snake_key in value.keys():
+                                    intf_api_key = interferers_key_map.get(intf_snake_key, intf_snake_key)
+                                    reset_interferers[intf_api_key] = None
+                                    self.log(
+                                        "Setting interferer '{0}' to null for reset.".format(intf_api_key),
+                                        "DEBUG"
+                                    )
+                                reset_feature_attrs[api_key] = reset_interferers
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_clean_air_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_clean_air_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for CleanAir Profile."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset CleanAir Profile: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete CleanAir Profile: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Call DELETE API
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_clean_air_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Delete API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_clean_air_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted CleanAir Profile."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete CleanAir Profile: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
-            self.msg = {"clean_air_delete": results}
-            # If every result contains 'Failed' or 'Exception' or 'Skipped', mark overall as failed; else success
+            self.msg = {"clean_air_delete_or_reset": results}
             self.status = (
                 "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
             )
@@ -12681,22 +15235,25 @@ class WirelessDesign(DnacBase):
             return self
 
         except Exception as exc:
-            self.msg = {"clean_air_delete": "Exception during delete: {0}".format(str(exc))}
+            self.msg = {"clean_air_delete_or_reset": "Exception during operation: {0}".format(str(exc))}
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
     def process_delete_event_driven_rrm(self, params):
         """
-        Handles deletion of Event-Driven RRM configurations in Cisco Catalyst Center.
+        Handles deletion/reset of Event-Driven RRM configurations in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of Event-Driven RRM payloads to delete.
+            params (list): A list of Event-Driven RRM payloads to process.
                         Each payload must contain at least the template 'id'
                         and optionally 'design_name' or 'designName'.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for Event-Driven RRM Configurations.", "INFO")
+        self.log("Processing DELETE/RESET for Event-Driven RRM Configurations.", "INFO")
         self.log("Params for DELETE: {0}".format(params), "DEBUG")
 
         results = {}
@@ -12707,7 +15264,7 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting Event-Driven RRM configuration: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing Event-Driven RRM configuration: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
@@ -12716,27 +15273,144 @@ class WirelessDesign(DnacBase):
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    # DNAC API for Event-Driven RRM delete
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_event_driven_r_r_m_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted Event-Driven RRM configuration."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting playbook attributes to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Extract playbook feature_attributes
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Key mapping: snake_case (playbook) -> camelCase (API)
+                        key_name_map = {
+                            "radio_band": "radioBand",
+                            "event_driven_rrm_enable": "eventDrivenRrmEnable",
+                            "event_driven_rrm_threshold_level": "eventDrivenRrmThresholdLevel",
+                            "event_driven_rrm_custom_threshold_val": "eventDrivenRrmCustomThresholdVal",
+                        }
+
+                        # Mandatory fields that cannot be null
+                        mandatory_fields = {"radio_band", "event_driven_rrm_enable"}
+
+                        # Fetch current template details - API REPLACES entire featureAttributes,
+                        # so we must start from current state and only null out playbook keys
+                        current_details = self.get_event_rrm_profile_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", []) or []
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current Event-Driven RRM feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for snake_key, value in playbook_feature_attrs.items():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            if snake_key in mandatory_fields:
+                                # Preserve mandatory field with its current value
+                                reset_feature_attrs[api_key] = current_feature_attrs.get(api_key, value)
+                                self.log(
+                                    "Preserving mandatory field '{0}' with value '{1}'.".format(
+                                        api_key, reset_feature_attrs[api_key]
+                                    ),
+                                    "DEBUG"
+                                )
+                            else:
+                                reset_feature_attrs[api_key] = None
+                                self.log(
+                                    "Setting attribute '{0}' to null for reset.".format(api_key),
+                                    "DEBUG"
+                                )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_event_driven_r_r_m_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_event_driven_r_r_m_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for Event-Driven RRM configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset Event-Driven RRM configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete Event-Driven RRM configuration: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_event_driven_r_r_m_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Received API response: {0}".format(response), "DEBUG")
+                        # validate the returned task(s)
+                        self.check_tasks_response_status(response, "delete_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted Event-Driven RRM configuration."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete Event-Driven RRM configuration: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
@@ -12757,15 +15431,17 @@ class WirelessDesign(DnacBase):
 
     def process_delete_advanced_ssids(self, params):
         """
-        Handles the deletion of Advanced SSIDs in Cisco Catalyst Center.
+        Handles the deletion or reset of Advanced SSIDs in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of Advanced SSID payloads to delete.
-                        Each payload must contain at least the template 'id' and optionally 'design_name'.
+            params (list): A list of Advanced SSID payloads to process.
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for Advanced SSIDs.", "INFO")
-        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+        self.log("Processing DELETE/RESET for Advanced SSIDs.", "INFO")
+        self.log("Params for processing: {0}".format(params), "DEBUG")
 
         results = {}
 
@@ -12775,41 +15451,197 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting Advanced SSID: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing Advanced SSID: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
                 if not template_id:
-                    results[design_name] = "Skipped delete: missing 'id' in payload."
+                    results[design_name] = "Skipped: missing 'id' in payload."
                     self.log(results[design_name], "ERROR")
                     continue
 
-                try:
-                    # NOTE: replace function name if your DNAC SDK expects a different delete function
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_advanced_ssid_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    # validate the returned task(s)
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted Advanced SSID."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values for playbook-specified attributes only
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting playbook attributes to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Build reset payload with NULL for ONLY playbook-specified attributes
+                        # Extract feature_attributes from payload and map to camelCase
+                        playbook_feature_attrs = payload.get("feature_attributes") or {}
+
+                        # If feature_attributes is empty, use unlocked_attributes as the list of keys to reset
+                        unlocked_attrs_list = payload.get("unlocked_attributes") or []
+                        if not playbook_feature_attrs and unlocked_attrs_list:
+                            playbook_feature_attrs = {k: None for k in unlocked_attrs_list}
+
+                        # Map playbook keys to API keys (snake_case to camelCase)
+                        key_name_map = {
+                            "peer2peer_blocking": "peer2peerblocking",
+                            "passive_client": "passiveClient",
+                            "prediction_optimization": "predictionOptimization",
+                            "dual_band_neighbor_list": "dualBandNeighborList",
+                            "radius_nac_state": "radiusNacState",
+                            "dhcp_required": "dhcpRequired",
+                            "dhcp_server": "dhcpServer",
+                            "flex_local_auth": "flexLocalAuth",
+                            "target_wakeup_time": "targetWakeupTime",
+                            "downlink_ofdma": "downlinkOfdma",
+                            "uplink_ofdma": "uplinkOfdma",
+                            "downlink_mu_mimo": "downlinkMuMimo",
+                            "uplink_mu_mimo": "uplinkMuMimo",
+                            "dot11ax": "dot11ax",
+                            "aironet_ie_support": "aironetIESupport",
+                            "load_balancing": "loadBalancing",
+                            "dtim_period_5ghz": "dtimPeriod5GHz",
+                            "dtim_period_24ghz": "dtimPeriod24GHz",
+                            "scan_defer_time": "scanDeferTime",
+                            "max_clients": "maxClients",
+                            "max_clients_per_radio": "maxClientsPerRadio",
+                            "max_clients_per_ap": "maxClientsPerAp",
+                            "wmm_policy": "wmmPolicy",
+                            "multicast_buffer": "multicastBuffer",
+                            "multicast_buffer_value": "multicastBufferValue",
+                            "media_stream_multicast_direct": "mediaStreamMulticastDirect",
+                            "mu_mimo_11ac": "muMimo11ac",
+                            "wifi_to_cellular_steering": "wifiToCellularSteering",
+                            "wifi_alliance_agile_multiband": "wifiAllianceAgileMultiband",
+                            "fastlane_asr": "fastlaneASR",
+                            "dot11v_bss_max_idle_protected": "dot11vBSSMaxIdleProtected",
+                            "universal_ap_admin": "universalAPAdmin",
+                            "opportunistic_key_caching": "opportunisticKeyCaching",
+                            "ip_source_guard": "ipSourceGuard",
+                            "dhcp_opt82_remote_id_sub_option": "dhcpOpt82RemoteIDSubOption",
+                            "vlan_central_switching": "vlanCentralSwitching",
+                            "call_snooping": "callSnooping",
+                            "send_disassociate": "sendDisassociate",
+                            "sent_486_busy": "sent486Busy",
+                            "ip_mac_binding": "ipMacBinding",
+                            "defer_priority_0": "deferPriority0",
+                            "defer_priority_1": "deferPriority1",
+                            "defer_priority_2": "deferPriority2",
+                            "defer_priority_3": "deferPriority3",
+                            "defer_priority_4": "deferPriority4",
+                            "defer_priority_5": "deferPriority5",
+                            "defer_priority_6": "deferPriority6",
+                            "defer_priority_7": "deferPriority7",
+                            "share_data_with_client": "shareDataWithClient",
+                            "advertise_support": "advertiseSupport",
+                            "advertise_pc_analytics_support": "advertisePCAnalyticsSupport",
+                            "send_beacon_on_association": "sendBeaconOnAssociation",
+                            "send_beacon_on_roam": "sendBeaconOnRoam",
+                            "idle_threshold": "idleThreshold",
+                            "fast_transition_reassociation_timeout": "fastTransitionReassociationTimeout",
+                            "mdns_mode": "mDNSMode",
+                        }
+
+                        # Fetch current template details - API REPLACES entire featureAttributes,
+                        # so we must start from current state and only null out playbook keys
+                        current_details = self.get_advanced_ssid_details(template_id)
+                        if current_details:
+                            current_feature_attrs = current_details.get("featureAttributes", {})
+                            current_unlocked = current_details.get("unlockedAttributes", [])
+                        else:
+                            current_feature_attrs = {}
+                            current_unlocked = []
+
+                        self.log(
+                            "Current Advanced SSID feature attributes before reset: {0}".format(current_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Start with ALL current values to preserve non-playbook attributes
+                        import copy
+                        reset_feature_attrs = copy.deepcopy(current_feature_attrs)
+
+                        # Override ONLY playbook-specified keys with None
+                        for playbook_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(playbook_key, playbook_key)
+                            reset_feature_attrs[api_key] = None
+                            self.log(
+                                "Setting attribute '{0}' to null for reset.".format(api_key),
+                                "DEBUG"
+                            )
+
+                        self.log(
+                            "Built reset feature attributes (preserving non-playbook values): {0}".format(reset_feature_attrs),
+                            "DEBUG"
+                        )
+
+                        # Remove playbook-specified keys from unlockedAttributes
+                        playbook_api_keys = set()
+                        for snake_key in playbook_feature_attrs.keys():
+                            api_key = key_name_map.get(snake_key, snake_key)
+                            playbook_api_keys.add(api_key)
+                        reset_unlocked = [attr for attr in current_unlocked if attr not in playbook_api_keys]
+                        self.log(
+                            "Reset unlockedAttributes (removed playbook keys {0}): {1}".format(playbook_api_keys, reset_unlocked),
+                            "DEBUG"
+                        )
+
+                        # Build reset payload
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": reset_feature_attrs,
+                            "unlockedAttributes": reset_unlocked
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_advanced_ssid_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_advanced_ssid_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the feature attributes for Advanced SSID."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset Advanced SSID: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete Advanced SSID: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Call DELETE API
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_advanced_ssid_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Delete API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_advanced_ssid_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted Advanced SSID."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete Advanced SSID: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as exc:
-                    results[design_name] = "Exception while deleting: {0}".format(str(exc))
+                    results[design_name] = "Exception while processing: {0}".format(str(exc))
                     self.log(results[design_name], "ERROR")
 
             # Final aggregated message
-            self.msg = {"advanced_ssids_delete": results}
-            # If every result contains 'Failed' or 'Exception', mark overall as failed; else success
+            self.msg = {"advanced_ssids_delete_or_reset": results}
             self.status = (
                 "failed" if all(("Failed" in v or "Exception" in v or "Skipped" in v) for v in results.values()) else "success"
             )
@@ -12817,22 +15649,25 @@ class WirelessDesign(DnacBase):
             return self
 
         except Exception as exc:
-            self.msg = {"advanced_ssids_delete": "Exception during delete: {0}".format(str(exc))}
+            self.msg = {"advanced_ssids_delete_or_reset": "Exception during operation: {0}".format(str(exc))}
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
             return self
 
     def process_delete_aaa_radius_attributes(self, params):
         """
-        Handles the deletion of AAA Radius Attributes in Cisco Catalyst Center.
+        Handles the deletion or reset of AAA Radius Attributes in Cisco Catalyst Center.
+        - If only design_name (and id) are in payload: Deletes the entire template
+        - If other attributes are present: Resets feature attributes to null using update API
+
         Args:
-            params (list): A list of AAA Radius Attribute payloads to delete.
+            params (list): A list of AAA Radius Attribute payloads to process.
 
         Returns:
             self (with self.msg and self.status set)
         """
-        self.log("Processing DELETE for AAA Radius Attributes.", "INFO")
-        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+        self.log("Processing DELETE/RESET for AAA Radius Attributes.", "INFO")
+        self.log("Params for processing: {0}".format(params), "DEBUG")
 
         results = {}
 
@@ -12842,41 +15677,239 @@ class WirelessDesign(DnacBase):
                 template_id = payload.get("id")
 
                 self.log(
-                    "Deleting AAA Radius Attribute: design='{0}', id='{1}'".format(design_name, template_id),
+                    "Processing AAA Radius Attribute: design='{0}', id='{1}'".format(design_name, template_id),
                     "DEBUG",
                 )
 
-                try:
-                    response = self.dnac._exec(
-                        family="wireless",
-                        function="delete_aaa_radius_attributes_configuration_feature_template",
-                        op_modifies=True,
-                        params={"id": template_id},
-                    )
-                    self.log("Received API response: {0}".format(response), "DEBUG")
-                    self.check_tasks_response_status(response, "delete_feature_template")
+                # Determine operation based on payload content
+                # Essential keys that should always be present after verification
+                essential_keys = {"design_name", "id"}
+                payload_keys = set(payload.keys())
+                has_other_attributes = bool(payload_keys - essential_keys)
 
-                    if self.status not in ["failed", "exited"]:
-                        results[design_name] = "Successfully deleted AAA Radius Attribute."
+                try:
+                    if has_other_attributes:
+                        # RESET operation: Update with null values
+                        self.log(
+                            "Other attributes provided for '{0}'. Performing RESET operation (setting values to null).".format(design_name),
+                            "INFO"
+                        )
+
+                        # Build reset payload with NULL values
+                        reset_payload = {
+                            "designName": design_name,
+                            "featureAttributes": {
+                                "calledStationId": None
+                            },
+                            "unlockedAttributes": []
+                        }
+
+                        self.log("Resetting feature attributes with payload: {0}".format(reset_payload), "DEBUG")
+
+                        # Call UPDATE API (not delete)
+                        reset_response = self.dnac._exec(
+                            family="wireless",
+                            function="update_aaa_radius_attributes_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id, "payload": reset_payload},
+                        )
+
+                        self.log("Reset API response: {0}".format(reset_response), "DEBUG")
+                        self.check_tasks_response_status(reset_response, "update_aaa_radius_attributes_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully reset the called_station_id for AAA Radius Attribute."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to reset the called_station_id for AAA Radius Attribute: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
+
                     else:
-                        fail_reason = self.msg
-                        results[design_name] = "Failed to delete AAA Radius Attribute: {0}".format(fail_reason)
-                        self.log(results[design_name], "ERROR")
+                        # DELETE operation: Remove the entire template
+                        self.log(
+                            "Only design_name provided for '{0}'. Performing DELETE operation.".format(design_name),
+                            "INFO"
+                        )
+
+                        # Call DELETE API
+                        response = self.dnac._exec(
+                            family="wireless",
+                            function="delete_aaa_radius_attributes_configuration_feature_template",
+                            op_modifies=True,
+                            params={"id": template_id},
+                        )
+                        self.log("Delete API response: {0}".format(response), "DEBUG")
+                        self.check_tasks_response_status(response, "delete_aaa_radius_attributes_configuration_feature_template")
+
+                        if self.status not in ["failed", "exited"]:
+                            results[design_name] = "Successfully deleted AAA Radius Attribute."
+                        else:
+                            fail_reason = self.msg
+                            results[design_name] = "Failed to delete AAA Radius Attribute: {0}".format(fail_reason)
+                            self.log(results[design_name], "ERROR")
 
                 except Exception as e:
-                    results[design_name] = "Exception while deleting: {0}".format(str(e))
+                    results[design_name] = "Exception while processing: {0}".format(str(e))
                     self.log(results[design_name], "ERROR")
 
-            # Final result after processing all deletions
-            self.msg = {"aaa_radius_attributes_delete": results}
+            # Final result after processing all operations
+            self.msg = {"aaa_radius_attributes_delete_or_reset": results}
             self.status = "failed" if all("Failed" in v or "Exception" in v for v in results.values()) else "success"
             self.set_operation_result(self.status, True, self.msg, "INFO")
             return self
 
         except Exception as e:
-            self.msg = {"aaa_radius_attributes_delete": "Exception during delete: {0}".format(str(e))}
+            self.msg = {"aaa_radius_attributes_delete_or_reset": "Exception during operation: {0}".format(str(e))}
             self.status = "failed"
             self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+            return self
+
+    def process_add_802_11_be_profile(self, params):
+        """
+        Handles the creation of 802.11be (Wi-Fi 7) profiles in Cisco Catalyst Center.
+
+        Args:
+            params (list): A list of 802.11be payloads to create.
+                        Each payload should include 'profileName' and 'featureAttributes'.
+
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing ADD for 802.11be Profiles.", "INFO")
+        self.log("Params for ADD: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                profile_name = payload.get("profileName") or "<unknown>"
+                self.log("Creating 802.11be profile: {0}".format(profile_name), "DEBUG")
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="create_a80211be_profile",
+                        op_modifies=True,
+                        params=payload,
+                    )
+                    self.log("Received API response: {0}".format(response), "DEBUG")
+
+                    # Validate async task
+                    self.check_tasks_response_status(response, "create80211beProfile")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[profile_name] = "Successfully created 802.11be profile."
+                    else:
+                        fail_reason = self.msg
+                        results[profile_name] = (
+                            "Failed to create 802.11be profile: {0}".format(fail_reason)
+                        )
+                        self.log(results[profile_name], "ERROR")
+
+                except Exception as exc:
+                    results[profile_name] = (
+                        "Exception while creating 802.11be profile: {0}".format(str(exc))
+                    )
+                    self.log(results[profile_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"80211be_add": results}
+            self.status = (
+                "failed"
+                if all(("Failed" in v or "Exception" in v) for v in results.values())
+                else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"80211be_add": "Exception during add: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+            return self
+
+    def process_update_802_11_be_profile(self, params):
+        """
+        Handles the update of 802.11be (Wi-Fi 7) profiles in Cisco Catalyst Center.
+
+        Args:
+            params (list): A list of 802.11be payloads to update.
+                        Each payload must include 'id' and may include
+                        'profileName' and 'featureAttributes'.
+
+        Returns:
+            self (with self.msg and self.status set)
+        """
+        self.log("Processing UPDATE for 802.11be Profiles.", "INFO")
+        self.log("Params for UPDATE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                profile_name = payload.get("profileName") or "<unknown>"
+                profile_id = payload.get("id")
+
+                self.log(
+                    "Updating 802.11be profile: profile='{0}', id='{1}'".format(
+                        profile_name, profile_id
+                    ),
+                    "DEBUG",
+                )
+
+                if not profile_id:
+                    results[profile_name] = "Skipped update: missing 'id' in payload."
+                    self.log(results[profile_name], "ERROR")
+                    continue
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="update80211be_profile",
+                        op_modifies=True,
+                        params=payload,
+                    )
+                    self.log("Received API response: {0}".format(response), "DEBUG")
+
+                    # Validate async task
+                    self.check_tasks_response_status(response, "update80211beProfile")
+
+                    if self.status not in ["failed", "exited"]:
+                        results[profile_name] = "Successfully updated 802.11be profile."
+                    else:
+                        fail_reason = self.msg
+                        results[profile_name] = (
+                            "Failed to update 802.11be profile: {0}".format(fail_reason)
+                        )
+                        self.log(results[profile_name], "ERROR")
+
+                except Exception as exc:
+                    results[profile_name] = (
+                        "Exception while updating 802.11be profile: {0}".format(str(exc))
+                    )
+                    self.log(results[profile_name], "ERROR")
+
+            # Final aggregated message
+            self.msg = {"80211be_update": results}
+            self.status = (
+                "failed"
+                if all(
+                    ("Failed" in v or "Exception" in v or "Skipped" in v)
+                    for v in results.values()
+                )
+                else "success"
+            )
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {"80211be_update": "Exception during update: {0}".format(str(exc))}
+            self.status = "failed"
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
             return self
 
     def validate_required_ssid_params(self, ssid, state="merged"):
@@ -14404,9 +17437,9 @@ class WirelessDesign(DnacBase):
                     "DEBUG",
                 )
                 if vlan_id is not None:
-                    if not (1 <= vlan_id <= 4094):
+                    if not (0 <= vlan_id <= 4094):
                         self.msg = (
-                            "The 'vlan_id' must be between 1 and 4094. "
+                            "The 'vlan_id' must be between 0 and 4094. "
                             "Provided 'vlan_id': {}"
                         ).format(vlan_id)
                         self.fail_and_exit(self.msg)
@@ -14864,7 +17897,7 @@ class WirelessDesign(DnacBase):
         valid_radio_band_types_5ghz = [
             "auto",
             "802.11abg",
-            "802.12ac",
+            "802.11ac",
             "802.11ax",
             "802.11n",
         ]
@@ -23851,6 +26884,340 @@ class WirelessDesign(DnacBase):
             )
             return "success", True
 
+    def verify_create_update_flex_connect_requirement(self, flex_connect_list):
+        """
+        Compares desired Flex Connect configuration against existing Catalyst Center
+        configuration and determines which entries need to be updated or left unchanged.
+
+        IMPORTANT:
+        - Flex Connect configuration CANNOT be created.
+        - Payloads MUST use siteId resolved via get_site_id().
+        """
+
+        add_configs = []   # Always empty (creation not supported)
+        update_configs = []
+        no_update_configs = []
+
+        # ---------------------------------------------------------
+        # Iterate requested Flex Connect configurations
+        # ---------------------------------------------------------
+        for req in flex_connect_list:
+            site_hierarchy = req.get("site_name_hierarchy")
+            vlan_id = req.get("vlan_id")
+
+            self.log(
+                "Evaluating Flex Connect config for site hierarchy: {0}".format(site_hierarchy),
+                "DEBUG"
+            )
+
+            # Basic validation
+            if not site_hierarchy or vlan_id is None:
+                self.msg = (
+                    "Invalid Flex Connect configuration. "
+                    "Both 'site_name_hierarchy' and 'vlan_id' are required."
+                )
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            # ---------------------------------------------------------
+            # Resolve siteId FIRST
+            # ---------------------------------------------------------
+            site_exists, site_id = self.get_site_id(site_hierarchy)
+
+            if not site_exists or not site_id:
+                self.msg = (
+                    "Site '{0}' does not exist or siteId could not be resolved."
+                    .format(site_hierarchy)
+                )
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            self.log(
+                "Resolved siteId '{0}' for site hierarchy '{1}'.".format(site_id, site_hierarchy),
+                "DEBUG"
+            )
+
+            # ---------------------------------------------------------
+            # Fetch existing Flex Connect config for THIS siteId
+            # ---------------------------------------------------------
+            existing_response = self.get_flex_connect_configuration(site_id)
+            self.log(
+                "Existing Flex Connect config for siteId '{0}': {1}".format(
+                    site_id, existing_response
+                ),
+                "DEBUG"
+            )
+
+            # **FIX: Handle the API response structure correctly**
+            # The API returns: {'nativeVlanId': 7, 'inheritedSiteUUID': '...', 'inheritedSiteNameHierarchy': '...'}
+            # NOT a list!
+            existing = None
+
+            if existing_response:
+                # If it's a dict with nativeVlanId, use it directly
+                if isinstance(existing_response, dict) and 'nativeVlanId' in existing_response:
+                    existing = existing_response
+                # If it's a list (some DNAC versions), take first entry
+                elif isinstance(existing_response, list) and len(existing_response) > 0:
+                    existing = existing_response[0]
+
+            # ---------------------------------------------------------
+            # Case 1: Flex Connect config exists → compare & update
+            # ---------------------------------------------------------
+            if existing and 'nativeVlanId' in existing:
+                self.log(
+                    "Flex Connect configuration exists for siteId '{0}'.".format(site_id),
+                    "DEBUG"
+                )
+
+                existing_vlan = existing.get("nativeVlanId")
+
+                self.log(
+                    "Comparing VLANs for siteId '{0}': existing={1}, requested={2}".format(
+                        site_id, existing_vlan, vlan_id
+                    ),
+                    "DEBUG"
+                )
+
+                if existing_vlan != vlan_id:
+                    payload = {
+                        "siteId": site_id,
+                        "vlanId": vlan_id
+                    }
+
+                    update_configs.append(payload)
+
+                    self.log(
+                        "Flex Connect config for siteId '{0}' marked for update "
+                        "(existing VLAN: {1}, requested VLAN: {2}).".format(
+                            site_id, existing_vlan, vlan_id
+                        ),
+                        "INFO"
+                    )
+                else:
+                    no_update_configs.append(existing)
+                    self.log(
+                        "Flex Connect config for siteId '{0}' requires no update "
+                        "(VLAN already set to {1}).".format(site_id, vlan_id),
+                        "INFO"
+                    )
+
+            # ---------------------------------------------------------
+            # Case 2: Flex Connect config does NOT exist → NO CREATE
+            # ---------------------------------------------------------
+            else:
+                self.log(
+                    "Flex Connect configuration does not exist for siteId '{0}'. "
+                    "Creation is not supported — skipping.".format(site_id),
+                    "WARNING"
+                )
+
+                no_update_configs.append(
+                    {
+                        "siteId": site_id,
+                        "vlanId": vlan_id,
+                        "reason": "Flex Connect configuration does not exist; creation not supported"
+                    }
+                )
+
+        # ---------------------------------------------------------
+        # Final logs
+        # ---------------------------------------------------------
+        self.log(
+            "Flex Connect configs to ADD (always empty): {0}".format(add_configs),
+            "DEBUG"
+        )
+        self.log(
+            "Flex Connect configs to UPDATE: {0}".format(update_configs),
+            "DEBUG"
+        )
+        self.log(
+            "Flex Connect configs with NO UPDATE: {0}".format(no_update_configs),
+            "DEBUG"
+        )
+
+        return add_configs, update_configs, no_update_configs
+
+    def get_flex_connect_configuration(self, site_id=None):
+        """
+        Retrieve existing Flex Connect (Native VLAN) configuration from
+        Cisco Catalyst Center.
+
+        Args:
+            site_id (str, optional): Specific siteId to filter the native VLAN settings.
+
+        Returns:
+            list: A list of existing Flex Connect configuration dicts
+                (the API 'response' list), or [] on failure.
+        """
+        self.log("Fetching existing Flex Connect (Native VLAN) configuration from DNAC.", "DEBUG")
+
+        try:
+            params = {}
+            if site_id:
+                params["site_id"] = site_id
+
+            response = self.execute_get_request(
+                "wireless",
+                "get_native_vlan_settings_by_site",
+                params
+            )
+
+            self.log("Received API response: {0}".format(response), "DEBUG")
+
+            existing_configs = response.get("response", [])
+
+            self.log(
+                "Retrieved {0} Flex Connect configuration entries.".format(
+                    len(existing_configs)
+                ),
+                "DEBUG",
+            )
+
+            return existing_configs
+
+        except Exception as e:
+            self.log(
+                "Failed to fetch Flex Connect (Native VLAN) configuration: {0}".format(
+                    str(e)
+                ),
+                "ERROR",
+            )
+            return []
+
+    def verify_delete_flex_connect_requirement(self, flex_connect_list):
+        """
+        Determines which Flex Connect configurations need to be deleted/reset
+        based on the requested parameters.
+
+        IMPORTANT:
+        - Flex Connect configurations are reset via Native VLAN delete/reset API.
+        - Creation is not supported; delete means removing overrides.
+
+        Args:
+            flex_connect_list (list): List of Flex Connect delete requests.
+                Each dictionary must contain:
+                    - site_name_hierarchy (str)
+                    - remove_override_in_hierarchy (bool, optional)
+
+        Returns:
+            tuple:
+                - delete_configs (list)
+                - no_delete_configs (list)
+        """
+
+        delete_configs = []
+        no_delete_configs = []
+
+        self.log(
+            "Starting verification of Flex Connect configurations for deletion.",
+            "INFO"
+        )
+
+        for req in flex_connect_list or []:
+            site_hierarchy = req.get("site_name_hierarchy")
+            remove_override = req.get("remove_override_in_hierarchy", True)
+
+            if not site_hierarchy:
+                self.msg = (
+                    "Invalid Flex Connect deletion request. "
+                    "'site_name_hierarchy' is required."
+                )
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            self.log(
+                "Evaluating Flex Connect deletion for site hierarchy: {0}".format(
+                    site_hierarchy
+                ),
+                "DEBUG"
+            )
+
+            # -------------------------------------------------
+            # Resolve siteId
+            # -------------------------------------------------
+            site_exists, site_id = self.get_site_id(site_hierarchy)
+
+            if not site_exists or not site_id:
+                self.log(
+                    "Site '{0}' does not exist. Skipping deletion.".format(
+                        site_hierarchy
+                    ),
+                    "WARNING"
+                )
+                no_delete_configs.append(
+                    {
+                        "site_name_hierarchy": site_hierarchy,
+                        "reason": "Site does not exist"
+                    }
+                )
+                continue
+
+            self.log(
+                "Resolved siteId '{0}' for site hierarchy '{1}'.".format(
+                    site_id, site_hierarchy
+                ),
+                "DEBUG"
+            )
+
+            # -------------------------------------------------
+            # Fetch existing Flex Connect config for this site
+            # -------------------------------------------------
+            existing_configs = self.get_flex_connect_configuration(site_id)
+
+            self.log(
+                "Existing Flex Connect configs for siteId '{0}': {1}".format(
+                    site_id, existing_configs
+                ),
+                "DEBUG"
+            )
+
+            # -------------------------------------------------
+            # Determine delete vs no-delete
+            # -------------------------------------------------
+            if existing_configs:
+                delete_configs.append(
+                    {
+                        "siteId": site_id,
+                        "removeOverrideInHierarchy": remove_override
+                    }
+                )
+
+                self.log(
+                    "Flex Connect config for site '{0}' scheduled for deletion/reset. "
+                    "Remove hierarchy overrides: {1}".format(
+                        site_hierarchy, remove_override
+                    ),
+                    "INFO"
+                )
+            else:
+                self.log(
+                    "No Flex Connect configuration exists for site '{0}'. "
+                    "Nothing to delete.".format(site_hierarchy),
+                    "INFO"
+                )
+                no_delete_configs.append(
+                    {
+                        "site_name_hierarchy": site_hierarchy,
+                        "siteId": site_id,
+                        "reason": "Flex Connect configuration does not exist"
+                    }
+                )
+
+        self.log(
+            "Flex Connect configs to DELETE: {0}".format(delete_configs),
+            "DEBUG"
+        )
+        self.log(
+            "Flex Connect configs with NO DELETE required: {0}".format(no_delete_configs),
+            "DEBUG"
+        )
+
+        return delete_configs, no_delete_configs
+
     def get_have(self, config, state):
         """
         Constructs the 'have' dictionary representing the current state of network configurations.
@@ -23949,6 +27316,121 @@ class WirelessDesign(DnacBase):
                     )
                 elif state == "deleted":
                     have["delete_{0}".format(config_key)] = deleted_func(elements)
+
+        # --- New logic for Flex Connect configuration ---
+        if config.get("flex_connect_configuration", []):
+            flex_connect_list = []
+
+            # Normalize config
+            raw_config = config
+            if isinstance(raw_config, dict):
+                config_list = [raw_config]
+            elif isinstance(raw_config, list):
+                config_list = raw_config
+            else:
+                self.msg = "Invalid config format for flex_connect_configuration"
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            for item in config_list:
+                if not isinstance(item, dict):
+                    continue
+
+                if "flex_connect_configuration" in item:
+                    flex_connect_list.extend(
+                        item.get("flex_connect_configuration", [])
+                    )
+
+            if flex_connect_list:
+                self.log(
+                    "Processing Flex Connect configuration for state: {0}".format(state),
+                    "DEBUG"
+                )
+
+                if state == "merged":
+                    (
+                        add_flex_configs,
+                        update_flex_configs,
+                        no_update_flex_configs,
+                    ) = self.verify_create_update_flex_connect_requirement(
+                        flex_connect_list
+                    )
+
+                    have.update(
+                        {
+                            "add_flex_connect_configuration": add_flex_configs,
+                            "update_flex_connect_configuration": update_flex_configs,
+                            "no_update_flex_connect_configuration": no_update_flex_configs,
+                        }
+                    )
+
+                elif state == "deleted":
+                    (
+                        delete_flex_configs,
+                        no_delete_flex_configs,
+                    ) = self.verify_delete_flex_connect_requirement(
+                        flex_connect_list
+                    )
+
+                    have.update(
+                        {
+                            "delete_flex_connect_configuration": delete_flex_configs,
+                            "no_delete_flex_connect_configuration": no_delete_flex_configs,
+                        }
+                    )
+
+        # --- New logic for 802.11be profiles ---
+        if config.get("802_11_be_profiles", []):
+            be_profiles_list = []
+
+            # Normalize config
+            raw_config = config
+            if isinstance(raw_config, dict):
+                config_list = [raw_config]
+            elif isinstance(raw_config, list):
+                config_list = raw_config
+            else:
+                self.msg = "Invalid config format for 802.11be profiles"
+                self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+
+            for item in config_list:
+                if not isinstance(item, dict):
+                    continue
+
+                if "802_11_be_profiles" in item:
+                    be_profiles_list.extend(item.get("802_11_be_profiles", []))
+
+            if be_profiles_list:
+                self.log(
+                    "Processing 802.11be profiles configuration for state: {0}".format(state),
+                    "DEBUG"
+                )
+
+                if state == "merged":
+                    add_be_profiles, update_be_profiles, no_update_be_profiles = (
+                        self.verify_create_update_80211be_profiles_requirement(be_profiles_list)
+                    )
+
+                    have.update(
+                        {
+                            "add_80211be_profiles": add_be_profiles,
+                            "update_80211be_profiles": update_be_profiles,
+                            "no_update_80211be_profiles": no_update_be_profiles,
+                        }
+                    )
+
+                elif state == "deleted":
+                    delete_be_profiles, no_delete_be_profiles = (
+                        self.verify_delete_80211be_profiles_requirement(be_profiles_list)
+                    )
+
+                    have.update(
+                        {
+                            "delete_80211be_profiles": delete_be_profiles,
+                            "no_delete_80211be_profiles": no_delete_be_profiles,
+                        }
+                    )
 
         # --- New logic for AAA Radius Attributes ---
         if config.get("feature_template_config", []):
@@ -24378,6 +27860,23 @@ class WirelessDesign(DnacBase):
                     "update_rrm_general_configuration_params",
                     self.have.get("update_rrm_general_configuration"),
                 ),
+                # -- 802_11_be_profiles --
+                (
+                    "add_80211be_profiles",
+                    "add_80211be_profiles_params",
+                    self.have.get("add_80211be_profiles"),
+                ),
+                (
+                    "update_80211be_profiles",
+                    "update_80211be_profiles_params",
+                    self.have.get("update_80211be_profiles"),
+                ),
+                # -- flex_connect
+                (
+                    "update_flex_connect_configuration",
+                    "update_flex_connect_configuration_params",
+                    self.have.get("update_flex_connect_configuration"),
+                ),
             ],
             "deleted": [
                 ("delete_ssids", "delete_ssids_params", self.have.get("delete_ssids")),
@@ -24470,6 +27969,18 @@ class WirelessDesign(DnacBase):
                     "delete_rrm_general_configuration_params",
                     self.have.get("delete_rrm_general_configuration"),
                 ),
+                # -- 802_11_be_profiles --
+                (
+                    "delete_80211be_profiles",
+                    "delete_80211be_profiles_params",
+                    self.have.get("delete_80211be_profiles"),
+                ),
+                # -- Flex Connect (Native VLAN) --
+                (
+                    "delete_flex_connect_configuration",
+                    "delete_flex_connect_configuration_params",
+                    self.have.get("delete_flex_connect_configuration"),
+                ),
             ],
         }
 
@@ -24500,6 +28011,531 @@ class WirelessDesign(DnacBase):
         self.msg = "Successfully collected all parameters from the playbook for Wireless Design operations."
         self.status = "success"
         return self
+
+    def verify_delete_80211be_profiles_requirement(self, be_profiles):
+        """
+        Determines which 802.11be profiles should be deleted based on the requested configuration.
+        Delete is decided ONLY by profile name presence.
+        """
+
+        delete_profiles, no_delete_profiles = [], []
+
+        # ------------------------------------------------------------------
+        # Fetch existing profiles
+        # ------------------------------------------------------------------
+        existing_blocks = self.get_80211be_profiles()
+        self.log(
+            "Existing 802.11be Profiles RAW: {0}".format(existing_blocks),
+            "DEBUG"
+        )
+
+        # ------------------------------------------------------------------
+        # Normalize existing profiles into dict { profileName: profile }
+        # ------------------------------------------------------------------
+        existing_dict = {}
+
+        for block in existing_blocks or []:
+            # Flat response (Wi-Fi 7)
+            if isinstance(block, dict) and block.get("profileName"):
+                existing_dict[block["profileName"]] = block
+
+            # Legacy instances[] response
+            elif isinstance(block, dict):
+                for inst in block.get("instances", []):
+                    if inst.get("profileName"):
+                        existing_dict[inst["profileName"]] = inst
+
+        self.log(
+            "Detected existing 802.11be profiles for delete: {0}"
+            .format(list(existing_dict.keys())),
+            "DEBUG"
+        )
+
+        # ------------------------------------------------------------------
+        # Process delete requests
+        # ------------------------------------------------------------------
+        for profile in be_profiles or []:
+            profile_name = profile.get("profile_name")
+
+            if not profile_name:
+                self.msg = "Missing required field 'profile_name' for 802.11be delete."
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            self.log(
+                "Evaluating delete request for 802.11be profile: {0}"
+                .format(profile_name),
+                "DEBUG"
+            )
+
+            existing = existing_dict.get(profile_name)
+
+            # =========================
+            # Case 1: Profile exists → DELETE
+            # =========================
+            if existing:
+                delete_profiles.append(
+                    {
+                        "id": existing["id"],
+                        "profileName": profile_name,
+                    }
+                )
+
+                self.log(
+                    "802.11be profile '{0}' scheduled for deletion."
+                    .format(profile_name),
+                    "DEBUG"
+                )
+
+            # =========================
+            # Case 2: Profile does not exist
+            # =========================
+            else:
+                no_delete_profiles.append(profile_name)
+                self.log(
+                    "802.11be profile '{0}' does not exist. Nothing to delete."
+                    .format(profile_name),
+                    "INFO"
+                )
+
+        # ------------------------------------------------------------------
+        # Final logs
+        # ------------------------------------------------------------------
+        self.log(
+            "802.11be Profiles to Delete: {0}".format(delete_profiles),
+            "DEBUG"
+        )
+        self.log(
+            "802.11be Profiles not found for deletion: {0}"
+            .format(no_delete_profiles),
+            "DEBUG"
+        )
+
+        return delete_profiles, no_delete_profiles
+
+    def verify_create_update_80211be_profiles_requirement(self, be_profiles):
+        """
+        Compares desired 802.11be profiles against existing ones and determines
+        which need to be created, updated, or left unchanged.
+        """
+
+        add_profiles, update_profiles, no_update_profiles = [], [], []
+
+        # ------------------------------------------------------------------
+        # Fetch existing profiles
+        # ------------------------------------------------------------------
+        existing_blocks = self.get_80211be_profiles()
+        self.log("Existing 802.11be Profiles RAW: {0}".format(existing_blocks), "DEBUG")
+
+        # ------------------------------------------------------------------
+        # Normalize existing profiles into dict { profileName: profile }
+        # Handles BOTH:
+        #   1) Flat API response (Wi-Fi 7)
+        #   2) Wrapped instances[] (older patterns)
+        # ------------------------------------------------------------------
+        existing_dict = {}
+
+        for block in existing_blocks or []:
+            # Case 1: Flat profile object
+            if isinstance(block, dict) and block.get("profileName"):
+                existing_dict[block["profileName"]] = block
+
+            # Case 2: Wrapped instances[]
+            elif isinstance(block, dict):
+                for inst in block.get("instances", []):
+                    if inst.get("profileName"):
+                        existing_dict[inst["profileName"]] = inst
+
+        self.log(
+            "Detected existing 802.11be profiles: {0}".format(list(existing_dict.keys())),
+            "DEBUG"
+        )
+
+        # ------------------------------------------------------------------
+        # Process desired profiles
+        # ------------------------------------------------------------------
+        for profile in be_profiles or []:
+            profile_name = profile.get("profile_name")
+            new_profile_name = profile.get("new_profile_name")
+
+            if not profile_name:
+                self.msg = "Missing required field 'profile_name' for 802.11be profile."
+                self.set_operation_result(
+                    "failed", False, self.msg, "ERROR"
+                ).check_return_status()
+
+            self.log("Evaluating 802.11be profile: {0}".format(profile_name), "DEBUG")
+
+            # Desired config (FLAT, API-READY)
+            desired_config = {
+                "ofdmaDownLink": profile.get("ofdma_down_link", True),
+                "ofdmaUpLink": profile.get("ofdma_up_link", True),
+                "muMimoDownLink": profile.get("mu_mimo_down_link", False),
+                "muMimoUpLink": profile.get("mu_mimo_up_link", False),
+                "ofdmaMultiRu": profile.get("ofdma_multi_ru", False),
+            }
+
+            existing = existing_dict.get(profile_name)
+
+            # ==============================================================
+            # CASE 1: Profile EXISTS → UPDATE / RENAME / NO-CHANGE
+            # ==============================================================
+            if existing:
+                self.log(
+                    "802.11be profile '{0}' already exists.".format(profile_name),
+                    "DEBUG"
+                )
+
+                details = self.get_80211be_profile_details(existing.get("id")) or {}
+
+                existing_config = {
+                    k: details.get(k)
+                    for k in desired_config.keys()
+                }
+
+                config_changed = existing_config != desired_config
+
+                # ------------------ Rename (with optional config update)
+                if new_profile_name:
+                    if (
+                        new_profile_name in existing_dict
+                        and new_profile_name != profile_name
+                    ):
+                        self.msg = (
+                            "Cannot rename 802.11be profile '{0}' to '{1}' "
+                            "- target name already exists."
+                            .format(profile_name, new_profile_name)
+                        )
+                        self.set_operation_result(
+                            "failed", False, self.msg, "ERROR"
+                        ).check_return_status()
+
+                    update_profiles.append(
+                        {
+                            "id": existing["id"],
+                            "profileName": new_profile_name,
+                            **desired_config,
+                        }
+                    )
+
+                    self.log(
+                        "802.11be profile '{0}' scheduled for rename/update."
+                        .format(profile_name),
+                        "DEBUG"
+                    )
+
+                # ------------------ Config update only
+                elif config_changed:
+                    update_profiles.append(
+                        {
+                            "id": existing["id"],
+                            "profileName": profile_name,
+                            **desired_config,
+                        }
+                    )
+
+                    self.log(
+                        "802.11be profile '{0}' marked for config update."
+                        .format(profile_name),
+                        "DEBUG"
+                    )
+
+                # ------------------ No change
+                else:
+                    no_update_profiles.append(details)
+                    self.log(
+                        "802.11be profile '{0}' requires no update."
+                        .format(profile_name),
+                        "DEBUG"
+                    )
+
+            # ==============================================================
+            # CASE 2: Profile DOES NOT EXIST → ADD
+            # ==============================================================
+            else:
+                add_profiles.append(
+                    {
+                        "profileName": profile_name,
+                        **desired_config,
+                    }
+                )
+
+                self.log(
+                    "802.11be profile '{0}' scheduled for creation."
+                    .format(profile_name),
+                    "DEBUG"
+                )
+
+        # ------------------------------------------------------------------
+        # Final logs
+        # ------------------------------------------------------------------
+        self.log("802.11be Profiles to Add: {0}".format(add_profiles), "DEBUG")
+        self.log("802.11be Profiles to Update: {0}".format(update_profiles), "DEBUG")
+        self.log(
+            "802.11be Profiles with No Changes: {0}".format(no_update_profiles),
+            "DEBUG",
+        )
+
+        return add_profiles, update_profiles, no_update_profiles
+
+    def get_80211be_profile_details(self, profile_id):
+        """
+        Retrieves details of a specific 802.11be (Wi-Fi 7) profile by ID.
+
+        Args:
+            profile_id (str): UUID of the 802.11be profile.
+
+        Returns:
+            dict: Flat profile details.
+                Example:
+                {
+                    "id": "<uuid>",
+                    "profileName": "sample_design",
+                    "ofdmaDownLink": True,
+                    "ofdmaUpLink": True,
+                    "muMimoDownLink": True,
+                    "muMimoUpLink": True,
+                    "ofdmaMultiRu": False
+                }
+        """
+
+        if not profile_id:
+            return {}
+
+        self.log(
+            "Fetching 802.11be profile details for id: {0}".format(profile_id),
+            "DEBUG"
+        )
+
+        try:
+            response = self.dnac._exec(
+                family="wireless",
+                function="get80211be_profile_by_id",
+                params={"id": profile_id},
+            )
+            self.log(f"received API response for {response}", "DEBUG")
+        except Exception as exc:
+            self.msg = (
+                "Failed to fetch 802.11be profile details for id '{0}': {1}".format(
+                    profile_id, str(exc)
+                )
+            )
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+
+        self.log(
+            "Raw get80211beProfileById API response: {0}".format(response),
+            "DEBUG"
+        )
+
+        data = response.get("response")
+
+        if not data:
+            return {}
+
+        # Some DNAC versions return a list
+        if isinstance(data, list):
+            data = data[0] if data else {}
+
+        # Return FLAT structure (important for diff comparison)
+        return {
+            "id": data.get("id"),
+            "profileName": data.get("profileName"),
+            "ofdmaDownLink": data.get("ofdmaDownLink"),
+            "ofdmaUpLink": data.get("ofdmaUpLink"),
+            "muMimoDownLink": data.get("muMimoDownLink"),
+            "muMimoUpLink": data.get("muMimoUpLink"),
+            "ofdmaMultiRu": data.get("ofdmaMultiRu"),
+        }
+
+    def get_80211be_profiles(self, profile_name=None, limit=500, offset=0):
+        """
+        Fetch existing 802.11be (Wi-Fi 7) profiles from Cisco Catalyst Center.
+
+        Args:
+            profile_name (str, optional): Profile name to filter results.
+            limit (int, optional): Number of records to fetch.
+            offset (int, optional): Pagination offset.
+
+        Returns:
+            list: List of profile blocks with instances.
+                Example:
+                [
+                    {
+                        "instances": [
+                            {
+                                "id": "<uuid>",
+                                "profileName": "<name>",
+                                ...
+                            }
+                        ]
+                    }
+                ]
+        """
+
+        self.log("Fetching 802.11be profiles from Cisco Catalyst Center", "DEBUG")
+
+        # Build params (ONLY profileName + pagination)
+        params = {}
+
+        if profile_name:
+            params["profileName"] = profile_name
+
+        self.log(
+            "get80211beProfiles request params: {0}".format(params),
+            "DEBUG"
+        )
+
+        try:
+            response = self.dnac._exec(
+                family="wireless",
+                function="get80211be_profiles",
+                params=params
+            )
+            self.log(f"Received API response for {response}", "DEBUG")
+
+        except Exception as e:
+            self.msg = "Failed to fetch 802.11be profiles: {0}".format(str(e))
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+
+        self.log(
+            "Raw get80211beProfiles API response: {0}".format(response),
+            "DEBUG"
+        )
+
+        # Normalize response safely
+        profiles = response.get("response", [])
+
+        if profiles is None:
+            return []
+
+        if not isinstance(profiles, list):
+            profiles = [profiles]
+
+        return profiles
+
+    def process_update_flex_connect_configuration(self, params):
+        """
+        Handles the update of Flex Connect (Native VLAN) configuration
+        in Cisco Catalyst Center.
+
+        Args:
+            params (list): A list of Flex Connect payloads to update.
+                        Each payload must include:
+                            - siteId (str)
+                            - vlanId (int)
+
+        Returns:
+            self (with self.msg and self.status set)
+        """
+
+        self.log("Processing UPDATE for Flex Connect Configuration.", "INFO")
+        self.log("Params for UPDATE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                site_id = payload.get("siteId")
+                vlan_id = payload.get("vlanId")
+                site_key = site_id or "<unknown-site>"
+
+                self.log(
+                    "Updating Flex Connect config: siteId='{0}', vlanId='{1}'".format(
+                        site_id, vlan_id
+                    ),
+                    "DEBUG",
+                )
+
+                # -------------------------------------------------
+                # Validate payload
+                # -------------------------------------------------
+                if not site_id or vlan_id is None:
+                    results[site_key] = (
+                        "Skipped update: missing 'siteId' or 'vlanId' in payload."
+                    )
+                    self.log(results[site_key], "ERROR")
+                    continue
+
+                # -------------------------------------------------
+                # Build API payload (DNAC expects nativeVlanId)
+                # -------------------------------------------------
+                api_payload = {
+                    "site_id": site_id,
+                    "nativeVlanId": vlan_id
+                }
+                self.log(
+                    "Constructed API payload for Flex Connect update: {0}"
+                    .format(api_payload),
+                    "DEBUG"
+                )
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="update_native_vlan_settings_by_site",
+                        op_modifies=True,
+                        params=api_payload,
+                    )
+
+                    self.log("Received API response: {0}".format(response), "DEBUG")
+
+                    # -------------------------------------------------
+                    # Validate async task
+                    # -------------------------------------------------
+                    self.check_tasks_response_status(
+                        response,
+                        "updateNativeVlanSettingsBySite"
+                    )
+
+                    if self.status not in ["failed", "exited"]:
+                        results[site_key] = (
+                            "Successfully updated Flex Connect configuration."
+                        )
+                    else:
+                        fail_reason = self.msg
+                        results[site_key] = (
+                            "Failed to update Flex Connect configuration: {0}"
+                            .format(fail_reason)
+                        )
+                        self.log(results[site_key], "ERROR")
+
+                except Exception as exc:
+                    results[site_key] = (
+                        "Exception while updating Flex Connect configuration: {0}"
+                        .format(str(exc))
+                    )
+                    self.log(results[site_key], "ERROR")
+
+            # -----------------------------------------------------
+            # Final aggregated result
+            # -----------------------------------------------------
+            self.msg = {"flex_connect_update": results}
+            self.status = (
+                "failed"
+                if all(
+                    ("Failed" in v or "Exception" in v or "Skipped" in v)
+                    for v in results.values()
+                )
+                else "success"
+            )
+
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {
+                "flex_connect_update": "Exception during update: {0}".format(str(exc))
+            }
+            self.status = "failed"
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+            return self
 
     def get_diff_merged(self):
         """
@@ -24674,6 +28710,23 @@ class WirelessDesign(DnacBase):
                 "UPDATE RRM General Configurations",
                 self.process_update_rrm_general,
             ),
+            # -- 802_11_be_profiles --
+            (
+                "add_80211be_profiles_params",
+                "ADD 802.11be Profiles",
+                self.process_add_802_11_be_profile,
+            ),
+            (
+                "update_80211be_profiles_params",
+                "UPDATE 802.11be Profiles",
+                self.process_update_802_11_be_profile,
+            ),
+            # -- Flex Connect (Native VLAN) --
+            (
+                "update_flex_connect_configuration_params",
+                "UPDATE Flex Connect Configuration",
+                self.process_update_flex_connect_configuration,
+            ),
         ]
 
         # Iterate over operations and process them
@@ -24830,6 +28883,19 @@ class WirelessDesign(DnacBase):
                 "DELETE RRM-General Configurations",
                 self.process_delete_rrm_general,
             ),
+            # --- 802.11be Profiles ---
+            (
+                "delete_80211be_profiles_params",
+                "DELETE 802.11be Profiles",
+                self.process_delete_802_11_be_profile,
+            ),
+            # --- Flex Connect (Native VLAN) ---
+            (
+                "delete_flex_connect_configuration_params",
+                "DELETE Flex Connect Configuration",
+                self.process_delete_flex_connect_configuration,
+            ),
+
         ]
 
         # Iterate over operations and process deletions
@@ -24873,9 +28939,16 @@ class WirelessDesign(DnacBase):
 
         # Handle the case where no deletions are required
         if not final_status_list:
-            self.msg = "No deletions were required for the provided parameters in the Cisco Catalyst Center."
-            self.set_operation_result("ok", False, self.msg, "INFO")
-            self.log("No deletion operations were performed.", "DEBUG")
+            # Check if AAA Radius Attributes were already reset (idempotency case)
+            if hasattr(self, 'already_reset_aaa_attrs') and self.already_reset_aaa_attrs:
+                already_reset_names = ', '.join(self.already_reset_aaa_attrs)
+                self.msg = "AAA Radius Attributes '{0}' are already reset. No changes required.".format(already_reset_names)
+                self.set_operation_result("ok", False, self.msg, "INFO")
+                self.log("AAA Radius Attributes already in desired state (reset).", "INFO")
+            else:
+                self.msg = "No deletions were required for the provided parameters in the Cisco Catalyst Center."
+                self.set_operation_result("ok", False, self.msg, "INFO")
+                self.log("No deletion operations were performed.", "DEBUG")
             return self
 
         # Process the final result
@@ -24889,6 +28962,234 @@ class WirelessDesign(DnacBase):
         )
         self.set_operation_result(final_status, is_changed, self.msg, "INFO")
         return self
+
+    def process_delete_flex_connect_configuration(self, params):
+        """
+        Handles deletion/reset of Flex Connect (Native VLAN) configuration
+        in Cisco Catalyst Center.
+
+        Args:
+            params (list): A list of Flex Connect delete/reset payloads.
+                        Each payload must include:
+                            - siteId (str)
+                            - removeOverrideInHierarchy (bool)
+
+        Returns:
+            self (with self.msg and self.status set)
+        """
+
+        self.log("Processing DELETE for Flex Connect Configuration.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                site_id = payload.get("siteId")
+                remove_override = payload.get("removeOverrideInHierarchy", True)
+                site_key = site_id or "<unknown-site>"
+
+                self.log(
+                    "Deleting Flex Connect config: siteId='{0}', removeOverrideInHierarchy='{1}'"
+                    .format(site_id, remove_override),
+                    "DEBUG",
+                )
+
+                # -------------------------------------------------
+                # Validate payload
+                # -------------------------------------------------
+                if not site_id:
+                    results[site_key] = (
+                        "Skipped delete: missing 'siteId' in payload."
+                    )
+                    self.log(results[site_key], "ERROR")
+                    continue
+
+                # -------------------------------------------------
+                # Build API payload
+                # -------------------------------------------------
+                api_payload = {
+                    "site_id": site_id,
+                    "removeOverrideInHierarchy": remove_override
+                }
+                self.log(
+                    "Constructed API payload for Flex Connect delete: {0}"
+                    .format(api_payload),
+                    "DEBUG"
+                )
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_native_vlan_settings_by_site",
+                        op_modifies=True,
+                        params=api_payload,
+                    )
+
+                    self.log("Received API response: {0}".format(response), "DEBUG")
+
+                    # -------------------------------------------------
+                    # Validate async task
+                    # -------------------------------------------------
+                    self.check_tasks_response_status(
+                        response,
+                        "deleteNativeVlanSettingsBySite"
+                    )
+
+                    if self.status not in ["failed", "exited"]:
+                        results[site_key] = (
+                            "Successfully deleted/reset Flex Connect configuration."
+                        )
+                    else:
+                        fail_reason = self.msg
+                        results[site_key] = (
+                            "Failed to delete/reset Flex Connect configuration: {0}"
+                            .format(fail_reason)
+                        )
+                        self.log(results[site_key], "ERROR")
+
+                except Exception as exc:
+                    results[site_key] = (
+                        "Exception while deleting Flex Connect configuration: {0}"
+                        .format(str(exc))
+                    )
+                    self.log(results[site_key], "ERROR")
+
+            # -----------------------------------------------------
+            # Final aggregated result
+            # -----------------------------------------------------
+            self.msg = {"flex_connect_delete": results}
+            self.status = (
+                "failed"
+                if all(
+                    ("Failed" in v or "Exception" in v or "Skipped" in v)
+                    for v in results.values()
+                )
+                else "success"
+            )
+
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {
+                "flex_connect_delete": "Exception during delete: {0}".format(str(exc))
+            }
+            self.status = "failed"
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+            return self
+
+    def process_delete_802_11_be_profile(self, params):
+        """
+        Handles deletion of 802.11be (Wi-Fi 7) profiles in Cisco Catalyst Center.
+
+        Args:
+            params (list): List of payloads returned by
+                        verify_delete_80211be_profiles_requirement().
+                        Each payload must include:
+                            - id (str)
+                            - profileName (str)
+
+        Returns:
+            self (with self.msg and self.status set)
+        """
+
+        self.log("Processing DELETE for 802.11be Profiles.", "INFO")
+        self.log("Params for DELETE: {0}".format(params), "DEBUG")
+
+        results = {}
+
+        try:
+            for payload in params or []:
+                profile_name = payload.get("profileName") or "<unknown>"
+                profile_id = payload.get("id")
+
+                self.log(
+                    "Deleting 802.11be profile: profile='{0}', id='{1}'"
+                    .format(profile_name, profile_id),
+                    "DEBUG"
+                )
+
+                # Safety check
+                if not profile_id:
+                    results[profile_name] = "Skipped delete: missing 'id' in payload."
+                    self.log(results[profile_name], "ERROR")
+                    continue
+
+                try:
+                    response = self.dnac._exec(
+                        family="wireless",
+                        function="delete_a80211be_profile",
+                        op_modifies=True,
+                        params={"id": profile_id},
+                    )
+
+                    self.log(
+                        "Received API response for delete: {0}".format(response),
+                        "DEBUG"
+                    )
+
+                    # Validate async task (DNAC standard)
+                    self.check_tasks_response_status(
+                        response, "delete_a80211be_profile"
+                    )
+
+                    if self.status not in ["failed", "exited"]:
+                        results[profile_name] = "Successfully deleted 802.11be profile."
+                    else:
+                        fail_reason = self.msg
+                        results[profile_name] = (
+                            "Failed to delete 802.11be profile: {0}".format(fail_reason)
+                        )
+                        self.log(results[profile_name], "ERROR")
+
+                except Exception as exc:
+                    results[profile_name] = (
+                        "Exception while deleting 802.11be profile: {0}".format(str(exc))
+                    )
+                    self.log(results[profile_name], "ERROR")
+
+            # --------------------------------------------------
+            # Final aggregated result - count successes and failures
+            # --------------------------------------------------
+            success_count = sum(
+                1 for v in results.values()
+                if "Successfully" in v
+            )
+            failure_count = sum(
+                1 for v in results.values()
+                if ("Failed" in v or "Exception" in v or "Skipped" in v)
+            )
+
+            # Mark as failed if ANY profile deletion failed (Ansible binary outcome)
+            if failure_count > 0:
+                self.status = "failed"
+                msg = (
+                    "802.11be Profile deletion completed with {0} success(es) and {1} failure(s). "
+                    "Details: {2}".format(success_count, failure_count, results)
+                )
+            else:
+                self.status = "success"
+                msg = (
+                    "Successfully deleted {0} 802.11be profile(s). "
+                    "Details: {1}".format(success_count, results)
+                )
+
+            self.msg = {"80211be_delete": msg}
+            self.set_operation_result(self.status, True, self.msg, "INFO")
+            return self
+
+        except Exception as exc:
+            self.msg = {
+                "80211be_delete": "Exception during delete: {0}".format(str(exc))
+            }
+            self.status = "failed"
+            self.set_operation_result(
+                "failed", False, self.msg, "ERROR"
+            ).check_return_status()
+            return self
 
     def verify_diff_merged(self):
         """

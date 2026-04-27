@@ -72,6 +72,7 @@ options:
                       - Only letters, numbers and -_./
                         characters are allowed.
                     type: str
+                    required: true
                   pool_type:
                     description: >
                       Includes both the Generic Ip Pool
@@ -99,6 +100,7 @@ options:
                       systematic IP address distribution
                       within a network.
                     type: str
+                    required: true
                   gateway:
                     description: Serves as an entry
                       or exit point for data traffic
@@ -156,6 +158,7 @@ options:
               - Only letters, numbers and -_./ characters
                 are allowed.
             type: str
+            required: true
           pool_type:
             description: Type of the reserve ip sub
               pool. Generic - Used for general purpose
@@ -882,7 +885,7 @@ EXAMPLES = r"""
 
 
 RETURN = r"""
-# Case_1: Successful creation/updation/deletion of global pool
+# Case_1: Successful creation/update/deletion of global pool
 response_1:
   description: A dictionary or list with the response returned by the Cisco Catalyst Center Python SDK
   returned: always
@@ -893,7 +896,7 @@ response_1:
       "executionStatusUrl": "string",
       "message": "string"
     }
-# Case_2: Successful creation/updation/deletion of reserve pool
+# Case_2: Successful creation/update/deletion of reserve pool
 response_2:
   description: A dictionary or list with the response returned by the Cisco Catalyst Center Python SDK
   returned: always
@@ -904,7 +907,7 @@ response_2:
       "executionStatusUrl": "string",
       "message": "string"
     }
-# Case_3: Successful creation/updation of network
+# Case_3: Successful creation/update of network
 response_3:
   description: A dictionary or list with the response returned by the Cisco Catalyst Center Python SDK
   returned: always
@@ -1222,6 +1225,8 @@ class NetworkSettings(DnacBase):
                     ("ipv6DnsServers", "ipv6DnsServers"),
                     ("ipv4TotalHost", "ipv4TotalHost"),
                     ("slaacSupport", "slaacSupport"),
+                    ("ipV6AddressSpace", "ipV6AddressSpace"),
+                    ("ipV4AddressSpace", "ipV4AddressSpace"),
                 ]
             elif get_object == "Network":
                 obj_params = [
@@ -5419,7 +5424,7 @@ class NetworkSettings(DnacBase):
 
             # Check pool exist, if not create and return
             self.log("IPv4 reserved pool '{0}': {1}"
-                     .format(name, self.want.get("wantReserve")[reserve_pool_index].get("ipv4GlobalPool")), "DEBUG")
+                     .format(name, self.want.get("wantReserve")[reserve_pool_index].get("ipV4AddressSpace")), "DEBUG")
             site_name = item.get("site_name")
             reserve_params = self.want.get("wantReserve")[reserve_pool_index]
             site_exist, site_id = self.get_site_id(site_name)
@@ -6933,6 +6938,12 @@ class NetworkSettings(DnacBase):
 
         self.have.clear()
         self.want.clear()
+        self.result["response"] = [
+            {"globalPool": {"response": {}, "msg": {}}},
+            {"reservePool": {"response": {}, "msg": {}}},
+            {"network": {"response": {}, "msg": {}}},
+            {"device_controllability": {"response": {}, "msg": {}}}
+        ]
         return
 
 
