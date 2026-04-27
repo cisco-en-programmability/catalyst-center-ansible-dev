@@ -112,138 +112,56 @@ options:
             elements: str
           global_credential_details:
             description:
-            - Filters for global device credential extraction.
-            - Extracts only credentials matching specified descriptions.
-            - Each credential type (cli_credential, https_read, https_write,
-              snmp_v2c_read, snmp_v2c_write, snmp_v3) can be filtered independently.
-            - Description values must match exactly as configured in Catalyst Center
-              (case-sensitive).
-            - If credential type not specified, all credentials of that type extracted.
-            type: dict
+            - List of credential filter entries for global device credential extraction.
+            - Each entry specifies a credential C(type) and an optional C(description).
+            - C(description) is a list of strings; each value must match a Catalyst
+              Center credential description exactly (case-sensitive).
+            - If C(description) is omitted (or empty) for a given C(type), all
+              credentials of that type are extracted.
+            - Multiple entries with the same C(type) are allowed; their descriptions
+              are aggregated.
+            - 'For example, [{"type": "cli_credential", "description": ["WLC", "Router_CLI"]},
+              {"type": "https_read"}, {"type": "snmp_v3", "description": ["SNMPv3_Admin"]}]'
+            type: list
+            elements: dict
+            required: false
             suboptions:
-              cli_credential:
+              type:
                 description:
-                - List of CLI credential descriptions to extract.
-                - Extracts CLI credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "WLC_CLI"}, {"description": "Router_CLI"}]'
-                type: list
-                elements: dict
-                required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of CLI credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
-              https_read:
+                - Credential type to filter.
+                - Must be one of cli_credential, https_read, https_write,
+                  snmp_v2c_read, snmp_v2c_write, snmp_v3.
+                type: str
+                required: true
+                choices:
+                  - cli_credential
+                  - https_read
+                  - https_write
+                  - snmp_v2c_read
+                  - snmp_v2c_write
+                  - snmp_v3
+              description:
                 description:
-                - List of HTTPS Read credential descriptions to extract.
-                - Extracts HTTPS Read credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "HTTPS_Read_Admin"}]'
+                - List of exact credential descriptions to extract for the given
+                  C(type).
+                - Each value must match a Catalyst Center credential description
+                  exactly (case-sensitive).
+                - If omitted or empty, all credentials of the specified C(type)
+                  are extracted.
                 type: list
-                elements: dict
+                elements: str
                 required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of HTTPS Read credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
-              https_write:
-                description:
-                - List of HTTPS Write credential descriptions to extract.
-                - Extracts HTTPS Write credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "HTTPS_Write_Admin"}]'
-                type: list
-                elements: dict
-                required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of HTTPS Write credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
-              snmp_v2c_read:
-                description:
-                - List of SNMPv2c Read credential descriptions to extract.
-                - Extracts SNMPv2c Read credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "SNMP_RO_Community"}]'
-                type: list
-                elements: dict
-                required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of SNMPv2c Read credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
-              snmp_v2c_write:
-                description:
-                - List of SNMPv2c Write credential descriptions to extract.
-                - Extracts SNMPv2c Write credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "SNMP_RW_Community"}]'
-                type: list
-                elements: dict
-                required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of SNMPv2c Write credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
-              snmp_v3:
-                description:
-                - List of SNMPv3 credential descriptions to extract.
-                - Extracts SNMPv3 credentials with matching description field.
-                - Each list item contains description key for filtering.
-                - 'For example: [{"description": "SNMPv3_Admin"}]'
-                type: list
-                elements: dict
-                required: false
-                suboptions:
-                  description:
-                    description:
-                    - Exact description of SNMPv3 credential to extract.
-                    - Must match Catalyst Center credential description exactly
-                      (case-sensitive).
-                    type: str
-                    required: true
           assign_credentials_to_site:
             description:
-            - Filters for site-specific credential assignment extraction.
+            - List of site hierarchical paths for credential assignment extraction.
             - Extracts credential assignments for specified site hierarchical paths.
             - Site names must be full hierarchical paths (case-sensitive).
             - If not specified when component included in components_list, extracts
               all site credential assignments.
-            type: dict
+            - For example, ["Global/India/Assam", "Global/India/Haryana"]
+            type: list
+            elements: str
             required: false
-            suboptions:
-              site_name:
-                description:
-                - List of site hierarchical paths to extract credential assignments.
-                - Site names must match exact hierarchical paths in Catalyst Center
-                  (case-sensitive).
-                - Extracts CLI, HTTPS Read/Write, SNMPv2c Read/Write, and SNMPv3
-                  credential assignments per site.
-                - For example, ["Global/India/Assam", "Global/India/Haryana"]
-                type: list
-                elements: str
-                required: false
 requirements:
 - dnacentersdk >= 2.10.10
 - python >= 3.9
@@ -330,12 +248,19 @@ EXAMPLES = r"""
       component_specific_filters:
         components_list: ["global_credential_details"]
         global_credential_details:
-          cli_credential:
-            - description: test
-          https_read:
-            - description: http_read
-          https_write:
-            - description: http_write
+          - type: cli_credential
+            description:
+              - WLC
+              - Router_CLI
+          - type: https_read
+            description:
+              - http_read
+          - type: https_write
+            description:
+              - http_write
+          - type: snmp_v2c_read
+          - type: snmp_v2c_write
+          - type: snmp_v3
 
 - name: Generate YAML Configuration with specific component assign credentials to site filters
   cisco.dnac.device_credential_playbook_config_generator:
@@ -355,9 +280,8 @@ EXAMPLES = r"""
       component_specific_filters:
         components_list: ["assign_credentials_to_site"]
         assign_credentials_to_site:
-          site_name:
-            - "Global/India/Assam"
-            - "Global/India/Haryana"
+          - "Global/India/Assam"
+          - "Global/India/Haryana"
 
 - name: Generate YAML Configuration with both global credential and assign credentials to site filters
   cisco.dnac.device_credential_playbook_config_generator:
@@ -377,16 +301,16 @@ EXAMPLES = r"""
       component_specific_filters:
         components_list: ["global_credential_details", "assign_credentials_to_site"]
         global_credential_details:
-          cli_credential:
-            - description: test
-          https_read:
-            - description: http_read
-          https_write:
-            - description: http_write
+          - type: cli_credential
+            description:
+              - WLC
+          - type: https_read
+            description:
+              - http_read
+          - type: https_write
         assign_credentials_to_site:
-          site_name:
-            - "Global/India/Assam"
-            - "Global/India/TamilNadu"
+          - "Global/India/Assam"
+          - "Global/India/TamilNadu"
 """
 
 RETURN = r"""
@@ -751,62 +675,29 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "network_elements": {
                 "global_credential_details": {
                     "filters": {
-                        "cli_credential": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
-
+                        "type": {
+                            "type": "str",
+                            "required": True,
+                            "choices": [
+                                "cli_credential",
+                                "https_read",
+                                "https_write",
+                                "snmp_v2c_read",
+                                "snmp_v2c_write",
+                                "snmp_v3",
+                            ],
                         },
-                        "https_read": {
+                        "description": {
                             "type": "list",
+                            "elements": "str",
                             "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
                         },
-                        "https_write": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
-                        },
-                        "snmp_v2c_read": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
-                        },
-                        "snmp_v2c_write": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
-
-                        },
-                        "snmp_v3": {
-                            "type": "list",
-                            "required": False,
-                            "elements": "dict",
-                            "options": {
-                                "description": {"type": "str"},
-                            }
-                        }
                     },
                     "reverse_mapping_function": self.global_credential_details_temp_spec,
                     "get_function_name": self.get_global_credential_details_configuration,
                 },
                 "assign_credentials_to_site": {
-                    "filters": ["site_name"],
+                    "filters": [],
                     "reverse_mapping_function": self.assign_credentials_to_site_temp_spec,
                     "api_function": "get_device_credential_settings_for_a_site",
                     "api_family": "network_settings",
@@ -916,8 +807,6 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                         # Sensitive fields masked
                         "password": mask("cli_credential", key, "password"),
                         "enable_password": mask("cli_credential", key, "enable_password"),
-                        # Non-sensitive fields passed through
-                        "id": key.get("id"),
                     }
                     for key in (detail.get("cliCredential") or [])
                 ],
@@ -935,7 +824,6 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                         "password": mask("https_read", key, "password"),
                         # Non-sensitive fields passed through
                         "port": key.get("port"),
-                        "id": key.get("id"),
                     }
                     for key in (detail.get("httpsRead") or [])
                 ],
@@ -953,7 +841,6 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                         "password": mask("https_write", key, "password"),
                         # Non-sensitive fields passed through
                         "port": key.get("port"),
-                        "id": key.get("id"),
                     }
                     for key in (detail.get("httpsWrite") or [])
                 ],
@@ -966,7 +853,6 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "transform": lambda detail: [
                     {
                         # Non-sensitive fields passed through
-                        "id": key.get("id"),
                         "description": key.get("description"),
                         # Sensitive field masked
                         "read_community": mask("snmp_v2c_read", key, "read_community"),
@@ -978,11 +864,15 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "type": "list",
                 "elements": "dict",
                 "source_key": "snmpV2cWrite",
-                "options": OrderedDict({
-                    "id": {"type": "str", "source_key": "id"},
-                    "description": {"type": "str", "source_key": "description"},
-                    "write_community": {"type": "str", "source_key": "writeCommunity"},
-                }),
+                "special_handling": True,
+                "transform": lambda detail: [
+                    {
+                        "description": key.get("description"),
+                        # Sensitive field masked
+                        "write_community": mask("snmp_v2c_write", key, "write_community"),
+                    }
+                    for key in (detail.get("snmpV2cWrite") or [])
+                ],
             },
             "snmp_v3": {
                 "type": "list",
@@ -992,10 +882,9 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "transform": lambda detail: [
                     {
                         # Non-sensitive fields passed through
-                        "id": key.get("id"),
                         "auth_type": key.get("authType"),
                         "snmp_mode": key.get("snmpMode"),
-                        "privacy_password": key.get("privacyPassword"),
+                        "privacy_password": mask("snmp_v3", key, "privacy_password"),
                         "privacy_type": key.get("privacyType"),
                         "username": key.get("username"),
                         "description": key.get("description"),
@@ -1109,37 +998,37 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "type": "dict",
                 "source_key": "cliCredential",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("cliCredential"), ["description", "username", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("cliCredential"), ["description", "username"]),
             },
             "https_read": {
                 "type": "dict",
                 "source_key": "httpsRead",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("httpsRead"), ["description", "username", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("httpsRead"), ["description", "username"]),
             },
             "https_write": {
                 "type": "dict",
                 "source_key": "httpsWrite",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("httpsWrite"), ["description", "username", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("httpsWrite"), ["description", "username"]),
             },
             "snmp_v2c_read": {
                 "type": "dict",
                 "source_key": "snmpV2cRead",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("snmpV2cRead"), ["description", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("snmpV2cRead"), ["description"]),
             },
             "snmp_v2c_write": {
                 "type": "dict",
                 "source_key": "snmpV2cWrite",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("snmpV2cWrite"), ["description", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("snmpV2cWrite"), ["description"]),
             },
             "snmp_v3": {
                 "type": "dict",
                 "source_key": "snmpV3",
                 "special_handling": True,
-                "transform": lambda detail: pick_fields(detail.get("snmpV3"), ["description", "id"]),
+                "transform": lambda detail: pick_fields(detail.get("snmpV3"), ["description"]),
             },
             "site_name": {
                 "type": "list",
@@ -1341,164 +1230,140 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
 
     def filter_credentials(self, source, filters):
         """
-        Filters global credential groups by matching description fields.
+        Filters global credential groups based on a list of type/description entries.
 
-        This function applies component-specific filters to global credential data by
-        matching credential descriptions against requested filter criteria, extracting
-        only credentials with matching descriptions from each credential type group
-        (CLI, HTTPS Read/Write, SNMPv2c Read/Write, SNMPv3), and constructing a filtered
-        credential dictionary containing only matched items for targeted credential
-        selection in YAML generation workflow.
+        Accepts a list of filter entries where each entry specifies a credential
+        ``type`` (required) and an optional ``description``. ``description`` is a
+        list of strings; each value must match a credential's description exactly
+        (case-sensitive). If ``description`` is omitted (or empty) for a given
+        ``type``, all credentials of that type are included. Multiple entries
+        with the same ``type`` are aggregated.
 
         Args:
-            source (dict): Global credentials dictionary from Catalyst Center containing
-                        credential groups with camelCase keys (e.g., cliCredential,
-                        httpsRead, httpsWrite, snmpV2cRead, snmpV2cWrite, snmpV3).
-                        Each group contains list of credential objects with description,
-                        username, id, and sensitive credential fields.
-            filters (dict): Component-specific filter dictionary with snake_case keys
-                        (e.g., cli_credential, https_read) containing lists of
-                        filter objects. Each filter object specifies description
-                        field to match (e.g., [{"description": "WLC"}]).
+            source (dict): Global credentials dictionary from Catalyst Center
+                containing credential groups with camelCase keys (e.g.,
+                cliCredential, httpsRead, httpsWrite, snmpV2cRead, snmpV2cWrite,
+                snmpV3).
+            filters (list): List of filter dicts. Each item has a required ``type``
+                key (snake_case credential type) and an optional ``description``
+                list of strings.
 
         Returns:
-            dict: Filtered credentials dictionary with camelCase keys containing only
-                credential objects matching filter descriptions. Empty dictionary if
-                no matches found or source/filters invalid. Preserves original API
-                response structure with matched items only.
+            dict: Filtered credentials dictionary with camelCase keys containing
+                only matched credential objects. Empty dict if nothing matched.
         """
         self.log(
-            "Starting credential filtering operation with {0} source credential "
-            "groups and {1} filter criteria. Filtering extracts credentials matching "
-            "description fields from each credential type group.".format(
+            "Starting credential filtering with {0} source group(s) and {1} filter "
+            "entry/entries.".format(
                 len(source) if isinstance(source, dict) else 0,
-                len(filters) if isinstance(filters, dict) else 0
+                len(filters) if isinstance(filters, list) else 0,
             ),
-            "DEBUG"
-        )
-
-        self.log(
-            "Source credential groups available: {0}. Filters provided for credential "
-            "types: {1}.".format(
-                list(source.keys()) if isinstance(source, dict) else [],
-                list(filters.keys()) if isinstance(filters, dict) else []
-            ),
-            "DEBUG"
-        )
-
-        self.log(
-            "Initializing filter key mapping from snake_case filter keys to camelCase "
-            "API response keys for credential group matching. Mapping enables "
-            "consistent filter application across 6 credential types.",
-            "DEBUG"
+            "DEBUG",
         )
 
         key_map = {
-            'cli_credential': 'cliCredential',
-            'https_read': 'httpsRead',
-            'https_write': 'httpsWrite',
-            'snmp_v2c_read': 'snmpV2cRead',
-            'snmp_v2c_write': 'snmpV2cWrite',
-            'snmp_v3': 'snmpV3',
+            "cli_credential": "cliCredential",
+            "https_read": "httpsRead",
+            "https_write": "httpsWrite",
+            "snmp_v2c_read": "snmpV2cRead",
+            "snmp_v2c_write": "snmpV2cWrite",
+            "snmp_v3": "snmpV3",
         }
+
+        if not isinstance(filters, list):
+            self.log(
+                "Expected filters to be a list, got {0}. Returning empty result.".format(
+                    type(filters).__name__
+                ),
+                "WARNING",
+            )
+            return {}
+
+        # Group filter entries by credential type. None as a member means
+        # "include all credentials of that type" (no description constraint).
+        wanted_by_type = {}
+        for entry_index, entry in enumerate(filters, start=1):
+            if not isinstance(entry, dict):
+                self.log(
+                    "Filter entry {0} is not a dict ({1}); skipping.".format(
+                        entry_index, type(entry).__name__
+                    ),
+                    "WARNING",
+                )
+                continue
+            f_type = entry.get("type")
+            if f_type not in key_map:
+                self.log(
+                    "Filter entry {0} has invalid or missing 'type': {1}. "
+                    "Valid types: {2}. Skipping.".format(
+                        entry_index, f_type, list(key_map.keys())
+                    ),
+                    "WARNING",
+                )
+                continue
+            desc = entry.get("description")
+            existing = wanted_by_type.setdefault(f_type, set())
+            if desc is None or (isinstance(desc, list) and len(desc) == 0):
+                # No description constraint -> include all credentials of this type
+                existing.add(None)
+            elif isinstance(desc, list):
+                for d in desc:
+                    if d is None:
+                        existing.add(None)
+                    else:
+                        existing.add(d)
+            else:
+                self.log(
+                    "Filter entry {0}: 'description' must be a list of strings, "
+                    "got {1}. Skipping.".format(
+                        entry_index, type(desc).__name__
+                    ),
+                    "WARNING",
+                )
+                continue
+
         result = {}
-        processed_filters = 0
         matched_credentials = 0
-
-        self.log(
-            "Starting iteration through {0} filter entries to extract matching "
-            "credentials from source groups. Each filter specifies description "
-            "criteria for credential selection.".format(len(filters)),
-            "DEBUG"
-        )
-        for filter_index, (f_key, wanted_list) in enumerate(filters.items(), start=1):
-            self.log(
-                "Processing filter {0}/{1} for credential type '{2}' with {3} "
-                "description filter(s). Resolving API key and extracting wanted "
-                "descriptions for matching.".format(
-                    filter_index, len(filters), f_key, len(wanted_list)
-                ),
-                "DEBUG"
-            )
-            src_key = key_map.get(f_key)
-            if not src_key:
+        for f_type, descriptions in wanted_by_type.items():
+            src_key = key_map[f_type]
+            src_items = source.get(src_key) or []
+            if None in descriptions:
+                # No description constraint -> include all credentials of this type
+                matched = list(src_items)
                 self.log(
-                    "Filter key '{0}' not found in key mapping. Skipping unsupported "
-                    "credential type filter. Valid filter keys: {1}".format(
-                        f_key, list(key_map.keys())
-                    ),
-                    "WARNING"
+                    "Type '{0}': no description filter, including all {1} "
+                    "credential(s).".format(f_type, len(matched)),
+                    "DEBUG",
                 )
-                continue
-
-            if src_key not in source:
+            else:
+                matched = [
+                    item for item in src_items
+                    if item.get("description") in descriptions
+                ]
                 self.log(
-                    "Credential group '{0}' (mapped from filter key '{1}') not found "
-                    "in source credentials. Skipping filter for this group. Available "
-                    "source groups: {2}".format(
-                        src_key, f_key, list(source.keys())
+                    "Type '{0}': matched {1}/{2} credential(s) for descriptions "
+                    "{3}.".format(
+                        f_type, len(matched), len(src_items), descriptions
                     ),
-                    "DEBUG"
+                    "DEBUG",
                 )
-                continue
 
-            self.log(
-                "Extracting wanted descriptions from {0} filter objects for credential "
-                "type '{1}'. Building description set for efficient matching against "
-                "source credentials.".format(len(wanted_list), f_key),
-                "DEBUG"
-            )
-            wanted_desc = {item.get('description') for item in wanted_list if 'description' in item}
-            self.log(
-                "Extracted {0} unique description(s) from filter criteria: {1}. "
-                "Matching against {2} credential(s) in source group '{3}'.".format(
-                    len(wanted_desc), wanted_desc, len(source[src_key]), src_key
-                ),
-                "DEBUG"
-            )
-
-            self.log(
-                "Filtering credential group '{0}' with {1} source credential(s) "
-                "against {2} wanted description(s). Extracting credentials with "
-                "matching description fields.".format(
-                    src_key, len(source[src_key]), len(wanted_desc)
-                ),
-                "DEBUG"
-            )
-            matched = [item for item in source[src_key] if item.get('description') in wanted_desc]
             if matched:
                 result[src_key] = matched
                 matched_credentials += len(matched)
-                processed_filters += 1
-
-                self.log(
-                    "Filter {0}/{1} for '{2}' matched {3} credential(s) from {4} "
-                    "source credential(s). Matched credentials added to result "
-                    "dictionary under key '{5}'.".format(
-                        filter_index, len(filters), f_key, len(matched),
-                        len(source[src_key]), src_key
-                    ),
-                    "DEBUG"
-                )
             else:
                 self.log(
-                    "Filter {0}/{1} for '{2}' matched 0 credentials from {3} source "
-                    "credential(s). No credentials found with descriptions matching: "
-                    "{4}. Group '{5}' will not be included in result.".format(
-                        filter_index, len(filters), f_key, len(source[src_key]),
-                        wanted_desc, src_key
-                    ),
-                    "WARNING"
+                    "Type '{0}': no credentials matched; group not included in "
+                    "result.".format(f_type),
+                    "WARNING",
                 )
 
         self.log(
-            "Credential filtering completed successfully. Processed {0}/{1} filter "
-            "criteria, matched {2} total credential(s) across {3} credential group(s). "
-            "Result contains groups: {4}".format(
-                processed_filters, len(filters), matched_credentials,
-                len(result), list(result.keys())
+            "Credential filtering completed. Matched {0} credential(s) across "
+            "{1} group(s): {2}".format(
+                matched_credentials, len(result), list(result.keys())
             ),
-            "INFO"
+            "INFO",
         )
         return result
 
@@ -1606,7 +1471,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
 
         site_names = []
         if component_specific_filters:
-            site_names = component_specific_filters.get("site_name", []) or []
+            site_names = list(component_specific_filters) if isinstance(component_specific_filters, list) else []
             self.log(
                 "Using filtered site names from component_specific_filters: {0}. "
                 "Will process {1} specified site(s).".format(site_names, len(site_names)),
@@ -1897,6 +1762,18 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "DEBUG"
             )
 
+            # Skip sites with no credentials assigned (only siteName remaining).
+            credential_keys = [k for k in raw_assign.keys() if k != "siteName"]
+            if not credential_keys:
+                self.log(
+                    "Site '{0}' (site_id: {1}) has no credentials assigned. "
+                    "Skipping this site in generated playbook.".format(
+                        self.site_id_name_dict.get(site_id, "UNKNOWN SITE"), site_id
+                    ),
+                    "INFO",
+                )
+                continue
+
             self.log(
                 "Retrieving reverse mapping specification for site credential "
                 "assignment transformation. Specification extracts non-sensitive fields "
@@ -1990,342 +1867,6 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "Generated custom variable name: {0}".format(custom_variable_name), "DEBUG"
         )
         return custom_variable_name
-
-    def yaml_config_generator(self, yaml_config_generator):
-        """
-        Generates a YAML configuration file based on the provided parameters.
-        This function retrieves network element details using component-specific filters, processes the data,
-        and writes the YAML content to a specified file. It dynamically handles multiple network elements and their respective filters.
-
-        Args:
-            yaml_config_generator (dict): Contains component_specific_filters and optionally generate_all_configurations flag.
-                file_path and file_mode are now taken from self.params.
-
-        Returns:
-            self: The current instance with the operation result and message updated.
-        """
-
-        self.log(
-            "Starting YAML configuration generation workflow for device credential "
-            "brownfield playbook. Workflow includes file path determination, "
-            "auto-discovery mode processing, component iteration with filters, and "
-            "YAML file writing with header comments.",
-            "DEBUG"
-        )
-
-        self.log(
-            "YAML config generator parameters received: {0}. Extracting "
-            "generate_all_configurations flag, file_path, and filter configurations.".format(
-                yaml_config_generator
-            ),
-            "DEBUG"
-        )
-
-        # Check if generate_all_configurations mode is enabled
-        generate_all = yaml_config_generator.get("generate_all_configurations", False)
-        if generate_all:
-            self.log(
-                "Auto-discovery mode enabled (generate_all_configurations=True). Will "
-                "process all device credentials and all supported components without "
-                "filter restrictions for complete brownfield inventory.",
-                "INFO"
-            )
-        else:
-            self.log(
-                "Targeted extraction mode (generate_all_configurations=False). Will "
-                "apply provided filters for selective component and credential retrieval.",
-                "DEBUG"
-            )
-
-        self.log(
-            "Determining output file path for YAML configuration. Checking for "
-            "user-provided file_path parameter or generating default timestamped "
-            "filename.",
-            "DEBUG"
-        )
-        file_path = self.params.get("file_path")
-        if not file_path:
-            self.log(
-                "No file_path provided in configuration. Generating default filename "
-                "with pattern device_credential_playbook_config_<YYYY-MM-DD_HH-MM-SS>.yml in "
-                "current working directory.",
-                "DEBUG"
-            )
-            file_path = self.generate_filename()
-            self.log(
-                "Default filename generated: {0}. File will be created in current "
-                "working directory.".format(file_path),
-                "DEBUG"
-            )
-        else:
-            self.log(
-                "Using user-provided file_path: {0}. File will be created at "
-                "specified location with directory creation if needed.".format(file_path),
-                "DEBUG"
-            )
-
-        self.log(
-            "YAML configuration file path determined: {0}. Path will be used for "
-            "write_dict_to_yaml() operation.".format(file_path),
-            "INFO"
-        )
-        file_mode = self.params.get("file_mode", "overwrite")
-
-        self.log(
-            "YAML configuration file path determined: {0}, file_mode: {1}".format(file_path, file_mode),
-            "DEBUG"
-        )
-
-        self.log(
-            "Initializing filter dictionaries from yaml_config_generator parameters. "
-            "Filters determine which components and credentials to extract from "
-            "Catalyst Center.",
-            "DEBUG"
-        )
-        if generate_all:
-            # In generate_all_configurations mode, override any provided filters to ensure we get ALL configurations
-            self.log(
-                "Auto-discovery mode: Overriding any provided filters to ensure "
-                "complete credential and component extraction without restrictions. "
-                "All component_specific_filters will be ignored.",
-                "INFO"
-            )
-
-            # Set empty filters to retrieve everything
-            component_specific_filters = {}
-        else:
-            # Use provided filters or default to empty
-            self.log(
-                "Normal mode: Using provided component_specific_filters from input",
-                "DEBUG",
-            )
-            component_specific_filters = yaml_config_generator.get("component_specific_filters") or {}
-            self.log(
-                f"Component specific filters initialized: {self.pprint(component_specific_filters)}",
-                "DEBUG",
-            )
-
-        self.log(
-            "Retrieving supported network elements schema from module_schema. Schema "
-            "defines available components (global_credential_details, "
-            "assign_credentials_to_site) with their retrieval functions and filter "
-            "specifications.",
-            "DEBUG"
-        )
-        module_supported_network_elements = self.module_schema.get("network_elements", {})
-
-        self.log(
-            "Module supports {0} network element component(s): {1}. Components define "
-            "available credential types and site assignment configurations.".format(
-                len(module_supported_network_elements),
-                list(module_supported_network_elements.keys())
-            ),
-            "DEBUG"
-        )
-
-        self.log(
-            "Determining components list for processing. Extracting components_list "
-            "from component_specific_filters or defaulting to all supported components "
-            "from module schema.",
-            "DEBUG"
-        )
-        components_list = component_specific_filters.get(
-            "components_list", list(module_supported_network_elements.keys())
-        )
-
-        # If components_list is empty, default to all supported components
-        if not components_list:
-            self.log(
-                "No components specified in components_list. Defaulting to all "
-                "supported components for complete credential extraction: {0}".format(
-                    list(module_supported_network_elements.keys())
-                ),
-                "DEBUG"
-            )
-            components_list = list(module_supported_network_elements.keys())
-        else:
-            self.log(
-                "Components list extracted from filters: {0}. Will process {1} "
-                "component(s) for targeted credential retrieval.".format(
-                    components_list, len(components_list)
-                ),
-                "DEBUG"
-            )
-
-        self.log(
-            "Components to process: {0}. Starting iteration through components for "
-            "credential retrieval and configuration aggregation.".format(components_list),
-            "INFO"
-        )
-
-        self.log(
-            "Initializing final configuration list for aggregating component data. "
-            "List will contain retrieved configurations from all processed components "
-            "ready for YAML serialization.",
-            "DEBUG"
-        )
-
-        final_config_list = []
-        processed_count = 0
-        skipped_count = 0
-
-        self.log(
-            "Starting component iteration loop. Processing {0} component(s) with "
-            "retrieval functions, filter application, and data aggregation for each.".format(
-                len(components_list)
-            ),
-            "DEBUG"
-        )
-        for component_index, component in enumerate(components_list, start=1):
-            self.log(
-                "Processing component {0}/{1}: '{2}'. Checking module schema for "
-                "component support and retrieval function availability.".format(
-                    component_index, len(components_list), component
-                ),
-                "DEBUG"
-            )
-            network_element = module_supported_network_elements.get(component)
-            if not network_element:
-                self.log(
-                    "Component {0} not supported by module, skipping processing".format(component),
-                    "WARNING",
-                )
-                skipped_count += 1
-                continue
-
-            filters = {
-                "component_specific_filters": component_specific_filters.get(component, [])
-            }
-
-            self.log(
-                "Extracting retrieval function for component '{0}' from network element "
-                "schema. Function will execute API calls and data transformation for "
-                "this component.".format(component),
-                "DEBUG"
-            )
-            operation_func = network_element.get("get_function_name")
-            if not callable(operation_func):
-                self.log(
-                    "No retrieval function defined for component: {0}".format(component),
-                    "ERROR"
-                )
-                skipped_count += 1
-                continue
-
-            component_data = operation_func(network_element, filters)
-            # Validate retrieval success
-            if not component_data:
-                self.log(
-                    "No data retrieved for component: {0}".format(component),
-                    "DEBUG"
-                )
-                continue
-
-            self.log(
-                "Details retrieved for {0}: {1}".format(component, component_data), "DEBUG"
-            )
-            processed_count += 1
-
-            if isinstance(component_data, list):
-                final_config_list.extend(component_data)
-                self.log(
-                    "Component '{0}' returned list with {1} item(s). Extended final "
-                    "configuration list. Total configurations: {2}".format(
-                        component, len(component_data), len(final_config_list)
-                    ),
-                    "DEBUG"
-                )
-            else:
-                final_config_list.append(component_data)
-                self.log(
-                    "Component '{0}' returned single dictionary. Appended to final "
-                    "configuration list. Total configurations: {1}".format(
-                        component, len(final_config_list)
-                    ),
-                    "DEBUG"
-                )
-
-        self.log(
-            "Component iteration completed. Processed {0}/{1} component(s), skipped "
-            "{2} component(s). Final configuration list contains {3} item(s) for YAML "
-            "generation.".format(
-                processed_count, len(components_list), skipped_count,
-                len(final_config_list)
-            ),
-            "INFO"
-        )
-        if not final_config_list:
-            self.log(
-                "No configurations retrieved after processing {0} component(s). "
-                "Processed: {1}, Skipped: {2}. All filters may have excluded available "
-                "credentials or no credentials exist in Catalyst Center for requested "
-                "components: {3}".format(
-                    len(components_list), processed_count, skipped_count, components_list
-                ),
-                "WARNING"
-            )
-            self.msg = {
-                "status": "ok",
-                "message": (
-                    "No configurations found for module '{0}'. Verify filters and component availability. "
-                    "Components attempted: {1}".format(self.module_name, components_list)
-                ),
-                "components_attempted": len(components_list),
-                "components_processed": processed_count,
-                "components_skipped": skipped_count
-            }
-            self.set_operation_result("ok", False, self.msg, "INFO")
-            return self
-
-        yaml_config_dict = {"config": final_config_list}
-        self.log(
-            "Final YAML configuration dictionary created successfully. Dictionary "
-            "structure: {0}. Proceeding with write_dict_to_yaml() operation.".format(
-                self.pprint(yaml_config_dict)
-            ),
-            "DEBUG"
-        )
-
-        self.log(
-            "Writing YAML configuration dictionary to file path: {0}. Using "
-            "OrderedDumper for consistent key ordering and formatting.".format(file_path),
-            "DEBUG"
-        )
-
-        if self.write_dict_to_yaml(yaml_config_dict, file_path, file_mode, dumper=OrderedDumper):
-            self.log(
-                "YAML file write operation succeeded. File created at: {0}. File "
-                "contains {1} configuration(s) with header comments and formatted "
-                "structure.".format(file_path, len(final_config_list)),
-                "INFO"
-            )
-            self.msg = {
-                "status": "success",
-                "message": "YAML configuration file generated successfully for module '{0}'".format(
-                    self.module_name
-                ),
-                "file_path": file_path,
-                "components_processed": processed_count,
-                "components_skipped": skipped_count,
-                "configurations_count": len(final_config_list)
-            }
-            self.set_operation_result("success", True, self.msg, "INFO")
-
-            self.log(
-                "YAML configuration generation completed. File: {0}, Components: {1}/{2}, Configs: {3}".format(
-                    file_path, processed_count, len(components_list), len(final_config_list)
-                ),
-                "INFO"
-            )
-        else:
-            self.msg = {
-                "YAML config generation Task failed for module '{0}'.".format(
-                    self.module_name
-                ): {"file_path": file_path}
-            }
-            self.set_operation_result("failed", True, self.msg, "ERROR")
-
-        return self
 
     def get_diff_gathered(self):
         """
