@@ -4191,8 +4191,8 @@ options:
             required: false
 
 requirements:
-  - dnacentersdk >= 2.10.3
-  - python >= 3.9
+  - dnacentersdk >= 2.11.2
+  - python >= 3.12
 notes:
   - SDK Methods used are - sites.Sites.get_site - site_design.SiteDesigns.get_sites
     - wirelesss.Wireless.create_ssid - wirelesss.Wireless.update_ssid
@@ -19576,11 +19576,11 @@ class WirelessDesign(DnacBase):
         Returns:
             list: A list of dictionaries containing the retrieved data based on the filtering parameters.
         """
-        def update_params(offset, limit, use_strings=False):
+        def update_params(offset, limit):
             """Update the params dictionary with pagination info."""
             params.update({
-                "offset": str(offset) if use_strings else offset,
-                "limit": str(limit) if use_strings else limit
+            "offset": offset,
+            "limit": limit
             })
 
         try:
@@ -19588,18 +19588,17 @@ class WirelessDesign(DnacBase):
             offset = 1
             limit = 500
             results = []
-            use_strings = api_function in {"get_ap_profiles", "get_anchor_groups"}
 
             # Start the loop for paginated API calls
             while True:
                 # Update parameters for pagination
-                update_params(offset, limit, use_strings)
+                update_params(offset, limit)
 
                 try:
                     # Execute the API call
                     self.log(
-                        "Attempting API call with {0} offset and limit for family '{1}', function '{2}': {3}".format(
-                            "string" if use_strings else "integer", api_family, api_function, params
+                        "Attempting API call with integer offset and limit for family '{0}', function '{1}': {2}".format(
+                            api_family, api_function, params
                         ),
                         "INFO"
                     )
@@ -19613,23 +19612,11 @@ class WirelessDesign(DnacBase):
                     )
 
                 except Exception as e:
-                    # Retry with integer offset/limit for specific cases
-                    if api_function == "get_ap_profiles" and use_strings:
-                        self.log(
-                            "API call failed with string offset and limit. Retrying with integer values. Error: {0}".format(
-                                str(e)
-                            ),
-                            "WARNING",
-                        )
-                        use_strings = False
-                        continue
-
-                    else:
-                        self.msg = (
-                            "An error occurred while retrieving data using family '{0}', function '{1}'. "
-                            "Details using API call. Error: {2}".format(api_family, api_function, str(e))
-                        )
-                        self.fail_and_exit(self.msg)
+                    self.msg = (
+                        "An error occurred while retrieving data using family '{0}', function '{1}'. "
+                        "Details using API call. Error: {2}".format(api_family, api_function, str(e))
+                    )
+                    self.fail_and_exit(self.msg)
 
                 self.log(
                     "Response received from API call for family '{0}', function '{1}': {2}".format(
