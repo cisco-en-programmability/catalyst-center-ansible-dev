@@ -380,6 +380,16 @@
             ]
         }
     ],
+    "playbook_config_interfaces_vlan_id_zero_no_change":[
+        {
+            "interfaces":[
+                {
+                    "interface_name":"management",
+                    "vlan_id":0
+                }
+            ]
+        }
+    ],
     "playbook_config_create_power_profiles":[
         {
             "power_profiles":[
@@ -31562,7 +31572,7 @@
             "called_station_id": "AP_ETHMAC_ONLY",
             "design_name": "sample_design",
             "unlocked_attributes": [
-              "calledStationId"
+              "called_station_id"
             ]
           }
         ]
@@ -31612,7 +31622,7 @@
             "called_station_id": "AP_MACADDRESS",
             "design_name": "sample_design",
             "unlocked_attributes": [
-              "calledStationId"
+              "called_station_id"
             ]
           }
         ]
@@ -32358,7 +32368,6 @@
               "bss_color",
               "target_waketime_broadcast",
               "non_srg_obss_pd_max_threshold",
-              "target_wake_up_time_11ax",
               "obss_pd"
             ]
           }
@@ -32511,23 +32520,7 @@
       {
         "dot11ax_configuration": [
           {
-            "design_name": "dot11ax_24ghz_design",
-            "feature_attributes": {
-              "bss_color": true,
-              "non_srg_obss_pd_max_threshold": -78,
-              "obss_pd": true,
-              "radio_band": "2_4GHZ",
-              "target_wake_up_time_11ax": true,
-              "target_waketime_broadcast": true
-            },
-            "unlocked_attributes": [
-              "radio_band",
-              "bss_color",
-              "target_waketime_broadcast",
-              "non_srg_obss_pd_max_threshold",
-              "target_wake_up_time_11ax",
-              "obss_pd"
-            ]
+            "design_name": "dot11ax_24ghz_design"
           }
         ]
       }
@@ -32733,14 +32726,7 @@
       {
         "dot11be_configuration": [
           {
-            "design_name": "dot11be_24ghz_design",
-            "feature_attributes": {
-              "dot11be_status": false,
-              "radio_band": "2_4GHZ"
-            },
-            "unlocked_attributes": [
-              "dot11be_status"
-            ]
+            "design_name": "dot11be_24ghz_design"
           }
         ]
       }
@@ -32923,13 +32909,7 @@
       {
         "flexconnect_configuration": [
           {
-            "design_name": "flexconnect_branch_office",
-            "feature_attributes": {
-              "overlap_ip_enable": false
-            },
-            "unlocked_attributes": [
-              "overlap_ip_enable"
-            ]
+            "design_name": "flexconnect_branch_office"
           }
         ]
       }
@@ -33354,20 +33334,7 @@
       {
         "rrm_general_configuration": [
           {
-            "design_name": "rrm_general_5ghz_default",
-            "feature_attributes": {
-              "coverage_hole_detection": false,
-              "monitoring_channels": "MONITORING_CHANNELS_DCA",
-              "neighbor_discover_type": "NEIGHBOR_DISCOVER_TYPE_TRANSPARENT",
-              "radio_band": "5GHZ",
-              "throughput_threshold": 500000
-            },
-            "unlocked_attributes": [
-              "monitoring_channels",
-              "neighbor_discover_type",
-              "throughput_threshold",
-              "coverage_hole_detection"
-            ]
+            "design_name": "rrm_general_5ghz_default"
           }
         ]
       }
@@ -33591,20 +33558,7 @@
       {
         "rrm_fra_configuration": [
           {
-            "design_name": "fra_design_1",
-            "feature_attributes": {
-              "fra_freeze": false,
-              "fra_interval": 12,
-              "fra_sensitivity": "HIGH",
-              "fra_status": false,
-              "radio_band": "2_4GHZ_5GHZ"
-            },
-            "unlocked_attributes": [
-              "fra_freeze",
-              "fra_status",
-              "fra_interval",
-              "fra_sensitivity"
-            ]
+            "design_name": "fra_design_1"
           }
         ]
       }
@@ -33804,17 +33758,7 @@
       {
         "event_driven_rrm_configuration": [
           {
-            "design_name": "edrrm_2_4ghz_design",
-            "feature_attributes": {
-              "event_driven_rrm_enable": true,
-              "event_driven_rrm_threshold_level": "LOW",
-              "radio_band": "2_4GHZ"
-            },
-            "unlocked_attributes": [
-              "event_driven_rrm_enable",
-              "event_driven_rrm_threshold_level",
-              "event_driven_rrm_custom_threshold_val"
-            ]
+            "design_name": "edrrm_2_4ghz_design"
           }
         ]
       }
@@ -33863,5 +33807,55 @@
     "id": "019a3888-0d37-7585-9b41-4af1a8797dec"
   },
   "version": "1.0"
-}
+},
+
+"playbook_80211be_add": [
+                {
+                    "802_11_be_profiles": [
+                        {
+                            "mu_mimo_down_link": false,
+                            "mu_mimo_up_link": false,
+                            "ofdma_down_link": true,
+                            "ofdma_multi_ru": false,
+                            "ofdma_up_link": true,
+                            "profile_name": "sample_design"
+                        }
+                    ]
+                }
+            ],
+"802_11_BE_PROFILES_get": {"response": [{"id": "34e7b147-5d32-33d3-a041-6cf61faaeca0", "profileName": "test_802.11be", "muMimoDownLink": true, "muMimoUpLink": true, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": true, "default": true}, {"id": "c69f975a-5a16-39c9-9b85-643ac0a06cdb", "profileName": "Ans NP WL BE 1", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": false, "default": true}], "version": "1.0"} 
+,"802_11_BE_PROFILES_create": {"response": {"taskId": "019b4543-bfb9-722b-a5a0-a10a5ab78f53", "url": "/api/v1/task/019b4543-bfb9-722b-a5a0-a10a5ab78f53"}, "version": "1.0"} 
+,"task_019b4543-bfb9-722b-a5a0-a10a5ab78f53": {"response": {"endTime": 1763035101234, "status": "SUCCESS", "startTime": 1763035101229, "resultLocation": "/dna/intent/api/v1/tasks/019b4543-bfb9-722b-a5a0-a10a5ab78f53/detail", "id": "019b4543-bfb9-722b-a5a0-a10a5ab78f53"}, "version": "1.0"}
+,
+"playbook_80211be_update": [
+                {
+                    "802_11_be_profiles": [
+                        {
+                            "mu_mimo_down_link": false,
+                            "mu_mimo_up_link": false,
+                            "ofdma_down_link": true,
+                            "ofdma_multi_ru": false,
+                            "ofdma_up_link": false,
+                            "profile_name": "sample_design"
+                        }
+                    ]
+                }
+            ],
+"802_11_BE_PROFILES_get_update": {"response": [{"id": "34e7b147-5d32-33d3-a041-6cf61faaeca0", "profileName": "test_802.11be", "muMimoDownLink": true, "muMimoUpLink": true, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": true, "default": true}, {"id": "c69f975a-5a16-39c9-9b85-643ac0a06cdb", "profileName": "Ans NP WL BE 1", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": false, "default": true}, {"id": "34f1d2e4-1c5e-3f4b-9f4e-2f45e8b6c123", "profileName": "sample_design", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": false, "default": false}], "version": "1.0"} 
+,"802_11_BE_PROFILES_update_get": {"response": {"id": "34f1d2e4-1c5e-3f4b-9f4e-2f45e8b6c123", "profileName": "sample_design", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": false, "default": false}, "version":  "1.0"},
+"802_11_BE_PROFILES_update": {"response": {"taskId": "019b46a2-3f4e-7c5d-8a1e-1234567890ab", "url": "/api/v1/task/019b46a2-3f4e-7c5d-8a1e-1234567890ab"}, "version": "1.0"} 
+,"task_019b46a2-3f4e-7c5d-8a1e-1234567890ab": {"response": {"endTime": 1763036123456, "status": "SUCCESS", "startTime": 1763036123450, "resultLocation": "/dna/intent/api/v1/tasks/019b46a2-3f4e-7c5d-8a1e-1234567890ab/detail", "id": "019b46a2-3f4e-7c5d-8a1e-1234567890ab"}, "version": "1.0"},
+
+"playbook_80211be_delete": [
+                {
+                    "802_11_be_profiles": [
+                        {
+                            "profile_name": "sample_design"
+                        }
+                    ]
+                }
+            ]
+,"802_11_BE_PROFILES_get_delete": {"response": [{"id": "5ba7d872-6a79-329e-839e-cb253dc70b60", "profileName": "sample_design", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": false, "ofdmaMultiRu": false, "default": true}, {"id": "34e7b147-5d32-33d3-a041-6cf61faaeca0", "profileName": "test_802.11be", "muMimoDownLink": true, "muMimoUpLink": true, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": true, "default": true}, {"id": "c69f975a-5a16-39c9-9b85-643ac0a06cdb", "profileName": "Ans NP WL BE 1", "muMimoDownLink": false, "muMimoUpLink": false, "ofdmaDownLink": true, "ofdmaUpLink": true, "ofdmaMultiRu": false, "default": true}], "version": "1.0"},
+"802_11_BE_PROFILES_delete": {"response": {"taskId": "019b454e-aae5-7d65-9316-ac49ff056b3f", "url": "/api/v1/task/019b454e-aae5-7d65-9316-ac49ff056b3f"}, "version": "1.0"},
+"task_019b454e-aae5-7d65-9316-ac49ff056b3f": {"response": {"endTime": 1763037123456, "status": "SUCCESS", "startTime": 1763037123452, "resultLocation": "/dna/intent/api/v1/tasks/019b454e-aae5-7d65-9316-ac49ff056b3f/detail", "id": "019b454e-aae5-7d65-9316-ac49ff056b3f"}, "version": "1.0"}
         }

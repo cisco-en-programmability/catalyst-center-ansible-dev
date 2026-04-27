@@ -72,10 +72,12 @@ options:
         type: dict
         suboptions:
           discovered_device_site_name_hierarchy:
-            description: Site hierarchy where the discovered
-              devices will be placed.
+            description: |
+              - Site hierarchy where the discovered
+                devices will be placed.
+              - Required only in merged state.
             type: str
-            required: true
+            required: false
           primary_device_management_ip_address:
             description: Management IP address of the
               primary or seed device in the LAN Automation
@@ -88,18 +90,22 @@ options:
             type: str
             required: false
           primary_device_interface_names:
-            description: A list of interface names on
-              the primary device to be used for LAN
-              automation.
+            description: |
+              - A list of interface names on
+                the primary device to be used for LAN
+                automation.
+              - Required only in merged state.
             type: list
             elements: str
-            required: true
+            required: false
           ip_pools:
-            description: A list of IP pools used during
-              the LAN Automation session.
+            description: |
+              - A list of IP pools used during
+                the LAN Automation session.
+              - Required only in merged state.
             type: list
             elements: dict
-            required: true
+            required: false
             suboptions:
               ip_pool_name:
                 description: Name of the IP pool.
@@ -477,7 +483,14 @@ notes:
   - Links from different Port Channels cannot be mixed during update
     operations. Each physical link can belong to only one Port Channel
     at any given time.
-
+  - To run multiple LAN Automation sessions in parallel, use Ansible asynchronous
+    tasks within a single playbook. This allows multiple LAN session start tasks
+    to execute concurrently. Cisco Catalyst Center supports up to 5 concurrent
+    LAN Automation sessions.
+  - For parallel execution, add async, poll, and register on each LAN
+    Automation task, then add a final async_status task that loops over the
+    registered jobs and waits for completion. Check the examples section for a
+    complete parallel execution playbook.
   - SDK Method used are
     lan_automation.LanAutomation.lan_automation_start_v2
     lan_automation.LanAutomation.lan_automation_stop
@@ -594,6 +607,70 @@ EXAMPLES = r"""
           device_serial_number_authorization:
             - "FJC27172JDW"
             - "FJC2721261A"
+
+- name: Start multiple LAN Automation sessions in parallel
+  hosts: dnac_servers
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Start LAN Automation session 1 asynchronously
+      cisco.dnac.lan_automation_workflow_manager:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        state: merged
+        config:
+          - lan_automation:
+              primary_device_management_ip_address: "204.1.1.1"
+              discovered_device_site_name_hierarchy: "Global/USA/SAN JOSE"
+              primary_device_interface_names:
+                - "HundredGigE1/0/2"
+              ip_pools:
+                - ip_pool_name: "underlay_sub_sj"
+                  ip_pool_role: "MAIN_POOL"
+              launch_and_wait: false
+        async: 3600
+        poll: 0
+        register: lan_job_1
+
+    - name: Start LAN Automation session 2 asynchronously
+      cisco.dnac.lan_automation_workflow_manager:
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_version: "{{dnac_version}}"
+        dnac_debug: "{{dnac_debug}}"
+        state: merged
+        config:
+          - lan_automation:
+              primary_device_management_ip_address: "204.1.1.2"
+              discovered_device_site_name_hierarchy: "Global/USA/SAN FRANCISCO"
+              primary_device_interface_names:
+                - "HundredGigE1/0/29"
+              ip_pools:
+                - ip_pool_name: "underlay_sub_sf"
+                  ip_pool_role: "MAIN_POOL"
+              launch_and_wait: false
+      async: 3600
+      poll: 0
+      register: lan_job_2
+
+    - name: Wait for all asynchronous LAN Automation jobs
+      ansible.builtin.async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: lan_job_status
+      until: lan_job_status.finished
+      retries: 300
+      delay: 10
+      loop:
+        - "{{ lan_job_1 }}"
+        - "{{ lan_job_2 }}"
 
 - name: Stop a LAN Automation session
   cisco.dnac.lan_automation_workflow_manager:
@@ -1041,7 +1118,7 @@ class LanAutomation(DnacBase):
                 "elements": "dict",
                 "discovered_device_site_name_hierarchy": {
                     "type": "str",
-                    "required": True,
+                    "required": False,
                 },
                 "primary_device_management_ip_address": {
                     "type": "str",
@@ -1049,7 +1126,7 @@ class LanAutomation(DnacBase):
                 },
                 "primary_device_interface_names": {
                     "type": "list",
-                    "required": True,
+                    "required": False,
                     "elements": "str",
                 },
                 "peer_device_management_ip_address": {
@@ -1058,7 +1135,7 @@ class LanAutomation(DnacBase):
                 },
                 "ip_pools": {
                     "type": "list",
-                    "required": True,
+                    "required": False,
                     "elements": "dict",
                     "ip_pool_name": {"type": "str", "required": True},
                     "ip_pool_role": {
@@ -4525,7 +4602,7 @@ class LanAutomation(DnacBase):
         else:
             self.msg = f"Invalid state '{state}' provided. Supported states are 'merged' and 'deleted'."
             self.fail_and_exit(self.msg)
-        #  The update API is not available, instead 2 seperate APIs for Add and delete are available, so only storing the new links to be added/removed.
+        #  The update API is not available, instead 2 separate APIs for Add and delete are available, so only storing the new links to be added/removed.
 
         if not updated_required_links:
             self.log(
@@ -5115,10 +5192,10 @@ class LanAutomation(DnacBase):
         pnp_authorization = lan_automation.get("pnpAuthorization", False)
         device_serials = [
             serial.upper()
-            for serial in lan_automation.get("deviceSerialNumberAuthorization", [])
+            for serial in (lan_automation.get("deviceSerialNumberAuthorization") or [])
         ] or [
             device.get("deviceSerialNumber", "").upper()
-            for device in lan_automation.get("discoveryDevices", [])
+            for device in (lan_automation.get("discoveryDevices") or [])
         ]
 
         self.log("LAN Automation Config: {}".format(lan_automation), "DEBUG")
@@ -5780,7 +5857,7 @@ class LanAutomation(DnacBase):
         lan_auto_params = {
             key: lan_automation_params[key]
             for key in included_keys
-            if key in lan_automation_params
+            if key in lan_automation_params and lan_automation_params[key] is not None
         }
 
         if lan_auto_params:

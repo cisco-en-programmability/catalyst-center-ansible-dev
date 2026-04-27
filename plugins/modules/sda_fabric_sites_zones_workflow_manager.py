@@ -59,15 +59,16 @@ options:
     required: true
     suboptions:
       fabric_sites:
-        description: A dictionary containing detailed
+        description: A list containing detailed
           configurations for managing REST Endpoints
           that will receive Audit log and Events from
-          the Cisco Catalyst Center Platform. This dictionary
+          the Cisco Catalyst Center Platform. This list
           is essential for specifying attributes and
           parameters required for the lifecycle management
           of fabric sites, zones, and associated authentication
           profiles.
-        type: dict
+        type: list
+        elements: dict
         suboptions:
           site_name_hierarchy:
             description: This name uniquely identifies
@@ -174,7 +175,7 @@ options:
                   the network access and maintaining
                   security.
                 type: str
-              enable_bpu_guard:
+              enable_bpdu_guard:
                 description: A boolean setting that
                   enables or disables BPDU Guard. BPDU
                   Guard provides a security mechanism
@@ -275,7 +276,7 @@ notes:
   - To ensure the module operates correctly for scaled
     sets,
     which involve creating or updating fabric
-    sites/zones and handling the updation of authentication
+    sites/zones and handling the update of authentication
     profile template,
     please provide valid input in
     the playbook. If any failure is encountered,
@@ -460,6 +461,32 @@ EXAMPLES = r"""
               dot1x_fallback_timeout: 28
               wake_on_lan: false
               number_of_hosts: "Single"
+
+- name: Update BPDU Guard in the Closed Authentication
+    profile template for a fabric zone.
+  cisco.dnac.sda_fabric_sites_zones_workflow_manager:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log_level: "{{dnac_log_level}}"
+    dnac_log: false
+    state: merged
+    config:
+      - fabric_sites:
+          - site_name_hierarchy: "Global/Test_SDA/Bld1/Floor1"
+            fabric_type: "fabric_zone"
+            authentication_profile: "Closed Authentication"
+            update_authentication_profile:
+              authentication_order: "dot1x"
+              dot1x_fallback_timeout: 28
+              wake_on_lan: false
+              number_of_hosts: "Single"
+              enable_bpdu_guard: false
+
 - name: Deleting/removing fabric site from sda from
     Cisco Catalyst Center
   cisco.dnac.sda_fabric_sites_zones_workflow_manager:
@@ -572,7 +599,7 @@ class FabricSitesZones(DnacBase):
                     "dot1x_fallback_timeout": {"type": "int"},
                     "wake_on_lan": {"type": "bool"},
                     "number_of_hosts": {"type": "str"},
-                    "enable_bpu_guard": {"type": "bool"},
+                    "enable_bpdu_guard": {"type": "bool"},
                     "pre_auth_acl": {
                         "type": "dict",
                         "enabled": {"type": "bool"},
@@ -922,7 +949,7 @@ class FabricSitesZones(DnacBase):
             self.create_site.append(site_name)
 
         except Exception as e:
-            self.msg = "An exception occured while creating the fabric site '{0}' in Cisco Catalyst Center: {1}".format(
+            self.msg = "An exception occurred while creating the fabric site '{0}' in Cisco Catalyst Center: {1}".format(
                 site_name, str(e)
             )
             self.set_operation_result("failed", False, self.msg, "ERROR")
@@ -1019,7 +1046,7 @@ class FabricSitesZones(DnacBase):
             self.update_site.append(site_name)
 
         except Exception as e:
-            self.msg = "An exception occured while updating the fabric site '{0}' in Cisco Catalyst Center: {1}".format(
+            self.msg = "An exception occurred while updating the fabric site '{0}' in Cisco Catalyst Center: {1}".format(
                 site_name, str(e)
             )
             self.log(self.msg, "ERROR")
@@ -1088,7 +1115,7 @@ class FabricSitesZones(DnacBase):
             self.create_zone.append(site_name)
 
         except Exception as e:
-            self.msg = "An exception occured while creating the fabric zone '{0}' in Cisco Catalyst Center: {1}".format(
+            self.msg = "An exception occurred while creating the fabric zone '{0}' in Cisco Catalyst Center: {1}".format(
                 site_name, str(e)
             )
             self.set_operation_result("failed", False, self.msg, "ERROR")
@@ -1152,7 +1179,7 @@ class FabricSitesZones(DnacBase):
             self.update_zone.append(site_name)
 
         except Exception as e:
-            self.msg = "An exception occured while updating the fabric zone '{0}' in Cisco Catalyst Center: {1}".format(
+            self.msg = "An exception occurred while updating the fabric zone '{0}' in Cisco Catalyst Center: {1}".format(
                 site_name, str(e)
             )
             self.log(self.msg, "ERROR")
@@ -1387,7 +1414,7 @@ class FabricSitesZones(DnacBase):
                 is needed. Returns `False` if the settings match and no update is required.
         Description:
             This method compares the provided authentication profile settings (`auth_profile_dict`) with the current settings retrieved from
-            the Cisco Catalyst Center (`auth_profile_in_ccc`). It considers the possibility of an additional setting "enable_bpu_guard" if
+            the Cisco Catalyst Center (`auth_profile_in_ccc`). It considers the possibility of an additional setting "enable_bpdu_guard" if
             the current profile is "Closed Authentication".
             It iterates through a mapping of profile settings and checks if any of the settings require an update. If any discrepancies are
             found, the method returns `True`. If all settings match, it returns `False`.
@@ -1401,7 +1428,7 @@ class FabricSitesZones(DnacBase):
         }
         profile_name = auth_profile_in_ccc.get("authenticationProfileName")
         if profile_name == "Closed Authentication":
-            profile_key_mapping["enable_bpu_guard"] = "isBpduGuardEnabled"
+            profile_key_mapping["enable_bpdu_guard"] = "isBpduGuardEnabled"
 
         for key, ccc_key in profile_key_mapping.items():
             desired_value = auth_profile_dict.get(key)
@@ -1522,13 +1549,13 @@ class FabricSitesZones(DnacBase):
             )
 
         if profile_name == "Closed Authentication":
-            if auth_profile_dict.get("enable_bpu_guard") is None:
+            if auth_profile_dict.get("enable_bpdu_guard") is None:
                 authentications_params_dict["isBpduGuardEnabled"] = (
                     auth_profile_in_ccc.get("isBpduGuardEnabled", True)
                 )
             else:
                 authentications_params_dict["isBpduGuardEnabled"] = (
-                    auth_profile_dict.get("enable_bpu_guard")
+                    auth_profile_dict.get("enable_bpdu_guard")
                 )
 
         if (
@@ -1655,7 +1682,7 @@ class FabricSitesZones(DnacBase):
             )
             if auth_profile_name == "Low Impact":
                 self.log(
-                    "Site '{0}' uses 'Low Impact' authentication profile (with with pre-authentication access control list configuration).".format(
+                    "Site '{0}' uses 'Low Impact' authentication profile (with pre-authentication access control list configuration).".format(
                         site_name
                     ),
                     "DEBUG",
@@ -1672,7 +1699,7 @@ class FabricSitesZones(DnacBase):
                 "DEBUG",
             )
         except Exception as e:
-            self.msg = "An exception occured while updating the authentication profile for site '{0}' in Cisco Catalyst Center: {1}".format(
+            self.msg = "An exception occurred while updating the authentication profile for site '{0}' in Cisco Catalyst Center: {1}".format(
                 site_name, str(e)
             )
             self.set_operation_result("failed", False, self.msg, "ERROR")
@@ -2062,7 +2089,7 @@ class FabricSitesZones(DnacBase):
             self.get_task_status_from_tasks_by_id(task_id, task_name, success_msg)
         except Exception as e:
             self.msg = (
-                "An exception occured while enabling the Wired Data Collection for the site '{0}' "
+                "An exception occurred while enabling the Wired Data Collection for the site '{0}' "
                 "in Cisco Catalyst Center: {1}"
             ).format(site_name, str(e))
             self.set_operation_result("failed", False, self.msg, "ERROR")
@@ -2188,7 +2215,7 @@ class FabricSitesZones(DnacBase):
             self.get_task_status_from_tasks_by_id(task_id, task_name, success_msg)
 
         except Exception as e:
-            self.msg = "An exception occured while applying the pending fabric event '{0}' for site {1}: {2}".format(
+            self.msg = "An exception occurred while applying the pending fabric event '{0}' for site {1}: {2}".format(
                 event_name, site_name, str(e)
             )
             self.set_operation_result("failed", False, self.msg, "ERROR")
