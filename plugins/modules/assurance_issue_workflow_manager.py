@@ -502,8 +502,8 @@ requirements:
   - python >= 3.9
 notes:
   - The maximum number of user-defined (custom) issue definitions
-  supported by Cisco Catalyst Center is 50. Attempting to create
-  more will result in an error.
+    supported by Cisco Catalyst Center is 50. Attempting to create
+    more will result in an error.
   - SDK Methods used are issues.AssuranceSettings.get_all_the_custom_issue_definitions_based_on_the_given_filters
     issues.AssuranceSettings.creates_a_new_user_defined_issue_definitions
     issues.AssuranceSettings.deletes_an_existing_custom_issue_definition
