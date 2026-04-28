@@ -38,6 +38,8 @@ class TestDnacAssuranceSettings(TestDnacModule):
     playbook_config_invalid_priority = test_data.get("playbook_config_invalid_priority")
     playbook_config_invalid_time_format = test_data.get("playbook_config_invalid_time_format")
     playbook_config_idempotency = test_data.get("playbook_config_idempotency")
+    playbook_config_udi_limit_error = test_data.get("playbook_config_udi_limit_error")
+    playbook_config_generic_error = test_data.get("playbook_config_generic_error")
 
     def setUp(self):
         super(TestDnacAssuranceSettings, self).setUp()
@@ -137,6 +139,24 @@ class TestDnacAssuranceSettings(TestDnacModule):
         if "invalid_time_format" in self._testMethodName:
             self.run_dnac_exec.side_effect = [
                 self.test_data.get("get_issue_ids_resolution"),
+            ]
+
+        if "udi_limit_error" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("Testing_creation_exit"),
+                Exception(
+                    "An error occurred when executing operation for the family 'issues' having "
+                    "the function 'creates_a_new_user_defined_issue_definitions'. "
+                    "The error was: status_code: 400,  "
+                    '[{\"errorCode\":9003,\"message\":\"Failed to create the custom issue definition \",'
+                    '\"detail\":\"UDIs have hit max supported number of: 50 \"}]'
+                ),
+            ]
+
+        if "generic_error" in self._testMethodName:
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("Testing_creation_exit"),
+                Exception("Connection timeout while calling the API"),
             ]
 
         if "update_idempotency" in self._testMethodName:
@@ -506,3 +526,50 @@ class TestDnacAssuranceSettings(TestDnacModule):
                 }
             }
         )
+
+    def test_assurance_issue_workflow_manager_udi_limit_error(self):
+        """
+        Test case to verify user-friendly error message when the UDI limit (errorCode 9003)
+        is reached while creating a user-defined issue in Cisco Catalyst Center.
+        Ensures the module fails with a message referencing the maximum limit of custom issues.
+        """
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="merged",
+                config=self.playbook_config_udi_limit_error
+            )
+        )
+        result = self.execute_module(changed=False, failed=True)
+        self.assertIn(
+            "maximum limit of {0}".format(
+                assurance_issue_workflow_manager.AssuranceSettings.MAX_CUSTOM_ISSUES
+            ),
+            result['msg']
+        )
+        self.assertIn("UDI_limit_test_issue", result['msg'])
+
+    def test_assurance_issue_workflow_manager_generic_error(self):
+        """
+        Test case to verify that generic SDK errors during user-defined issue creation
+        are reported with the original exception message, and are not mistakenly
+        matched by the UDI limit handler in Cisco Catalyst Center.
+        """
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="merged",
+                config=self.playbook_config_generic_error
+            )
+        )
+        result = self.execute_module(changed=False, failed=True)
+        self.assertIn("Connection timeout while calling the API", result['msg'])
+        self.assertNotIn("maximum limit", result['msg'])
