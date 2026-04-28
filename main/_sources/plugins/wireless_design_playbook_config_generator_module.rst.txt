@@ -83,8 +83,8 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- dnacentersdk \>= 2.3.7.9
-- python \>= 3.9
+- dnacentersdk \>= 2.11.2
+- python \>= 3.12
 
 
 
