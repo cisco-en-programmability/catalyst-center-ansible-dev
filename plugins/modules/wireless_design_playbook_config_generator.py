@@ -200,8 +200,8 @@ options:
                 type: str
 
 requirements:
-- dnacentersdk >= 2.3.7.9
-- python >= 3.9
+- dnacentersdk >= 2.11.2
+- python >= 3.12
 notes:
 - Cisco Catalyst Center >= 2.3.7.9
 - |-
@@ -3395,7 +3395,7 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "DEBUG"
                 )
                 wireless_access_point_profile_details = self.execute_get_with_pagination(
-                    api_family, api_function, params, use_strings=True
+                    api_family, api_function, params
                 )
 
                 if wireless_access_point_profile_details:
@@ -3423,7 +3423,7 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             self.log("Fetching all wireless access point profiles from Catalyst Center", "DEBUG")
 
             wireless_access_point_profile_details = self.execute_get_with_pagination(
-                api_family, api_function, params, use_strings=True
+                api_family, api_function, params
             )
 
             if wireless_access_point_profile_details:
@@ -3656,7 +3656,7 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "DEBUG"
                 )
                 wireless_anchor_group_details = self.execute_get_with_pagination(
-                    api_family, api_function, params, use_strings=True
+                    api_family, api_function, params
                 )
 
                 if "anchor_group_name" in filter_param:
@@ -3685,7 +3685,7 @@ class WirelessDesignPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             self.log("Fetching all wireless anchor groups from Catalyst Center", "DEBUG")
 
             wireless_anchor_group_details = self.execute_get_with_pagination(
-                api_family, api_function, params, use_strings=True
+                api_family, api_function, params
             )
 
             if wireless_anchor_group_details:
