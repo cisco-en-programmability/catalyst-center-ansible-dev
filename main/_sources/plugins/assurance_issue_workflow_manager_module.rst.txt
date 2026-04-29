@@ -2268,6 +2268,7 @@ Notes
 -----
 
 .. note::
+   - The maximum number of user-defined (custom) issue definitions supported by Cisco Catalyst Center is 50. Attempting to create more will result in an error.
    - SDK Methods used are issues.AssuranceSettings.get\_all\_the\_custom\_issue\_definitions\_based\_on\_the\_given\_filters issues.AssuranceSettings.creates\_a\_new\_user\_defined\_issue\_definitions issues.AssuranceSettings.deletes\_an\_existing\_custom\_issue\_definition issues.AssuranceSettings.resolve\_the\_given\_lists\_of\_issues issues.AssuranceSettings.ignore\_the\_given\_list\_of\_issues issues.AssuranceSettings.execute\_suggested\_action\_commands
    - Paths used are POST /dna/intent/api/api/v1/customIssueDefinitions POST /dna/intent/api/v1/assuranceIssues/resolve POST /dna/intent/api/v1/execute-suggested-actions-commands POST /dna/intent/api/v1/assuranceIssues/ignore POST /dna/intent/api/v1/flow-analysis/${flowAnalysisId} POST /dna/intent/api/v1/flow-analysis PUT /dna/intent/api/v1/systemIssueDefinitions/${id} DELETE /dna/intent/api/v1/flow-analysis/{flowAnalysisId} DELETE /dna/intent/api/v1/customIssueDefinitions/{id}
    - Does not support \ :literal:`check\_mode`\ 
