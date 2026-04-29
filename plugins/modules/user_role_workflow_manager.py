@@ -9,8 +9,8 @@ __author__ = "Ajith Andrew J, Syed khadeer Ahmed, Rangaprabhu Deenadayalu, Madha
 DOCUMENTATION = r"""
 ---
 module: user_role_workflow_manager
-short_description: Resource module for managing users
-  and roles in Cisco Catalyst Center.
+short_description: Resource module for managing users,
+  roles, and access groups in Cisco Catalyst Center.
 description:
   - Manages operations to create, update, and delete
     users and roles in Cisco Catalyst Center.
@@ -692,6 +692,7 @@ notes:
     - put /dna/system/api/v1/accessGroups/{id}
     - delete /dna/system/api/v1/accessGroups/{id}
 """
+
 EXAMPLES = r"""
 ---
 - name: Create a user
@@ -1016,6 +1017,7 @@ EXAMPLES = r"""
       access_group_details:
         - name: "Test_access_group"
 """
+
 RETURN = r"""
 # Case 1: Successful creation of user
 response_1:
@@ -1029,6 +1031,7 @@ response_1:
             "userId": "string"
         }
     }
+
 # Case 2: Successful update of user
 response_2:
   description: A dictionary with details of the API execution from Cisco Catalyst Center.
@@ -1040,6 +1043,7 @@ response_2:
             "message": "string"
         }
     }
+
 # Case 3: Successful deletion of user
 response_3:
   description: A dictionary with details of the API execution from Cisco Catalyst Center.
@@ -1051,6 +1055,7 @@ response_3:
             "message": "string"
         }
     }
+
 # Case 4: User exists and no action needed (for update)
 response_4:
   description: A dictionary with existing user details indicating no update needed.
@@ -1071,6 +1076,7 @@ response_4:
         },
         "msg": "User already exists and no update needed."
     }
+
 # Case 5: Error during user operation (create/update/delete)
 response_5:
   description: A dictionary with details of the API execution and error information.
@@ -1082,6 +1088,7 @@ response_5:
             "msg": "Error during creating, updating or deleting the user."
         }
     }
+
 # Case 6: User not found (during delete operation)
 response_6:
   description: A dictionary indicating user not found during delete operation.
@@ -1093,6 +1100,7 @@ response_6:
             "msg": "User not found."
         }
     }
+
 # Case 7: Successful creation of role
 response_7:
   description: A dictionary with details of the API execution from Cisco Catalyst Center.
@@ -1105,6 +1113,7 @@ response_7:
             "message": "string"
         }
     }
+
 # Case 8: Successful update of role
 response_8:
   description: A dictionary with details of the API execution from Cisco Catalyst Center.
@@ -1117,6 +1126,7 @@ response_8:
             "message": "string"
         }
     }
+
 # Case 9: Successful deletion of role
 response_9:
   description: A dictionary with details of the API execution from Cisco Catalyst Center.
@@ -1128,6 +1138,7 @@ response_9:
             "message": "string"
         }
     }
+
 # Case 10: Error during role operation (create/update/delete)
 response_10:
   description: A dictionary with details of the API execution and error information.
@@ -1139,6 +1150,7 @@ response_10:
             "msg": "Error during creating, updating or deleting the role."
         }
     }
+
 # Case 11: Role not found (during delete operation)
 response_11:
   description: A dictionary indicating role not found during delete operation.
@@ -1149,6 +1161,26 @@ response_11:
         "response": {
             "msg": "Role not found."
         }
+    }
+
+# Case 12: Successful creation of access group
+response_12:
+  description: A message confirming access group creation.
+  returned: always
+  type: dict
+  sample:
+    {
+        "response": "Access group(s) 'Test_access_group' created successfully in Cisco Catalyst Center."
+    }
+
+# Case 13: Access group already exists, no update needed
+response_13:
+  description: A message indicating the access group needs no update.
+  returned: always
+  type: dict
+  sample:
+    {
+        "response": "Access group(s) 'Test_access_group' need no update in Cisco Catalyst Center."
     }
 """
 
@@ -1353,7 +1385,6 @@ class UserandRole(DnacBase):
         ):
             access_group_details = {
                 "name": {"required": False, "type": "str"},
-                "new_name": {"required": False, "type": "str"},
                 "description": {"required": False, "type": "str"},
                 "site_hierarchy": {"required": False, "type": "str"},
                 "role_name": {"required": False, "type": "str"},
@@ -4862,7 +4893,7 @@ class UserandRole(DnacBase):
                 return self
 
             self.log(
-                "xAccess group "
+                "Access group "
                 "'{0}' still exists in Catalyst "
                 "Center - deletion verification "
                 "failed.".format(ag_name),
@@ -5011,10 +5042,9 @@ class UserandRole(DnacBase):
 
         if self.no_deleted_access_group:
             no_delete_ag_msg = (
-                "The specified access group '{0}' does not "
-                "exist or has already been deleted in Cisco Catalyst Center. Please "
-                "provide a valid 'name' for access group "
-                "deletion.".format(
+                "Access group(s) '{0}' is already absent in "
+                "Cisco Catalyst Center. Nothing to "
+                "delete.".format(
                     "', '".join(
                         self.no_deleted_access_group
                     )
@@ -5277,8 +5307,12 @@ class UserandRole(DnacBase):
                 "Error calling get_roles API: {0}".format(str(e)),
                 "ERROR",
             )
+            self.msg = (
+                "An error occurred while retrieving roles "
+                "from Cisco Catalyst Center: {0}".format(str(e))
+            )
             self.set_operation_result("failed", False, self.msg, "ERROR")
-            return self
+            return None
 
         raw = response.get("response", response)
         if isinstance(raw, dict):
@@ -5454,18 +5488,6 @@ class UserandRole(DnacBase):
                     "only letters, numbers, periods, "
                     "underscores, hyphens, or "
                     "spaces.".format(name)
-                )
-
-        new_name = ag_config.get("new_name")
-        if new_name:
-            name_regex = re.compile(r"^[a-zA-Z0-9._\- ]{3,25}$")
-            if not name_regex.match(new_name):
-                error_messages.append(
-                    "new_name: Access group name '{0}' must "
-                    "be 3 to 25 characters long and contain "
-                    "only letters, numbers, periods, "
-                    "underscores, hyphens, or "
-                    "spaces.".format(new_name)
                 )
 
         if is_create:
