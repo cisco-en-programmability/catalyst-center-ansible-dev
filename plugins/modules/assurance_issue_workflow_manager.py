@@ -501,6 +501,9 @@ requirements:
   - dnacentersdk >= 2.8.6
   - python >= 3.9
 notes:
+  - The maximum number of user-defined (custom) issue definitions
+    supported by Cisco Catalyst Center is 50. Attempting to create
+    more will result in an error.
   - SDK Methods used are issues.AssuranceSettings.get_all_the_custom_issue_definitions_based_on_the_given_filters
     issues.AssuranceSettings.creates_a_new_user_defined_issue_definitions
     issues.AssuranceSettings.deletes_an_existing_custom_issue_definition
@@ -1006,6 +1009,9 @@ from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
 
 class AssuranceSettings(DnacBase):
     """Class containing member attributes for Assurance setting workflow manager module"""
+
+    MAX_CUSTOM_ISSUES = 50
+    UDI_LIMIT_ERROR_PATTERNS = ("9003", "max supported number", "UDIs have hit max")
 
     def __init__(self, module):
         super().__init__(module)
@@ -2984,10 +2990,20 @@ class AssuranceSettings(DnacBase):
                     params=user_issue_params,
                 )
             except Exception as msg:
-                self.msg = "Exception occurred while creating the user defined issue: {msg}".format(
-                    msg=msg
-                )
-                self.log(str(msg), "ERROR")
+                error_str = str(msg)
+                if any(pattern in error_str for pattern in self.UDI_LIMIT_ERROR_PATTERNS):
+                    self.msg = (
+                        "Failed to create the user-defined issue '{name}' in Cisco Catalyst Center. "
+                        "The system has reached the maximum limit of {limit} custom issues. "
+                        "Please delete one or more existing issues before creating new ones."
+                    ).format(name=issue.get("name"), limit=self.MAX_CUSTOM_ISSUES)
+                    self.log(self.msg, "WARNING")
+                else:
+                    self.msg = (
+                        "Exception occurred while creating the user-defined issue "
+                        "in Cisco Catalyst Center: {msg}"
+                    ).format(msg=msg)
+                self.log(error_str, "ERROR")
                 self.set_operation_result(
                     "failed", False, self.msg, "ERROR"
                 ).check_return_status()
