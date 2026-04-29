@@ -184,24 +184,24 @@ options:
                     C(ip_address_list) matching runs after
                     server-type pruning, so only IPs from
                     the retained server types are evaluated.
-                    - If omitted, all server types are included
+                  - If omitted, all server types are included
                     in the output (backward-compatible).
                   - "Example: C([dns_server, ntp_server])
                     returns only DNS and NTP settings."
-                    type: list
-                    elements: str
-                    required: false
-                    choices:
-                      - dhcp_server
-                      - dns_server
-                      - ntp_server
-                      - network_aaa
-                      - client_and_endpoint_aaa
-                      - netflow_collector
-                      - snmp_server
-                      - syslog_server
-                      - timezone
-                      - message_of_the_day
+                type: list
+                elements: str
+                required: false
+                choices:
+                  - dhcp_server
+                  - dns_server
+                  - ntp_server
+                  - network_aaa
+                  - client_and_endpoint_aaa
+                  - netflow_collector
+                  - snmp_server
+                  - syslog_server
+                  - timezone
+                  - message_of_the_day
               ip_address_list:
                 description:
                 - List of server IP addresses to filter sites by.
