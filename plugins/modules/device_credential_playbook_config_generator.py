@@ -76,39 +76,65 @@ options:
     required: false
   config:
     description:
-    - A dictionary of filters for generating YAML playbook compatible with the `device_credential_workflow_manager`
-      module.
-    - Filters specify which components to include in the YAML configuration file.
-    - If "components_list" is specified, only those components are included, regardless of the filters.
-    - If config is not provided or is empty, all configurations for all global_credential_details and
-      assign_credentials_to_site will be generated.
-    - This is useful for complete brownfield infrastructure discovery and documentation.
+    - Top-level configuration block that controls the
+      scope and filtering of the generated YAML playbook
+      for the C(device_credential_workflow_manager) module.
+    - Contains C(component_specific_filters) to select
+      which credential components (global credentials,
+      site assignments) and which individual credentials
+      are included in the output.
+    - If C(config) is not provided or is empty, all global
+      credentials and all site credential assignments are
+      extracted (auto-discovery mode).
+    - This is useful for complete brownfield infrastructure
+      discovery and documentation.
     type: dict
     required: false
     suboptions:
       component_specific_filters:
         description:
-        - Filters to specify which components to include in the YAML configuration
-          file.
-        - If "components_list" is specified, only those components are included,
-          regardless of other filters.
-        - If filters for specific components (e.g., global_credential_details or assign_credentials_to_site) are provided
-          without explicitly including them in components_list, those components will be
-          automatically added to components_list.
-        - At least one of components_list or component filters must be provided.
+        - Container for all component-level and credential-level
+          filters that control what is included in the generated
+          YAML playbook.
+        - Holds C(components_list) to select which top-level
+          components to extract, and optional per-component
+          filters (C(global_credential_details),
+          C(assign_credentials_to_site)) for fine-grained
+          credential or site selection.
+        - If C(components_list) is specified, only the listed
+          components are included regardless of other filters.
+        - If per-component filters are provided without
+          explicitly including them in C(components_list),
+          those components are automatically added to
+          C(components_list).
+        - At least one of C(components_list) or per-component
+          filters must be provided.
         type: dict
         suboptions:
           components_list:
             description:
-            - List of credential components to include in YAML configuration.
-            - Valid values are 'global_credential_details' for global credentials
-              and 'assign_credentials_to_site' for site-specific assignments.
-            - If specified, only the listed components will be included in the generated YAML file.
-            - If not specified but component filters (global_credential_details or assign_credentials_to_site)
-              are provided, those components are automatically added to this list.
-            - If neither components_list nor any component filters are provided, an error will be raised.
+            - Selector that determines which top-level
+              credential components are extracted from
+              Catalyst Center and written to the YAML
+              playbook.
+            - Valid values are C(global_credential_details)
+              for global credentials and
+              C(assign_credentials_to_site) for site-specific
+              credential assignments.
+            - If specified, only the listed components are
+              included in the generated YAML file.
+            - If not specified but per-component filters
+              (C(global_credential_details) or
+              C(assign_credentials_to_site)) are provided,
+              those components are automatically added to
+              this list.
+            - If neither C(components_list) nor any
+              per-component filters are provided, an error
+              is raised.
             type: list
-            choices: ["global_credential_details", "assign_credentials_to_site"]
+            choices:
+              - global_credential_details
+              - assign_credentials_to_site
             elements: str
           global_credential_details:
             description:
@@ -118,8 +144,11 @@ options:
               Center credential description exactly (case-sensitive).
             - If C(description) is omitted (or empty) for a given C(type), all
               credentials of that type are extracted.
-            - Multiple entries with the same C(type) are allowed; their descriptions
-              are aggregated.
+            - When multiple entries with different C(type) values are provided,
+              each type is filtered independently (AND logic across types).
+            - If C(global_credential_details) is omitted entirely but
+              C(global_credential_details) is present in C(components_list),
+              all credentials of all types are extracted without filtering.
             - 'For example, [{"type": "cli_credential", "description": ["WLC", "Router_CLI"]},
               {"type": "https_read"}, {"type": "snmp_v3", "description": ["SNMPv3_Admin"]}]'
             type: list
@@ -142,23 +171,41 @@ options:
                   - snmp_v3
               description:
                 description:
-                - List of exact credential descriptions to extract for the given
-                  C(type).
-                - Each value must match a Catalyst Center credential description
-                  exactly (case-sensitive).
-                - If omitted or empty, all credentials of the specified C(type)
-                  are extracted.
+                - Human-readable labels assigned to credentials
+                  in Catalyst Center, used here as filter
+                  values to select specific credentials of the
+                  given C(type).
+                - Each value must match a Catalyst Center
+                  credential description exactly
+                  (case-sensitive).
+                - If omitted or empty, all credentials of the
+                  specified C(type) are extracted.
+                - When multiple entries share the same C(type),
+                  their C(description) lists are merged
+                  (union).
+                - 'For example: ["WLC", "Router_CLI"]'
                 type: list
                 elements: str
                 required: false
           assign_credentials_to_site:
             description:
-            - List of site hierarchical paths for credential assignment extraction.
-            - Extracts credential assignments for specified site hierarchical paths.
-            - Site names must be full hierarchical paths (case-sensitive).
-            - If not specified when component included in components_list, extracts
-              all site credential assignments.
-            - For example, ["Global/India/Assam", "Global/India/Haryana"]
+            - Site-level credential assignments that map global
+              credentials to specific sites in the Catalyst
+              Center site hierarchy.
+            - This parameter accepts a list of site
+              hierarchical path strings to control which site
+              assignments are extracted into the generated
+              YAML playbook.
+            - Each string must be a full hierarchical site
+              path starting from "Global"
+              (e.g., "Global/Region/Building").
+            - Site names are case-sensitive and must match
+              exact paths configured in Catalyst Center.
+            - If not specified when component is included in
+              C(components_list), extracts all site credential
+              assignments.
+            - 'For example:
+              ["Global/India/Assam", "Global/India/Haryana"]'
             type: list
             elements: str
             required: false
@@ -283,6 +330,34 @@ EXAMPLES = r"""
           - "Global/India/Assam"
           - "Global/India/Haryana"
 
+- name: Generate YAML with aggregated duplicate type filters
+  cisco.dnac.device_credential_playbook_config_generator:
+    dnac_host: "{{ dnac_host }}"
+    dnac_username: "{{ dnac_username }}"
+    dnac_password: "{{ dnac_password }}"
+    dnac_verify: "{{ dnac_verify }}"
+    dnac_port: "{{ dnac_port }}"
+    dnac_version: "{{ dnac_version }}"
+    dnac_debug: "{{ dnac_debug }}"
+    dnac_log: true
+    dnac_log_level: DEBUG
+    state: gathered
+    file_path: "device_credential_config.yml"
+    config:
+      component_specific_filters:
+        components_list:
+          - global_credential_details
+        global_credential_details:
+          # Two entries for same type — descriptions are merged
+          - type: cli_credential
+            description:
+              - WLC
+          - type: cli_credential
+            description:
+              - Router_CLI
+          # Omitting description extracts all of this type
+          - type: snmp_v3
+
 - name: Generate YAML Configuration with both global credential and assign credentials to site filters
   cisco.dnac.device_credential_playbook_config_generator:
     dnac_host: "{{ dnac_host }}"
@@ -307,7 +382,7 @@ EXAMPLES = r"""
           - type: https_read
             description:
               - http_read
-          - type: https_write
+          - type: https_write  # No description filter — extracts all
         assign_credentials_to_site:
           - "Global/India/Assam"
           - "Global/India/TamilNadu"
@@ -722,19 +797,19 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
 
         Returns:
             OrderedDict: Reverse mapping specification with credential type mappings:
-                        - cli_credential: List transformation with username, masked
-                        password/enable_password, description, and id fields
-                        - https_read: List transformation with username, masked password,
-                        port, description, and id fields
-                        - https_write: List transformation with username, masked password,
-                        port, description, and id fields
-                        - snmp_v2c_read: List transformation with masked read_community,
-                        description, and id fields
-                        - snmp_v2c_write: List transformation with write_community,
-                        description, and id fields
+                        - cli_credential: List transformation with description, username,
+                        masked password and enable_password fields
+                        - https_read: List transformation with description, username,
+                        masked password, and port fields
+                        - https_write: List transformation with description, username,
+                        masked password, and port fields
+                        - snmp_v2c_read: List transformation with description and
+                        masked read_community fields
+                        - snmp_v2c_write: List transformation with description and
+                        masked write_community fields
                         - snmp_v3: List transformation with auth_type, snmp_mode,
-                        privacy settings, username, masked auth_password,
-                        description, and id fields
+                        masked privacy_password, privacy_type, username,
+                        description, and masked auth_password fields
         """
         self.log(
             "Constructing reverse mapping specification for global credential details. "
@@ -899,7 +974,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "Reverse mapping specification constructed successfully with 6 credential "
             "type transformations. Specification includes field mappings for username, "
             "passwords (masked), ports, communities (masked for v2c read), auth settings "
-            "(masked for v3), and description/id fields for all credential types.",
+            "(masked for v3), and description fields for all credential types.",
             "DEBUG"
         )
 
@@ -927,19 +1002,20 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
 
         Returns:
             OrderedDict: Reverse mapping specification with site assignment mappings:
-                        - cli_credential: Dict transformation with description, username,
-                        and id fields extracted
-                        - https_read: Dict transformation with description, username,
-                        and id fields extracted
-                        - https_write: Dict transformation with description, username,
-                        and id fields extracted
-                        - snmp_v2c_read: Dict transformation with description and id
-                        fields extracted
-                        - snmp_v2c_write: Dict transformation with description and id
-                        fields extracted
-                        - snmp_v3: Dict transformation with description and id fields
+                        - cli_credential: Dict transformation with description and
+                        username fields extracted
+                        - https_read: Dict transformation with description and
+                        username fields extracted
+                        - https_write: Dict transformation with description and
+                        username fields extracted
+                        - snmp_v2c_read: Dict transformation with description
+                        field extracted
+                        - snmp_v2c_write: Dict transformation with description
+                        field extracted
+                        - snmp_v3: Dict transformation with description field
                         extracted
-                        - site_name: List of site names where credentials are assigned
+                        - site_name: List of site names where credentials are
+                        assigned
         """
         self.log(
             "Constructing reverse mapping specification for site credential "
@@ -1040,9 +1116,9 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         self.log(
             "Reverse mapping specification constructed successfully with 7 field "
             "mappings (6 credential types + site_name). Specification includes "
-            "transformations for CLI (description, username, id), HTTPS Read/Write "
-            "(description, username, id), SNMPv2c Read/Write (description, id), "
-            "SNMPv3 (description, id), and site_name list for location context.",
+            "transformations for CLI (description, username), HTTPS Read/Write "
+            "(description, username), SNMPv2c Read/Write (description), "
+            "SNMPv3 (description), and site_name list for location context.",
             "DEBUG"
         )
 
@@ -1291,6 +1367,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "WARNING",
                 )
                 continue
+
             f_type = entry.get("type")
             if f_type not in key_map:
                 self.log(
@@ -1301,6 +1378,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "WARNING",
                 )
                 continue
+
             desc = entry.get("description")
             existing = wanted_by_type.setdefault(f_type, set())
             if desc is None or (isinstance(desc, list) and len(desc) == 0):
@@ -1386,11 +1464,10 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                                 - api_function (str): SDK function name
                                     (e.g., 'get_device_credential_settings_for_a_site')
             filters (dict): Filter configuration containing:
-                        - component_specific_filters (dict, optional): Nested filters
-                            for site selection:
-                            - site_name (list): List of site hierarchical names to
-                            process (e.g., ['Global/India/Assam'])
-                        If component_specific_filters not provided or site_name empty,
+                        - component_specific_filters (list, optional): List of site
+                            hierarchical path strings for targeted extraction
+                            (e.g., ["Global/India/Assam", "Global/India/Haryana"]).
+                        If component_specific_filters is not provided or empty,
                         processes all sites from cached site mapping.
 
         Returns:
@@ -1612,6 +1689,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                     "WARNING"
                 )
                 continue
+
             self.log(
                 "Processing site {0}/{1} with site_id: {2}. Fetching credential sync "
                 "status using API family '{3}', function '{4}'.".format(
@@ -1716,6 +1794,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                         "DEBUG"
                     )
                     continue
+
                 self.log(
                     "Searching global credential cache for credential ID {0} in group "
                     "'{1}' for sync_key '{2}'.".format(cred_id, global_key, sync_key),
