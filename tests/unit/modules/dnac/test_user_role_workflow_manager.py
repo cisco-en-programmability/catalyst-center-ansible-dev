@@ -1200,8 +1200,7 @@ numbers, periods, underscores, and hyphens."
         result = self.execute_module(changed=False, failed=False)
         print(result)
         expected_response = (
-            "The specified access group 'Test_access_group_new' does not exist or has already been "
-            "deleted in Cisco Catalyst Center. Please provide a valid 'name' for access group deletion."
+            "Access group(s) 'Test_access_group_new' is already absent in Cisco Catalyst Center. Nothing to delete."
         )
         self.assertEqual(
             result.get("response"),
@@ -1259,3 +1258,31 @@ numbers, periods, underscores, and hyphens."
             result.get("response"),
             "Invalid parameters in playbook config: role_name: Required when creating a new access group."
         )
+
+    def test_user_role_workflow_manager_resolve_role_api_failure(self):
+        """
+        Verify that when get_roles raises an exception during
+        access group creation, the module fails gracefully with
+        a clear error instead of passing 'self' as a role ID.
+        """
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_log=True,
+                state="merged",
+                config_verify=False,
+                dnac_version="3.1.6.0",
+                config=self.playbook_create_access_group,
+            )
+        )
+        # Mock get_access_groups to return no match,
+        # get_sites to succeed, get_roles to raise
+        self.run_dnac_exec.side_effect = [
+            self.test_data.get("get_access_groups"),
+            self.test_data.get("get_sites"),
+            Exception("Connection timeout"),
+        ]
+        result = self.execute_module(changed=False, failed=True)
+        self.assertIn("role", result.get("msg", "").lower())
