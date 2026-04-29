@@ -131,41 +131,41 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
 
         elif "network_management_by_ip_address_no_match" in self._testMethodName:
             # All 8 API calls provided; DHCP response has no matching IP (192.0.2.99)
-            # so ip_address_list filter produces no match → no configs generated
+            # so ip_address_list filter produces no match - no configs generated
             self.run_dnac_exec.side_effect = [
-                self.test_data.get("get_site_details_with_global"),       # get_sites
-                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
-                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 — not in filter)
-                self.test_data.get("get_dns_settings_for_site_response"), # DNS
-                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
-                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
-                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_site_details_with_global"),  # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"),  # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),  # DHCP (10.1.1.10 not in filter)
+                self.test_data.get("get_dns_settings_for_site_response"),  # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"),  # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"),  # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"),  # timezone
                 self.test_data.get("get_banner_settings_for_site_response"),  # banner
             ]
 
         elif "network_management_by_ip_address" in self._testMethodName:
             # All 8 API calls; DHCP has 10.1.1.10 which matches ip_address_list filter
             self.run_dnac_exec.side_effect = [
-                self.test_data.get("get_site_details_with_global"),       # get_sites
-                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
-                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 matches)
-                self.test_data.get("get_dns_settings_for_site_response"), # DNS
-                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
-                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
-                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_site_details_with_global"),  # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"),  # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),  # DHCP (10.1.1.10 matches)
+                self.test_data.get("get_dns_settings_for_site_response"),  # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"),  # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"),  # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"),  # timezone
                 self.test_data.get("get_banner_settings_for_site_response"),  # banner
             ]
 
         elif "network_management_combined_ip_filter" in self._testMethodName:
             # All 8 API calls; server_types=[dhcp_server, dns_server] + ip=10.1.1.10 (in DHCP)
             self.run_dnac_exec.side_effect = [
-                self.test_data.get("get_site_details_with_global"),       # get_sites
-                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
-                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 matches)
-                self.test_data.get("get_dns_settings_for_site_response"), # DNS
-                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
-                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
-                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_site_details_with_global"),  # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"),  # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),  # DHCP (10.1.1.10 matches)
+                self.test_data.get("get_dns_settings_for_site_response"),  # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"),  # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"),  # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"),  # timezone
                 self.test_data.get("get_banner_settings_for_site_response"),  # banner
             ]
 
