@@ -43,6 +43,9 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
     playbook_config_reserve_pools_by_pool_name = test_data.get("playbook_config_reserve_pools_by_pool_name")
     playbook_config_network_management_by_site = test_data.get("playbook_config_network_management_by_site")
     playbook_config_network_management_by_server_types = test_data.get("playbook_config_network_management_by_server_types")
+    playbook_config_network_management_by_ip_address = test_data.get("playbook_config_network_management_by_ip_address")
+    playbook_config_network_management_by_ip_address_no_match = test_data.get("playbook_config_network_management_by_ip_address_no_match")
+    playbook_config_network_management_combined_ip_filter = test_data.get("playbook_config_network_management_combined_ip_filter")
     playbook_config_device_controllability_by_site = test_data.get("playbook_config_device_controllability_by_site")
     playbook_config_aaa_settings_by_network = test_data.get("playbook_config_aaa_settings_by_network")
     playbook_config_aaa_settings_by_server_type = test_data.get("playbook_config_aaa_settings_by_server_type")
@@ -124,6 +127,46 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
             self.run_dnac_exec.side_effect = [
                 self.test_data.get("get_site_details"),
                 self.test_data.get("get_network_management_response"),
+            ]
+
+        elif "network_management_by_ip_address_no_match" in self._testMethodName:
+            # All 8 API calls provided; DHCP response has no matching IP (192.0.2.99)
+            # so ip_address_list filter produces no match → no configs generated
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("get_site_details_with_global"),       # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 — not in filter)
+                self.test_data.get("get_dns_settings_for_site_response"), # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_banner_settings_for_site_response"),  # banner
+            ]
+
+        elif "network_management_by_ip_address" in self._testMethodName:
+            # All 8 API calls; DHCP has 10.1.1.10 which matches ip_address_list filter
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("get_site_details_with_global"),       # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 matches)
+                self.test_data.get("get_dns_settings_for_site_response"), # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_banner_settings_for_site_response"),  # banner
+            ]
+
+        elif "network_management_combined_ip_filter" in self._testMethodName:
+            # All 8 API calls; server_types=[dhcp_server, dns_server] + ip=10.1.1.10 (in DHCP)
+            self.run_dnac_exec.side_effect = [
+                self.test_data.get("get_site_details_with_global"),       # get_sites
+                self.test_data.get("get_aaa_settings_for_site_response"), # AAA
+                self.test_data.get("get_dhcp_settings_for_site_response"),# DHCP (10.1.1.10 matches)
+                self.test_data.get("get_dns_settings_for_site_response"), # DNS
+                self.test_data.get("get_telemetry_settings_for_site_response"), # telemetry
+                self.test_data.get("get_ntp_settings_for_site_response"), # NTP
+                self.test_data.get("get_timezone_settings_for_site_response"), # timezone
+                self.test_data.get("get_banner_settings_for_site_response"),  # banner
             ]
 
         elif "device_controllability_by_site" in self._testMethodName:
@@ -681,3 +724,91 @@ class TestNetworkSettingsPlaybookGenerator(TestDnacModule):
         )
         result = self.execute_module(changed=False, failed=True)
         self.assertIn("must include a non-empty components_list", str(result.get("msg", "")))
+
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('os.path.exists')
+    def test_network_settings_playbook_config_generator_network_management_by_ip_address(self, mock_exists, mock_file):
+        """
+        Test case for network management settings filtered by ip_address_list.
+
+        Verifies that when ip_address_list is provided, only sites whose server
+        settings contain at least one of the specified IPs are included in the
+        generated YAML output.
+        The fixture response contains DHCP server 10.1.1.10, so the filter
+        matches and the module should succeed with generated config.
+        """
+        mock_exists.return_value = True
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="gathered",
+                file_path="/tmp/test_ip_filter.yaml",
+                file_mode="overwrite",
+                config=self.playbook_config_network_management_by_ip_address
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation succeeded", str(result.get('msg')))
+
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('os.path.exists')
+    def test_network_settings_playbook_config_generator_network_management_by_ip_address_no_match(self, mock_exists, mock_file):
+        """
+        Test case for network management settings when no site matches the ip_address_list filter.
+
+        Verifies that when none of the IPs in ip_address_list are present in any
+        site's server settings, the module produces no configurations.
+        The fixture response does not contain 192.0.2.99, so no sites match.
+        """
+        mock_exists.return_value = True
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="gathered",
+                file_path="/tmp/test_ip_filter_no_match.yaml",
+                file_mode="overwrite",
+                config=self.playbook_config_network_management_by_ip_address_no_match
+            )
+        )
+        result = self.execute_module(changed=False, failed=False)
+        self.assertIn("No configurations or components to process", str(result.get('msg')))
+
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('os.path.exists')
+    def test_network_settings_playbook_config_generator_network_management_combined_ip_filter(self, mock_exists, mock_file):
+        """
+        Test case for network management settings with combined site_name_list,
+        server_types, and ip_address_list filters (AND logic across all three).
+
+        Verifies that when all three filters are provided, a site is included
+        only when it matches the site list, has the specified server types,
+        AND has at least one of the specified IPs in those server settings.
+        The fixture Global site has DHCP server 10.1.1.10, so the filter matches.
+        """
+        mock_exists.return_value = True
+
+        set_module_args(
+            dict(
+                dnac_host="1.1.1.1",
+                dnac_username="dummy",
+                dnac_password="dummy",
+                dnac_version="2.3.7.9",
+                dnac_log=True,
+                state="gathered",
+                file_path="/tmp/test_combined_ip_filter.yaml",
+                file_mode="overwrite",
+                config=self.playbook_config_network_management_combined_ip_filter
+            )
+        )
+        result = self.execute_module(changed=True, failed=False)
+        self.assertIn("YAML config generation succeeded", str(result.get('msg')))

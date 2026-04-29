@@ -129,17 +129,38 @@ options:
                 required: false
           network_management_details:
             description:
-            - Network management settings to filter by site, server type, and/or server IP address.
-            - If C(network_management_details) sub-filter is not provided under C(component_specific_filters),
-              the module defaults to retrieving settings for the B(Global) (root) site only.
-            - To retrieve settings for specific sites, provide a C(site_name_list) with the desired site names.
-            - To retrieve only specific server types, provide a C(server_types) list. Site and server filters
-              are combined with B(AND) logic.
-            - To retrieve only sites whose settings contain a specific server IP, provide C(ip_address_list).
-              A site is included in the output only if B(any) of its server settings contains B(any) of the
-              specified IP addresses (OR across IPs, AND with site/server-type filters).
-            - If C(server_types) is omitted, all server types are retrieved (backward-compatible).
-            - If C(ip_address_list) is omitted, no IP filtering is applied.
+            - Network management settings to filter by site,
+              server type, and/or server IP address.
+            - Each list entry is an independent filter dict.
+              Within a single entry, all specified filters
+              (C(site_name_list), C(server_types),
+              C(ip_address_list)) are combined with B(AND)
+              logic. Omitting a filter means no restriction
+              on that attribute.
+            - If C(network_management_details) sub-filter is
+              not provided under
+              C(component_specific_filters), the module
+              defaults to retrieving settings for the
+              B(Global) (root) site only.
+            - To retrieve settings for specific sites,
+              provide a C(site_name_list) with the desired
+              site names.
+            - To retrieve only specific server types, provide
+              a C(server_types) list.
+            - To include only sites whose server settings
+              match a specific server IP, provide
+              C(ip_address_list). A site is included only if
+              B(any) of its server IPs matches B(any) of the
+              specified addresses (OR across IPs, AND with
+              site and server-type filters).
+            - Evaluation order is site filtering first, then
+              C(server_types) pruning, then
+              C(ip_address_list) matching against the pruned
+              settings.
+            - If C(server_types) is omitted, all server types
+              are retrieved (backward-compatible).
+            - If C(ip_address_list) is omitted, no IP
+              filtering is applied.
             type: list
             elements: dict
             required: false
@@ -154,26 +175,45 @@ options:
                 required: false
               server_types:
                 description:
-                - List of server/settings types to include in the output.
-                - Valid values are C(dhcp_server), C(dns_server), C(ntp_server), C(network_aaa),
-                  C(client_and_endpoint_aaa), C(netflow_collector), C(snmp_server), C(syslog_server),
-                  C(timezone), C(message_of_the_day).
-                - If omitted, all server types are included (default/backward-compatible behaviour).
-                - Combined with C(site_name_list) using AND logic.
+                  - Restricts the YAML output to only the
+                    listed server-type keys. Server types not
+                    in this list are pruned from the generated
+                    settings dict for each site.
+                  - Combined with C(site_name_list) and
+                    C(ip_address_list) using AND logic.
+                    C(ip_address_list) matching runs after
+                    server-type pruning, so only IPs from
+                    the retained server types are evaluated.
+                    - If omitted, all server types are included
+                    in the output (backward-compatible).
+                  - "Example: C([dns_server, ntp_server])
+                    returns only DNS and NTP settings."
+                    type: list
+                    elements: str
+                    required: false
+                    choices:
+                      - dhcp_server
+                      - dns_server
+                      - ntp_server
+                      - network_aaa
+                      - client_and_endpoint_aaa
+                      - netflow_collector
+                      - snmp_server
+                      - syslog_server
+                      - timezone
+                      - message_of_the_day
+              ip_address_list:
+                description:
+                - List of server IP addresses to filter sites by.
+                - A site is included only if B(any) of its server
+                  settings contains B(any) of the specified IPs.
+                - Uses exact match. Combined with C(site_name_list)
+                  and C(server_types) using AND logic.
+                - If omitted, no IP-based filtering is applied
+                  (default/backward-compatible behaviour).
                 type: list
                 elements: str
                 required: false
-                choices:
-                  - dhcp_server
-                  - dns_server
-                  - ntp_server
-                  - network_aaa
-                  - client_and_endpoint_aaa
-                  - netflow_collector
-                  - snmp_server
-                  - syslog_server
-                  - timezone
-                  - message_of_the_day
           device_controllability_details:
             description:
             - Device controllability settings to filter by site.
@@ -290,6 +330,59 @@ EXAMPLES = r"""
               - syslog_server
               - timezone
               - message_of_the_day
+
+# Network management details filtered by server IP address.
+# Only sites whose server settings contain any of the listed IPs are included.
+- name: Generate YAML Configuration for network management - filtered by IP
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_by_ip.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - ip_address_list:
+              - "10.1.1.10"
+              - "8.8.8.8"
+
+# Combined: site + server type + IP address filters (AND logic across all three).
+- name: Generate YAML Configuration - combined site, server type, and IP filter
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_combined.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - site_name_list:
+              - "Global/USA/California"
+            server_types:
+              - dns_server
+              - dhcp_server
+            ip_address_list:
+              - "10.1.1.10"
 """
 
 RETURN = r"""
@@ -601,6 +694,11 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                                 "timezone",
                                 "message_of_the_day",
                             ]
+                        },
+                        "ip_address_list": {
+                            "type": "list",
+                            "required": False,
+                            "elements": "str"
                         },
                     },
                     "reverse_mapping_function": self.network_management_reverse_mapping_function,
@@ -4279,7 +4377,7 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                 if requested_ip_addresses:
                     site_ips = self._collect_server_ips(filtered_settings)
                     matched = any(
-                        any(req_ip in site_ip for site_ip in site_ips)
+                        req_ip in site_ips
                         for req_ip in requested_ip_addresses
                     )
                     if not matched:
