@@ -962,21 +962,31 @@ class SdaHostPortOnboardingPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
         return {
             "network_elements": {
                 "port_assignments": {
-                    "filters": ["fabric_site_name_hierarchy"],
+                    "filters": {
+                        "fabric_site_name_hierarchy": {"type": "str"},
+                        "device_ips": {"type": "list", "elements": "str"},
+                        "serial_numbers": {"type": "list", "elements": "str"},
+                        "hostnames": {"type": "list", "elements": "str"},
+                    },
                     "reverse_mapping_function": self.port_assignments_temp_spec,
                     "api_function": "get_port_assignments",
                     "api_family": "sda",
                     "get_function_name": self.get_port_assignments_configuration,
                 },
                 "port_channels": {
-                    "filters": ["fabric_site_name_hierarchy"],
+                    "filters": {
+                        "fabric_site_name_hierarchy": {"type": "str"},
+                        "device_ips": {"type": "list", "elements": "str"},
+                        "serial_numbers": {"type": "list", "elements": "str"},
+                        "hostnames": {"type": "list", "elements": "str"},
+                    },
                     "reverse_mapping_function": self.port_channels_temp_spec,
                     "api_function": "get_port_channels",
                     "api_family": "sda",
                     "get_function_name": self.get_port_channels_configuration,
                 },
                 "wireless_ssids": {
-                    "filters": ["fabric_site_name_hierarchy"],
+                    "filters": {"fabric_site_name_hierarchy": {"type": "str"}},
                     "reverse_mapping_function": self.wireless_ssids_temp_spec,
                     "api_function": "retrieve_the_vlans_and_ssids_mapped_to_the_vlan_within_a_fabric_site",
                     "api_family": "fabric_wireless",
