@@ -129,10 +129,38 @@ options:
                 required: false
           network_management_details:
             description:
-            - Network management settings to filter by site.
-            - If C(network_management_details) sub-filter is not provided under C(component_specific_filters),
-              the module defaults to retrieving settings for the B(Global) (root) site only.
-            - To retrieve settings for specific sites, provide a C(site_name_list) with the desired site names.
+            - Network management settings to filter by site,
+              server type, and/or server IP address.
+            - Each list entry is an independent filter dict.
+              Within a single entry, all specified filters
+              (C(site_name_list), C(server_types),
+              C(ip_address_list)) are combined with B(AND)
+              logic. Omitting a filter means no restriction
+              on that attribute.
+            - If C(network_management_details) sub-filter is
+              not provided under
+              C(component_specific_filters), the module
+              defaults to retrieving settings for the
+              B(Global) (root) site only.
+            - To retrieve settings for specific sites,
+              provide a C(site_name_list) with the desired
+              site names.
+            - To retrieve only specific server types, provide
+              a C(server_types) list.
+            - To include only sites whose server settings
+              match a specific server IP, provide
+              C(ip_address_list). A site is included only if
+              B(any) of its server IPs matches B(any) of the
+              specified addresses (OR across IPs, AND with
+              site and server-type filters).
+            - Evaluation order is site filtering first, then
+              C(server_types) pruning, then
+              C(ip_address_list) matching against the pruned
+              settings.
+            - If C(server_types) is omitted, all server types
+              are retrieved (backward-compatible).
+            - If C(ip_address_list) is omitted, no IP
+              filtering is applied.
             type: list
             elements: dict
             required: false
@@ -142,6 +170,47 @@ options:
                 - List of site names to filter network management settings by site.
                 - Each site name must be the full hierarchy path (e.g., C(Global/USA), C(Global/USA/California)).
                 - If not provided, defaults to the B(Global) (root) site only.
+                type: list
+                elements: str
+                required: false
+              server_types:
+                description:
+                  - Restricts the YAML output to only the
+                    listed server-type keys. Server types not
+                    in this list are pruned from the generated
+                    settings dict for each site.
+                  - Combined with C(site_name_list) and
+                    C(ip_address_list) using AND logic.
+                    C(ip_address_list) matching runs after
+                    server-type pruning, so only IPs from
+                    the retained server types are evaluated.
+                  - If omitted, all server types are included
+                    in the output (backward-compatible).
+                  - "Example: C([dns_server, ntp_server])
+                    returns only DNS and NTP settings."
+                type: list
+                elements: str
+                required: false
+                choices:
+                  - dhcp_server
+                  - dns_server
+                  - ntp_server
+                  - network_aaa
+                  - client_and_endpoint_aaa
+                  - netflow_collector
+                  - snmp_server
+                  - syslog_server
+                  - timezone
+                  - message_of_the_day
+              ip_address_list:
+                description:
+                - List of server IP addresses to filter sites by.
+                - A site is included only if B(any) of its server
+                  settings contains B(any) of the specified IPs.
+                - Uses exact match. Combined with C(site_name_list)
+                  and C(server_types) using AND logic.
+                - If omitted, no IP-based filtering is applied
+                  (default/backward-compatible behaviour).
                 type: list
                 elements: str
                 required: false
@@ -223,6 +292,97 @@ EXAMPLES = r"""
             pool_type: "Generic"
         reserve_pool_details:
           - site_name: "Global/USA"
+
+# Network management details filtered by site and specific server types.
+# server_types uses AND logic with site_name_list: only the listed server types
+# are included in the output for the specified sites.
+# All 10 available server types are shown below; include only the ones you need.
+- name: Generate YAML Configuration for network management - filtered by server type
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_config.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - site_name_list:
+              - "Global/USA/California"
+              - "Global/India/Mumbai"
+            server_types:
+              - dhcp_server
+              - dns_server
+              - ntp_server
+              - network_aaa
+              - client_and_endpoint_aaa
+              - netflow_collector
+              - snmp_server
+              - syslog_server
+              - timezone
+              - message_of_the_day
+
+# Network management details filtered by server IP address.
+# Only sites whose server settings contain any of the listed IPs are included.
+- name: Generate YAML Configuration for network management - filtered by IP
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_by_ip.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - ip_address_list:
+              - "10.1.1.10"
+              - "8.8.8.8"
+
+# Combined: site + server type + IP address filters (AND logic across all three).
+- name: Generate YAML Configuration - combined site, server type, and IP filter
+  cisco.dnac.network_settings_playbook_config_generator:
+    dnac_host: "{{dnac_host}}"
+    dnac_username: "{{dnac_username}}"
+    dnac_password: "{{dnac_password}}"
+    dnac_verify: "{{dnac_verify}}"
+    dnac_port: "{{dnac_port}}"
+    dnac_version: "{{dnac_version}}"
+    dnac_debug: "{{dnac_debug}}"
+    dnac_log: true
+    dnac_log_level: "{{dnac_log_level}}"
+    state: gathered
+    file_path: "/tmp/network_mgmt_combined.yml"
+    file_mode: "overwrite"
+    config:
+      component_specific_filters:
+        components_list:
+          - "network_management_details"
+        network_management_details:
+          - site_name_list:
+              - "Global/USA/California"
+            server_types:
+              - dns_server
+              - dhcp_server
+            ip_address_list:
+              - "10.1.1.10"
 """
 
 RETURN = r"""
@@ -514,6 +674,28 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                 "network_management_details": {
                     "filters": {
                         "site_name_list": {
+                            "type": "list",
+                            "required": False,
+                            "elements": "str"
+                        },
+                        "server_types": {
+                            "type": "list",
+                            "required": False,
+                            "elements": "str",
+                            "choices": [
+                                "dhcp_server",
+                                "dns_server",
+                                "ntp_server",
+                                "network_aaa",
+                                "client_and_endpoint_aaa",
+                                "netflow_collector",
+                                "snmp_server",
+                                "syslog_server",
+                                "timezone",
+                                "message_of_the_day",
+                            ]
+                        },
+                        "ip_address_list": {
                             "type": "list",
                             "required": False,
                             "elements": "str"
@@ -3338,6 +3520,75 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
             "operation_summary": self.get_operation_summary()
         }
 
+    def _collect_server_ips(self, settings):
+        """
+        Collect all IP address values from a transformed network management settings dict.
+
+        Scans every server-type key that can carry IP addresses and returns a flat
+        deduplicated list of all IP strings found. Used by the ip_address_list filter
+        to decide whether a site entry should be included in the output.
+
+        Covered fields per server type:
+            dhcp_server            -> list of IPs (top-level list)
+            dns_server             -> primary_ip_address, secondary_ip_address
+            ntp_server             -> list of server addresses
+            network_aaa            -> primary_server_address, secondary_server_address
+            client_and_endpoint_aaa-> primary_server_address, secondary_server_address
+            netflow_collector      -> ip_address
+            snmp_server            -> ip_addresses (list)
+            syslog_server          -> ip_addresses (list)
+
+        Args:
+            settings (dict): Transformed settings dict as built in get_network_management_settings.
+
+        Returns:
+            list: Deduplicated list of non-empty IP/hostname strings found in settings.
+        """
+        ips = []
+
+        def _add(val):
+            if val and isinstance(val, str):
+                ips.append(val)
+
+        # dhcp_server: list of IP strings
+        dhcp = settings.get("dhcp_server")
+        if isinstance(dhcp, list):
+            for ip in dhcp:
+                _add(ip)
+
+        # dns_server: dict with primary/secondary IP fields
+        dns = settings.get("dns_server")
+        if isinstance(dns, dict):
+            _add(dns.get("primary_ip_address"))
+            _add(dns.get("secondary_ip_address"))
+
+        # ntp_server: list of server addresses
+        ntp = settings.get("ntp_server")
+        if isinstance(ntp, list):
+            for srv in ntp:
+                _add(srv)
+
+        # network_aaa / client_and_endpoint_aaa: primary/secondary server address
+        for aaa_key in ("network_aaa", "client_and_endpoint_aaa"):
+            aaa = settings.get(aaa_key)
+            if isinstance(aaa, dict):
+                _add(aaa.get("primary_server_address"))
+                _add(aaa.get("secondary_server_address"))
+
+        # netflow_collector: ip_address field
+        netflow = settings.get("netflow_collector")
+        if isinstance(netflow, dict):
+            _add(netflow.get("ip_address"))
+
+        # snmp_server / syslog_server: ip_addresses list
+        for ts_key in ("snmp_server", "syslog_server"):
+            ts = settings.get(ts_key)
+            if isinstance(ts, dict):
+                for ip in ts.get("ip_addresses", []):
+                    _add(ip)
+
+        return list(dict.fromkeys(ips))  # deduplicate preserving order
+
     def get_network_management_settings(self, network_element, filters):
         """
         Retrieve comprehensive network management settings for targeted sites.
@@ -3455,8 +3706,10 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
             )
             component_specific_filters = []
 
-        # Extract site_name_list from component specific filters
+        # Extract site_name_list, server_types and ip_address_list from component specific filters
         site_name_list = []
+        requested_server_types = []
+        requested_ip_addresses = []
         if component_specific_filters:
             self.log(
                 "Processing {0} component-specific filter criteria".format(
@@ -3497,6 +3750,54 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                             ),
                             "WARNING"
                         )
+
+                if "server_types" in filter_param:
+                    extracted_types = filter_param["server_types"]
+                    if isinstance(extracted_types, list):
+                        requested_server_types.extend(extracted_types)
+                        self.log(
+                            "Extracted server_types filter: {0}".format(extracted_types),
+                            "DEBUG"
+                        )
+                    else:
+                        self.log(
+                            "Invalid server_types type in component filter - expected list, got {0}".format(
+                                type(extracted_types).__name__
+                            ),
+                            "WARNING"
+                        )
+
+                if "ip_address_list" in filter_param:
+                    extracted_ips = filter_param["ip_address_list"]
+                    if isinstance(extracted_ips, list):
+                        requested_ip_addresses.extend(extracted_ips)
+                        self.log(
+                            "Extracted ip_address_list filter: {0}".format(extracted_ips),
+                            "DEBUG"
+                        )
+                    else:
+                        self.log(
+                            "Invalid ip_address_list type in component filter - expected list, got {0}".format(
+                                type(extracted_ips).__name__
+                            ),
+                            "WARNING"
+                        )
+
+        # Deduplicate while preserving order
+        requested_server_types = list(dict.fromkeys(requested_server_types))
+        requested_ip_addresses = list(dict.fromkeys(requested_ip_addresses))
+        self.log(
+            "Server type filter: {0} (empty = all types)".format(
+                requested_server_types if requested_server_types else "<all>"
+            ),
+            "INFO"
+        )
+        self.log(
+            "IP address filter: {0} (empty = no IP filtering)".format(
+                requested_ip_addresses if requested_ip_addresses else "<none>"
+            ),
+            "INFO"
+        )
 
         # If no component specific filters, check global filters
         if not site_name_list:
@@ -4041,20 +4342,62 @@ class NetworkSettingsPlaybookGenerator(DnacBase, BrownFieldHelper):
                 entry = self.clean_nm_entry(entry)
 
                 # ---- Apply unified reverse mapping ----
+                # Build the full settings dict first, then prune by server_types if specified
+                all_settings = {
+                    "network_aaa": self.extract_network_aaa(entry),
+                    "client_and_endpoint_aaa": self.extract_client_aaa(entry),
+                    "dhcp_server": self.extract_dhcp(entry),
+                    "dns_server": self.extract_dns(entry),
+                    "ntp_server": self.extract_ntp(entry),
+                    "timezone": self.extract_timezone(entry),
+                    "message_of_the_day": self.extract_banner(entry),
+                    "netflow_collector": self.extract_netflow(entry),
+                    "snmp_server": self.extract_snmp(entry),
+                    "syslog_server": self.extract_syslog(entry),
+                }
+
+                if requested_server_types:
+                    # AND logic: keep only the server types explicitly requested
+                    filtered_settings = {
+                        k: v for k, v in all_settings.items()
+                        if k in requested_server_types
+                    }
+                    self.log(
+                        "server_types filter applied for site '{0}': keeping {1} of {2} server types".format(
+                            site_name, len(filtered_settings), len(all_settings)
+                        ),
+                        "DEBUG"
+                    )
+                else:
+                    # No server_types filter — default: include all (backward-compatible)
+                    filtered_settings = all_settings
+
+                # Apply ip_address_list filter — site is skipped if none of its
+                # server IPs match any of the requested IPs (AND with other filters)
+                if requested_ip_addresses:
+                    site_ips = self._collect_server_ips(filtered_settings)
+                    matched = any(
+                        req_ip in site_ips
+                        for req_ip in requested_ip_addresses
+                    )
+                    if not matched:
+                        self.log(
+                            "ip_address_list filter: site '{0}' has no server IPs matching {1} — skipping".format(
+                                site_name, requested_ip_addresses
+                            ),
+                            "DEBUG"
+                        )
+                        continue
+                    self.log(
+                        "ip_address_list filter: site '{0}' matched (site IPs: {1})".format(
+                            site_name, site_ips
+                        ),
+                        "DEBUG"
+                    )
+
                 transformed_entry = self.prune_empty({
                     "site_name": site_name,
-                    "settings": {
-                        "network_aaa": self.extract_network_aaa(entry),
-                        "client_and_endpoint_aaa": self.extract_client_aaa(entry),
-                        "dhcp_server": self.extract_dhcp(entry),
-                        "dns_server": self.extract_dns(entry),
-                        "ntp_server": self.extract_ntp(entry),
-                        "timezone": self.extract_timezone(entry),
-                        "message_of_the_day": self.extract_banner(entry),
-                        "netflow_collector": self.extract_netflow(entry),
-                        "snmp_server": self.extract_snmp(entry),
-                        "syslog_server": self.extract_syslog(entry),
-                    }
+                    "settings": filtered_settings
                 })
 
                 transformed_nm.append(transformed_entry)
