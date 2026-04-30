@@ -1870,6 +1870,10 @@ class Site(DnacBase):
         success_msg = "Site created successfully."
         self.get_task_status_from_tasks_by_id(task_id, task_name, success_msg, True)
 
+        if self.status == "failed":
+            self.log(self.msg, "ERROR")
+            self.set_operation_result("failed", False, self.msg, "ERROR").check_return_status()
+
         for site in process_config:
             site_name = site.get("name")
             if site_name:
