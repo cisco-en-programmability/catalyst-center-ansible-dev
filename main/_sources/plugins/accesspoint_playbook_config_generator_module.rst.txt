@@ -1332,7 +1332,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'accesspoint\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/accesspoint\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    },\\n  \\"msg\\": {\\n    \\"YAML config generation Task succeeded for module\\n     'accesspoint\_workflow\_manager'.\\": {\\n        \\"file\_path\\":\\n         \\"tmp/accesspoint\_workflow\_playbook\_templatebase.yml\\"\\n      }\\n    }\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": {"configurations\_count": 7, "file\_mode": "overwrite", "file\_path": "tmp/accesspoint\_workflow\_playbook.yml", "message": "YAML configuration file generated successfully for module 'accesspoint\_workflow\_manager'", "status": "success"}, "response": {"configurations\_count": 7, "file\_mode": "overwrite", "file\_path": "tmp/accesspoint\_workflow\_playbook.yml", "message": "YAML configuration file generated successfully for module 'accesspoint\_workflow\_manager'", "status": "success"}, "status": "success"}`
 
 
       .. raw:: html
@@ -1377,7 +1377,7 @@ Common return values are documented :ref:`here <common_return_values>`, the foll
       .. rst-class:: ansible-option-line
       .. rst-class:: ansible-option-sample
 
-      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`"{\\n  \\"response\\": \\"No configurations or components to process for\\n               module 'accesspoint\_workflow\_manager'.\\n               Verify input filters or configuration.\\",\\n  \\"msg\\": \\"No configurations or components to process for module\\n          'accesspoint\_workflow\_manager'.\\n          Verify input filters or configuration.\\"\\n}\\n"`
+      :ansible-option-sample-bold:`Sample:` :ansible-rv-sample-value:`{"msg": "Validation failed: global\_filters is required when config is provided.", "response": "Validation failed: global\_filters is required when config is provided."}`
 
 
       .. raw:: html
