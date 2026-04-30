@@ -2424,6 +2424,7 @@ class NetworkProfileWirelessPlaybookGenerator(NetworkProfileFunctions, BrownFiel
                 "status and informational message about filter validation.",
                 "INFO"
             )
+            return self
 
         self.log(
             "Constructing final YAML configuration dictionary with 'config' key. "
