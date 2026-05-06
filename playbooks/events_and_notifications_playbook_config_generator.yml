@@ -27,8 +27,11 @@
             components_list:
               - webhook_destination
             webhook_destination:
-              - name: ["webhook demo 103", "Events PCG Webhook 01"]
-              - name: ["Events PCG Webhook 02"]
+              - name:
+                  - "webhook demo 103"
+                  - "Events PCG Webhook 01"
+              - name:
+                  - "Events PCG Webhook 02"
 
     - name: Generate YAML Configuration for email destinations only
       cisco.dnac.events_and_notifications_playbook_config_generator:
@@ -51,8 +54,10 @@
             components_list:
               - email_destination
             email_destination:
-              - sender_email: ["DNAC@cisco.com"]
-              - recipient_email: ["uchandan@cisco.com"]
+              - sender_email:
+                  - "DNAC@cisco.com"
+              - recipient_email:
+                  - "uchandan@cisco.com"
 
     - name: Generate YAML Configuration for webhook and email notifications
       cisco.dnac.events_and_notifications_playbook_config_generator:
@@ -76,9 +81,12 @@
               - webhook_event_notification
               - email_event_notification
             webhook_event_notification:
-              - name: ["test event"]
+              - name:
+                  - "test event"
             email_event_notification:
-              - name: ["EMAIL Notification 24", "EMAIL Notification 25"]
+              - name:
+                  - "EMAIL Notification 24"
+                  - "EMAIL Notification 25"
 
     - name: Generate YAML Configuration for ITSM settings only
       cisco.dnac.events_and_notifications_playbook_config_generator:
@@ -101,7 +109,8 @@
             components_list:
               - itsm_setting
             itsm_setting:
-              - instance_name: ["Playbook itsm demo 10"]
+              - instance_name:
+                  - "Playbook itsm demo 10"
 
     - name: Generate YAML Configuration for mixed component filters
       cisco.dnac.events_and_notifications_playbook_config_generator:
@@ -131,22 +140,34 @@
               - webhook_event_notification
               - syslog_event_notification
             webhook_destination:
-              - name: ["webhook demo 103", "Events PCG Webhook 01"]
-              - name: ["Events PCG Webhook 02"]
+              - name:
+                  - "webhook demo 103"
+                  - "Events PCG Webhook 01"
+              - name:
+                  - "Events PCG Webhook 02"
             email_event_notification:
-              - name: ["EMAIL Notification 24", "EMAIL Notification 25"]
-              - name: ["EMAIL Notification 26"]
+              - name:
+                  - "EMAIL Notification 24"
+                  - "EMAIL Notification 25"
+              - name:
+                  - "EMAIL Notification 26"
             email_destination:
-              - sender_email: ["DNAC@cisco.com"]
-              - recipient_email: ["uchandan@cisco.com"]
+              - sender_email:
+                  - "DNAC@cisco.com"
+              - recipient_email:
+                  - "uchandan@cisco.com"
             itsm_setting:
-              - instance_name: ["Playbook itsm demo 10"]
+              - instance_name:
+                  - "Playbook itsm demo 10"
             syslog_destination:
-              - name: ["Test_Syslog 101"]
+              - name:
+                  - "Test_Syslog 101"
             snmp_destination:
-              - name: ["SNMP"]
+              - name:
+                  - "SNMP"
             webhook_event_notification:
-              - name: ["test event"]
+              - name:
+                  - "test event"
             syslog_event_notification:
-              - name: ["CG-Test"]
-            
+              - name:
+                  - "CG-Test"
