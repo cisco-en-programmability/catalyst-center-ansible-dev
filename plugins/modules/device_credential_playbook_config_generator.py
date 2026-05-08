@@ -1302,6 +1302,15 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
             "DEBUG"
         )
         mapped = mapped_list[0] if mapped_list else {}
+        if not mapped:
+            self.log(
+                "No credentials mapped after transformation. Final mapped structure is "
+                "empty. This may indicate invalid filters or missing credential data. "
+                "Returning empty credential details.",
+                "WARNING"
+            )
+            return None
+
         return {"global_credential_details": mapped}
 
     def filter_credentials(self, source, filters):
@@ -1587,7 +1596,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "assignment dictionary.".format(site_names),
                 "WARNING"
             )
-            return {"assign_credentials_to_site": {}}
+            return None
 
         self.log(
             "Initializing credential ID to group mapping for credential matching. "
