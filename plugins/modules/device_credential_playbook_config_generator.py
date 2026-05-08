@@ -1310,6 +1310,7 @@ class DeviceCredentialPlaybookConfigGenerator(DnacBase, BrownFieldHelper):
                 "WARNING"
             )
             return None
+
         return {"global_credential_details": mapped}
 
     def filter_credentials(self, source, filters):
