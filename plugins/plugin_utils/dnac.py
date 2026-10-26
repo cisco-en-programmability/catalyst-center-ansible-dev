@@ -16,6 +16,9 @@ else:
 from ansible.module_utils.basic import env_fallback
 from ansible.module_utils.common.text.converters import to_native
 from ansible.utils.display import Display
+from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
+    COLLECTION_USER_AGENT,
+)
 
 display = Display()
 
@@ -184,7 +187,7 @@ def dnac_argument_spec():
 
 
 class DNACSDK(object):
-    def __init__(self, params):
+    def __init__(self, params, user_agent=None):
         display.deprecated(
             "The cisco.dnac collection is deprecated. Please migrate to cisco.catalystcenter.",
             version="7.0.0",
@@ -202,6 +205,7 @@ class DNACSDK(object):
                 version=params.get("dnac_version"),
                 verify=params.get("dnac_verify"),
                 debug=params.get("dnac_debug"),
+                user_agent=user_agent or COLLECTION_USER_AGENT,
             )
             if params.get("dnac_debug") and LOGGING_IN_STANDARD:
                 logging.getLogger("dnacentersdk").addHandler(logging.StreamHandler())
