@@ -60,7 +60,8 @@ class DnacBase():
         self.msg = ""
         self.status = "success"
         dnac_params = self.get_dnac_params(self.params)
-        self.dnac = DNACSDK(params=dnac_params)
+        self.user_agent = build_user_agent(getattr(module, "_name", None))
+        self.dnac = DNACSDK(params=dnac_params, user_agent=self.user_agent)
         self.dnac_apply = {'exec': self.dnac._exec}
         self.get_diff_state_apply = {'merged': self.get_diff_merged,
                                      'queried': self.get_diff_queried,
@@ -123,6 +124,7 @@ class DnacBase():
         masked_config = self.get_safe_log_config(masked_config)
 
         self.log('Cisco Catalyst Center parameters: {0}'.format(masked_config), "DEBUG")
+        self.log('SDK User-Agent identifier for this module: {0}'.format(self.user_agent), "DEBUG")
         self.supported_states = ["merged", "queried", "deleted", "replaced", "overridden", "gathered", "rendered", "parsed"]
         self.result = {"changed": False, "diff": [], "response": [], "warnings": []}
 
@@ -2980,9 +2982,37 @@ def validate_list_of_dicts(param_list, spec, module=None):
 RATE_LIMIT_MESSAGE = "Rate Limit exceeded"
 RATE_LIMIT_RETRY_AFTER = 15
 
+# Appended to the SDK User-Agent so Catalyst Center can identify Ansible traffic.
+COLLECTION_USER_AGENT = "ansible-dnac"
+
+
+def build_user_agent(module_name=None):
+    """Build the User-Agent suffix identifying the Ansible module making the call.
+
+    Args:
+        module_name (str): Module name, either unqualified or fully qualified
+            (for example 'cisco.dnac.swim_workflow_manager').
+
+    Returns:
+        str: Suffix such as 'ansible-dnac-swim_workflow_manager',
+        falling back to 'ansible-dnac' when the name is unavailable.
+    """
+    qualified_name = (module_name or "").strip()
+    # AnsibleModule._name holds a '<file>.py' placeholder until the controller supplies
+    # the real module name, so treat any filename-looking value as unavailable.
+    if not qualified_name or qualified_name.endswith(".py"):
+        return COLLECTION_USER_AGENT
+
+    # Drop the 'cisco.dnac.' namespace that Ansible prefixes to module names.
+    unqualified_name = qualified_name.rsplit(".", 1)[-1]
+    if not unqualified_name:
+        return COLLECTION_USER_AGENT
+
+    return "{0}-{1}".format(COLLECTION_USER_AGENT, unqualified_name)
+
 
 class DNACSDK(object):
-    def __init__(self, params):
+    def __init__(self, params, user_agent=None):
         self.result = dict(changed=False, result="")
         self.validate_response_schema = params.get("validate_response_schema")
         self.logger = logging.getLogger('dnacentersdk')
@@ -2996,6 +3026,7 @@ class DNACSDK(object):
                 version=params.get("dnac_version"),
                 verify=params.get("dnac_verify"),
                 debug=params.get("dnac_debug"),
+                user_agent=user_agent or COLLECTION_USER_AGENT,
             )
             if params.get("dnac_debug") and LOGGING_IN_STANDARD:
                 self.logger.addHandler(logging.StreamHandler())
