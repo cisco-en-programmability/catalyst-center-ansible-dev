@@ -1,0 +1,474 @@
+---
+#############################################################################################################
+# Integration test for cisco.dnac.sda_port_assignment_migration_workflow_manager
+#
+# Focuses on the "interface_mapping provided" path (positive + negative), because the two
+# fabric edge devices in the testbed have non-overlapping physical interface names and the
+# "no mapping" success path is physically impossible here. The "no mapping" success path is
+# covered in the unit tests via synthetic fixtures.
+#
+# Each scenario is bracketed with "=== SCENARIO N START / END ===" debug markers so the
+# captured dnac.log can be split into per-scenario segments when building unit test fixtures.
+#
+# All module calls run with dnac_log_append: true so every scenario's API request/response
+# pair is accumulated in a single dnac.log file.
+#
+# Scenarios:
+#   1  positive  WITH mapping  - add path (first run against a wiped destination)
+#   2  positive  WITH mapping  - no_update path (second run, idempotency)
+#   3  positive  WITH mapping  - hostname-based device resolution
+#   4  negative  offline       - fabric hierarchy missing Global/ prefix
+#   5  negative  offline       - source_device has neither ip_address nor hostname
+#   6  negative  offline       - invalid IPv4 in source_device.ip_address
+#   7  negative  offline       - source and destination identical
+#   8  negative  offline       - interface_mapping provided but empty
+#   9  negative  offline       - duplicate source_interface in interface_mapping
+#   10 negative  offline       - duplicate destination_interface in interface_mapping
+#   11 negative  api           - source device IP not in inventory
+#   12 negative  api           - fabric site does not exist
+#   13 negative  api           - mapping source_interface not on source device
+#   14 negative  api           - mapping destination_interface not on destination device
+#############################################################################################################
+- debug:
+    msg: "Starting SDA Port Assignment Migration integration test"
+- debug:
+    msg: "Role Path {{ role_path }}"
+
+- block:
+    - name: Load test data and declare dnac_login credentials
+      include_vars:
+        file: "{{ role_path }}/vars/vars_sda_port_assignment_migration_management.yml"
+        name: vars_map
+      vars:
+        dnac_login: &dnac_login
+          dnac_host: "{{ dnac_host }}"
+          dnac_username: "{{ dnac_username }}"
+          dnac_password: "{{ dnac_password }}"
+          dnac_verify: "{{ dnac_verify }}"
+          dnac_port: "{{ dnac_port }}"
+          dnac_version: "{{ dnac_version }}"
+          dnac_debug: "{{ dnac_debug }}"
+          dnac_log: true
+          dnac_log_level: "DEBUG"
+          dnac_log_append: true
+          config_verify: true
+          dnac_api_task_timeout: "{{ dnac_api_task_timeout }}"
+
+    #########################################################################################
+    # PRE-TEST: populate source (EN1) with dummy port assignments and wipe destination (EN2)
+    # so the first positive scenario exercises the "add" path.
+    #########################################################################################
+    - debug:
+        msg: "=== PRE-TEST START ==="
+
+    - name: "Pre-test - wipe any stale port assignments on destination EN2"
+      cisco.dnac.sda_host_port_onboarding_workflow_manager:
+        <<: *dnac_login
+        state: deleted
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.pre_test_destination_wipe }}"
+      ignore_errors: true
+
+    - name: "Pre-test - populate source EN1 with dummy port assignments"
+      cisco.dnac.sda_host_port_onboarding_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.pre_test_source_populate }}"
+      register: result_pre_populate
+
+    - name: "Pre-test - confirm source population"
+      debug:
+        msg: "{{ result_pre_populate }}"
+
+    - debug:
+        msg: "=== PRE-TEST END ==="
+
+    #########################################################################################
+    # SCENARIO 1 (positive) - WITH mapping, add path
+    #########################################################################################
+    - debug:
+        msg: "=== SCENARIO 1 START: migrate_with_mapping_add ==="
+
+    - name: "Scenario 1 - migrate EN1 -> EN2 with mapping (add path)"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.migrate_with_mapping_add }}"
+      register: result_scenario_1
+
+    - name: "Scenario 1 - assert changed=true (add path did work)"
+      assert:
+        that:
+          - item.changed == true
+        fail_msg: "Scenario 1 should have added port assignments on the destination, but changed=false."
+        success_msg: "Scenario 1 added port assignments on the destination."
+      loop: "{{ result_scenario_1.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 1 END ==="
+
+    #########################################################################################
+    # SCENARIO 2 (positive) - WITH mapping, no_update path
+    #########################################################################################
+    - debug:
+        msg: "=== SCENARIO 2 START: migrate_with_mapping_idempotent ==="
+
+    - name: "Scenario 2 - re-run (idempotency, no_update path)"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.migrate_with_mapping_idempotent }}"
+      register: result_scenario_2
+
+    - name: "Scenario 2 - assert changed=false (idempotent)"
+      assert:
+        that:
+          - item.changed == false
+        fail_msg: "Scenario 2 (idempotency) should not have reported changes."
+        success_msg: "Scenario 2 correctly reported no changes."
+      loop: "{{ result_scenario_2.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 2 END ==="
+
+    #########################################################################################
+    # SCENARIO 3 (positive) - WITH mapping, hostname resolution path
+    #########################################################################################
+    - debug:
+        msg: "=== SCENARIO 3 START: migrate_with_mapping_by_hostname ==="
+
+    - name: "Scenario 3 - migrate by hostname with mapping"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.migrate_with_mapping_by_hostname }}"
+      register: result_scenario_3
+
+    - debug:
+        msg: "=== SCENARIO 3 END ==="
+
+    #########################################################################################
+    # SCENARIOS 4-10 - offline validation negative cases. ignore_errors allows the run to
+    # continue; per-scenario assertions enforce that the module failed and the error message
+    # is the expected one.
+    #########################################################################################
+    - debug:
+        msg: "=== SCENARIO 4 START: invalid_fabric_hierarchy_prefix ==="
+
+    - name: "Scenario 4 - fabric hierarchy missing 'Global/'"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_fabric_hierarchy_prefix }}"
+      register: result_scenario_4
+      ignore_errors: true
+
+    - name: "Scenario 4 - assert fabric hierarchy rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'Global/' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 4 did not reject the invalid fabric hierarchy."
+        success_msg: "Scenario 4 rejected the invalid fabric hierarchy."
+      loop: "{{ result_scenario_4.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 4 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 5 START: invalid_source_device_missing_identifier ==="
+
+    - name: "Scenario 5 - source_device missing ip_address and hostname"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_source_device_missing_identifier }}"
+      register: result_scenario_5
+      ignore_errors: true
+
+    - name: "Scenario 5 - assert missing identifier rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'at least one of' in ((item.msg | default('') | string) + (item.response | default('') | string)) or 'ip_address' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 5 did not reject the missing device identifier."
+        success_msg: "Scenario 5 rejected the missing device identifier."
+      loop: "{{ result_scenario_5.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 5 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 6 START: invalid_source_device_bad_ipv4 ==="
+
+    - name: "Scenario 6 - source_device.ip_address is not a valid IPv4"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_source_device_bad_ipv4 }}"
+      register: result_scenario_6
+      ignore_errors: true
+
+    - name: "Scenario 6 - assert invalid IPv4 rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'valid IPv4' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 6 did not reject the invalid IPv4."
+        success_msg: "Scenario 6 rejected the invalid IPv4."
+      loop: "{{ result_scenario_6.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 6 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 7 START: invalid_same_source_and_destination ==="
+
+    - name: "Scenario 7 - source_device and destination_device resolve to the same device"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_same_source_and_destination }}"
+      register: result_scenario_7
+      ignore_errors: true
+
+    - name: "Scenario 7 - assert same-device rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'same device' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 7 did not reject the same source/destination."
+        success_msg: "Scenario 7 rejected the same source/destination."
+      loop: "{{ result_scenario_7.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 7 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 8 START: invalid_empty_interface_mapping ==="
+
+    - name: "Scenario 8 - interface_mapping is an empty list"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_empty_interface_mapping }}"
+      register: result_scenario_8
+      ignore_errors: true
+
+    - name: "Scenario 8 - assert empty interface_mapping rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'interface_mapping' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 8 did not reject the empty interface_mapping."
+        success_msg: "Scenario 8 rejected the empty interface_mapping."
+      loop: "{{ result_scenario_8.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 8 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 9 START: invalid_duplicate_source_interface ==="
+
+    - name: "Scenario 9 - duplicate source_interface in interface_mapping"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_duplicate_source_interface }}"
+      register: result_scenario_9
+      ignore_errors: true
+
+    - name: "Scenario 9 - assert duplicate source_interface rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'Duplicate' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+          - "'source_interface' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 9 did not reject the duplicate source_interface."
+        success_msg: "Scenario 9 rejected the duplicate source_interface."
+      loop: "{{ result_scenario_9.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 9 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 10 START: invalid_duplicate_destination_interface ==="
+
+    - name: "Scenario 10 - duplicate destination_interface in interface_mapping"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_duplicate_destination_interface }}"
+      register: result_scenario_10
+      ignore_errors: true
+
+    - name: "Scenario 10 - assert duplicate destination_interface rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'Duplicate' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+          - "'destination_interface' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 10 did not reject the duplicate destination_interface."
+        success_msg: "Scenario 10 rejected the duplicate destination_interface."
+      loop: "{{ result_scenario_10.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 10 END ==="
+
+    #########################################################################################
+    # SCENARIOS 11-14 - API-backed validation negative cases
+    #########################################################################################
+    - debug:
+        msg: "=== SCENARIO 11 START: invalid_source_device_not_in_inventory ==="
+
+    - name: "Scenario 11 - source device IP not present in Catalyst Center inventory"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_source_device_not_in_inventory }}"
+      register: result_scenario_11
+      ignore_errors: true
+
+    - name: "Scenario 11 - assert missing source device rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'not found' in ((item.msg | default('') | string) + (item.response | default('') | string)) or 'inventory' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 11 did not reject the missing source device."
+        success_msg: "Scenario 11 rejected the missing source device."
+      loop: "{{ result_scenario_11.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 11 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 12 START: invalid_fabric_site_not_found ==="
+
+    - name: "Scenario 12 - fabric site hierarchy does not exist"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_fabric_site_not_found }}"
+      register: result_scenario_12
+      ignore_errors: true
+
+    - name: "Scenario 12 - assert missing fabric site rejected"
+      assert:
+        that:
+          - item.failed == true
+        fail_msg: "Scenario 12 did not reject the missing fabric site."
+        success_msg: "Scenario 12 rejected the missing fabric site."
+      loop: "{{ result_scenario_12.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 12 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 13 START: invalid_mapping_source_interface_not_on_device ==="
+
+    - name: "Scenario 13 - mapping source_interface does not exist on source device"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_mapping_source_interface_not_on_device }}"
+      register: result_scenario_13
+      ignore_errors: true
+
+    - name: "Scenario 13 - assert invalid source_interface rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'source_interface' in ((item.msg | default('') | string) + (item.response | default('') | string)) or 'does not exist' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 13 did not reject the invalid source_interface."
+        success_msg: "Scenario 13 rejected the invalid source_interface."
+      loop: "{{ result_scenario_13.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 13 END ==="
+
+    - debug:
+        msg: "=== SCENARIO 14 START: invalid_mapping_destination_interface_not_on_device ==="
+
+    - name: "Scenario 14 - mapping destination_interface does not exist on destination device"
+      cisco.dnac.sda_port_assignment_migration_workflow_manager:
+        <<: *dnac_login
+        state: merged
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.invalid_mapping_destination_interface_not_on_device }}"
+      register: result_scenario_14
+      ignore_errors: true
+
+    - name: "Scenario 14 - assert invalid destination_interface rejected"
+      assert:
+        that:
+          - item.failed == true
+          - "'destination_interface' in ((item.msg | default('') | string) + (item.response | default('') | string)) or 'does not exist' in ((item.msg | default('') | string) + (item.response | default('') | string))"
+        fail_msg: "Scenario 14 did not reject the invalid destination_interface."
+        success_msg: "Scenario 14 rejected the invalid destination_interface."
+      loop: "{{ result_scenario_14.results }}"
+
+    - debug:
+        msg: "=== SCENARIO 14 END ==="
+
+    #########################################################################################
+    # POST-TEST: restore both source and destination to empty state so subsequent integration
+    # runs start clean.
+    #########################################################################################
+    - debug:
+        msg: "=== POST-TEST START ==="
+
+    - name: "Post-test - wipe port assignments on source EN1"
+      cisco.dnac.sda_host_port_onboarding_workflow_manager:
+        <<: *dnac_login
+        state: deleted
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.post_test_source_wipe }}"
+      ignore_errors: true
+
+    - name: "Post-test - wipe port assignments on destination EN2"
+      cisco.dnac.sda_host_port_onboarding_workflow_manager:
+        <<: *dnac_login
+        state: deleted
+        config:
+          - "{{ item }}"
+      loop: "{{ vars_map.post_test_destination_wipe }}"
+      ignore_errors: true
+
+    - debug:
+        msg: "=== POST-TEST END ==="
+
+    - debug:
+        msg: >-
+          All 14 integration test scenarios executed, pre/post cleanup complete.
+          Check dnac.log for captured API traffic.
